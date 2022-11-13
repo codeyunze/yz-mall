@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- 继承父工程jar包 -->
+	<parent>
+		<groupId>com.yz</groupId>
+		<artifactId>base-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<!-- 设置父类的相对对路径 -->
+		<relativePath>../base-parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>base-redis-utils</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>base-redis-utils</name>
+	<description>redis工具包</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<!-- Redis缓存 [start]  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<!-- Redis缓存 [end]  -->
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<classifier>exec</classifier>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
