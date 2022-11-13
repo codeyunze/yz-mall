@@ -1,5 +1,6 @@
-package com.yz.openInterface.controller;
+package com.yz.openInterface.common;
 
+import com.yz.common.vo.Result;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
 
     @RequestMapping(value = "/a")
-    public String a(){
-        return "service is normal!";
+    public Result a(){
+        return Result.success(null, "service is normal!");
     }
 
 }

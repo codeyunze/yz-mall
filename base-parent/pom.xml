@@ -44,6 +44,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <!--<optional>true</optional>--><!--自动选择版本-->
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>2.0.18</version>
+        </dependency>
     </dependencies>
 
     <!-- 以下jar包依赖不会自动被子项目工程引用，需要子项目工程添加需要使用的jar包的依赖，可不用添加版本号 -->
@@ -82,16 +95,15 @@
             </dependency>
 
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.12</version>
-                <!--<optional>true</optional>--><!--自动选择版本-->
-            </dependency>
-
-            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-bootstrap</artifactId>
                 <version>3.1.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.8.9</version>
             </dependency>
 
             <!-- 腾讯短信息发送sdk [start] -->
