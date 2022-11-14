@@ -100,6 +100,30 @@
                 <version>3.1.1</version>
             </dependency>
 
+            <!-- mysql驱动 [start]  -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.29</version>
+            </dependency>
+            <!-- mysql驱动 [end]  -->
+
+            <!-- Druid数据库连接池 [start]  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>1.1.21</version>
+            </dependency>
+            <!-- Druid数据库连接池 [end]  -->
+
+            <!-- mybatis-plus [start]  -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+            <!-- mybatis-plus [end]  -->
+
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
