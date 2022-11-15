@@ -1,14 +1,15 @@
 package com.yz.auth.config;
 
-import com.yz.auth.baseRole.service.BaseRoleService;
-import com.yz.auth.baseUser.entity.BaseUser;
-import com.yz.auth.baseUser.service.BaseUserService;
+import com.yz.auth.business.baseRole.service.BaseRoleService;
+import com.yz.auth.business.baseUser.entity.BaseUser;
+import com.yz.auth.business.baseUser.service.BaseUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired(required = false)
     private BaseRoleService baseRoleService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String userAccount) throws UsernameNotFoundException {

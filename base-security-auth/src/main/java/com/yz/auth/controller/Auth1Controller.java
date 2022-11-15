@@ -1,6 +1,6 @@
 package com.yz.auth.controller;
 
-import com.gh.common.toolsclass.ResultData;
+import com.yz.common.vo.Result;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Auth1Controller {
 
     @RequestMapping(value = "/test")
-    public ResultData test(){
-        return ResultData.success("auth1 access is successful");
+    public Result test(){
+        return Result.success(null, "auth1 access is successful");
     }
 }

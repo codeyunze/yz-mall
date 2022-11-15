@@ -4,6 +4,8 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.annotation.MapperScans;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
 /**
@@ -15,12 +17,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableAuthorizationServer
 // @ComponentScan(value = "com.yz.redis.*")
 @MapperScans(value = {
-        @MapperScan(value = "com.yz.*.*.mapper")
+        @MapperScan(value = "com.yz.auth.business.*.mapper")
 })
-// @ComponentScans(value = {
-//         @ComponentScan(value = "com.gh.redis.*"),
-//         @ComponentScan(value = "com.gh.common.*")
-// })
+@ComponentScans(value = {
+        @ComponentScan(value = "com.yz.redis.*"),
+        @ComponentScan(value = "com.yz.common.*")
+})
 public class BaseSecurityAuthApplication {
 
     public static void main(String[] args) {
