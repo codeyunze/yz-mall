@@ -1,4 +1,4 @@
-package com.yz.openInterface;
+package com.yz.openinterface;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
