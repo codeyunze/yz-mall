@@ -1,8 +1,11 @@
-package com.yz;
+package com.yz.search;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 
 /**
  * @ClassName BaseSearchApplication
@@ -13,6 +16,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  */
 @SpringBootApplication
 @EnableConfigurationProperties
+@MapperScan("com.yz.search.business.*.mapper")
+@ComponentScans(value = {
+        @ComponentScan(value = "com.yz.redis.*")
+})
 public class BaseSearchApplication {
     public static void main(String[] args) {
         SpringApplication.run(BaseSearchApplication.class, args);

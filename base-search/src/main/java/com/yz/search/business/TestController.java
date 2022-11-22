@@ -1,8 +1,11 @@
-package com.yz;
+package com.yz.search.business;
 
+import com.yz.redis.util.RedisUtil;
+import com.yz.search.config.MyProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +24,9 @@ public class TestController {
     @Autowired
     private MyProperties properties;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     @Value("${txj.message}")
     private String msg;
 
@@ -32,5 +38,16 @@ public class TestController {
     @RequestMapping(value = "/b")
     public String b() {
         return properties.getMessage();
+    }
+
+    @RequestMapping(value = "/c/{msg}")
+    public String c(@PathVariable(value = "msg") String msg) {
+        redisUtil.insertOrUpdate("3xj", msg);
+        return msg;
+    }
+
+    @RequestMapping(value = "/d/{key}")
+    public Object d(@PathVariable(value = "key") String key) {
+        return redisUtil.get(key);
     }
 }
