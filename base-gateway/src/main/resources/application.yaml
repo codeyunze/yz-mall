@@ -1,0 +1,39 @@
+server:
+  port: 20000
+spring:
+  application:
+    name: base-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: base-search
+          uri: lb://base-search
+          predicates:
+            - Path=/search/**
+            # \u5BF9Header\u8FDB\u884C\u5339\u914D  \u8BF7\u6C42\u4E2D\u5E26\u6709\u8BF7\u6C42\u5934\u540D\u4E3A x-request-id\uFF0C\u5176\u503C\u4E0E \d+ \uFF08\u6574\u6570\uFF09\u6B63\u5219\u8868\u8FBE\u5F0F\u5339\u914D
+            - Header=X-Request-Id, \d+
+          filters:
+            - AddRequestHeader=X-Request-color, red # \u6DFB\u52A0\u8BF7\u6C42\u5934
+            - Check=gender, man  # \u81EA\u5B9A\u4E49\u7684\u8FC7\u6EE4\u5668 CheckGatewayFilterFactory
+            
+            
+        - id: open-interface
+          uri: lb://open-interface
+          predicates:
+            - Path=/api/**
+            
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTION
+            
+              
+            
+                  
+
