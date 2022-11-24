@@ -1,7 +1,9 @@
 package com.yz.search.business;
 
+import com.yz.common.vo.Result;
 import com.yz.redis.util.RedisUtil;
 import com.yz.search.config.MyProperties;
+import com.yz.search.jms.producer.DirectProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -49,5 +51,14 @@ public class TestController {
     @RequestMapping(value = "/d/{key}")
     public Object d(@PathVariable(value = "key") String key) {
         return redisUtil.get(key);
+    }
+
+    @Autowired
+    private DirectProducer producer;
+
+    @RequestMapping(value = "/e/{msg}")
+    public Result e(@PathVariable(value = "msg") String msg){
+        producer.sendMessage(msg);
+        return Result.success();
     }
 }
