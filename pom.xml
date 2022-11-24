@@ -22,6 +22,7 @@
         <module>base-redis-utils</module>
         <module>base-gateway</module>
         <module>base-search</module>
+        <module>open-interface</module>
     </modules>
 
     <properties>

@@ -2,6 +2,7 @@ package com.yz.search.jms.consumer;
 
 import com.rabbitmq.client.Channel;
 import com.yz.common.common.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
@@ -17,18 +18,34 @@ import java.io.IOException;
  * @date : 2022/6/27 23:41
  */
 @Component
+@Slf4j
 public class DirectConsumer {
+
+    Integer stock = 20;
 
     @RabbitListener(queues = Constants.QUEUE_DIRECT)
     public void directReceive(Message message, Channel channel, String msg) throws IOException {
-        System.out.println("consumer1 directReceive message : " + msg);
+        minusStock(1, msg);
         basicAck(message, channel);
     }
 
     @RabbitListener(queues = Constants.QUEUE_DIRECT)
     public void directReceive2(Message message, Channel channel, String msg) throws IOException {
-        System.out.println("consumer2 directReceive message : " + msg);
+        minusStock(2, msg);
         basicAck(message, channel);
+    }
+
+    private void minusStock(Integer index, String msg){
+        if (stock > 0) {
+            try {
+                Thread.sleep((int) (Math.random() * 500) + 100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            log.info(Thread.currentThread().getName() + "----->consumer" + index + " : " + msg + "售卖第" + stock + "张票，库存剩余：" + (--stock));
+        } else {
+            log.info("库存不足：" + stock);
+        }
     }
 
     private void basicAck(Message message, Channel channel) throws IOException {

@@ -1,6 +1,7 @@
-package com.yz.openinterface.common;
+package com.yz.openinterface;
 
 import com.yz.common.vo.Result;
+import com.yz.openinterface.jms.producer.DirectProducer;
 import com.yz.redis.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/demo")
 @Slf4j
-public class DemoController {
+public class TestController {
 
     @Autowired(required = false)
     private RedisUtil redisUtil;
@@ -34,6 +35,17 @@ public class DemoController {
         log.info(color);
         log.info(request.getHeader("X-Request-color"));
         return Result.success(o);
+    }
+
+    @Autowired
+    private DirectProducer producer;
+
+    @RequestMapping(value = "/c")
+    public Result c() {
+        for (int i = 0; i < 100; i++) {
+            producer.sendMessage("order-" + i);
+        }
+        return Result.success();
     }
 
 }

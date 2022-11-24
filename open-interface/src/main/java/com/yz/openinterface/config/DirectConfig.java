@@ -1,14 +1,13 @@
-package com.yz.search.config;
+package com.yz.openinterface.config;
 
 import com.yz.common.common.Constants;
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 /**
  * @author : yunze
- * @date : 2022/6/28 23:44
+ * @date : 2022/11/24 23:40
  */
 @Configuration
 public class DirectConfig {
