@@ -18,8 +18,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>base-common</module>
         <module>base-redis-utils</module>
+        <module>base-common</module>
         <module>base-gateway</module>
         <module>base-search</module>
         <module>open-interface</module>

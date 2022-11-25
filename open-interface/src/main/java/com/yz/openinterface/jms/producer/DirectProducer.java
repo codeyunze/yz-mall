@@ -1,6 +1,6 @@
 package com.yz.openinterface.jms.producer;
 
-import com.yz.common.common.Constants;
+import com.yz.common.Constants;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

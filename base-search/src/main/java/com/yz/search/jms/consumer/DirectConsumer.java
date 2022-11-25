@@ -1,7 +1,7 @@
 package com.yz.search.jms.consumer;
 
 import com.rabbitmq.client.Channel;
-import com.yz.common.common.Constants;
+import com.yz.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.Message;

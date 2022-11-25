@@ -1,4 +1,4 @@
-package com.yz.common.common;
+package com.yz.common;
 
 /**
  * @author : yunze
@@ -50,4 +50,9 @@ public class Constants {
     public static final String DL_QUEUE = "bc-server-queue-dl";
 
     public static final String DL_KEY = "bc.server.key.dl";
+
+    /**
+     * 雪花ID最后一次生成时间，存放到redis的记录KEY
+     */
+    public static final String SNOW_FLAKE_LAST_TIMESTAMP = "SNOW_FLAKE_LAST_TIMESTAMP";
 }

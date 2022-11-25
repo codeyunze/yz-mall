@@ -1,6 +1,6 @@
 package com.yz.openinterface.config;
 
-import com.yz.common.common.Constants;
+import com.yz.common.Constants;
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
