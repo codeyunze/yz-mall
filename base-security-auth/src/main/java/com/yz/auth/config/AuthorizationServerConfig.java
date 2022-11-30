@@ -1,6 +1,7 @@
 package com.yz.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,25 +27,32 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    @Qualifier("redisTokenStore")
     private TokenStore tokenStore;
 
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private CustomizeUserDetailsService userDetailsService;
+
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         // super.configure(endpoints);
         endpoints
-                .authenticationManager(authenticationManager)   // 使用密码模式需要配置
-                // .userDetailsService(userDetailsService)
+                // 使用密码模式需要配置
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService)
                 // .authorizationCodeServices(authorizationCodeServices)
                 // .tokenServices(tokenService())
-                .tokenStore(tokenStore) // 注册redis令牌仓库
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET);   // 支持GET,POST请求
+                // 注册redis令牌仓库
+                .tokenStore(tokenStore)
+                // 支持GET,POST请求
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET);
     }
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(AuthorizationServerSecurityConfigurer security) {
         // super.configure(security);
         security.tokenKeyAccess("permitAll()")
                 .checkTokenAccess("permitAll()")

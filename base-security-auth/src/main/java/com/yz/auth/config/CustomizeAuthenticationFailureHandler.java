@@ -2,11 +2,13 @@ package com.yz.auth.config;
 
 import com.alibaba.fastjson.JSON;
 import com.yz.common.enums.CodeEnum;
+import com.yz.common.exception.BusinessException;
 import com.yz.common.vo.Result;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +21,12 @@ public class CustomizeAuthenticationFailureHandler implements AuthenticationFail
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
         Result result = null;
         if (e instanceof AccountExpiredException) {
-            // 账号过期
-            result = new Result(CodeEnum.AUTHENTICATION_ERROR.get(), null, "账号过期");
+            if (StringUtils.hasText(e.getMessage())) {
+                result = new Result(CodeEnum.BUSINESS_ERROR.get(), null, e.getMessage());
+            } else {
+                // 账号过期
+                result = new Result(CodeEnum.AUTHENTICATION_ERROR.get(), null, "账号过期");
+            }
         } else if (e instanceof BadCredentialsException) {
             // 密码错误
             result = new Result(CodeEnum.AUTHENTICATION_ERROR.get(), null, "密码错误");

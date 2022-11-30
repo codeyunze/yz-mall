@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class CustomizeAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private CustomizeUserDetailsService userDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

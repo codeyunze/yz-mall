@@ -23,6 +23,7 @@
         <module>base-gateway</module>
         <module>base-search</module>
         <module>open-interface</module>
+        <module>base-security-auth</module>
     </modules>
 
     <properties>

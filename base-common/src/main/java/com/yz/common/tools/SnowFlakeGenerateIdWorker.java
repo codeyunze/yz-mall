@@ -48,13 +48,13 @@ public class SnowFlakeGenerateIdWorker {
     /**
      * 工作机器ID(0~31)
      */
-    @Value("${concrete.snowflake.worker-id}")
+    @Value("${base.snowflake.worker-id}")
     private long workerId;
 
     /**
      * 数据中心ID(0~31)
      */
-    @Value("${concrete.snowflake.datacenter-id:0}")
+    @Value("${base.snowflake.datacenter-id:0}")
     private long datacenterId;
 
     /**

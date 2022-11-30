@@ -23,28 +23,6 @@ import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCo
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthorizationCodeServices authorizationCodeServices() {
-        return new InMemoryAuthorizationCodeServices();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 配置认证方式等
-        super.configure(auth);
-    }
-
     @Autowired
     private CustomizeAuthenticationEntryPoint authenticationEntryPoint;
 
@@ -59,6 +37,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomizeSessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+
+    @Autowired
+    private CustomizeUserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthorizationCodeServices authorizationCodeServices() {
+        return new InMemoryAuthorizationCodeServices();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        // oauth2 密码模式需要拿到这个bean
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // 配置认证方式等
+        // super.configure(auth);
+        // 实现UserDetailService接口获取用户信息
+        auth.userDetailsService(userDetailsService);
+    }
 
     /**
      * http相关的配置，包括登入登出、异常处理、会话管理等
@@ -103,6 +108,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 同一账号同时登录最大用户数
                 .maximumSessions(1)
                 // 会话信息过期策略会话信息过期策略(账号被挤下线)
-                .expiredSessionStrategy(sessionInformationExpiredStrategy);
+                // .expiredSessionStrategy(sessionInformationExpiredStrategy)
+        ;
     }
 }
