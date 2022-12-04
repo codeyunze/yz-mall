@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author : gaohan
  * @date : 2022/8/30 23:25
  */
-@Configuration
+// @Configuration
 public class WebConfig implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

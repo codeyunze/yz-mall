@@ -53,5 +53,6 @@ public class CustomizeAuthenticationFailureHandler implements AuthenticationFail
         response.setContentType("text/json;charset=utf-8");
         // 塞到HttpServletResponse中返回给前台
         response.getWriter().write(JSON.toJSONString(result));
+        // response.sendRedirect("http://localhost:20002/login.html");
     }
 }

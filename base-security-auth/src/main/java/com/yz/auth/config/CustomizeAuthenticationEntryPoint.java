@@ -19,6 +19,7 @@ public class CustomizeAuthenticationEntryPoint implements AuthenticationEntryPoi
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         Result result = new Result(CodeEnum.AUTHENTICATION_ERROR.get(), null,"用户未登录");
         response.setContentType("text/json;charset=utf-8");
-        response.getWriter().write(JSON.toJSONString(result));
+        // response.getWriter().write(JSON.toJSONString(result));
+        response.sendRedirect("http://localhost:20002/login.html");
     }
 }

@@ -36,17 +36,23 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private CustomizeUserDetailsService userDetailsService;
 
+    @Autowired
+    private CustomizeAuthorizationCodeServices authorizationCodeServices;
+
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         // super.configure(endpoints);
         endpoints
                 // 使用密码模式需要配置
                 .authenticationManager(authenticationManager)
+                // 刷新令牌授权包含对用户信息的检查
                 .userDetailsService(userDetailsService)
-                // .authorizationCodeServices(authorizationCodeServices)
+                .authorizationCodeServices(authorizationCodeServices)
                 // .tokenServices(tokenService())
                 // 注册redis令牌仓库
                 .tokenStore(tokenStore)
+                // refresh_token是否可以重复使用
+                .reuseRefreshTokens(false)
                 // 支持GET,POST请求
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET);
     }

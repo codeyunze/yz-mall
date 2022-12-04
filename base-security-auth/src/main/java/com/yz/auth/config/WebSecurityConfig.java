@@ -48,7 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthorizationCodeServices authorizationCodeServices() {
-        return new InMemoryAuthorizationCodeServices();
+        /*if (authorizationCodeServices == null) {
+            return new InMemoryAuthorizationCodeServices();
+        }*/
+        return new CustomizeAuthorizationCodeServices();
     }
 
     @Bean
@@ -74,41 +77,47 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // super.configure(http);
-        http.csrf().disable()
-                .authorizeRequests()
-                // 放行接口
-                .antMatchers("/oauth/**", "/maintain/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                // 登入
-                .formLogin().permitAll()
+        http.csrf().disable();
+
+        // 授权
+        http.authorizeRequests()
+                // 放行接口,不需要认证
+                .antMatchers("/oauth/**", "/login.html", "/maintain/**").permitAll()
+                .anyRequest().authenticated();
+
+        // 自定义登录设置
+        http.formLogin().permitAll()
+                // 登录页面设置
+                .loginPage("/login.html")
+                .defaultSuccessUrl("/main.html")
                 // 指定登录接口uri
                 .loginProcessingUrl("/oauth/login")
                 // 指定登录账号参数名
                 .usernameParameter("userAccount")
                 // 指定登录密码参数名
                 .passwordParameter("userPassword")
-                // 登录成功处理逻辑
-                // .successHandler(authenticationSuccessHandler)
-                // 登录失败处理逻辑
-                // .failureHandler(authenticationFailureHandler)
-                .and()
-                // 登出
-                .logout().permitAll()
-                // 登出成功处理逻辑
-                // .logoutSuccessHandler(logoutSuccessHandler)
-                // .and()
-                // 异常处理(权限拒绝、登录失效等)
-                // .exceptionHandling()
-                // 匿名用户访问无权限资源时的异常处理    (加了该处理方案之后，未登录时就不会自动跳到登录页了)
-                // .authenticationEntryPoint(authenticationEntryPoint)
-                .and()
-                // 会话管理
-                .sessionManagement()
+        // 登录成功处理逻辑
+        // .successHandler(authenticationSuccessHandler)
+        // 登录失败处理逻辑
+        .failureHandler(authenticationFailureHandler)
+        ;
+
+        // 自定义登出设置
+        http.logout().permitAll()
+        // 登出成功处理逻辑
+        .logoutSuccessHandler(logoutSuccessHandler);
+
+        // 自定义异常处理(权限拒绝、登录失效等)
+        http.exceptionHandling()
+        // 匿名用户访问无权限资源时的异常处理    (加了该处理方案之后，未登录时就不会自动跳到登录页了)
+        .authenticationEntryPoint(authenticationEntryPoint);
+
+        // 会话管理
+        http.sessionManagement()
                 // 同一账号同时登录最大用户数
                 .maximumSessions(1)
-                // 会话信息过期策略会话信息过期策略(账号被挤下线)
-                // .expiredSessionStrategy(sessionInformationExpiredStrategy)
+        // 会话信息过期策略会话信息过期策略(账号被挤下线)
+        // .expiredSessionStrategy(sessionInformationExpiredStrategy)
         ;
     }
 }
