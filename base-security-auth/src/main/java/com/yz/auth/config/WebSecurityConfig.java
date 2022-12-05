@@ -82,7 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 授权
         http.authorizeRequests()
                 // 放行接口,不需要认证
-                .antMatchers("/oauth/**", "/login.html", "/maintain/**").permitAll()
+                .antMatchers("/oauth/**", "/index.html", "/maintain/**", "/js/**", "/css/**", "/images/**").permitAll()
                 .anyRequest().authenticated();
 
         // 自定义登录设置

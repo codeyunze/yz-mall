@@ -1,5 +1,7 @@
 package com.yz.auth.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.yz.redis.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class CustomizeAuthorizationCodeServices extends RandomValueAuthorizationCodeServices {
 
-    protected final ConcurrentHashMap<String, OAuth2Authentication> authorizationCodeStore = new ConcurrentHashMap<String, OAuth2Authentication>();
+    // protected final ConcurrentHashMap<String, OAuth2Authentication> authorizationCodeStore = new ConcurrentHashMap<String, OAuth2Authentication>();
 
     @Autowired
     private RedisUtil redisUtil;
@@ -31,16 +33,17 @@ public class CustomizeAuthorizationCodeServices extends RandomValueAuthorization
 
     @Override
     protected void store(String code, OAuth2Authentication authentication) {
-        redisUtil.insertOrUpdateByHours(PREFIX + ":" + code, authentication, 2);
+        redisUtil.insertOrUpdateByHours(PREFIX + ":" + code, JSON.toJSONString(authentication), 2);
         System.err.println("授权码：" + code);
-        authorizationCodeStore.put(code, authentication);
+        // authorizationCodeStore.put(code, authentication);
     }
 
     @Override
     protected OAuth2Authentication remove(String code) {
+        Object o = redisUtil.get(PREFIX + ":" + code);
         redisUtil.remove(PREFIX + ":" + code);
-        OAuth2Authentication auth = this.authorizationCodeStore.remove(code);
-        System.err.println("移除授权码：" + code + "[" + auth + "]");
-        return auth;
+        // OAuth2Authentication auth = this.authorizationCodeStore.remove(code);
+        System.err.println("移除授权码：" + code + "[" + o + "]");
+        return JSON.toJavaObject(JSONObject.parseObject(JSON.toJSONString(o)), OAuth2Authentication.class);
     }
 }
