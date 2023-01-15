@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SpringBootApplication
 // @EnableWebSecurity
 @EnableAuthorizationServer
-// @ComponentScan(value = "com.yz.redis.*")
 @MapperScans(value = {
         @MapperScan(value = "com.yz.auth.business.*.mapper")
 })

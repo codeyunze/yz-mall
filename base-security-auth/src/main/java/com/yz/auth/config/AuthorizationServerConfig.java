@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.code.RandomValueAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.sql.DataSource;
@@ -37,7 +38,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private CustomizeUserDetailsService userDetailsService;
 
     @Autowired
-    private CustomizeAuthorizationCodeServices authorizationCodeServices;
+    private RandomValueAuthorizationCodeServices authorizationCodeServices;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
@@ -47,6 +48,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authenticationManager(authenticationManager)
                 // 刷新令牌授权包含对用户信息的检查
                 .userDetailsService(userDetailsService)
+                // 授权码存储方式（Memory / JDBC / Redis）
                 .authorizationCodeServices(authorizationCodeServices)
                 // .tokenServices(tokenService())
                 // 注册redis令牌仓库

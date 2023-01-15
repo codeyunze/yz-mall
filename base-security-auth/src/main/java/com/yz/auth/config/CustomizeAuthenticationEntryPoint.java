@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 匿名用户访问无权限资源时的异常处理（跳转到登录页）
+ */
 @Configuration
 public class CustomizeAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

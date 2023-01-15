@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 
 /**
  * @author : gaohan
@@ -48,9 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthorizationCodeServices authorizationCodeServices() {
-        /*if (authorizationCodeServices == null) {
-            return new InMemoryAuthorizationCodeServices();
-        }*/
+        // if (authorizationCodeServices == null) {
+        //     return new InMemoryAuthorizationCodeServices();
+        // }
         return new CustomizeAuthorizationCodeServices();
     }
 
@@ -82,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 授权
         http.authorizeRequests()
                 // 放行接口,不需要认证
-                .antMatchers("/oauth/**", "/index.html", "/maintain/**", "/js/**", "/css/**", "/images/**").permitAll()
+                .antMatchers("/oauth/**", "/maintain/**", "/js/**", "/css/**", "/images/**").permitAll()
                 .anyRequest().authenticated();
 
         // 自定义登录设置
