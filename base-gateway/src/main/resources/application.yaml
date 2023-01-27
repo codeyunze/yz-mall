@@ -21,6 +21,11 @@ spring:
           uri: lb://open-interface
           predicates:
             - Path=/api/**
+
+        - id: base-security-auth
+          uri: lb://base-security-auth
+          predicates:
+            - Path=/security/**
             
       globalcors:
         cors-configurations:

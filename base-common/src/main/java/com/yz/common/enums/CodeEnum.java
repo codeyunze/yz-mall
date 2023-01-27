@@ -11,7 +11,7 @@ public enum CodeEnum {
     /**
      * 成功
      */
-    SUCCESS(0),
+    SUCCESS(20000),
     /**
      * 业务异常
      */
@@ -20,6 +20,14 @@ public enum CodeEnum {
      * 权限异常
      */
     AUTHENTICATION_ERROR(2),
+    /**
+     * 非法token
+     */
+    ERROR_TOKEN_ILLEGAL(50008),
+    /**
+     * token已经过期
+     */
+    ERROR_TOKEN_EXPIRED(50014),
     /**
      * 系统异常
      */

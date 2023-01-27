@@ -4,17 +4,24 @@
 1. 用户登录客户端应用时，客户端应用直接跳转到授权服务的授权码申请地址
    ```http request
    http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http://localhost:20002/main.html
+   
+   http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http://localhost:9527/index
+   
+   http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http://localhost:9527/auth-redirect
+   
+   http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http://localhost:20002/auth/redirect?redirect=http://localhost:9527/auth-redirect
+   
+   http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http%3A%2F%2Flocalhost%3A20002%2Fauth%2Fredirect%3Fredirect%3Dhttp%3A%2F%2Flocalhost%3A9527%2Fauth-redirect
    ```
    
    参数说明：
- 
+   
     | 参数         |  类型  | 备注                                                                                                                   |
     | ---- |----------------------------------------------------------------------------------------------------------------------|----------|
     | client_id | String | 应用客户端编码                                                                                                              |
     | redirect_uri | String | 重定向地址，验证通过后需要跳转的地址（也就是客户端应用的地址）                                                                                      |
     | response_type | String | 响应方式（**code**：验证通过后跳转的地址会携带一个授权码，可以通过授权码请求`/oauth/token`接口获取account_token令牌；**token**：验证通过后跳转的地址会直接携带account_token令牌；） |
-    
-
+   
 2. 访问上面地址会跳转到授权服务的登录页面
 3. 登录成功后会跳到授权服务提供的一个授权确认页面
 4. 确认成功后，会跳转到先前指定的客户端应用地址，且客户端应用页面的url后面会带上code（授权码），如下：
@@ -22,7 +29,7 @@
    http://localhost:20002/main.html?code=5Zz85f
    ```
 5. 然后客户端应用使用授权码请求授权服务的`/oauth/token`接口，获取account_token令牌
-    
+   
 
 
 ## 授权码模式相关接口信息

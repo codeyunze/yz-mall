@@ -29,4 +29,9 @@ public class DemoController {
         return Result.success(o);
     }
 
+    @RequestMapping(value = "/maintain/{code}")
+    public Result ma(@PathVariable String code) {
+        return Result.success(code);
+    }
+
 }

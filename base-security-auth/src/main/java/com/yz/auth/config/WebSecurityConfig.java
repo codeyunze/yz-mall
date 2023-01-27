@@ -81,14 +81,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 授权
         http.authorizeRequests()
                 // 放行接口,不需要认证
-                .antMatchers("/oauth/**", "/maintain/**", "/js/**", "/css/**", "/images/**").permitAll()
+                .antMatchers("/oauth/**", "/demo/maintain/**", "/js/**", "/css/**", "/images/**", "/auth/redirect").permitAll()
                 .anyRequest().authenticated();
 
         // 自定义登录设置
         http.formLogin().permitAll()
                 // 登录页面设置
                 .loginPage("/login.html")
-                .defaultSuccessUrl("/main.html")
+                // .defaultSuccessUrl("/main.html")
                 // 指定登录接口uri
                 .loginProcessingUrl("/oauth/login")
                 // 指定登录账号参数名
