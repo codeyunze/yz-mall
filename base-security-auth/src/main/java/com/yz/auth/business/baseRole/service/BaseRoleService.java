@@ -15,5 +15,10 @@ import java.util.List;
  */
 public interface BaseRoleService extends IService<BaseRole> {
 
+    /**
+     * 根据用户ID查询该用户的角色
+     * @param userId 用户ID
+     * @return 该用户所拥有的角色列表
+     */
     List<String> queryUserOwnedRoleCodes(String userId);
 }

@@ -3,6 +3,8 @@
 ## 客户端应用通过授权服务登录流程
 1. 用户登录客户端应用时，客户端应用直接跳转到授权服务的授权码申请地址
    ```http request
+   http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http://www.baidu.com
+   
    http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http://localhost:20002/main.html
    
    http://localhost:20002/oauth/authorize?client_id=3xj&response_type=code&scope=all&redirect_uri=http://localhost:9527/index

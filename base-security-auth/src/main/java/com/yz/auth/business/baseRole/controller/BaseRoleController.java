@@ -1,8 +1,8 @@
 package com.yz.auth.business.baseRole.controller;
 
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author gaohan
  * @since 2022-09-13
  */
-@Controller
+@RestController
 @RequestMapping("/baseRole")
 public class BaseRoleController {
 

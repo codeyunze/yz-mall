@@ -1,8 +1,12 @@
 package com.yz.auth.business.baseUser.controller;
 
 
-import org.springframework.stereotype.Controller;
+import com.yz.common.vo.Result;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -12,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author gaohan
  * @since 2022-09-13
  */
-@Controller
-@RequestMapping("/baseUser")
+@RestController
+@RequestMapping("/user")
 public class BaseUserController {
 
+    @GetMapping(value = "/getInfo")
+    public Result getInfo(Authentication authentication) {
+        return new Result(HttpStatus.OK.value(), authentication, HttpStatus.OK.getReasonPhrase());
+    }
 }
 
