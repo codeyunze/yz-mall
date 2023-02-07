@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Version 1.0
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Result implements Serializable {
+public class Result<T> implements Serializable {
 
     /**
      * 返回状态编码
@@ -28,9 +28,9 @@ public class Result implements Serializable {
     /**
      * 返回数据
      */
-    private Object data;
+    private T data;
 
-    public Result(int code, Object data, String message) {
+    public Result(int code, T data, String message) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -72,7 +72,7 @@ public class Result implements Serializable {
      *
      * @return Result
      */
-    public static Result fail() {
+    public static Result failed() {
         return new Result(CodeEnum.BUSINESS_ERROR.get(), null, "失败");
     }
 
@@ -82,7 +82,7 @@ public class Result implements Serializable {
      * @param message 返回前端提示信息
      * @return Result
      */
-    public static Result fail(String message) {
+    public static Result failed(String message) {
         return new Result(CodeEnum.BUSINESS_ERROR.get(), null, message);
     }
 
@@ -93,7 +93,7 @@ public class Result implements Serializable {
      * @param message 返回前端提示信息
      * @return Result
      */
-    public static Result fail(Object data, String message) {
+    public static Result failed(Object data, String message) {
         return new Result(CodeEnum.BUSINESS_ERROR.get(), data, message);
     }
 
@@ -113,11 +113,11 @@ public class Result implements Serializable {
         this.message = message;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }
