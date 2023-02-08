@@ -3,6 +3,7 @@ package com.yz.openinterface.business.shop.order.entity;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @author makejava
  * @since 2023-02-06 23:45:11
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @SuppressWarnings("serial")
 public class ShopOrder extends Model<ShopOrder> {
     // 自增主键
