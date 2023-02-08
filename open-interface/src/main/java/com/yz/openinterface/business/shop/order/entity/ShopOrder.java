@@ -1,11 +1,11 @@
 package com.yz.openinterface.business.shop.order.entity;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 订单表(ShopOrder)表实体类
@@ -24,10 +24,14 @@ public class ShopOrder extends Model<ShopOrder> {
     private String productNumber;
     // 商品数量
     private Integer productQuantity;
-    // 创建时间
-    private Date createDate;
+    /**
+     * 创建时间
+     */
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+
+    private LocalDateTime createDate;
     // 更新时间
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
 
     public Long getId() {
@@ -62,19 +66,19 @@ public class ShopOrder extends Model<ShopOrder> {
         this.productQuantity = productQuantity;
     }
 
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public Date getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 
