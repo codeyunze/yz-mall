@@ -3,8 +3,10 @@ package com.yz.openinterface.business.shop.order.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yz.common.extension.api.ApiController;
+import com.yz.common.vo.PageFilter;
 import com.yz.common.vo.Result;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yz.common.vo.TableResult;
 import com.yz.openinterface.business.shop.order.entity.ShopOrder;
 import com.yz.openinterface.business.shop.order.service.ShopOrderService;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +33,13 @@ public class ShopOrderController extends ApiController {
     /**
      * 分页查询所有数据
      *
-     * @param page      分页对象
-     * @param shopOrder 查询实体
+     * @param filter 分页查询实体
      * @return 所有数据
      */
     @GetMapping
-    public Result<Page<ShopOrder>> selectAll(Page<ShopOrder> page, ShopOrder shopOrder) {
-        return success(this.shopOrderService.page(page, new QueryWrapper<>(shopOrder)));
+    public TableResult<List<ShopOrder>> selectAll(@RequestBody PageFilter<ShopOrder> filter) {
+        Page<ShopOrder> orderPage = this.shopOrderService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
+        return success(orderPage.getRecords(), orderPage.getTotal(), orderPage.getPages());
     }
 
     /**
@@ -58,7 +60,7 @@ public class ShopOrderController extends ApiController {
      * @return 新增结果
      */
     @PostMapping
-    public Result insert(@RequestBody ShopOrder shopOrder) {
+    public Result<Boolean> insert(@RequestBody ShopOrder shopOrder) {
         return success(this.shopOrderService.save(shopOrder));
     }
 
@@ -69,7 +71,7 @@ public class ShopOrderController extends ApiController {
      * @return 修改结果
      */
     @PutMapping
-    public Result update(@RequestBody ShopOrder shopOrder) {
+    public Result<Boolean> update(@RequestBody ShopOrder shopOrder) {
         return success(this.shopOrderService.updateById(shopOrder));
     }
 
@@ -80,7 +82,7 @@ public class ShopOrderController extends ApiController {
      * @return 删除结果
      */
     @DeleteMapping
-    public Result delete(@RequestParam("idList") List<Long> idList) {
+    public Result<Boolean> delete(@RequestParam("idList") List<Long> idList) {
         return success(this.shopOrderService.removeByIds(idList));
     }
 }
