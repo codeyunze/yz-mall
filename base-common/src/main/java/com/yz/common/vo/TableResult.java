@@ -13,40 +13,100 @@ import java.util.Collections;
  * @Version 1.0
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TableResult extends Result{
+public class TableResult<T> extends Result<T> {
 
-    private Integer total;
+    private static final long serialVersionUID = 1L;
 
-    public TableResult(int code, Object data, String message) {
-        super(code, data, message);
-    }
+    /**
+     * 数据总数
+     */
+    private Long total;
 
-    public TableResult(int code, Integer total, Object data, String message) {
+    /**
+     * 数据总页数
+     */
+    private Long pages;
+
+    /**
+     * 列表数据查询响应信息
+     *
+     * @param code    响应编码
+     * @param data    列表数据
+     * @param total   总数
+     * @param pages   页面总数
+     * @param message 说明消息
+     */
+    public TableResult(int code, T data, Long total, Long pages, String message) {
         super(code, data, message);
         this.total = total;
+        this.pages = pages;
     }
 
-    public static TableResult success(Integer total, Object data) {
-        return new TableResult(CodeEnum.SUCCESS.get(), total, data, "成功");
+    /**
+     * 响应成功
+     *
+     * @param data  列表数据
+     * @param total 总数
+     * @param pages 页面总数
+     * @param <T>   返回列表数据类型
+     * @return 返回查询列表数据
+     */
+    public static <T> TableResult<T> success(T data, Long total, Long pages) {
+        return new TableResult<T>(CodeEnum.SUCCESS.get(), data, total, pages, "成功");
     }
 
+    /**
+     * 响应成功
+     *
+     * @param data 列表数据
+     * @param <T>  返回列表数据类型
+     * @return 返回查询列表数据
+     */
+    public static <T> TableResult<T> success(T data) {
+        return TableResult.success(data, null, null);
+    }
+
+    /**
+     * 响应成功
+     *
+     * @return 返回成功编码与成功消息
+     */
     public static TableResult success() {
-        return new TableResult(CodeEnum.SUCCESS.get(), 0, Collections.emptyList(), "成功");
+        return TableResult.success(Collections.emptyList());
     }
 
-    public static TableResult fail() {
-        return new TableResult(CodeEnum.BUSINESS_ERROR.get(), 0, Collections.emptyList(), "失败");
+    /**
+     * 返回查询失败信息
+     *
+     * @return 返回查询失败编码与失败消息
+     */
+    public static TableResult failed() {
+        return TableResult.failed("失败");
     }
 
-    public static TableResult fail(String message) {
-        return new TableResult(CodeEnum.BUSINESS_ERROR.get(), 0, Collections.emptyList(), message);
+    /**
+     * 返回查询失败信息，及失败原因
+     *
+     * @param message 失败原因
+     * @return 返回查询失败编码与失败原因
+     */
+    public static TableResult failed(String message) {
+        return new TableResult(CodeEnum.BUSINESS_ERROR.get(), Collections.emptyList(), null, null, message);
     }
 
-    public Integer getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(Long total) {
         this.total = total;
+    }
+
+    public Long getPages() {
+        return pages;
+    }
+
+    public void setPages(Long pages) {
+        this.pages = pages;
     }
 }

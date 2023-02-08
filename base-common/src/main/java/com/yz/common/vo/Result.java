@@ -15,6 +15,8 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result<T> implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * 返回状态编码
      */
@@ -39,7 +41,7 @@ public class Result<T> implements Serializable {
     /**
      * 成功
      *
-     * @return Result
+     * @return 请求成功返回数据
      */
     public static Result success() {
         return new Result(CodeEnum.SUCCESS.get(), null, "成功");
@@ -50,9 +52,9 @@ public class Result<T> implements Serializable {
      * 成功
      *
      * @param data 返回前端数据信息
-     * @return Result
+     * @return 请求成功返回数据
      */
-    public static Result success(Object data) {
+    public static <T> Result success(T data) {
         return new Result(CodeEnum.SUCCESS.get(), data, "成功");
     }
 
@@ -61,16 +63,16 @@ public class Result<T> implements Serializable {
      *
      * @param data    返回前端数据信息
      * @param message 返回前端提示信息
-     * @return Result
+     * @return 请求成功返回数据
      */
-    public static Result success(Object data, String message) {
-        return new Result(CodeEnum.SUCCESS.get(), data, message);
+    public static <T> Result<T> success(T data, String message) {
+        return new Result<T>(CodeEnum.SUCCESS.get(), data, message);
     }
 
     /**
      * 失败
      *
-     * @return Result
+     * @return 请求成功返回数据
      */
     public static Result failed() {
         return new Result(CodeEnum.BUSINESS_ERROR.get(), null, "失败");
@@ -80,7 +82,7 @@ public class Result<T> implements Serializable {
      * 失败
      *
      * @param message 返回前端提示信息
-     * @return Result
+     * @return 请求成功返回数据
      */
     public static Result failed(String message) {
         return new Result(CodeEnum.BUSINESS_ERROR.get(), null, message);
@@ -91,10 +93,10 @@ public class Result<T> implements Serializable {
      *
      * @param data    返回前端数据信息
      * @param message 返回前端提示信息
-     * @return Result
+     * @return 请求成功返回数据
      */
-    public static Result failed(Object data, String message) {
-        return new Result(CodeEnum.BUSINESS_ERROR.get(), data, message);
+    public static <T> Result<T> failed(T data, String message) {
+        return new Result<T>(CodeEnum.BUSINESS_ERROR.get(), data, message);
     }
 
     public int getCode() {
