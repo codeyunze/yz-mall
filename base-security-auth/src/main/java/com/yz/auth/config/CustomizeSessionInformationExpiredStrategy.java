@@ -17,7 +17,7 @@ import java.io.IOException;
 public class CustomizeSessionInformationExpiredStrategy implements SessionInformationExpiredStrategy {
     @Override
     public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
-        Result result = Result.fail();
+        Result result = Result.failed();
         HttpServletResponse httpServletResponse = event.getResponse();
         httpServletResponse.setContentType("text/json;charset=utf-8");
         httpServletResponse.getWriter().write(JSON.toJSONString(result));

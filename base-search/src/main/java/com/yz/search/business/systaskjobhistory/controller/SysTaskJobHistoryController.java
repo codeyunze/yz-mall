@@ -28,6 +28,6 @@ public class SysTaskJobHistoryController {
     @RequestMapping(value = "/list")
     public TableResult list() {
         List<SysTaskJobHistory> list = service.list();
-        return TableResult.success(list.size(), list);
+        return TableResult.success(list);
     }
 }
