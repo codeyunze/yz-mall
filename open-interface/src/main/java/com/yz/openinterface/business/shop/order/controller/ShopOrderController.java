@@ -2,6 +2,7 @@ package com.yz.openinterface.business.shop.order.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.yz.common.extension.api.ApiController;
 import com.yz.common.vo.PageFilter;
 import com.yz.common.vo.Result;
@@ -9,6 +10,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.common.vo.TableResult;
 import com.yz.openinterface.business.shop.order.entity.ShopOrder;
 import com.yz.openinterface.business.shop.order.service.ShopOrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,6 +25,7 @@ import java.util.List;
  * @author makejava
  * @since 2023-02-06 23:45:11
  */
+@Api(tags = "订单信息模块")
 @RestController
 @RequestMapping("shopOrder")
 public class ShopOrderController extends ApiController {
@@ -37,6 +42,9 @@ public class ShopOrderController extends ApiController {
      * @return 所有数据
      */
     @GetMapping
+    @ApiOperation(value = "分页查询所有数据")
+    @ApiImplicitParam(name = "filter",value = "分页查询实体", required = false)
+    @ApiOperationSupport(author = "yunze")
     public TableResult<List<ShopOrder>> selectAll(@RequestBody PageFilter<ShopOrder> filter) {
         Page<ShopOrder> orderPage = this.shopOrderService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
         return success(orderPage.getRecords(), orderPage.getTotal(), orderPage.getPages());
