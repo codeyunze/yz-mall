@@ -45,10 +45,10 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().
                 title("订单模块").
-                contact("小凡").
+                contact("yunze").
                 version("1.0 version").
                 termsOfServiceUrl("api/order/**").
-                description("用户模块-这是一个 cloud+nacos+gateway+knife4j 的项目")
+                description("开放接口服务-这是一个 cloud+nacos+gateway+rabbitmq+knife4j 的项目")
                 .build();
     }
 }

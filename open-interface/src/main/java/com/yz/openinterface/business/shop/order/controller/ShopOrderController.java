@@ -46,7 +46,7 @@ public class ShopOrderController extends ApiController {
     @ApiOperation(value = "分页查询所有数据")
     // @ApiImplicitParam(name = "filter", value = "分页查询实体")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "Content-Type", value = "application/json", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = "header", name = "Content-Type", value = "application/json", dataType = "String", required = false),
             @ApiImplicitParam(paramType = "body", name = "filter", value = "分页查询实体")
     })
     @ApiOperationSupport(author = "yunze")

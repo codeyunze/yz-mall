@@ -3,6 +3,8 @@ package com.yz.openinterface.business.shop.order.entity;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,24 +15,36 @@ import java.time.LocalDateTime;
  * @author makejava
  * @since 2023-02-06 23:45:11
  */
+@ApiModel("订单表(ShopOrder)表实体类")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @SuppressWarnings("serial")
 public class ShopOrder extends Model<ShopOrder> {
+
     // 自增主键
+    @ApiModelProperty("自增主键")
     private Long id;
+
     // 订单编号
+    @ApiModelProperty("订单编号")
     private String orderNumber;
+
     // 商品编号
+    @ApiModelProperty("商品编号")
     private String productNumber;
+
     // 商品数量
+    @ApiModelProperty("商品数量")
     private Integer productQuantity;
+
     /**
      * 创建时间
      */
+    @ApiModelProperty("创建时间")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-
     private LocalDateTime createDate;
+
     // 更新时间
+    @ApiModelProperty("更新时间")
     private LocalDateTime updateDate;
 
 
