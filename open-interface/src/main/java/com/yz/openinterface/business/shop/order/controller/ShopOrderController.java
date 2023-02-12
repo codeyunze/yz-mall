@@ -2,16 +2,17 @@ package com.yz.openinterface.business.shop.order.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.yz.common.extension.api.ApiController;
 import com.yz.common.vo.PageFilter;
 import com.yz.common.vo.Result;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.common.vo.TableResult;
 import com.yz.openinterface.business.shop.order.entity.ShopOrder;
 import com.yz.openinterface.business.shop.order.service.ShopOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,9 +42,13 @@ public class ShopOrderController extends ApiController {
      * @param filter 分页查询实体
      * @return 所有数据
      */
-    @GetMapping
+    @PostMapping(value = "/list")
     @ApiOperation(value = "分页查询所有数据")
-    @ApiImplicitParam(name = "filter",value = "分页查询实体", required = false)
+    // @ApiImplicitParam(name = "filter", value = "分页查询实体")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Content-Type", value = "application/json", dataType = "String", required = true),
+            @ApiImplicitParam(paramType = "body", name = "filter", value = "分页查询实体")
+    })
     @ApiOperationSupport(author = "yunze")
     public TableResult<List<ShopOrder>> selectAll(@RequestBody PageFilter<ShopOrder> filter) {
         Page<ShopOrder> orderPage = this.shopOrderService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));

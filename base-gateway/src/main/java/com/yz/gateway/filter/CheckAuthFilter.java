@@ -31,6 +31,7 @@ public class CheckAuthFilter implements GlobalFilter, Ordered {
         String firstUri = uri.split("/")[1];
         List<String> excludes = new ArrayList<>();
         excludes.add("security");
+        excludes.add("v2");
 
         if (!excludes.contains(firstUri)) {
             String token = exchange.getRequest().getHeaders().getFirst("token");

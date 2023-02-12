@@ -18,8 +18,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  * @Date 2023/2/9 22:45
  * @Version 1.0
  */
-@Configuration
-@EnableSwagger2WebMvc
+// @Configuration
+// @EnableSwagger2WebMvc
 public class SwaggerConfiguration {
 
     /*引入Knife4j提供的扩展类*/
@@ -32,7 +32,7 @@ public class SwaggerConfiguration {
 
     @Bean(value = "defaultApi2")
     public Docket defaultApi2() {
-        String groupName = "1.0版本接口";
+        String groupName = "2.0版本接口";
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
                         //.title("swagger-bootstrap-ui-demo RESTful APIs")

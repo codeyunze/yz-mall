@@ -5,16 +5,17 @@ spring:
     name: base-gateway
   cloud:
     gateway:
+      #设置路由：路由id、路由到微服务的uri、断言
       routes:
-        - id: base-search
-          uri: lb://base-search
+        - id: base-search         # 路由ID，全局唯一，建议配置服务名
+          uri: lb://base-search   #lb 整合负载均衡器ribbon,loadbalancer
           predicates:
-            - Path=/search/**
-            # \u5BF9Header\u8FDB\u884C\u5339\u914D  \u8BF7\u6C42\u4E2D\u5E26\u6709\u8BF7\u6C42\u5934\u540D\u4E3A x-request-id\uFF0C\u5176\u503C\u4E0E \d+ \uFF08\u6574\u6570\uFF09\u6B63\u5219\u8868\u8FBE\u5F0F\u5339\u914D
-            - Header=X-Request-Id, \d+
-          filters:
-            - AddRequestHeader=X-Request-color, red # \u6DFB\u52A0\u8BF7\u6C42\u5934
-            - Check=gender, man  # \u81EA\u5B9A\u4E49\u7684\u8FC7\u6EE4\u5668 CheckGatewayFilterFactory
+            - Path=/search/**     # 断言，路径相匹配的进行路由
+#            # Header匹配 请求中带有请求头名为 x‐request‐id，其值与 \d+ 正则表达式匹配
+#            - Header=X-Request-Id, \d+
+#          filters:
+#            - AddRequestHeader=X-Request-color, red # \u6DFB\u52A0\u8BF7\u6C42\u5934
+#            - Check=gender, man  # \u81EA\u5B9A\u4E49\u7684\u8FC7\u6EE4\u5668 CheckGatewayFilterFactory
             
             
         - id: open-interface
@@ -26,7 +27,12 @@ spring:
           uri: lb://base-security-auth
           predicates:
             - Path=/security/**
-            
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+          
+      
       globalcors:
         cors-configurations:
           '[/**]':

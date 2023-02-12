@@ -1,4 +1,4 @@
-package com.yz.common.tools;
+package com.yz.common.utils;
 
 import com.yz.common.Constants;
 import com.yz.redis.util.RedisUtil;
@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
  * 序列号: 同一数据中心，同一服务，同一时间戳下，可产生4096个序列号(0~4095)
  */
 @Component
-public class SnowFlakeGenerateIdWorker {
+public class SnowflakeUtil {
 
     @Autowired
     private RedisUtil redisUtil;
