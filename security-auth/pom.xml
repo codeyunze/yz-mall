@@ -92,13 +92,6 @@
         </dependency>
         <!-- mybatis-plus [end]  -->
 
-        <!-- mybatis分页插件 -->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.4.5</version>
-        </dependency>
-
         <!--集成mybatis-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -106,5 +99,6 @@
             <version>2.2.2</version>
         </dependency>
     </dependencies>
+
 
 </project>
