@@ -3,8 +3,7 @@ package com.yz.openinterface.business.shop.order.entity;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,86 +14,44 @@ import java.time.LocalDateTime;
  * @author makejava
  * @since 2023-02-06 23:45:11
  */
-@ApiModel("订单表(ShopOrder)表实体类")
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @SuppressWarnings("serial")
 public class ShopOrder extends Model<ShopOrder> {
 
-    // 自增主键
-    @ApiModelProperty("自增主键")
+    /**
+     * 自增主键
+     */
     private Long id;
 
-    // 订单编号
-    @ApiModelProperty("订单编号")
+    /**
+     * 订单编号 0000012
+     */
     private String orderNumber;
 
-    // 商品编号
-    @ApiModelProperty("商品编号")
+    /**
+     * 商品编号 SP001
+     */
     private String productNumber;
 
-    // 商品数量
-    @ApiModelProperty("商品数量")
+    /**
+     * 商品数量 7
+     * @required
+     */
     private Integer productQuantity;
 
     /**
-     * 创建时间
+     * 创建时间 2023-01-01 01:01:01
      */
-    @ApiModelProperty("创建时间")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
 
-    // 更新时间
-    @ApiModelProperty("更新时间")
+    /**
+     * 更新时间
+     *
+     * @ignore 加上该注解表示接口文档不展示该字段
+     */
     private LocalDateTime updateDate;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    public String getProductNumber() {
-        return productNumber;
-    }
-
-    public void setProductNumber(String productNumber) {
-        this.productNumber = productNumber;
-    }
-
-    public Integer getProductQuantity() {
-        return productQuantity;
-    }
-
-    public void setProductQuantity(Integer productQuantity) {
-        this.productQuantity = productQuantity;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public LocalDateTime getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
-    }
 
     /**
      * 获取主键值

@@ -3,17 +3,12 @@ package com.yz.openinterface.business.shop.order.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.yz.common.extension.api.ApiController;
 import com.yz.common.vo.PageFilter;
 import com.yz.common.vo.Result;
 import com.yz.common.vo.TableResult;
 import com.yz.openinterface.business.shop.order.entity.ShopOrder;
 import com.yz.openinterface.business.shop.order.service.ShopOrderService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,12 +16,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 订单表(ShopOrder)表控制层
+ * 订单信息模块
+ * 订单信息的列表、详情、新增、更新、删除操作接口
  *
- * @author makejava
+ * @author yunze
+ * @version 1.0
  * @since 2023-02-06 23:45:11
  */
-@Api(tags = "订单信息模块")
 @RestController
 @RequestMapping("shopOrder")
 public class ShopOrderController extends ApiController {
@@ -39,17 +35,12 @@ public class ShopOrderController extends ApiController {
     /**
      * 分页查询所有数据
      *
-     * @param filter 分页查询实体
-     * @return 所有数据
+     * @param filter 分页查询实体类
+     * @return 订单信息列表数据
+     * @apiNote 接口详细描述：根据filter过滤条件，分页查询订单信息
+     * @deprecated 加上该注解，则表示接口已经废弃
      */
-    @PostMapping(value = "/list")
-    @ApiOperation(value = "分页查询所有数据")
-    // @ApiImplicitParam(name = "filter", value = "分页查询实体")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", name = "Content-Type", value = "application/json", dataType = "String", required = false),
-            @ApiImplicitParam(paramType = "body", name = "filter", value = "分页查询实体")
-    })
-    @ApiOperationSupport(author = "yunze")
+    @PostMapping("/list")
     public TableResult<List<ShopOrder>> selectAll(@RequestBody PageFilter<ShopOrder> filter) {
         Page<ShopOrder> orderPage = this.shopOrderService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
         return success(orderPage.getRecords(), orderPage.getTotal(), orderPage.getPages());
@@ -93,9 +84,10 @@ public class ShopOrderController extends ApiController {
      *
      * @param idList 主键结合
      * @return 删除结果
+     * @exception Exception 没有数据时会删除失败
      */
     @DeleteMapping
-    public Result<Boolean> delete(@RequestParam("idList") List<Long> idList) {
+    public Result<Boolean> delete(@RequestParam("idList") List<Long> idList) throws Exception {
         return success(this.shopOrderService.removeByIds(idList));
     }
 }

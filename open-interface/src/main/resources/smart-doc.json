@@ -1,0 +1,11 @@
+{
+  "outPath": "./src/main/resources/static/doc",
+  "projectName": "开放接口服务",
+  "packageFilters": "com.yz.openinterface.business.*",
+  "openUrl": "http://159.75.135.41:7700/api",
+  "appToken": "4c2f646e96324f38a7d91acf45bc9367",
+  "debugEnvName":"开发环境",
+  "debugEnvUrl":"http://159.75.135.41:20001",
+  "tornaDebug": true,
+  "replace": true
+}
