@@ -5,6 +5,11 @@
 #      password: 123456
 #      roles: admin
 
+logging:
+  level:
+    org.springframework: DEBUG
+
+
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -22,3 +27,7 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+  thymeleaf:
+    prefix: /static
+    suffix: .html
+    cache: false
