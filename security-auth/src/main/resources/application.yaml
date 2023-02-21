@@ -7,7 +7,8 @@
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework:
+      security: debug
 
 
 spring:
@@ -31,3 +32,8 @@ spring:
     prefix: /static
     suffix: .html
     cache: false
+  redis:
+    host: 159.75.135.41
+    database: 1
+    port: 63791
+    password: 123456

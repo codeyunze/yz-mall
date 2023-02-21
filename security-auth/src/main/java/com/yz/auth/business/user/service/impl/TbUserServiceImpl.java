@@ -33,9 +33,6 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserDao, TbUser> implements
     @Autowired
     private TbPermissionService permissionService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Override
     public TbUser getByUsername(String username) {
         LambdaQueryWrapper<TbUser> query = new LambdaQueryWrapper<>();
