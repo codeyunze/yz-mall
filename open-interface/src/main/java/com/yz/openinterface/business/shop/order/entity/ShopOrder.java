@@ -25,23 +25,27 @@ public class ShopOrder extends Model<ShopOrder> {
     private Long id;
 
     /**
-     * 订单编号 0000012
+     * 订单编号
+     * @mock 0000012
      */
     private String orderNumber;
 
     /**
-     * 商品编号 SP001
+     * 商品编号
+     * @mock SP001
      */
     private String productNumber;
 
     /**
-     * 商品数量 7
+     * 商品数量
      * @required
+     * @mock 7
      */
     private Integer productQuantity;
 
     /**
-     * 创建时间 2023-01-01 01:01:01
+     * 创建时间
+     * @mock 2023-01-01 01:01:01
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * 订单信息模块
@@ -41,8 +43,13 @@ public class ShopOrderController extends ApiController {
      * @deprecated 加上该注解，则表示接口已经废弃
      */
     @PostMapping("/list")
-    public TableResult<List<ShopOrder>> selectAll(@RequestBody PageFilter<ShopOrder> filter) {
-        Page<ShopOrder> orderPage = this.shopOrderService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
+    public TableResult<List<ShopOrder>> selectAll(@RequestBody PageFilter<ShopOrder> filter) throws ExecutionException, InterruptedException {
+        // Page<ShopOrder> orderPage = this.shopOrderService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
+        Future<Page<ShopOrder>> future = shopOrderService.selectAllPage(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
+
+
+
+        Page<ShopOrder> orderPage = future.get();
         return success(orderPage.getRecords(), orderPage.getTotal(), orderPage.getPages());
     }
 
@@ -82,12 +89,14 @@ public class ShopOrderController extends ApiController {
     /**
      * 删除数据
      *
-     * @param idList 主键结合
+     * @param idList 主键集合
      * @return 删除结果
      * @exception Exception 没有数据时会删除失败
      */
+
+
     @DeleteMapping
-    public Result<Boolean> delete(@RequestParam("idList") List<Long> idList) throws Exception {
+    public Result<Boolean> delete(@RequestParam("idList") List<Long> idList) {
         return success(this.shopOrderService.removeByIds(idList));
     }
 }

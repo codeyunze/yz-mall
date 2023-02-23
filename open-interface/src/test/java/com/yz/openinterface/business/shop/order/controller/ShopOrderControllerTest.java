@@ -43,15 +43,17 @@ class ShopOrderControllerTest {
                 "    }\n" +
                 "\n" +
                 "}";
+        for (int i = 0; i < 50; i++) {
+            mockMvc.perform(MockMvcRequestBuilders
+                            .post("/shopOrder/list")
+                            .content(json.getBytes()) // 传json参数
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .header("Authorization", "Bearer ********-****-****-****-************")
+                    ).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andDo(print());
+        }
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/shopOrder/list")
-                        .content(json.getBytes()) // 传json参数
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", "Bearer ********-****-****-****-************")
-                ).andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(print());
         System.out.println("---------------end---------------");
     }
 
