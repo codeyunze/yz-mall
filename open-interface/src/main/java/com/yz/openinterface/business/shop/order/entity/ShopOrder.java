@@ -38,7 +38,7 @@ public class ShopOrder extends Model<ShopOrder> {
 
     /**
      * 商品数量
-     * @mock 7
+     * @mock 100
      */
     private Integer productQuantity;
 
