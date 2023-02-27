@@ -44,7 +44,7 @@ public class ShopOrder extends Model<ShopOrder> {
 
     /**
      * 创建时间
-     * @mock 2023-02-02 02:01:02
+     * @mock 2023-02-02 02:02:02
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
