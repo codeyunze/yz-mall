@@ -1,0 +1,11 @@
+{
+  "outPath": "./src/main/resources/static/doc",
+  "projectName": "文件服务",
+  "packageFilters": "com.yz.basefile.*",
+  "openUrl": "http://159.75.135.41:7700/api",
+  "appToken": "1322031e2075402da99148017a43445f",
+  "debugEnvName":"开发环境",
+  "debugEnvUrl":"http://159.75.135.41:20001",
+  "tornaDebug": true,
+  "replace": true
+}
