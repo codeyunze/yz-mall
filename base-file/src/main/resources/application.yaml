@@ -12,11 +12,11 @@ spring:
   servlet:
     multipart:
       # 单文件上传大小
-      max-file-size: 15mb
+      max-file-size: 15MB
       # 单次请求的文件大小（总体文件的大小）
-      max-request-size: 20mb
+      max-request-size: 20MB
       # 当上传文件达到指定配置量的时候文件内容将不再临时存在内存中（防止文件过大导致出现outofmemoryerror），而是以临时文件保存在磁盘
-      file-size-threshold: 512kb
+      file-size-threshold: 512KB
       # 保存在磁盘的临时文件地址
       location: d:/3xj/temp
 
