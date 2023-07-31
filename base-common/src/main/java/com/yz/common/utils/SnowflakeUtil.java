@@ -1,7 +1,7 @@
 package com.yz.common.utils;
 
 import com.yz.common.Constants;
-import com.yz.redis.util.RedisUtil;
+import com.yz.redistools.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

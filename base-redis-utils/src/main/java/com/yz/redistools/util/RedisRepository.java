@@ -1,4 +1,4 @@
-package com.yz.redis.util;
+package com.yz.redistools.util;
 
 import cn.hutool.core.lang.Assert;
 import lombok.extern.slf4j.Slf4j;

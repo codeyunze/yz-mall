@@ -1,4 +1,4 @@
-package com.yz.redis.util;
+package com.yz.redistools.util;
 
 import cn.hutool.core.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;

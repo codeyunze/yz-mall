@@ -1,7 +1,7 @@
 package com.yz.auth.controller;
 
 import com.yz.common.vo.Result;
-import com.yz.redis.util.RedisUtil;
+import com.yz.redistools.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

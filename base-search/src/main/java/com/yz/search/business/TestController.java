@@ -1,7 +1,7 @@
 package com.yz.search.business;
 
 import com.yz.common.vo.Result;
-import com.yz.redis.util.RedisUtil;
+import com.yz.redistools.util.RedisUtil;
 import com.yz.search.config.MyProperties;
 import com.yz.search.jms.producer.DirectProducer;
 import org.springframework.beans.factory.annotation.Autowired;

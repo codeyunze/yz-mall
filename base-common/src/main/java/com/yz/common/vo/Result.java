@@ -3,6 +3,7 @@ package com.yz.common.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yz.common.enums.CodeEnum;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 
 /**
@@ -30,6 +31,7 @@ public class Result<T> implements Serializable {
     /**
      * 返回数据
      */
+    @Valid
     private T data;
 
     public Result(int code, T data, String message) {

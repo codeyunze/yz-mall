@@ -1,4 +1,4 @@
-package com.yz.redis.config;
+package com.yz.redistools.config;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
