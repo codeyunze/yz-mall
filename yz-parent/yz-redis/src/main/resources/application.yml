@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  redis:
+    database: 0
+    timeout: 3000
+    # 哨兵模式
+    sentinel:
+      # redis哨兵集群名称
+      master: mymaster
+      nodes: 192.168.3.39:26379,192.168.3.39:26380,192.168.3.39:26381
+    lettuce:
+      pool:
+        max-idle: 50
+        min-idle: 10
+        max-active: 100
+        max-wait: 1000
