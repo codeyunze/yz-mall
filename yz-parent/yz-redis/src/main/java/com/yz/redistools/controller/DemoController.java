@@ -40,4 +40,22 @@ public class DemoController {
         }
     }
 
+    @RequestMapping("/test_cluster")
+    public void testCluster() {
+        int i = 1000;
+        while (true) {
+            try {
+                stringRedisTemplate.opsForValue().set("test-cluster-" + i, String.valueOf(i));
+                log.info("设置key：{}", "test-" + i);
+                Thread.sleep(1000);
+                String val = stringRedisTemplate.opsForValue().get("test-cluster-" + i);
+                i++;
+                log.info("获取{}值: {}", "test-" + i, val);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("出现异常：{}", e.getMessage());
+            }
+        }
+    }
+
 }

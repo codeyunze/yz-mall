@@ -6,10 +6,16 @@ spring:
     database: 0
     timeout: 3000
     # 哨兵模式
-    sentinel:
+#    sentinel:
       # redis哨兵集群名称
-      master: mymaster
-      nodes: 192.168.3.39:26379,192.168.3.39:26380,192.168.3.39:26381
+#      master: mymaster
+#      nodes: 192.168.3.39:26379,192.168.3.39:26380,192.168.3.39:26381
+    # 集群模式
+    cluster:
+      nodes: 192.168.3.39:8001,192.168.3.39:8004,192.168.3.129:8002,192.168.3.129:8005,192.168.3.130:8003,192.168.3.130:8006
+    # redis访问密码
+    password: foobared
+
 #    lettuce:
 #      pool:
 #        max-idle: 50
