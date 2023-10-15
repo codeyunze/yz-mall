@@ -6,6 +6,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author yunze
  * @date 2023/7/31 0031 23:20
@@ -29,7 +31,7 @@ public class DemoController {
         int i = 1;
         while (true) {
             try {
-                stringRedisTemplate.opsForValue().set("test-" + i, String.valueOf(i));
+                stringRedisTemplate.opsForValue().set("test-" + i, String.valueOf(i), 10, TimeUnit.MINUTES);
                 log.info("设置key：{}", "test-" + i);
                 i++;
                 Thread.sleep(1000);
@@ -58,4 +60,8 @@ public class DemoController {
         }
     }
 
+    @RequestMapping("/test_lock")
+    public void testLock() {
+
+    }
 }

@@ -25,6 +25,7 @@
         <module>open-interface</module>
         <module>base-security-auth</module>
         <module>security-auth</module>
+        <module>yz-parent/yz-websocket</module>
     </modules>
 
     <properties>

@@ -49,6 +49,12 @@
                 <version>${spring-boot.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>3.23.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -1,5 +1,6 @@
 package com.yz.openinterface.business.shop.order.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 /**
- * @ClassName ShopOrderControllerTest
- * @Description TODO
- * @Author yunze
- * @Date 2023/2/12 22:14
- * @Version 1.0
+ * ShopOrderControllerTest
  */
+@Slf4j
 // 让JUnit运行Spring的测试环境,获得Spring环境的上下文的支持
 @SpringBootTest
 // 让JUnit运行Spring的测试环境,获得Spring环境的上下文的支持
