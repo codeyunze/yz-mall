@@ -1,5 +1,6 @@
 package com.yz.redistools.mapper;
 
+import com.yz.redistools.entity.Product;
 import org.springframework.stereotype.Repository;
 
 /**

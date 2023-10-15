@@ -44,12 +44,12 @@ public class DemoController {
 
     @RequestMapping("/test_cluster")
     public void testCluster() {
-        int i = 1000;
+        int i = 1;
         while (true) {
             try {
                 stringRedisTemplate.opsForValue().set("test-cluster-" + i, String.valueOf(i));
                 log.info("设置key：{}", "test-" + i);
-                Thread.sleep(1000);
+                Thread.sleep(10);
                 String val = stringRedisTemplate.opsForValue().get("test-cluster-" + i);
                 i++;
                 log.info("获取{}值: {}", "test-" + i, val);
@@ -60,8 +60,4 @@ public class DemoController {
         }
     }
 
-    @RequestMapping("/test_lock")
-    public void testLock() {
-
-    }
 }

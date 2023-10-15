@@ -1,17 +1,16 @@
 package com.yz.redistools.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.redisson.Redisson;
+import org.redisson.config.ClusterServersConfig;
 import org.redisson.config.Config;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author : yunze
@@ -20,19 +19,37 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedissonConfig {
 
-    @Value("${spring.redis.host:127.0.0.1}")
-    private Integer REDIS_HOST;
-
-    @Value("${spring.redis.port:6379}")
-    private Integer REDIS_PORT;
-
-    @Value("${spring.redis.database:0}")
-    private Integer REDIS_DATABASE;
+    @Autowired
+    private RedisProperties redisProperties;
 
     @Bean
     public Redisson redisson() {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://" + REDIS_HOST + ":" + REDIS_PORT).setDatabase(REDIS_DATABASE);
+
+        if (redisProperties.getCluster() != null) {
+            // 集群模式配置
+            List<String> nodes = redisProperties.getCluster().getNodes();
+            List<String> clusterNodes = new ArrayList<>();
+
+            nodes.forEach(node -> {
+                clusterNodes.add("redis://" + node);
+            });
+
+            config.useClusterServers().addNodeAddress(clusterNodes.toArray(new String[0]));
+
+            if (StringUtils.hasText(redisProperties.getPassword())) {
+                // 设置密码，如果有配置该信息
+                config.useClusterServers().setPassword(redisProperties.getPassword());
+            }
+        } else {
+            // 单节点模式配置
+            config.useSingleServer().setAddress("redis://" + redisProperties.getHost() + ":" + redisProperties.getPort()).setDatabase(redisProperties.getDatabase());
+
+            if (StringUtils.hasText(redisProperties.getPassword())) {
+                // 设置密码，如果有配置该信息
+                config.useSingleServer().setPassword(redisProperties.getPassword());
+            }
+        }
         return (Redisson) Redisson.create(config);
     }
 
@@ -42,7 +59,7 @@ public class RedissonConfig {
      * @param redisConnectionFactory
      * @return
      */
-    @Bean
+    /*@Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
@@ -61,5 +78,5 @@ public class RedissonConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
-    }
+    }*/
 }
