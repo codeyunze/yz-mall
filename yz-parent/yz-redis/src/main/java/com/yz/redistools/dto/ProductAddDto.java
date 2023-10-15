@@ -1,4 +1,4 @@
-package com.yz.redistools.entity;
+package com.yz.redistools.dto;
 
 import lombok.Data;
 
@@ -9,12 +9,7 @@ import java.math.BigDecimal;
  * @date : 2023/9/19 12:51
  */
 @Data
-public class Product {
-
-    /**
-     * 商品ID
-     */
-    private Long id;
+public class ProductAddDto {
 
     /**
      * 商品名称
@@ -25,4 +20,9 @@ public class Product {
      * 价格
      */
     private BigDecimal price;
+
+    /**
+     * 库存
+     */
+    private Integer stock;
 }

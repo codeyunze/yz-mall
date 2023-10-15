@@ -2,6 +2,7 @@ package com.yz.redistools.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,15 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/demo")
 public class DemoController {
 
+    /**
+     * 当前版本
+     */
+    @Value("${server.version}")
+    private String serviceVersion;
+
     @RequestMapping("/redis")
     public String redis() {
+        log.info("Current service version {}", serviceVersion);
         return "success!";
     }
 
