@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * 订单表(ShopOrder)表实体类
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-06 23:45:11
  */
 @Data

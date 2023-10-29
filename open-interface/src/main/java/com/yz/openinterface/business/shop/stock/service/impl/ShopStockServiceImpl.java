@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
  * 库存表(ShopStock)表服务实现类
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-06 22:44:54
  */
 @Service("shopStockService")

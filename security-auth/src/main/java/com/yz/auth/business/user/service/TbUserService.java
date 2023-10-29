@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 /**
  * 用户表(TbUser)表服务接口
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-14 23:35:56
  */
 public interface TbUserService extends IService<TbUser> {

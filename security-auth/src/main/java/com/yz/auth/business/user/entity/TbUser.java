@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * 用户表(TbUser)表实体类
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-14 23:35:56
  */
 @Data

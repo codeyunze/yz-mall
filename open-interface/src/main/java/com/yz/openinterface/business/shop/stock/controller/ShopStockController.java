@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 库存表(ShopStock)表控制层
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-06 22:44:54
  */
 @RestController

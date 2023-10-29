@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 /**
  * 订单表(ShopOrder)表服务接口
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-06 23:45:11
  */
 public interface ShopOrderService extends IService<ShopOrder> {

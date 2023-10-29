@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 权限表(TbPermission)表服务接口
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-14 23:47:14
  */
 public interface TbPermissionService extends IService<TbPermission> {

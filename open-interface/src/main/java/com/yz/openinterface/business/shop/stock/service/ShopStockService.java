@@ -6,7 +6,7 @@ import com.yz.openinterface.business.shop.stock.entity.ShopStock;
 /**
  * 库存表(ShopStock)表服务接口
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-06 22:44:54
  */
 public interface ShopStockService extends IService<ShopStock> {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
  * 角色权限表(TbRolePermission)表服务实现类
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-14 23:47:45
  */
 @Service("tbRolePermissionService")

@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * 角色权限表(TbRolePermission)表实体类
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-14 23:47:45
  */
 @SuppressWarnings("serial")

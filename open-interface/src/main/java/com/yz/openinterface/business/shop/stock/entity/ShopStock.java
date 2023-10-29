@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * 库存表(ShopStock)表实体类
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-06 22:44:54
  */
 @SuppressWarnings("serial")

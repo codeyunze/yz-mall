@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * 角色表(TbRole)表实体类
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-14 23:46:48
  */
 @SuppressWarnings("serial")

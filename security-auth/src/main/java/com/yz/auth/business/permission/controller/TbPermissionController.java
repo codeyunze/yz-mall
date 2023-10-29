@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 权限表(TbPermission)表控制层
  *
- * @author makejava
+ * @author yunze
  * @since 2023-02-14 23:47:14
  */
 @RestController
