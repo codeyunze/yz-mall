@@ -1,0 +1,17 @@
+
+spring:
+  datasource:
+    dynamic:
+      primary: product
+      strict: false
+      datasource:
+        product:
+          url: jdbc:mysql://127.0.0.1:3306/t_mall_product?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        stock:
+          url: jdbc:mysql://127.0.0.1:3306/t_mall_stock?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
