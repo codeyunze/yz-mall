@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DynamicDataSourceAspect implements Ordered {
 
-    @Before("within(com.yz.*) && @annotation(ds)")
+    @Before("within(com.yz.dynamic.datasource.one.service.impl.*) && @annotation(ds)")
     public void before(JoinPoint joinPoint, DS ds) {
         DynamicDataSource.name.set(ds.value());
         log.info("选择的数据源：{}", ds.value());

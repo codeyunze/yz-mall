@@ -22,7 +22,7 @@ import java.util.Map;
 @Component
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
-    public static ThreadLocal<DataSourceTypeEnum> name = new ThreadLocal<>();
+    public static ThreadLocal<String> name = new ThreadLocal<>();
 
     /**
      * 注入的bean对应 {@link DataSourceConfig#productDataSource()}
@@ -47,8 +47,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     public void afterPropertiesSet() {
         // 为targetDataSources初始化所有数据源
         Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DataSourceTypeEnum.product, productDataSource);
-        targetDataSources.put(DataSourceTypeEnum.stock, stockDataSource);
+        targetDataSources.put(DataSourceTypeEnum.product.get(), productDataSource);
+        targetDataSources.put(DataSourceTypeEnum.stock.get(), stockDataSource);
         super.setTargetDataSources(targetDataSources);
 
         // 设置默认数据源

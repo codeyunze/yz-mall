@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service("tProductService")
 public class TProductServiceImpl extends ServiceImpl<TProductMapper, TProduct> implements TProductService {
 
-    @DS(DataSourceTypeEnum.product)
+    @DS("product")
     @Override
     public Integer save(ProductAddDto dto) {
         dto.setId(IdUtil.getSnowflake().nextId());

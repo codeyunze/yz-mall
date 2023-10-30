@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Insert;
  */
 public interface TStockMapper extends BaseMapper<TStock> {
 
-    @Insert("INSERT INTO t_stock(id, productId, num) VALUES (#{id}, #{productId}, #{num})")
+    @Insert("INSERT INTO t_stock(id, product_id, num) VALUES (#{id}, #{productId}, #{num})")
     Integer save(StockAddDto dto);
 }
 
