@@ -1,6 +1,8 @@
 package com.yz.dynamic.datasource.one.dto;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 /**
@@ -23,6 +25,7 @@ public class StockAddDto extends Model<StockAddDto> {
     /**
      * 商品id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long productId;
 
     /**

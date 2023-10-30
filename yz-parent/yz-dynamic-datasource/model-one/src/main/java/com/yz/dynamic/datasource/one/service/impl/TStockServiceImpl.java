@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service("tStockService")
 public class TStockServiceImpl extends ServiceImpl<TStockMapper, TStock> implements TStockService {
 
-    @DS("stock")
+    @DS(DataSourceTypeEnum.stock)
     @Override
     public Integer save(StockAddDto dto) {
         dto.setId(IdUtil.getSnowflake().nextId());

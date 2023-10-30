@@ -20,5 +20,5 @@ public @interface DS {
      * 设置数据源
      * 默认：product
      */
-    String value() default "product";
+    DataSourceTypeEnum value() default DataSourceTypeEnum.product;
 }
