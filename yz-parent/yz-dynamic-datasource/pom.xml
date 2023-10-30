@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>model-one</module>
+        <module>model-two</module>
     </modules>
 
     <properties>
