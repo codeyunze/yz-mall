@@ -1,3 +1,14 @@
+CREATE TABLE t_product
+(
+    id          BIGINT         NOT NULL PRIMARY KEY COMMENT '主键id',
+    `name`      VARCHAR(255)   NOT NULL COMMENT '商品名称',
+    price       DECIMAL(15, 2) NOT NULL DEFAULT 0 COMMENT '商品价格',
+    create_date DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_date DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    invalid     TINYINT        NOT NULL DEFAULT 0 COMMENT '逻辑删除，0：有效数据；1：无效数据'
+) ENGINE = INNODB CHARSET = utf8 COMMENT = '商品信息';
+
+
 CREATE TABLE t_stock
 (
     id          BIGINT   NOT NULL PRIMARY KEY COMMENT '主键id',
@@ -9,12 +20,13 @@ CREATE TABLE t_stock
 ) ENGINE = INNODB CHARSET = utf8 COMMENT = '库存信息';
 
 
-CREATE TABLE t_product
+CREATE TABLE t_order
 (
-    id          BIGINT         NOT NULL PRIMARY KEY COMMENT '主键id',
-    `name`      VARCHAR(255)   NOT NULL COMMENT '商品名称',
-    price       DECIMAL(15, 2) NOT NULL DEFAULT 0 COMMENT '商品价格',
-    create_date DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_date DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    invalid     TINYINT        NOT NULL DEFAULT 0 COMMENT '逻辑删除，0：有效数据；1：无效数据'
-) ENGINE = INNODB CHARSET = utf8 COMMENT = '商品信息';
+    id          BIGINT   NOT NULL PRIMARY KEY COMMENT '主键id',
+    user_id     BIGINT   NOT NULL COMMENT '用户ID',
+    product_id  BIGINT   NOT NULL COMMENT '商品id',
+    num         INT      NOT NULL DEFAULT 0 COMMENT '数量',
+    create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    invalid     TINYINT  NOT NULL DEFAULT 0 COMMENT '逻辑删除，0：有效数据；1：无效数据'
+) ENGINE = INNODB CHARSET = utf8 COMMENT = '订单信息';

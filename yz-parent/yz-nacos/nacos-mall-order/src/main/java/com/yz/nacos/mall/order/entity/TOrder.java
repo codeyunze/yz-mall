@@ -1,0 +1,64 @@
+package com.yz.nacos.mall.order.entity;
+
+import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.Data;
+
+import java.io.Serializable;
+
+/**
+ * 订单信息(TOrder)表实体类
+ *
+ * @author yunze
+ * @since 2023-11-05 19:59:16
+ */
+@Data
+public class TOrder extends Model<TOrder> {
+
+    private static final long serialVesionUID = 1L;
+
+    /**
+     * 主键ID
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+
+
+    /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
+     * 商品id
+     */
+    private Long productId;
+
+    /**
+     * 数量
+     */
+    private Integer num;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createDate;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateDate;
+
+    /**
+     * 逻辑删除，0：有效数据；1：无效数据
+     */
+    @TableLogic
+    private Integer invalid;
+
+
+}
+
