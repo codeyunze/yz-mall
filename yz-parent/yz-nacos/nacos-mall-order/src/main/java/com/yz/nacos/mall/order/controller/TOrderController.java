@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2023-11-05 19:59:16
  */
 @RestController
-@RequestMapping("tOrder")
+@RequestMapping("order")
 public class TOrderController extends ApiController {
 
     /**
@@ -62,8 +62,8 @@ public class TOrderController extends ApiController {
      * @return 新增结果
      */
     @PostMapping("/add")
-    public Result<Boolean> insert(@RequestBody @Validated TOrder tOrder) {
-        return success(this.tOrderService.save(tOrder));
+    public Result<TOrder> insert(@RequestBody @Validated TOrder tOrder) {
+        return success(this.tOrderService.saveOrder(tOrder));
     }
 
     /**

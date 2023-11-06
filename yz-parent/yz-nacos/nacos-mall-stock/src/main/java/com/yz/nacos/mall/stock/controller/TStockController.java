@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2023-11-05 15:59:36
  */
 @RestController
-@RequestMapping("tStock")
+@RequestMapping("stock")
 public class TStockController extends ApiController {
 
     /**
@@ -90,6 +90,18 @@ public class TStockController extends ApiController {
     @PostMapping("/delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.tStockService.removeById(id));
+    }
+
+    /**
+     * 扣减指定商品的库存
+     *
+     * @param productId 商品ID
+     * @param num       扣减数量
+     */
+    @RequestMapping("/deduct")
+    public Result<Boolean> deduct(@RequestParam("productId") Long productId, @RequestParam("num") Integer num) {
+        boolean deduct = this.tStockService.deduct(productId, num);
+        return deduct ? success(true) : failed("库存扣减失败");
     }
 }
 

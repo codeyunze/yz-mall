@@ -11,5 +11,6 @@ import com.yz.nacos.mall.stock.entity.TStock;
  */
 public interface TStockService extends IService<TStock> {
 
+    boolean deduct(Long productId, Integer num);
 }
 
