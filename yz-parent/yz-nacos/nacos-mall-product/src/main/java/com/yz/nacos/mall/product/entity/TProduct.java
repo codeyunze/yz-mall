@@ -1,9 +1,8 @@
-package com.yz.nacos.mall.order.entity;
+package com.yz.nacos.mall.product.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -13,13 +12,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 订单信息(TOrder)表实体类
+ * 商品信息(TProduct)表实体类
  *
  * @author yunze
- * @since 2023-11-05 19:59:16
+ * @since 2023-11-07 23:47:54
  */
 @Data
-public class TOrder extends Model<TOrder> {
+public class TProduct extends Model<TProduct> {
 
     private static final long serialVesionUID = 1L;
 
@@ -31,19 +30,14 @@ public class TOrder extends Model<TOrder> {
 
 
     /**
-     * 用户ID
+     * 商品名称
      */
-    private Long accountId;
+    private String name;
 
     /**
-     * 商品id
+     * 商品价格
      */
-    private Long productId;
-
-    /**
-     * 数量
-     */
-    private Integer num;
+    private BigDecimal price;
 
     /**
      * 创建时间
@@ -61,10 +55,6 @@ public class TOrder extends Model<TOrder> {
     @TableLogic
     private Integer invalid;
 
-    /**
-     * 订单金额
-     */
-    @TableField(exist = false)
-    private BigDecimal amount;
+
 }
 

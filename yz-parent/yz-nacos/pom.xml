@@ -28,6 +28,8 @@
     </properties>
 
     <modules>
+        <module>nacos-mall-account</module>
+        <module>nacos-mall-product</module>
         <module>nacos-mall-stock</module>
         <module>nacos-mall-order</module>
     </modules>

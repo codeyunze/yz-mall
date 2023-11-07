@@ -1,10 +1,8 @@
 package com.yz.nacos.mall.stock.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.nacos.mall.stock.mapper.TStockMapper;
 import com.yz.nacos.mall.stock.entity.TStock;
+import com.yz.nacos.mall.stock.mapper.TStockMapper;
 import com.yz.nacos.mall.stock.service.TStockService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

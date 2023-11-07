@@ -23,10 +23,22 @@ CREATE TABLE t_stock
 CREATE TABLE t_order
 (
     id          BIGINT   NOT NULL PRIMARY KEY COMMENT '主键id',
-    user_id     BIGINT   NOT NULL COMMENT '用户ID',
+    account_id  BIGINT   NOT NULL COMMENT '用户ID',
     product_id  BIGINT   NOT NULL COMMENT '商品id',
     num         INT      NOT NULL DEFAULT 0 COMMENT '数量',
     create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     invalid     TINYINT  NOT NULL DEFAULT 0 COMMENT '逻辑删除，0：有效数据；1：无效数据'
 ) ENGINE = INNODB CHARSET = utf8 COMMENT = '订单信息';
+
+
+CREATE TABLE t_account
+(
+    id           BIGINT         NOT NULL PRIMARY KEY COMMENT '主键id',
+    `name`       VARCHAR(36)    NOT NULL COMMENT '姓名',
+    cash_balance DECIMAL(15, 2) NOT NULL DEFAULT '0.00' COMMENT '余额',
+    create_date  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_date  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    invalid      TINYINT        NOT NULL DEFAULT 0 COMMENT '逻辑删除，0：有效数据；1：无效数据'
+) ENGINE = INNODB
+  CHARSET = utf8 COMMENT = '账号信息';
