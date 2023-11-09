@@ -46,6 +46,11 @@ public class TOrder extends Model<TOrder> {
     private Integer num;
 
     /**
+     * 订单状态，0：下单未支付；1：下单已支付
+     */
+    private Integer state;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createDate;
