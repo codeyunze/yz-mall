@@ -15,6 +15,6 @@ public enum DataSourceTypeEnum {
     /**
      * 库存数据源
      */
-    stock;
+    storage;
 
 }

@@ -1,7 +1,5 @@
 package com.yz.local.transaction;
 
-import cn.hutool.core.util.IdUtil;
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,7 +34,7 @@ public class LocalTransaction {
             preparedStatement = connection.prepareStatement(sql);
 
             // 设置参数
-            preparedStatement.setLong(1, IdUtil.getSnowflakeNextId());
+            preparedStatement.setLong(1, 1L);
             preparedStatement.setString(2, "王五");
             preparedStatement.setBigDecimal(3, BigDecimal.valueOf(2000));
 

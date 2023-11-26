@@ -10,7 +10,7 @@ spring:
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-        stock:
+        storage:
           url: jdbc:mysql://127.0.0.1:3306/t_mall_stock?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true
           username: root
           password: 123456

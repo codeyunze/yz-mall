@@ -9,7 +9,7 @@ CREATE TABLE t_product
 ) ENGINE = INNODB CHARSET = utf8 COMMENT = '商品信息';
 
 
-CREATE TABLE t_stock
+CREATE TABLE t_storage
 (
     id          BIGINT   NOT NULL PRIMARY KEY COMMENT '主键id',
     product_id  BIGINT   NOT NULL COMMENT '商品id',

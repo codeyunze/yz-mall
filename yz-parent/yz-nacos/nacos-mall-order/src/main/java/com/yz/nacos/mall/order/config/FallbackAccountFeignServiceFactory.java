@@ -1,6 +1,6 @@
 package com.yz.nacos.mall.order.config;
 
-import com.yz.nacos.mall.order.feign.TStockFeignService;
+import com.yz.nacos.mall.order.feign.TStorageFeignService;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class FallbackAccountFeignServiceFactory implements FallbackFactory<TStockFeignService> {
+public class FallbackAccountFeignServiceFactory implements FallbackFactory<TStorageFeignService> {
     @Override
-    public TStockFeignService create(Throwable throwable) {
+    public TStorageFeignService create(Throwable throwable) {
 
-        return new TStockFeignService() {
+        return new TStorageFeignService() {
             @Override
             public Result<Boolean> deduct(Long productId, Integer num) {
                 log.info("账户服务异常降级了");
