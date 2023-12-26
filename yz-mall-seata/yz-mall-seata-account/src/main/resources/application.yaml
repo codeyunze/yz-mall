@@ -14,15 +14,15 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 159.75.135.41:8848
+        server-addr: 159.75.135.41:8999
 
 seata:
   application-id: ${spring.application.name}
   # seata 服务分组，要与服务端配置service.vgroup_mapping的后缀对应
-  tx-service-group: t_mall_tx_group
-  service:
-    vgroup-mapping:
-      t_mall_tx_group: guangzhou
+#  tx-service-group: t_mall_tx_group
+#  service:
+#    vgroup-mapping:
+#      t_mall_tx_group: guangzhou
   registry:
     type: nacos
     nacos:
@@ -31,8 +31,8 @@ seata:
   config:
     type: nacos
     nacos:
-      server-addr: 159.75.135.41:8848
+      server-addr: 159.75.135.41:8999
       namespace: f0357fda-3e2d-42ae-ac6f-3848aaecf0db
       group: SEATA_GROUP
       data-id: seataServer.properties
-#      context-path: /nacos
+      context-path: /nacos
