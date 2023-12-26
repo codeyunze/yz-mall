@@ -14,7 +14,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.3.19:8848
+        server-addr: 159.75.135.41:8848
         
 seata:
   application-id: ${spring.application.name}
@@ -31,7 +31,7 @@ seata:
   config:
     type: nacos
     nacos:
-      server-addr: 192.168.3.19:8848
+      server-addr: 159.75.135.41:8848
       namespace: f0357fda-3e2d-42ae-ac6f-3848aaecf0db
       group: SEATA_GROUP
       data-id: seataServer.properties
