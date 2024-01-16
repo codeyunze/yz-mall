@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.seata.tcc.order.dto.TccOrderDto;
 import com.yz.mall.seata.tcc.order.entity.TccOrder;
+import com.yz.mall.seata.tcc.order.service.BussinessService;
 import com.yz.mall.seata.tcc.order.service.TccOrderService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
@@ -33,6 +34,9 @@ public class TccOrderController extends ApiController {
     @Resource
     private TccOrderService tOrderService;
 
+    @Resource
+    private BussinessService bussinessService;
+
     /**
      * 分页查询所有数据
      *
@@ -58,13 +62,10 @@ public class TccOrderController extends ApiController {
 
     /**
      * 新增数据
-     *
-     * @param tOrder 实体对象
-     * @return 新增结果
      */
     @PostMapping("/add")
     public Result<TccOrder> insert(@RequestBody @Validated TccOrderDto dto) {
-        return success(this.tOrderService.saveOrder(dto));
+        return success(this.bussinessService.saveOrder(dto));
     }
 
     /**

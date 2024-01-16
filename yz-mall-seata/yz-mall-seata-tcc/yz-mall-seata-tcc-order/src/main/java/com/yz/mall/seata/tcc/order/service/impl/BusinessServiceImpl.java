@@ -37,7 +37,7 @@ public class BusinessServiceImpl implements BussinessService {
         stockFeignService.deduct(order.getProductId(), order.getNum());
 
         // 扣减账户金额
-        accountFeignService.deduct(order.getAccountId(), order.getAmount());
+        accountFeignService.deduct(order.getAccountId(), order.getMoney());
 
         return tccOrder;
     }

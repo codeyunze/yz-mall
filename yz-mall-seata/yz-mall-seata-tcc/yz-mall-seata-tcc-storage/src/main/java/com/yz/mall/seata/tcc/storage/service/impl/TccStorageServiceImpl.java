@@ -8,6 +8,8 @@ import io.seata.rm.tcc.api.BusinessActionContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 /**
  * 库存信息(TccStorage)表服务实现类
  *
@@ -29,14 +31,14 @@ public class TccStorageServiceImpl extends ServiceImpl<TccStorageMapper, TccStor
 
     @Override
     public boolean commit(BusinessActionContext actionContext) {
-        Long productId = (Long) actionContext.getActionContext("productId");
+        Long productId = Long.parseLong(Objects.requireNonNull(actionContext.getActionContext("productId")).toString());
         Integer deductNum = (Integer) actionContext.getActionContext("deductNum");
         return baseMapper.deductFreezeStorage(productId, deductNum) > 0;
     }
 
     @Override
     public boolean rollback(BusinessActionContext actionContext) {
-        Long productId = (Long) actionContext.getActionContext("productId");
+        Long productId = Long.parseLong(Objects.requireNonNull(actionContext.getActionContext("productId")).toString());
         Integer deductNum = (Integer) actionContext.getActionContext("deductNum");
         return baseMapper.unfreezeStorage(productId, deductNum) > 0;
     }

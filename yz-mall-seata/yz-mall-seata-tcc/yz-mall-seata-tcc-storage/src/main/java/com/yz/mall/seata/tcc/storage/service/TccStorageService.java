@@ -23,8 +23,8 @@ public interface TccStorageService extends IService<TccStorage> {
      * @param deductNum 扣减库存数量
      * @return 是否扣减成功
      */
-    @TwoPhaseBusinessAction(name = "deduct", commitMethod = "commit", rollbackMethod = "rollback", useTCCFence = true)
-    boolean deduct(@BusinessActionContextParameter(paramName = "accountId") Long accountId,
+    @TwoPhaseBusinessAction(name = "deductionOfInventoryQuantity", commitMethod = "commit", rollbackMethod = "rollback", useTCCFence = true)
+    boolean deduct(@BusinessActionContextParameter(paramName = "productId") Long productId,
                    @BusinessActionContextParameter(paramName = "deductNum") Integer deductNum);
 
 

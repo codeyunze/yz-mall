@@ -5,6 +5,7 @@ import com.yz.mall.seata.tcc.order.dto.TccOrderDto;
 import com.yz.mall.seata.tcc.order.entity.TccOrder;
 import io.seata.rm.tcc.api.BusinessActionContext;
 import io.seata.rm.tcc.api.BusinessActionContextParameter;
+import io.seata.rm.tcc.api.LocalTCC;
 import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
 
 /**
@@ -13,6 +14,7 @@ import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
  * @author yunze
  * @since 2023-11-05 19:59:16
  */
+@LocalTCC
 public interface TccOrderService extends IService<TccOrder> {
 
     /**

@@ -44,6 +44,11 @@ public class TccOrder extends Model<TccOrder> {
     private Integer num;
 
     /**
+     * 金额
+     */
+    private BigDecimal money;
+
+    /**
      * 订单状态，0：下单未支付；1：下单已支付；-1：下单失败
      */
     private Integer state;
@@ -63,11 +68,5 @@ public class TccOrder extends Model<TccOrder> {
      */
     @TableLogic
     private Integer invalid;
-
-    /**
-     * 订单金额
-     */
-    @TableField(exist = false)
-    private BigDecimal amount;
 }
 

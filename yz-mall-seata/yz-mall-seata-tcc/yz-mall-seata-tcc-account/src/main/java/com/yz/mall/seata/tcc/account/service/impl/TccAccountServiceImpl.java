@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 账号信息(TAccount)表服务实现类
@@ -35,7 +36,7 @@ public class TccAccountServiceImpl extends ServiceImpl<TccAccountMapper, TccAcco
 
     @Override
     public boolean commit(BusinessActionContext actionContext) {
-        Long accountId = (Long) actionContext.getActionContext("accountId");
+        Long accountId = Long.parseLong(Objects.requireNonNull(actionContext.getActionContext("accountId")).toString());
         Object money = actionContext.getActionContext("amountToDeduct");
         BigDecimal amountToDeduct = new BigDecimal(String.valueOf(money));
         // 实际扣减已经被冻结的金额
@@ -44,7 +45,7 @@ public class TccAccountServiceImpl extends ServiceImpl<TccAccountMapper, TccAcco
 
     @Override
     public boolean rollback(BusinessActionContext actionContext) {
-        Long accountId = (Long) actionContext.getActionContext("accountId");
+        Long accountId = Long.parseLong(Objects.requireNonNull(actionContext.getActionContext("accountId")).toString());
         Object money = actionContext.getActionContext("amountToDeduct");
         BigDecimal amountToDeduct = new BigDecimal(String.valueOf(money));
         // 回滚时解冻被冻结的金额

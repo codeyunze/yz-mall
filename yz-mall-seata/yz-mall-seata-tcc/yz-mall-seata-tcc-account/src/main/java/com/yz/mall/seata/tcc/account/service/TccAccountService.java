@@ -26,7 +26,7 @@ public interface TccAccountService extends IService<TccAccount> {
      * @param amountToDeduct 扣减金额
      * @return 是否扣减成功
      */
-    @TwoPhaseBusinessAction(name = "deduct", commitMethod = "commit", rollbackMethod = "rollback", useTCCFence = true)
+    @TwoPhaseBusinessAction(name = "deductionOfAccountBalance", commitMethod = "commit", rollbackMethod = "rollback", useTCCFence = true)
     boolean deduct(@BusinessActionContextParameter(paramName = "accountId") Long accountId,
                    @BusinessActionContextParameter(paramName = "amountToDeduct") BigDecimal amountToDeduct);
 

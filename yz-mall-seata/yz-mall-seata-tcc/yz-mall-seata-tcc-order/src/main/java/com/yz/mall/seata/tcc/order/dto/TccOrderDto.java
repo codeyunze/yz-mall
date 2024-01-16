@@ -34,6 +34,6 @@ public class TccOrderDto implements Serializable {
     /**
      * 订单金额
      */
-    private BigDecimal amount;
+    private BigDecimal money;
 }
 
