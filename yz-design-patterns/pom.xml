@@ -9,10 +9,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>yz-mall-seata</artifactId>
+	<artifactId>yz-design-patterns</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>yz-mall-seata</name>
-	<description>yz-mall-seata</description>
+	<name>yz-design-patterns</name>
+	<description>yz-design-patterns</description>
 	<packaging>pom</packaging>
 
 
@@ -24,26 +24,31 @@
 	</properties>
 
 	<modules>
-		<module>yz-mall-seata-at</module>
-		<module>yz-mall-seata-tcc</module>
-		<module>yz-mall-seata-xa</module>
+		<module>yz-design-factory</module>
+		<module>yz-design-factory-strategy</module>
 	</modules>
 
 	<dependencies>
 		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
 		</dependency>
 	</dependencies>
 
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>com.yz</groupId>
-				<artifactId>yz-tools</artifactId>
-				<version>${yz-common.version}</version>
-			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 </project>

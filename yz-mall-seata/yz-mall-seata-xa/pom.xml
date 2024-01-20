@@ -5,14 +5,14 @@
 
 	<parent>
 		<groupId>com.yz</groupId>
-		<artifactId>yz-mall</artifactId>
+		<artifactId>yz-mall-seata</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>yz-mall-seata</artifactId>
+	<artifactId>yz-mall-seata-xa</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>yz-mall-seata</name>
-	<description>yz-mall-seata</description>
+	<name>yz-mall-seata-xa</name>
+	<description>yz-mall-seata-xa</description>
 	<packaging>pom</packaging>
 
 
@@ -20,30 +20,14 @@
 		<java.version>8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<yz-common.version>0.0.1-SNAPSHOT</yz-common.version>
 	</properties>
 
 	<modules>
-		<module>yz-mall-seata-at</module>
-		<module>yz-mall-seata-tcc</module>
-		<module>yz-mall-seata-xa</module>
+
 	</modules>
 
 	<dependencies>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
-		</dependency>
+
 	</dependencies>
 
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.yz</groupId>
-				<artifactId>yz-tools</artifactId>
-				<version>${yz-common.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>
