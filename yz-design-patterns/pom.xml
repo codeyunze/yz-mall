@@ -25,6 +25,7 @@
 
 	<modules>
 		<module>yz-design-factory</module>
+		<module>yz-design-strategy</module>
 		<module>yz-design-factory-strategy</module>
 	</modules>
 
