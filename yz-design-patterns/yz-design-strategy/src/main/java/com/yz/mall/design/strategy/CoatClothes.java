@@ -1,18 +1,19 @@
 package com.yz.mall.design.strategy;
 
 /**
+ * 衣服-外套
  * @author yunze
  * @date 2024/1/22 12:58
  */
-public class CoatClothes extends Clothes {
+public class CoatClothes implements Clothes {
 
     @Override
-    void type() {
+    public void type() {
         System.out.println("外套");
     }
 
     @Override
-    void function() {
+    public void function() {
         System.out.println("防风");
     }
 }

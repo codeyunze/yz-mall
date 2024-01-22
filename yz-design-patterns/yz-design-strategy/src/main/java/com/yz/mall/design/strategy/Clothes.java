@@ -5,23 +5,23 @@ package com.yz.mall.design.strategy;
  * @author yunze
  * @date 2024/1/22 12:49
  */
-public abstract class Clothes {
+public interface Clothes {
 
-    public void print() {
+    /*public void print() {
         System.out.println("---------衣服属性---------");
         System.out.println("衣服类型：");
         this.type();
         System.out.println("衣服功能：");
         this.function();
-    }
+    }*/
 
     /**
      * 衣服类型
      */
-    abstract void type();
+    void type();
 
     /**
      * 衣服功能
      */
-    abstract void function();
+    void function();
 }

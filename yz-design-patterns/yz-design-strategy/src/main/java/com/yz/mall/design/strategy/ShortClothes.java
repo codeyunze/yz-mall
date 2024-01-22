@@ -1,10 +1,12 @@
 package com.yz.mall.design.strategy;
 
 /**
+ * 衣服-短袖
+ *
  * @author yunze
  * @date 2024/1/22 12:54
  */
-public class ShortClothes extends Clothes {
+public class ShortClothes implements Clothes {
 
     @Override
     public void type() {

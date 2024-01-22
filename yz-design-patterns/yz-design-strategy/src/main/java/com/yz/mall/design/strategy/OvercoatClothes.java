@@ -1,18 +1,19 @@
 package com.yz.mall.design.strategy;
 
 /**
+ * 衣服-大衣
  * @author yunze
  * @date 2024/1/22 13:01
  */
-public class OvercoatClothes extends Clothes{
+public class OvercoatClothes implements Clothes {
 
     @Override
-    void type() {
+    public void type() {
         System.out.println("大衣");
     }
 
     @Override
-    void function() {
+    public void function() {
         System.out.println("御寒");
     }
 }
