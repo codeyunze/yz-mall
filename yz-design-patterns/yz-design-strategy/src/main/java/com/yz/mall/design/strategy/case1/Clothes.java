@@ -1,4 +1,4 @@
-package com.yz.mall.design.strategy;
+package com.yz.mall.design.strategy.case1;
 
 /**
  * 衣服

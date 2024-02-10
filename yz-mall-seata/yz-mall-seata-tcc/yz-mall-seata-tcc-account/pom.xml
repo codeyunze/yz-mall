@@ -6,7 +6,7 @@
         <groupId>com.yz</groupId>
         <artifactId>yz-mall-seata-tcc</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath />
+
     </parent>
 
     <artifactId>yz-mall-seata-tcc-account</artifactId>

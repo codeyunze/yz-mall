@@ -7,7 +7,7 @@ import java.util.Map;
  * @author yunze
  * @date 2024/1/20 15:59
  */
-public class Demo {
+public class Test {
 
     public static void main(String[] args) {
         User user = new User();

@@ -6,7 +6,7 @@
         <groupId>com.yz</groupId>
         <artifactId>yz-design-patterns</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath />
+
     </parent>
 
     <artifactId>yz-design-factory-strategy</artifactId>
@@ -20,7 +20,10 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
