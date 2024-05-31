@@ -11,10 +11,24 @@ public enum DataSourceTypeEnum {
     /**
      * 商品数据源
      */
-    product,
+    product("product"),
     /**
      * 库存数据源
      */
-    storage;
+    stock("stock"),
+    /**
+     * 只读库
+     */
+    read("read");
 
+
+    private String value;
+
+    DataSourceTypeEnum(String value) {
+        this.value = value;
+    }
+
+    public String get() {
+        return this.value;
+    }
 }
