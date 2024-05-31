@@ -1,10 +1,16 @@
+server:
+  port: 30002
+
 spring:
+  application:
+    name: cases-mall
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://127.0.0.1:3306/mall_product?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+
 
 
 # 配置 MyBatis-Plus SQL 日志打印器

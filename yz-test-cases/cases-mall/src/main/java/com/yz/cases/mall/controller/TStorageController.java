@@ -1,9 +1,9 @@
 package com.yz.cases.mall.controller;
 
 
-import com.yz.dynamic.datasource.one.dto.TStorageAddDto;
-import com.yz.dynamic.datasource.one.entity.TStorage;
-import com.yz.dynamic.datasource.one.service.TStorageService;
+import com.yz.cases.mall.dto.TStorageAddDto;
+import com.yz.cases.mall.entity.TStorage;
+import com.yz.cases.mall.service.TStorageService;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;

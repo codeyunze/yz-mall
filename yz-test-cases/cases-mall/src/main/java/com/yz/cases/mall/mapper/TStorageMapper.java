@@ -1,8 +1,8 @@
 package com.yz.cases.mall.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yz.dynamic.datasource.one.dto.TStorageAddDto;
-import com.yz.dynamic.datasource.one.entity.TStorage;
+import com.yz.cases.mall.dto.TStorageAddDto;
+import com.yz.cases.mall.entity.TStorage;
 import org.apache.ibatis.annotations.Insert;
 
 /**
