@@ -37,6 +37,7 @@
         <druid.version>1.2.6</druid.version>
         <mybatis-plus.version>3.5.4</mybatis-plus.version>
         <hutool-all.version>5.8.26</hutool-all.version>
+        <redisson-version>3.23.3</redisson-version>
     </properties>
 
     <dependencies>
@@ -101,7 +102,7 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
-                <version>3.23.3</version>
+                <version>${redisson-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
