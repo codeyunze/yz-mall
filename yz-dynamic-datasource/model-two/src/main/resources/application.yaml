@@ -3,15 +3,17 @@ spring:
   datasource:
     dynamic:
       primary: product
-      strict: false
+      strict: true
       datasource:
         product:
-          url: jdbc:mysql://127.0.0.1:3306/t_mall_product?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://119.91.214.135:3306/mall?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true
           username: root
-          password: 123456
+          password: k1q235pr
           driver-class-name: com.mysql.cj.jdbc.Driver
         storage:
-          url: jdbc:mysql://127.0.0.1:3306/t_mall_stock?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://119.91.214.135:3306/mall?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true
           username: root
-          password: 123456
+          password: k1q235pr
           driver-class-name: com.mysql.cj.jdbc.Driver
+server:
+  port: 8002

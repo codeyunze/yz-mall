@@ -5,6 +5,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.cases.mall.dto.ProductAddDto;
@@ -12,8 +13,11 @@ import com.yz.cases.mall.entity.TProduct;
 import com.yz.cases.mall.mapper.TProductMapper;
 import com.yz.cases.mall.service.TProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -27,12 +31,17 @@ import java.util.List;
  * @since 2023-10-29 18:01:13
  */
 @Slf4j
-@Service("tProductService")
+@Service
 public class TProductServiceImpl extends ServiceImpl<TProductMapper, TProduct> implements TProductService {
 
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
+    @DS("#session.rw")
     @Override
     public Integer save(ProductAddDto dto) {
         dto.setId(IdUtil.getSnowflake().nextId());
+        // int updated = jdbcTemplate.update("INSERT INTO t_product(id, name, price) VALUES (?, ?, ?)", dto.getId(), dto.getName(), dto.getPrice());
         return baseMapper.save(dto);
     }
 

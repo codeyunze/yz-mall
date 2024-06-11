@@ -1,6 +1,7 @@
 package com.yz.cases.mall.controller;
 
 
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.yz.cases.mall.dto.ProductAddDto;
 import com.yz.cases.mall.entity.TProduct;
 import com.yz.cases.mall.service.TProductService;
@@ -11,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -29,7 +31,8 @@ public class TProductController extends ApiController {
     @Resource
     private TProductService tProductService;
 
-
+    @Resource
+    private DynamicRoutingDataSource dataSource;
 
     /**
      * 新增数据
@@ -38,7 +41,8 @@ public class TProductController extends ApiController {
      * @return 新增结果
      */
     @PostMapping("/add")
-    public Result<Boolean> insert(@RequestBody @Validated ProductAddDto dto) {
+    public Result<Boolean> insert(@RequestBody @Validated ProductAddDto dto, HttpServletRequest request) {
+        request.getSession().setAttribute("rw", dto.getDbSource());
         return success(this.tProductService.save(dto) > 0);
     }
 

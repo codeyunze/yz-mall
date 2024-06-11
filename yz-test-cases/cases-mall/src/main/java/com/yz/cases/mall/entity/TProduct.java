@@ -53,6 +53,17 @@ public class TProduct extends Model<TProduct> {
     @TableLogic
     private Integer invalid;
 
+    /**
+     * 商品标签
+     * 默认值为-1
+     */
+    private String title;
+
+    /**
+     * 商品备注
+     * 默认值为-1
+     */
+    private String remark;
 
 }
 

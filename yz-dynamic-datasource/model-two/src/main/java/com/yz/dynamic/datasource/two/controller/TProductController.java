@@ -1,6 +1,7 @@
 package com.yz.dynamic.datasource.two.controller;
 
 
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.dynamic.datasource.two.entity.TProduct;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
@@ -62,7 +64,8 @@ public class TProductController extends ApiController {
      * @return 新增结果
      */
     @PostMapping("/add")
-    public Result<Boolean> insert(@RequestBody @Validated TProduct tProduct) {
+    public Result<Boolean> insert(@RequestBody @Valid TProduct tProduct) {
+        tProduct.setId(IdUtil.getSnowflakeNextId());
         return success(this.tProductService.save(tProduct));
     }
 
