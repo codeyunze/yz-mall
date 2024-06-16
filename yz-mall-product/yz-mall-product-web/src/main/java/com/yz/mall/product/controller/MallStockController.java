@@ -2,9 +2,8 @@ package com.yz.mall.product.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.product.dto.MallStockAddDto;
+import com.yz.mall.product.dto.MallStockDto;
 import com.yz.mall.product.dto.MallStockQueryDto;
-import com.yz.mall.product.dto.MallStockUpdateDto;
 import com.yz.mall.product.entity.MallStock;
 import com.yz.mall.product.service.MallStockService;
 import com.yz.tools.ApiController;
@@ -33,32 +32,6 @@ public class MallStockController extends ApiController {
     private MallStockService service;
 
     /**
-     * 新增
-     */
-    @PostMapping("add")
-    public Result<String> insert(@RequestBody @Valid MallStockAddDto dto) {
-        return success(this.service.save(dto));
-    }
-
-    /**
-     * 更新
-     */
-    @PostMapping("update")
-    public Result<Boolean> update(@RequestBody @Valid MallStockUpdateDto dto) {
-        return success(this.service.update(dto));
-    }
-
-    /**
-     * 删除
-     *
-     * @param id 删除数据主键ID
-     */
-    @DeleteMapping("delete/{id}")
-    public Result<Boolean> delete(@PathVariable String id) {
-        return success(this.service.removeById(id));
-    }
-
-    /**
      * 分页查询
      */
     @PostMapping("page")
@@ -77,11 +50,18 @@ public class MallStockController extends ApiController {
 
     /**
      * 扣减商品库存
-     * @return
      */
     @PostMapping("deduct")
-    public Result<Boolean> deduct() {
+    public Result<Boolean> deduct(@RequestBody @Valid MallStockDto dto) {
+        return success(this.service.deduct(dto.getProductId(), dto.getQuantity()));
+    }
 
+    /**
+     * 增加商品库存
+     */
+    @PostMapping("add")
+    public Result<Boolean> add(@RequestBody @Valid MallStockDto dto) {
+        return success(this.service.add(dto.getProductId(), dto.getQuantity()));
     }
 }
 

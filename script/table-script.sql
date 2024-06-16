@@ -12,6 +12,9 @@ CREATE TABLE mall_stock
     PRIMARY KEY (id)
 ) COMMENT = '商品库存表';
 
+alter table mall_stock modify `created_time` DATETIME default current_timestamp COMMENT '创建时间';
+alter table mall_stock modify `updated_time` DATETIME on update current_timestamp COMMENT '更新时间';
+
 
 DROP TABLE IF EXISTS mall_product;
 CREATE TABLE mall_product
@@ -34,3 +37,7 @@ CREATE TABLE mall_product
 
 alter table mall_product modify `publish_status` INT default 0 COMMENT '商品上架状态：0：下架，1：上架';
 alter table mall_product modify `verify_status` INT default 0 COMMENT '商品审核状态：0：未审核，1：审核通过';
+
+alter table mall_product modify `created_time` DATETIME default current_timestamp COMMENT '创建时间';
+alter table mall_product modify `updated_time` DATETIME on update current_timestamp COMMENT '更新时间';
+

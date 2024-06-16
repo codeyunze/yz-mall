@@ -7,6 +7,7 @@ import com.yz.mall.product.dto.MallProductQueryDto;
 import com.yz.mall.product.dto.MallProductUpdateDto;
 import com.yz.mall.product.entity.MallProduct;
 import com.yz.mall.product.service.MallProductService;
+import com.yz.mall.product.vo.MallProductVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
@@ -71,8 +72,8 @@ public class MallProductController extends ApiController {
      * 详情查询
      */
     @GetMapping("get/{id}")
-    public Result<MallProduct> page(@PathVariable String id) {
-        return success(this.service.getById(id));
+    public Result<MallProductVo> page(@PathVariable String id) {
+        return success(this.service.detail(id));
     }
 
 }

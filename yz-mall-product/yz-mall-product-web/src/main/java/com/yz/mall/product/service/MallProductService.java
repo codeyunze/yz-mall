@@ -6,6 +6,7 @@ import com.yz.mall.product.dto.MallProductAddDto;
 import com.yz.mall.product.dto.MallProductQueryDto;
 import com.yz.mall.product.dto.MallProductUpdateDto;
 import com.yz.mall.product.entity.MallProduct;
+import com.yz.mall.product.vo.MallProductVo;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
@@ -41,6 +42,14 @@ public interface MallProductService extends IService<MallProduct> {
      * @return 分页列表数据
      */
     Page<MallProduct> page(PageFilter<MallProductQueryDto> filter);
+
+    /**
+     * 商品详情
+     *
+     * @param id 商品id
+     * @return 商品详情
+     */
+    MallProductVo detail(String id);
 
 }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yz.mall.product.entity.MallStock;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 /**
@@ -24,5 +25,14 @@ public interface MallStockMapper extends BaseMapper<MallStock> {
      */
     @Update("update mall_stock set quantity = quantity - #{quantity} where invalid = 0 and product_id = #{productId} and quantity >= #{quantity}")
     boolean deduct(@Param("productId") String productId, @Param("quantity") Integer quantity);
+
+    /**
+     * 获取指定商品的库存
+     *
+     * @param productId 商品id
+     * @return 商品剩余库存
+     */
+    @Select("select quantity from mall_stock where invalid = 0 and product_id = #{productId}")
+    Integer getStockByProductId(@Param("productId") String productId);
 }
 

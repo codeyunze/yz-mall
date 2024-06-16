@@ -1,28 +1,26 @@
-package com.yz.mall.product.entity;
-
-import java.time.LocalDateTime;
+package com.yz.mall.product.vo;
 
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
- * 商品库存表(MallStock)表实体类
+ * 商品详细信息
  *
  * @author yunze
- * @since 2024-06-16 16:14:09
+ * @since 2024-06-16 16:06:43
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class MallStock extends Model<MallStock> {
+public class MallProductVo implements Serializable {
+
+    private static final long serialVesionUID = 1L;
 
     /**
      * 主键标识
@@ -54,29 +52,43 @@ public class MallStock extends Model<MallStock> {
     private LocalDateTime updatedTime;
 
     /**
-     * 数据是否有效：0数据有效
+     * 商品名称
      */
-    @TableLogic
-    private Integer invalid;
+    private String name;
 
     /**
-     * 商品信息Id
+     * 商品价格
      */
-    private String productId;
+    private BigDecimal price;
 
     /**
-     * 商品库存数量
+     * 商品标签
+     */
+    private String title;
+
+    /**
+     * 商品备注信息
+     */
+    private String remark;
+
+    /**
+     * 商品上架状态：0：下架，1：上架
+     */
+    private Integer publishStatus;
+
+    /**
+     * 商品审核状态：0：未审核，1：审核通过
+     */
+    private Integer verifyStatus;
+
+    /**
+     * 商品图片id，限制为5张，以逗号分割
+     */
+    private String albumPics;
+
+    /**
+     * 商品剩余库存数量
      */
     private Integer quantity;
-
-    /**
-     * 获取主键值
-     *
-     * @return 主键值
-     */
-    @Override
-    public Serializable pkVal() {
-        return this.id;
-    }
 }
 
