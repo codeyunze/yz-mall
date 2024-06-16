@@ -1,3 +1,4 @@
+
 server:
   port: 30005
 
@@ -20,11 +21,6 @@ spring:
           username: read_only
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-
-
-
-
-
 
 # 配置 MyBatis-Plus SQL 日志打印器
 mybatis-plus:

@@ -41,3 +41,5 @@ alter table mall_product modify `verify_status` INT default 0 COMMENT '商品审
 alter table mall_product modify `created_time` DATETIME default current_timestamp COMMENT '创建时间';
 alter table mall_product modify `updated_time` DATETIME on update current_timestamp COMMENT '更新时间';
 
+
+alter table base_user modify `id` VARCHAR(32) NOT NULL COMMENT '主键标识';

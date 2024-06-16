@@ -60,7 +60,7 @@ public class TProductController extends ApiController {
     @RequestMapping("/db/{key}")
     public String addDb(@PathVariable String key) {
         DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl("jdbc:mysql://119.91.214.135:3306/mall_test?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true");
+        dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/mall_test?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowPublicKeyRetrieval=true");
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUsername("root");
         dataSource.setPassword("123456");
