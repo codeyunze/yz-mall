@@ -11,15 +11,15 @@ public class BaseDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 数据源
+     * 数据源标识
      */
-    private String dbSource;
+    private String datasourceId;
 
-    public String getDbSource() {
-        return dbSource;
+    public String getDatasourceId() {
+        return datasourceId;
     }
 
-    public void setDbSource(String dbSource) {
-        this.dbSource = dbSource;
+    public void setDatasourceId(String datasourceId) {
+        this.datasourceId = datasourceId;
     }
 }

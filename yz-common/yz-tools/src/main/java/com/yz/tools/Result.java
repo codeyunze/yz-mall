@@ -1,9 +1,7 @@
 package com.yz.tools;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yz.tools.enums.CodeEnum;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 
 /**
@@ -13,7 +11,6 @@ import java.io.Serializable;
  * @Date 2022/11/13 23:23
  * @Version 1.0
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,7 +28,6 @@ public class Result<T> implements Serializable {
     /**
      * 返回数据
      */
-    @Valid
     private T data;
 
     public Result() {

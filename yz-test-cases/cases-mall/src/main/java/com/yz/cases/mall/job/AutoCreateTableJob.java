@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @date 2024/5/25 11:09
  */
 @Slf4j
-@Component
+// @Component
 public class AutoCreateTableJob {
 
     @Resource

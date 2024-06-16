@@ -1,22 +1,46 @@
 package com.yz.cases.mall.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.cases.mall.dto.ProductAddDto;
+import com.yz.cases.mall.dto.TProductAddDto;
+import com.yz.cases.mall.dto.TProductQueryDto;
+import com.yz.cases.mall.dto.TProductUpdateDto;
 import com.yz.cases.mall.entity.TProduct;
+import com.yz.tools.PageFilter;
 
-import java.util.List;
+import javax.validation.Valid;
 
 /**
  * 商品信息(TProduct)表服务接口
  *
  * @author yunze
- * @since 2023-10-29 18:01:13
+ * @since 2024-06-13 08:38:51
  */
 public interface TProductService extends IService<TProduct> {
 
-    Integer save(ProductAddDto dto);
+    /**
+     * 新增数据
+     *
+     * @param dto 新增基础数据
+     * @return 主键Id
+     */
+    Long save(TProductAddDto dto);
 
-    List<TProduct> customList();
+    /**
+     * 更新数据
+     *
+     * @param dto 更新基础数据
+     * @return 是否操作成功
+     */
+    boolean update(@Valid TProductUpdateDto dto);
+
+    /**
+     * 分页查询
+     *
+     * @param filter 过滤条件
+     * @return 分页列表数据
+     */
+    Page<TProduct> page(PageFilter<TProductQueryDto> filter);
 
     /**
      * 创建数据表
@@ -27,5 +51,6 @@ public interface TProductService extends IService<TProduct> {
      * 生成商品数据
      */
     void generateData();
+
 }
 

@@ -7,17 +7,18 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.cases.mall.dto.ProductAddDto;
+import com.yz.cases.mall.dto.TProductAddDto;
+import com.yz.cases.mall.dto.TProductQueryDto;
+import com.yz.cases.mall.dto.TProductUpdateDto;
 import com.yz.cases.mall.entity.TProduct;
 import com.yz.cases.mall.mapper.TProductMapper;
 import com.yz.cases.mall.service.TProductService;
-import lombok.extern.slf4j.Slf4j;
+import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -28,28 +29,34 @@ import java.util.List;
  * 商品信息(TProduct)表服务实现类
  *
  * @author yunze
- * @since 2023-10-29 18:01:13
+ * @since 2024-06-13 08:38:51
  */
-@Slf4j
+
 @Service
 public class TProductServiceImpl extends ServiceImpl<TProductMapper, TProduct> implements TProductService {
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
-
-    @DS("#session.rw")
+    @DS("slave")
     @Override
-    public Integer save(ProductAddDto dto) {
-        dto.setId(IdUtil.getSnowflake().nextId());
-        // int updated = jdbcTemplate.update("INSERT INTO t_product(id, name, price) VALUES (?, ?, ?)", dto.getId(), dto.getName(), dto.getPrice());
-        return baseMapper.save(dto);
+    public Long save(TProductAddDto dto) {
+        TProduct bo = new TProduct();
+        BeanUtils.copyProperties(dto, bo);
+        bo.setId(IdUtil.getSnowflakeNextId());
+        baseMapper.insert(bo);
+        return bo.getId();
     }
 
     @Override
-    public List<TProduct> customList() {
+    public boolean update(TProductUpdateDto dto) {
+        TProduct bo = new TProduct();
+        BeanUtils.copyProperties(dto, bo);
+        return baseMapper.updateById(bo) > 0;
+    }
+
+    @DS("#session.rw")
+    @Override
+    public Page<TProduct> page(PageFilter<TProductQueryDto> filter) {
         LambdaQueryWrapper<TProduct> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(TProduct::getInvalid, 0);
-        return baseMapper.selectList(queryWrapper);
+        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 
     @Override

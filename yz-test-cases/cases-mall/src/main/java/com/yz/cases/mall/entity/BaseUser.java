@@ -1,59 +1,58 @@
 package com.yz.cases.mall.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * 商品信息(TProduct)表实体类
+ * 基础-用户(BaseUser)表实体类
  *
  * @author yunze
- * @since 2024-06-13 08:38:51
+ * @since 2024-06-11 23:16:13
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class TProduct extends Model<TProduct> {
+public class BaseUser extends Model<BaseUser> {
+
+    private static final long serialVesionUID = 1L;
 
     /**
-     * 主键id
+     * 主键ID
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
-     * 商品名称
+     * 创建人
      */
-    private String name;
-
-    /**
-     * 商品价格
-     */
-    private BigDecimal price;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long createdId;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime createDate;
+    private LocalDateTime createdTime;
+
+    /**
+     * 更新人
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long updatedId;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime updateDate;
+    private LocalDateTime updatedTime;
 
     /**
      * 逻辑删除，0：有效数据；1：无效数据
@@ -62,23 +61,19 @@ public class TProduct extends Model<TProduct> {
     private Integer invalid;
 
     /**
-     * 商品标签
+     * phone
      */
-    private String title;
+    private String phone;
 
     /**
-     * 商品备注
+     * 邮箱
      */
-    private String remark;
+    private String email;
 
     /**
-     * 获取主键值
-     *
-     * @return 主键值
+     * 密码
      */
-    @Override
-    public Serializable pkVal() {
-        return this.id;
-    }
+    private String password;
+
 }
 

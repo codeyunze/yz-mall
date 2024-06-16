@@ -7,12 +7,17 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     dynamic:
-      primary: mall
-      strict: true
+      primary: master
+      strict: false
       datasource:
-        mall:
+        master:
           url: jdbc:mysql://127.0.0.1:3306/mall?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-          username: root
+          username: mall
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        slave:
+          url: jdbc:mysql://127.0.0.1:3306/mall_product?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+          username: read_only
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
 
