@@ -22,6 +22,7 @@
         <module>yz-mall-seata</module>
         <module>yz-design-patterns</module>
         <module>yz-dynamic-datasource</module>
+        <module>yz-mall-user</module>
         <module>yz-mall-product</module>
         <module>yz-test-cases</module>
     </modules>
