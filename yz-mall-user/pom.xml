@@ -14,6 +14,7 @@
     <description>商城-用户信息服务</description>
 
     <modules>
+        <module>yz-mall-user-core</module>
         <module>yz-mall-user-web</module>
     </modules>
 
