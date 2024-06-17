@@ -6,6 +6,7 @@ import com.yz.mall.user.dto.BaseUserAddDto;
 import com.yz.mall.user.dto.BaseUserQueryDto;
 import com.yz.mall.user.dto.BaseUserUpdateDto;
 import com.yz.mall.user.entity.BaseUser;
+import com.yz.mall.user.vo.BaseUserVo;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
@@ -41,6 +42,13 @@ public interface BaseUserService extends IService<BaseUser> {
      * @return 分页列表数据
      */
     Page<BaseUser> page(PageFilter<BaseUserQueryDto> filter);
+
+    /**
+     * 获取用户信息
+     * @param account 登录账号（手机号|邮箱）
+     * @return 用户信息
+     */
+    BaseUserVo get(String account);
 
 }
 

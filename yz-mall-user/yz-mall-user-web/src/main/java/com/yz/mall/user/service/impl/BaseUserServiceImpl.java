@@ -11,6 +11,7 @@ import com.yz.mall.user.dto.BaseUserUpdateDto;
 import com.yz.mall.user.mapper.BaseUserMapper;
 import com.yz.mall.user.entity.BaseUser;
 import com.yz.mall.user.service.BaseUserService;
+import com.yz.mall.user.vo.BaseUserVo;
 import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,11 @@ public class BaseUserServiceImpl extends ServiceImpl<BaseUserMapper, BaseUser> i
     public Page<BaseUser> page(PageFilter<BaseUserQueryDto> filter) {
         LambdaQueryWrapper<BaseUser> queryWrapper = new LambdaQueryWrapper<>();
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+    }
+
+    @Override
+    public BaseUserVo get(String account) {
+        return baseMapper.get(account);
     }
 }
 
