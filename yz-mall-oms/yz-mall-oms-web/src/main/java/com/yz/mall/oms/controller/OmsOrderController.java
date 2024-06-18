@@ -3,6 +3,7 @@ package com.yz.mall.oms.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.oms.dto.OmsOrderAddDto;
+import com.yz.mall.oms.dto.OmsOrderGenerateDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderUpdateDto;
 import com.yz.mall.oms.entity.OmsOrder;
@@ -31,6 +32,15 @@ public class OmsOrderController extends ApiController {
      */
     @Resource
     private OmsOrderService service;
+
+    /**
+     * 生成订单
+     */
+    @PostMapping("generateOrder")
+    public Result<String> generateOrder(@RequestBody @Valid OmsOrderGenerateDto dto) {
+        return success(this.service.generateOrder(dto));
+    }
+
 
     /**
      * 新增

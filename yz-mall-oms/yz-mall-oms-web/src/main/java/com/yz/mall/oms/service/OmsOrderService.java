@@ -3,6 +3,7 @@ package com.yz.mall.oms.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.oms.dto.OmsOrderAddDto;
+import com.yz.mall.oms.dto.OmsOrderGenerateDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderUpdateDto;
 import com.yz.mall.oms.entity.OmsOrder;
@@ -17,6 +18,13 @@ import javax.validation.Valid;
  * @since 2024-06-18 12:49:55
  */
 public interface OmsOrderService extends IService<OmsOrder> {
+
+    /**
+     * 生成订单
+     * @param dto 订单与商品信息
+     * @return 订单Id
+     */
+    String generateOrder(OmsOrderGenerateDto dto);
 
     /**
      * 新增数据

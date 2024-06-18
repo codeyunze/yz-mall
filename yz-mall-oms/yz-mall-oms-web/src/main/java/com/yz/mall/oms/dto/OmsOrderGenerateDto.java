@@ -1,12 +1,12 @@
 package com.yz.mall.oms.dto;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 订单信息表(OmsOrder)表新增数据模型类
@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @since 2024-06-18 12:49:55
  */
 @Data
-public class OmsOrderAddDto implements Serializable {
+public class OmsOrderGenerateDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 
@@ -24,12 +24,6 @@ public class OmsOrderAddDto implements Serializable {
      */
     @NotBlank(message = "用户Id不能为空")
     private String userId;
-
-    /**
-     * 订单编号;省市区年月日000001
-     */
-    @NotBlank(message = "订单编号;省市区年月日000001不能为空")
-    private String orderCode;
 
     /**
      * 订单类型：0正常订单；1秒杀订单
@@ -98,5 +92,10 @@ public class OmsOrderAddDto implements Serializable {
     @NotBlank(message = "订单消息接收邮箱不能为空")
     private String email;
 
+    /**
+     * 订单商品信息
+     */
+    @NotNull(message = "商品信息不能为空")
+    private List<OmsOrderItemDto> omsOrderItems;
 }
 

@@ -2,6 +2,7 @@ package com.yz.mall.oms.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yz.mall.oms.dto.OmsOrderItemDto;
 import com.yz.mall.oms.dto.OmsOrderProductRelationAddDto;
 import com.yz.mall.oms.dto.OmsOrderProductRelationQueryDto;
 import com.yz.mall.oms.dto.OmsOrderProductRelationUpdateDto;
@@ -9,6 +10,8 @@ import com.yz.mall.oms.entity.OmsOrderProductRelation;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * 订单商品关联表(OmsOrderProductRelation)表服务接口
@@ -25,6 +28,15 @@ public interface OmsOrderProductRelationService extends IService<OmsOrderProduct
      * @return 主键Id
      */
     String save(OmsOrderProductRelationAddDto dto);
+
+    /**
+     * 批量新增数据
+     *
+     * @param orderId 订单Id
+     * @param dtos 新增基础数据
+     * @return 是否新增成功
+     */
+    boolean saveBatch(@NotBlank(message = "订单Id不能为空") String orderId, @Valid List<OmsOrderItemDto> dtos);
 
     /**
      * 更新数据

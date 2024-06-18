@@ -1,15 +1,11 @@
 package com.yz.mall.oms.dto;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import com.yz.mall.oms.entity.OmsOrderProductRelation;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 订单商品关联表(OmsOrderProductRelation)表新增数据模型类
@@ -18,15 +14,9 @@ import java.io.Serializable;
  * @since 2024-06-18 12:51:39
  */
 @Data
-public class OmsOrderProductRelationAddDto implements Serializable {
+public class OmsOrderItemDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
-
-    /**
-     * 订单id
-     */
-    @NotBlank(message = "订单id不能为空")
-    private String orderId;
 
     /**
      * 商品id
