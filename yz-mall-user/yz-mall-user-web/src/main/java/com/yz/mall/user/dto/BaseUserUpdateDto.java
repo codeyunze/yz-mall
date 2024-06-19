@@ -22,7 +22,7 @@ public class BaseUserUpdateDto implements Serializable {
      * 主键标识
      */
     @NotNull(message = "主键标识不能为空")
-    private Long id;
+    private String id;
 
     /**
      * 手机号

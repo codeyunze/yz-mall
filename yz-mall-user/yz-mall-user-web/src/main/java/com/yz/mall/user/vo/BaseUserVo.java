@@ -3,6 +3,8 @@ package com.yz.mall.user.vo;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 基础-用户(BaseUser)表实体类
  *
@@ -32,5 +34,9 @@ public class BaseUserVo extends Model<BaseUserVo> {
      */
     private String password;
 
+    /**
+     * 账户余额
+     */
+    private BigDecimal balance;
 }
 

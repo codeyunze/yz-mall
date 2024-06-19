@@ -10,6 +10,7 @@ import com.yz.mall.user.vo.BaseUserVo;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 /**
  * 基础-用户(BaseUser)表服务接口
@@ -45,10 +46,28 @@ public interface BaseUserService extends IService<BaseUser> {
 
     /**
      * 获取用户信息
+     *
      * @param account 登录账号（手机号|邮箱）
      * @return 用户信息
      */
     BaseUserVo get(String account);
+
+    /**
+     * 扣减账户金额
+     *
+     * @param userId 扣减用户
+     * @param amount 扣减金额
+     */
+    void deduct(String userId, BigDecimal amount);
+
+    /**
+     * 账户充值
+     *
+     * @param userId 充值用户
+     * @param amount 充值金额
+     */
+    void recharge(String userId, BigDecimal amount);
+
 
 }
 

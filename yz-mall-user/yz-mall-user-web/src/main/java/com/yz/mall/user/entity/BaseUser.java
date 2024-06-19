@@ -1,5 +1,6 @@
 package com.yz.mall.user.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import cn.hutool.core.date.DatePattern;
@@ -71,6 +72,12 @@ public class BaseUser extends Model<BaseUser> {
      * 密码
      */
     private String password;
+
+    /**
+     * 账户余额
+     */
+    private BigDecimal balance;
+
 
     /**
      * 获取主键值

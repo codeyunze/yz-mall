@@ -43,3 +43,5 @@ alter table mall_product modify `updated_time` DATETIME on update current_timest
 
 
 alter table base_user modify `id` VARCHAR(32) NOT NULL COMMENT '主键标识';
+
+alter table mall.base_user add balance decimal(15, 2) default 0 comment '账户余额';
