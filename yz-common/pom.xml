@@ -16,6 +16,7 @@
 
     <modules>
         <module>yz-tools</module>
+        <module>yz-advice</module>
     </modules>
 
     <properties>
