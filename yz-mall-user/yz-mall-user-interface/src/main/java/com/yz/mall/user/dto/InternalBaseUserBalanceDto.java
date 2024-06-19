@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @since 2024-06-16 23:25:56
  */
 @Data
-public class BalanceDto implements Serializable {
+public class InternalBaseUserBalanceDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 

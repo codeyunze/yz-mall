@@ -67,7 +67,5 @@ public interface BaseUserService extends IService<BaseUser> {
      * @param amount 充值金额
      */
     void recharge(String userId, BigDecimal amount);
-
-
 }
 

@@ -2,8 +2,6 @@ package com.yz.mall.user.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.advice.exception.BusinessException;
-import com.yz.mall.user.dto.BalanceDto;
 import com.yz.mall.user.dto.BaseUserAddDto;
 import com.yz.mall.user.dto.BaseUserQueryDto;
 import com.yz.mall.user.dto.BaseUserUpdateDto;
@@ -75,24 +73,6 @@ public class BaseUserController extends ApiController {
     @GetMapping("get/{id}")
     public Result<BaseUser> page(@PathVariable String id) {
         return success(this.service.getById(id));
-    }
-
-    /**
-     * 扣减余额
-     */
-    @PostMapping("deduct")
-    public Result<Boolean> deduct(@RequestBody @Valid BalanceDto dto) {
-        service.deduct(dto.getUserId(), dto.getAmount());
-        return success(true);
-    }
-
-    /**
-     * 账户充值
-     */
-    @PostMapping("recharge")
-    public Result<Boolean> recharge(@RequestBody @Valid BalanceDto dto) {
-        service.recharge(dto.getUserId(), dto.getAmount());
-        return success(true);
     }
 
 }
