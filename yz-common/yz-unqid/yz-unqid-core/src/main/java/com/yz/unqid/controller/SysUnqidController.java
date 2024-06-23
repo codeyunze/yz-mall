@@ -1,13 +1,12 @@
-package com.yz.mall.oms.controller;
+package com.yz.unqid.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.oms.dto.OmsOrderAddDto;
-import com.yz.mall.oms.dto.OmsOrderGenerateDto;
-import com.yz.mall.oms.dto.OmsOrderQueryDto;
-import com.yz.mall.oms.dto.OmsOrderUpdateDto;
-import com.yz.mall.oms.entity.OmsOrder;
-import com.yz.mall.oms.service.OmsOrderService;
+import com.yz.unqid.dto.SysUnqidAddDto;
+import com.yz.unqid.dto.SysUnqidQueryDto;
+import com.yz.unqid.dto.SysUnqidUpdateDto;
+import com.yz.unqid.entity.SysUnqid;
+import com.yz.unqid.service.SysUnqidService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
@@ -18,35 +17,26 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 订单信息表(OmsOrder)表控制层
+ * 系统-序列号表(SysUnqid)表控制层
  *
  * @author yunze
- * @since 2024-06-18 12:49:54
+ * @since 2024-06-23 22:52:36
  */
 @RestController
-@RequestMapping("omsOrder")
-public class OmsOrderController extends ApiController {
+@RequestMapping("sys/unqid")
+public class SysUnqidController extends ApiController {
 
     /**
      * 服务对象
      */
     @Resource
-    private OmsOrderService service;
-
-    /**
-     * 生成订单
-     */
-    @PostMapping("generateOrder")
-    public Result<String> generateOrder(@RequestBody @Valid OmsOrderGenerateDto dto) {
-        return success(this.service.generateOrder(dto));
-    }
-
+    private SysUnqidService service;
 
     /**
      * 新增
      */
     @PostMapping("add")
-    public Result<String> insert(@RequestBody @Valid OmsOrderAddDto dto) {
+    public Result<String> insert(@RequestBody @Valid SysUnqidAddDto dto) {
         return success(this.service.save(dto));
     }
 
@@ -54,7 +44,7 @@ public class OmsOrderController extends ApiController {
      * 更新
      */
     @PostMapping("update")
-    public Result<Boolean> update(@RequestBody @Valid OmsOrderUpdateDto dto) {
+    public Result<Boolean> update(@RequestBody @Valid SysUnqidUpdateDto dto) {
         return success(this.service.update(dto));
     }
 
@@ -72,8 +62,8 @@ public class OmsOrderController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<OmsOrder>> page(@RequestBody @Valid PageFilter<OmsOrderQueryDto> filter) {
-        Page<OmsOrder> page = this.service.page(filter);
+    public Result<List<SysUnqid>> page(@RequestBody @Valid PageFilter<SysUnqidQueryDto> filter) {
+        Page<SysUnqid> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
@@ -81,7 +71,7 @@ public class OmsOrderController extends ApiController {
      * 详情查询
      */
     @GetMapping("get/{id}")
-    public Result<OmsOrder> page(@PathVariable String id) {
+    public Result<SysUnqid> page(@PathVariable String id) {
         return success(this.service.getById(id));
     }
 

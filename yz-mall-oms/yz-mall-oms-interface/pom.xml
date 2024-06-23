@@ -10,7 +10,7 @@
     </parent>
 
 
-    <artifactId>yz-mall-oms-web</artifactId>
+    <artifactId>yz-mall-oms-interface</artifactId>
     <description>用户服务</description>
 
     <properties>
@@ -22,19 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-mall-oms-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-mall-user-interface</artifactId>
-            <version>${revision}</version>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

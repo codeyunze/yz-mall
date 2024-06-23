@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.oms.dto.*;
 import com.yz.mall.oms.entity.OmsOrder;
-import com.yz.mall.oms.entity.OmsOrderProductRelation;
 import com.yz.mall.oms.mapper.OmsOrderMapper;
 import com.yz.mall.oms.service.OmsOrderProductRelationService;
 import com.yz.mall.oms.service.OmsOrderService;
@@ -19,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 订单信息表(OmsOrder)表服务实现类

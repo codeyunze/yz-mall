@@ -3,20 +3,21 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>yz-mall</artifactId>
+        <artifactId>yz-common</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>yz-mall-oms</artifactId>
+    <artifactId>yz-unqid</artifactId>
+    <description>流水号生成服务</description>
     <packaging>pom</packaging>
-    <description>商城-订单信息管理</description>
 
     <modules>
-        <module>yz-mall-oms-interface</module>
-        <module>yz-mall-oms-core</module>
-        <module>yz-mall-oms-web</module>
+        <module>yz-unqid-interface</module>
+        <module>yz-unqid-core</module>
+        <module>yz-unqid-web</module>
     </modules>
 
     <properties>
@@ -26,23 +27,7 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-advice</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-
-        </dependencies>
-    </dependencyManagement>
 
 </project>

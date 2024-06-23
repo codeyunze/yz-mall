@@ -1,11 +1,8 @@
 package com.yz.mall.oms.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-import com.yz.mall.oms.entity.OmsOrderProductRelation;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

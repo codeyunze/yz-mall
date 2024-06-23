@@ -3,15 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>yz-mall-oms</artifactId>
+        <artifactId>yz-unqid</artifactId>
         <version>${revision}</version>
     </parent>
 
-
-    <artifactId>yz-mall-oms-web</artifactId>
-    <description>用户服务</description>
+    <artifactId>yz-unqid-web</artifactId>
+    <description>流水号生成服务</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -24,26 +24,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-mall-oms-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-mall-user-interface</artifactId>
-            <version>${revision}</version>
-        </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
