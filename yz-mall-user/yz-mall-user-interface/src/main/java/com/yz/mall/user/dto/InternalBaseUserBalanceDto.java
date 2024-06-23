@@ -27,5 +27,12 @@ public class InternalBaseUserBalanceDto implements Serializable {
     @NotNull(message = "金额不能为空")
     private BigDecimal amount;
 
+    public InternalBaseUserBalanceDto() {
+    }
+
+    public InternalBaseUserBalanceDto(String userId, BigDecimal amount) {
+        this.userId = userId;
+        this.amount = amount;
+    }
 }
 

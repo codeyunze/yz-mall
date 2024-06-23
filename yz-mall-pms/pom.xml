@@ -9,15 +9,15 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>yz-mall-user</artifactId>
+    <artifactId>yz-mall-pms</artifactId>
     <packaging>pom</packaging>
-    <description>商城-用户信息服务</description>
+    <description>商城-商品管理服务</description>
 
     <modules>
-        <module>yz-mall-user-interface</module>
-        <module>yz-mall-user-core</module>
-        <module>yz-mall-user-feign</module>
-        <module>yz-mall-user-startup</module>
+        <module>yz-mall-pms-interface</module>
+        <module>yz-mall-pms-core</module>
+        <module>yz-mall-pms-feign</module>
+        <module>yz-mall-pms-web</module>
     </modules>
 
     <properties>
@@ -37,6 +37,7 @@
             <artifactId>yz-advice</artifactId>
             <version>${revision}</version>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>

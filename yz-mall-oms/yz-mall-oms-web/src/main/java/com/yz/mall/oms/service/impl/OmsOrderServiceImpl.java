@@ -53,6 +53,11 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
         // 订单关联商品信息
         omsOrderProductRelationService.saveBatch(order.getId(), dto.getOmsOrderItems());
+
+        // 扣减库存
+
+        // 扣减用户余额
+
         return order.getId();
     }
 

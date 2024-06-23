@@ -45,13 +45,13 @@ public enum CodeEnum {
      */
     OTHER_ERROR(9);
 
-    private int value;
+    private Integer value;
 
-    CodeEnum(int value) {
+    CodeEnum(Integer value) {
         this.value = value;
     }
 
-    public int get() {
+    public Integer get() {
         return this.value;
     }
 }
