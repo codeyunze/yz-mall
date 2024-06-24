@@ -8,6 +8,7 @@ import com.yz.unqid.entity.SysUnqid;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
 @RequestMapping("internal/unqid/")
 public class InternalSysUnqidController extends ApiController {
 
-    private InternalUnqidService service;
+    private final InternalUnqidService service;
 
     public InternalSysUnqidController(InternalUnqidService service) {
         this.service = service;
@@ -31,7 +32,7 @@ public class InternalSysUnqidController extends ApiController {
      * 生成流水号
      */
     @PostMapping("generateSerialNumber")
-    public Result<String> generateSerialNumber(@RequestBody InternalUnqidDto dto) {
+    public Result<String> generateSerialNumber(@RequestBody @Valid InternalUnqidDto dto) {
         return success(this.service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
     }
 
@@ -39,7 +40,7 @@ public class InternalSysUnqidController extends ApiController {
      * 批量生成流水号
      */
     @PostMapping("generateSerialNumbers")
-    public Result<List<String>> generateSerialNumbers(@RequestBody InternalUnqidDto dto) {
+    public Result<List<String>> generateSerialNumbers(@RequestBody @Valid InternalUnqidDto dto) {
         return success(this.service.generateSerialNumbers(dto.getPrefix(), dto.getNumberLength(), dto.getQuantity()));
     }
 

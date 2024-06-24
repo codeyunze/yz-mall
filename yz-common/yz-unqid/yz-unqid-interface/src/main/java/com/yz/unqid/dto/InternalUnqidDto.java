@@ -30,6 +30,19 @@ public class InternalUnqidDto implements Serializable {
      */
     private Integer quantity = 1;
 
+    public InternalUnqidDto() {
+    }
+
+    public InternalUnqidDto(String prefix, Integer numberLength) {
+        this.prefix = prefix;
+        this.numberLength = numberLength;
+    }
+
+    public InternalUnqidDto(String prefix, Integer numberLength, Integer quantity) {
+        this.prefix = prefix;
+        this.numberLength = numberLength;
+        this.quantity = quantity;
+    }
 
     public Integer getQuantity() {
         return quantity;

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -23,11 +22,11 @@ import javax.validation.Valid;
 @RequestMapping("internal/baseUser")
 public class InternalBaseUserController extends ApiController {
 
-    /**
-     * 服务对象
-     */
-    @Resource
-    private InternalBaseUserService service;
+    private final InternalBaseUserService service;
+
+    public InternalBaseUserController(InternalBaseUserService service) {
+        this.service = service;
+    }
 
     /**
      * 扣减余额
