@@ -17,7 +17,7 @@
     <modules>
         <module>yz-unqid-interface</module>
         <module>yz-unqid-core</module>
-        <module>yz-unqid-web</module>
+        <module>yz-unqid-startup</module>
     </modules>
 
     <properties>

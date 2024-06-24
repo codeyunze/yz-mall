@@ -10,7 +10,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>yz-unqid-web</artifactId>
+    <artifactId>yz-unqid-startup</artifactId>
     <description>流水号生成服务</description>
 
     <properties>
@@ -23,6 +23,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-unqid-core</artifactId>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 

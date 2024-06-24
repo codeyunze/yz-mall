@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.yz.unqid.YzUnqidInterfaceConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.yz.unqid.YzUnqidInterfaceConfig
