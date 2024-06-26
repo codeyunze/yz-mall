@@ -10,7 +10,7 @@
     </parent>
 
 
-    <artifactId>yz-mall-oms-web</artifactId>
+    <artifactId>yz-mall-oms-startup</artifactId>
     <description>用户服务</description>
 
     <properties>
@@ -26,6 +26,21 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-oms-core</artifactId>
             <version>${revision}</version>
@@ -34,6 +49,12 @@
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-user-interface</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-unqid-feign</artifactId>
             <version>${revision}</version>
         </dependency>
     </dependencies>

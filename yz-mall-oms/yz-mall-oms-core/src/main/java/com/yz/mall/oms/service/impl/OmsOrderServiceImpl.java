@@ -13,6 +13,7 @@ import com.yz.mall.oms.mapper.OmsOrderMapper;
 import com.yz.mall.oms.service.OmsOrderProductRelationService;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.tools.PageFilter;
+import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +31,12 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final OmsOrderProductRelationService omsOrderProductRelationService;
 
-    public OmsOrderServiceImpl(OmsOrderProductRelationService omsOrderProductRelationService) {
-        this.omsOrderProductRelationService = omsOrderProductRelationService;
-    }
+    private final InternalUnqidService internalUnqidService;
 
+    public OmsOrderServiceImpl(OmsOrderProductRelationService omsOrderProductRelationService, InternalUnqidService internalUnqidService) {
+        this.omsOrderProductRelationService = omsOrderProductRelationService;
+        this.internalUnqidService = internalUnqidService;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -43,7 +46,9 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         order.setId(IdUtil.getSnowflakeNextIdStr());
         // TODO: 2024/6/18 星期二 yunze 序号自动有序的生成
         // 省市区年月日000001
-        String orderCode = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN) + "000002";
+        String prefix = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
+        // String orderCode = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN) + "000002";
+        String orderCode = internalUnqidService.generateSerialNumber(prefix, 6);
         order.setOrderCode(orderCode);
         // 订单信息
         baseMapper.insert(order);

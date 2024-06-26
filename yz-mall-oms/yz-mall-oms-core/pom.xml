@@ -67,6 +67,12 @@
             <artifactId>yz-mall-user-interface</artifactId>
             <version>${revision}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-unqid-interface</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>
