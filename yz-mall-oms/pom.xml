@@ -14,7 +14,9 @@
     <description>商城-订单信息管理</description>
 
     <modules>
-        <module>yz-mall-oms-web</module>
+        <module>yz-mall-oms-interface</module>
+        <module>yz-mall-oms-core</module>
+        <module>yz-mall-oms-startup</module>
     </modules>
 
     <properties>
@@ -31,18 +33,15 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-tools</artifactId>
+            <artifactId>yz-advice</artifactId>
+            <version>${revision}</version>
         </dependency>
 
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.yz</groupId>
-                <artifactId>yz-tools</artifactId>
-                <version>${revision}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
