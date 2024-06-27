@@ -41,7 +41,7 @@ public class InternalPmsStockController extends ApiController {
     /**
      * 获取指定商品的库存
      */
-    @GetMapping("getStock/{productId}")
+    @GetMapping("get/{productId}")
     public Result<Integer> getStockByProductId(@PathVariable String productId) {
         return success(this.service.getStockByProductId(productId));
     }
