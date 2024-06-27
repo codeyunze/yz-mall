@@ -14,8 +14,10 @@
     <description>商城-用户信息服务</description>
 
     <modules>
+        <module>yz-mall-user-interface</module>
         <module>yz-mall-user-core</module>
-        <module>yz-mall-user-web</module>
+        <module>yz-mall-user-feign</module>
+        <module>yz-mall-user-startup</module>
     </modules>
 
     <properties>
@@ -32,18 +34,14 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-tools</artifactId>
+            <artifactId>yz-advice</artifactId>
+            <version>${revision}</version>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.yz</groupId>
-                <artifactId>yz-tools</artifactId>
-                <version>${revision}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
