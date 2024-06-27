@@ -14,14 +14,14 @@ import java.io.Serializable;
  * @since 2024-06-16 16:14:09
  */
 @Data
-public class PmsStockDto implements Serializable {
+public class InternalPmsStockDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 
-    public PmsStockDto() {
+    public InternalPmsStockDto() {
     }
 
-    public PmsStockDto(String productId, Integer quantity) {
+    public InternalPmsStockDto(String productId, Integer quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }

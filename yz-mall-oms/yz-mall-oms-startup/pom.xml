@@ -48,13 +48,19 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-mall-user-interface</artifactId>
+            <artifactId>yz-mall-user-feign</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-unqid-feign</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-mall-pms-feign</artifactId>
             <version>${revision}</version>
         </dependency>
     </dependencies>

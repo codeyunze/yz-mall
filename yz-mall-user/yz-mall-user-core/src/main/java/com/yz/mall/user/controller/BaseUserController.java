@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2024-06-16 23:25:55
  */
 @RestController
-@RequestMapping("baseUser")
+@RequestMapping("base/user")
 public class BaseUserController extends ApiController {
 
     /**

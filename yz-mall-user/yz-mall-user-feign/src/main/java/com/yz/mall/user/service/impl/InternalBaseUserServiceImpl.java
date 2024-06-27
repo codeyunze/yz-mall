@@ -1,5 +1,6 @@
 package com.yz.mall.user.service.impl;
 
+import com.yz.advice.exception.BusinessException;
 import com.yz.mall.user.dto.InternalBaseUserBalanceDto;
 import com.yz.mall.user.feign.InternalBaseUserFeign;
 import com.yz.mall.user.service.InternalBaseUserService;
@@ -24,13 +25,17 @@ public class InternalBaseUserServiceImpl implements InternalBaseUserService {
 
     @Override
     public void deduct(String userId, BigDecimal amount) {
-        Result<Boolean> deducted = feign.deduct(new InternalBaseUserBalanceDto(userId, amount));
-        // if (!CodeEnum.SUCCESS.get().equals(deducted.getCode())) {
-        // }
+        Result<Boolean> result = feign.deduct(new InternalBaseUserBalanceDto(userId, amount));
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new BusinessException(result.getMessage());
+        }
     }
 
     @Override
     public void recharge(String userId, BigDecimal amount) {
-        Result<Boolean> deducted = feign.deduct(new InternalBaseUserBalanceDto(userId, amount));
+        Result<Boolean> result = feign.deduct(new InternalBaseUserBalanceDto(userId, amount));
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new BusinessException(result.getMessage());
+        }
     }
 }

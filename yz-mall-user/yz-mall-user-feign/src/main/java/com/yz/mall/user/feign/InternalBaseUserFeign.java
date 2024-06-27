@@ -13,19 +13,18 @@ import javax.validation.Valid;
  * @author yunze
  * @date 2024/6/22 23:44
  */
-@FeignClient(name = "yz-mall-user")
-@RequestMapping("internal/baseUser")
+@FeignClient(name = "yz-mall-user", contextId = "internalUser")
 public interface InternalBaseUserFeign {
 
     /**
      * 扣减余额
      */
-    @PostMapping("deduct")
+    @PostMapping("internal/base/user/deduct")
     public Result<Boolean> deduct(@RequestBody @Valid InternalBaseUserBalanceDto dto);
 
     /**
      * 账户充值
      */
-    @PostMapping("recharge")
+    @PostMapping("internal/base/user/recharge")
     public Result<Boolean> recharge(@RequestBody @Valid InternalBaseUserBalanceDto dto);
 }

@@ -60,6 +60,7 @@ public class BaseUserServiceImpl extends ServiceImpl<BaseUserMapper, BaseUser> i
 
     @Override
     public void deduct(String userId, BigDecimal amount) {
+        // TODO: 2024/6/27 星期四 yunze 加锁
         BaseUser user = baseMapper.selectById(userId);
         if (user.getBalance().compareTo(amount) < 0) {
             throw new BusinessException("账户余额不足");

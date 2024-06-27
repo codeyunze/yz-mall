@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @since 2024-06-16 23:25:55
  */
 @RestController
-@RequestMapping("internal/baseUser")
+@RequestMapping("internal/base/user")
 public class InternalBaseUserController extends ApiController {
 
     private final InternalBaseUserService service;

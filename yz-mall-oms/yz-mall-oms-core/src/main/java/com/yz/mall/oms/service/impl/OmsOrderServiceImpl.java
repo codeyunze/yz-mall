@@ -12,13 +12,19 @@ import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.mapper.OmsOrderMapper;
 import com.yz.mall.oms.service.OmsOrderProductRelationService;
 import com.yz.mall.oms.service.OmsOrderService;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.user.service.InternalBaseUserService;
 import com.yz.tools.PageFilter;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 订单信息表(OmsOrder)表服务实现类
@@ -33,9 +39,15 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final InternalUnqidService internalUnqidService;
 
-    public OmsOrderServiceImpl(OmsOrderProductRelationService omsOrderProductRelationService, InternalUnqidService internalUnqidService) {
+    private final InternalPmsStockService internalPmsStockService;
+
+    private final InternalBaseUserService internalBaseUserService;
+
+    public OmsOrderServiceImpl(OmsOrderProductRelationService omsOrderProductRelationService, InternalUnqidService internalUnqidService, InternalPmsStockService internalPmsStockService, InternalBaseUserService internalBaseUserService) {
         this.omsOrderProductRelationService = omsOrderProductRelationService;
         this.internalUnqidService = internalUnqidService;
+        this.internalPmsStockService = internalPmsStockService;
+        this.internalBaseUserService = internalBaseUserService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -57,8 +69,11 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         omsOrderProductRelationService.saveBatch(order.getId(), dto.getOmsOrderItems());
 
         // 扣减库存
+        List<InternalPmsStockDto> productStocks = dto.getOmsOrderItems().stream().map(t -> new InternalPmsStockDto(t.getProductId(), t.getProductQuantity())).collect(Collectors.toList());
+        internalPmsStockService.deductBatch(productStocks);
 
         // 扣减用户余额
+        internalBaseUserService.deduct(dto.getUserId(), dto.getPayAmount());
 
         return order.getId();
     }

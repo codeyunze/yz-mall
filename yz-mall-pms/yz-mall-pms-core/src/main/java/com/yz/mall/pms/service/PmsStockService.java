@@ -2,9 +2,12 @@ package com.yz.mall.pms.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.tools.PageFilter;
+
+import java.util.List;
 
 /**
  * 商品库存表(PmsStock)表服务接口
@@ -30,6 +33,13 @@ public interface PmsStockService extends IService<PmsStock> {
      * @return 是否扣减成功
      */
     Boolean deduct(String productId, Integer quantity);
+
+    /**
+     * 批量扣减指定商品库存
+     *
+     * @param productStocks 指定的商品及其库存
+     */
+    void deduct(List<InternalPmsStockDto> productStocks);
 
     /**
      * 增加库存

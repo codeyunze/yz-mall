@@ -4,7 +4,7 @@ package com.yz.mall.pms.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
-import com.yz.mall.pms.dto.PmsStockDto;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.PmsStockService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
@@ -52,7 +52,7 @@ public class PmsStockController extends ApiController {
      * 扣减商品库存
      */
     @PostMapping("deduct")
-    public Result<Boolean> deduct(@RequestBody @Valid PmsStockDto dto) {
+    public Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto) {
         return success(this.service.deduct(dto.getProductId(), dto.getQuantity()));
     }
 
@@ -60,7 +60,7 @@ public class PmsStockController extends ApiController {
      * 增加商品库存
      */
     @PostMapping("add")
-    public Result<Boolean> add(@RequestBody @Valid PmsStockDto dto) {
+    public Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto) {
         return success(this.service.add(dto.getProductId(), dto.getQuantity()));
     }
 }

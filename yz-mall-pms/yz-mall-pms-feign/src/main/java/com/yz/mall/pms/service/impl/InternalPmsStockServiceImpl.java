@@ -1,13 +1,15 @@
 package com.yz.mall.pms.service.impl;
 
 import com.yz.advice.exception.BusinessException;
-import com.yz.mall.pms.dto.PmsStockDto;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.feign.InternalPmsStockFeign;
 import com.yz.mall.pms.service.InternalPmsStockService;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author yunze
@@ -25,7 +27,7 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
 
     @Override
     public Boolean deduct(String productId, Integer quantity) {
-        Result<Boolean> result = feign.deduct(new PmsStockDto(productId, quantity));
+        Result<Boolean> result = feign.deduct(new InternalPmsStockDto(productId, quantity));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMessage());
         }
@@ -33,8 +35,16 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
+    public void deductBatch(List<InternalPmsStockDto> productStocks) {
+        Result<Boolean> result = feign.deductBatch(productStocks);
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new BusinessException(result.getMessage());
+        }
+    }
+
+    @Override
     public Boolean add(String productId, Integer quantity) {
-        Result<Boolean> result = feign.add(new PmsStockDto(productId, quantity));
+        Result<Boolean> result = feign.add(new InternalPmsStockDto(productId, quantity));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMessage());
         }

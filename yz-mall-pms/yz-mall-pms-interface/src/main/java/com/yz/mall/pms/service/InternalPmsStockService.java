@@ -1,5 +1,9 @@
 package com.yz.mall.pms.service;
 
+import com.yz.mall.pms.dto.InternalPmsStockDto;
+
+import java.util.List;
+
 /**
  * @author yunze
  * @date 2024/6/23 09:14
@@ -14,6 +18,13 @@ public interface InternalPmsStockService {
      * @return 是否扣减成功
      */
     Boolean deduct(String productId, Integer quantity);
+
+    /**
+     * 批量扣减指定商品库存
+     *
+     * @param productStocks 指定的商品及其库存
+     */
+    void deductBatch(List<InternalPmsStockDto> productStocks);
 
     /**
      * 增加库存
