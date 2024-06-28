@@ -1,10 +1,10 @@
 
 server:
-  port: 30004
+  port: 30008
 
 spring:
   application:
-    name: yz-user
+    name: yz-unqid
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     dynamic:
@@ -13,12 +13,12 @@ spring:
       datasource:
         master:
           url: jdbc:mysql://127.0.0.1:3306/mall?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-          username: mall
+          username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
         slave:
           url: jdbc:mysql://127.0.0.1:3306/mall?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-          username: read_only
+          username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
 
