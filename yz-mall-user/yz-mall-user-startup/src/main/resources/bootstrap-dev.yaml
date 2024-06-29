@@ -5,6 +5,9 @@ spring:
       config:
         namespace: mall
         extension-configs[0]:
+          data-id: yz-mall-datasource.yaml
+          refresh: true
+        extension-configs[1]:
           data-id: yz-mall-user.yaml
           refresh: true
       discovery:
