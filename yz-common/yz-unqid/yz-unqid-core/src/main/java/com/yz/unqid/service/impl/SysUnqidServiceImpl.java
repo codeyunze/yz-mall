@@ -6,18 +6,22 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
 import com.yz.tools.PageFilter;
+import com.yz.tools.RedissonLockKey;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;
 import com.yz.unqid.entity.SysUnqid;
 import com.yz.unqid.mapper.SysUnqidMapper;
 import com.yz.unqid.service.SysUnqidService;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 系统-序列号表(SysUnqid)表服务实现类
@@ -27,6 +31,9 @@ import java.util.List;
  */
 @Service
 public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> implements SysUnqidService {
+
+    @Resource
+    private Redisson redisson;
 
     @Override
     public String save(SysUnqidAddDto dto) {
@@ -52,52 +59,70 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
 
     @Override
     public String generateSerialNumber(String prefix, Integer numberLength) {
-        SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
-        if (bo == null) {
-            bo = new SysUnqid();
-            bo.setId(IdUtil.getSnowflakeNextIdStr());
-            bo.setSerialNumber(1);
-            bo.setPrefix(prefix);
-        } else {
-            bo.setSerialNumber(bo.getSerialNumber() + 1);
-        }
+        // 加锁用于控制防止出现重复序列号情况
+        RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
+        redissonLock.lock(10, TimeUnit.SECONDS);
 
-        boolean saved = super.saveOrUpdate(bo);
-        if (!saved) {
-            throw new BusinessException(prefix + "流水号生成失败");
-        }
+        try {
+            SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
+            if (bo == null) {
+                bo = new SysUnqid();
+                bo.setId(IdUtil.getSnowflakeNextIdStr());
+                bo.setSerialNumber(1);
+                bo.setPrefix(prefix);
+            } else {
+                bo.setSerialNumber(bo.getSerialNumber() + 1);
+            }
 
-        return generateProcessor(prefix, numberLength, bo.getSerialNumber());
+            boolean saved = super.saveOrUpdate(bo);
+            if (!saved) {
+                throw new BusinessException(prefix + "流水号生成失败");
+            }
+
+            String code = generateProcessor(prefix, numberLength, bo.getSerialNumber());
+            baseMapper.record(code);
+
+            return code;
+        } finally {
+            redissonLock.unlock();
+        }
     }
 
     @Override
     public List<String> generateSerialNumbers(String prefix, Integer numberLength, Integer quantity) {
-        SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
-        if (bo == null) {
-            bo = new SysUnqid();
-            bo.setId(IdUtil.getSnowflakeNextIdStr());
-            bo.setSerialNumber(0);
-            bo.setPrefix(prefix);
-        }
+        RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
+        redissonLock.lock(10, TimeUnit.SECONDS);
 
-        List<String> serialNumbers = new ArrayList<>();
+        try {
+            SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
+            if (bo == null) {
+                bo = new SysUnqid();
+                bo.setId(IdUtil.getSnowflakeNextIdStr());
+                bo.setSerialNumber(0);
+                bo.setPrefix(prefix);
+            }
 
-        for (int i = 1; i <= quantity; i++) {
-            serialNumbers.add(generateProcessor(prefix, numberLength, bo.getSerialNumber() + i));
-        }
-        bo.setSerialNumber(bo.getSerialNumber() + quantity);
+            List<String> serialNumbers = new ArrayList<>();
 
-        boolean saved = super.saveOrUpdate(bo);
-        if (!saved) {
-            throw new BusinessException(prefix + "流水号生成失败");
+            for (int i = 1; i <= quantity; i++) {
+                serialNumbers.add(generateProcessor(prefix, numberLength, bo.getSerialNumber() + i));
+            }
+            bo.setSerialNumber(bo.getSerialNumber() + quantity);
+
+            boolean saved = super.saveOrUpdate(bo);
+            if (!saved) {
+                throw new BusinessException(prefix + "流水号生成失败");
+            }
+            return serialNumbers;
+        } finally {
+            redissonLock.unlock();
         }
-        return serialNumbers;
     }
 
     /**
      * 流水号生成加工
      *
-     * @param prefix 流水号前缀
+     * @param prefix       流水号前缀
      * @param numberLength 流水号的序号长度
      * @param serialNumber 流水号的本次序号
      * @return 流水号
