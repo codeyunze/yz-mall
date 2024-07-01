@@ -73,7 +73,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         internalPmsStockService.deductBatch(productStocks);
 
         // 扣减用户余额
-        internalBaseUserService.deduct(dto.getUserId(), dto.getPayAmount());
+        // internalBaseUserService.deduct(dto.getUserId(), dto.getPayAmount());
 
         return order.getId();
     }

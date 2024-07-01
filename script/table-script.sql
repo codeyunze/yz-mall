@@ -48,3 +48,16 @@ alter table mall.base_user add balance decimal(15, 2) default 0 comment '账户�
 
 alter table mall.sys_unqid
     modify updated_time datetime null on update current_timestamp comment '更新时间';
+
+
+
+create table test_serial_number
+(
+    id           int auto_increment primary key,
+    created_time datetime default current_timestamp comment '创建时间',
+    code         varchar(32) not null comment '序列号'
+) comment = '测试表-序列号生成';
+
+insert into test_serial_number (code) values ('1000001');
+
+select * from test_serial_number;

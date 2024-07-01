@@ -5,3 +5,7 @@ server:
 spring:
   application:
     name: yz-unqid
+  redis:
+    host: 192.168.3.129
+    port: 6379
+    database: 0
