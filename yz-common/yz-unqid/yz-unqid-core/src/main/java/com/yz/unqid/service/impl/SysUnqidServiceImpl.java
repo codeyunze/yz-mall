@@ -74,6 +74,7 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
                 bo.setSerialNumber(bo.getSerialNumber() + 1);
             }
 
+            // TODO: 2024/7/3 星期三 yunze 调整为redis+mysql的模式记录序列号的流水号
             boolean saved = super.saveOrUpdate(bo);
             if (!saved) {
                 throw new BusinessException(prefix + "流水号生成失败");
