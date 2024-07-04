@@ -2,10 +2,3 @@
 server:
   port: 30008
 
-spring:
-  application:
-    name: yz-unqid
-  redis:
-    host: 192.168.3.129
-    port: 6379
-    database: 0
