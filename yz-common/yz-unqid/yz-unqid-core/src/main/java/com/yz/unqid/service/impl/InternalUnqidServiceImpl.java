@@ -2,6 +2,7 @@ package com.yz.unqid.service.impl;
 
 import com.yz.unqid.service.InternalUnqidService;
 import com.yz.unqid.service.SysUnqidService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class InternalUnqidServiceImpl implements InternalUnqidService {
 
     private final SysUnqidService service;
 
-    public InternalUnqidServiceImpl(SysUnqidService service) {
+    public InternalUnqidServiceImpl(@Qualifier("sysUnqidServiceImpl") SysUnqidService service) {
         this.service = service;
     }
 

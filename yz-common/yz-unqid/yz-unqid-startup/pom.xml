@@ -45,12 +45,6 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-redisson</artifactId>
-            <version>${revision}</version>
-        </dependency>
     </dependencies>
 
 

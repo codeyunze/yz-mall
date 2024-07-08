@@ -58,8 +58,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-redisson</artifactId>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 

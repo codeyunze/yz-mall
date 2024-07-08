@@ -29,7 +29,7 @@ public class SysUnqidController extends ApiController {
     /**
      * 服务对象
      */
-    @Resource
+    @Resource(name = "sysUnqidServiceImpl")
     private SysUnqidService service;
 
     /**

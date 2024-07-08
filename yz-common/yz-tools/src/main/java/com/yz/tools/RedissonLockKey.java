@@ -18,4 +18,14 @@ public class RedissonLockKey {
         return "lock:unqid:" + prefix;
     }
 
+    /**
+     * 获取序列号信息的key
+     *
+     * @param prefix 序列号前缀
+     * @return 序列号信息的key
+     */
+    public static String objUnqid(String prefix) {
+        return "obj:unqid:" + prefix;
+    }
+
 }

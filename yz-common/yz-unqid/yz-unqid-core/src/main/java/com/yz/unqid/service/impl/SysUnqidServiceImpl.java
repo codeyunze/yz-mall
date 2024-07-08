@@ -29,11 +29,11 @@ import java.util.concurrent.TimeUnit;
  * @author yunze
  * @since 2024-06-23 22:52:36
  */
-@Service
+@Service("sysUnqidServiceImpl")
 public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> implements SysUnqidService {
 
     @Resource
-    private Redisson redisson;
+    protected Redisson redisson;
 
     @Override
     public String save(SysUnqidAddDto dto) {
@@ -65,23 +65,26 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
 
         try {
             SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
+            boolean saved = false;
             if (bo == null) {
                 bo = new SysUnqid();
                 bo.setId(IdUtil.getSnowflakeNextIdStr());
                 bo.setSerialNumber(1);
                 bo.setPrefix(prefix);
+                saved = baseMapper.insert(bo) > 0;
             } else {
                 bo.setSerialNumber(bo.getSerialNumber() + 1);
+                saved = baseMapper.updateById(bo) > 0;
             }
 
             // TODO: 2024/7/3 星期三 yunze 调整为redis+mysql的模式记录序列号的流水号
-            boolean saved = super.saveOrUpdate(bo);
+            // boolean saved = super.saveOrUpdate(bo);
             if (!saved) {
                 throw new BusinessException(prefix + "流水号生成失败");
             }
 
             String code = generateProcessor(prefix, numberLength, bo.getSerialNumber());
-            baseMapper.record(code);
+            // baseMapper.record(code);
 
             return code;
         } finally {
@@ -128,7 +131,7 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
      * @param serialNumber 流水号的本次序号
      * @return 流水号
      */
-    private String generateProcessor(String prefix, Integer numberLength, Integer serialNumber) {
+    protected String generateProcessor(String prefix, Integer numberLength, Integer serialNumber) {
         StringBuilder codeSerialNumber = new StringBuilder(serialNumber.toString());
 
         // 补零 zero padding
