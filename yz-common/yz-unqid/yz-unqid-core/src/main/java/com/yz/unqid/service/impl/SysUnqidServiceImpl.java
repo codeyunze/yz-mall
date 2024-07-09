@@ -65,7 +65,7 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
 
         try {
             SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
-            boolean saved = false;
+            boolean saved;
             if (bo == null) {
                 bo = new SysUnqid();
                 bo.setId(IdUtil.getSnowflakeNextIdStr());
