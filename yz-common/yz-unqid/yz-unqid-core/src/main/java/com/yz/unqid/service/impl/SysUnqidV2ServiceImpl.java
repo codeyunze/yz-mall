@@ -8,11 +8,13 @@ import com.yz.advice.exception.BusinessException;
 import com.yz.tools.RedissonLockKey;
 import com.yz.unqid.entity.SysUnqid;
 import org.redisson.api.RLock;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,15 +61,21 @@ public class SysUnqidV2ServiceImpl extends SysUnqidServiceImpl {
      * @param bo     序列号对象信息
      */
     private Integer updateSysUnqidCache(String prefix, SysUnqid bo) {
+        BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedissonLockKey.objUnqid(prefix));
         if (bo == null) {
             bo = new SysUnqid();
             bo.setId(IdUtil.getSnowflakeNextIdStr());
             bo.setSerialNumber(1);
             bo.setPrefix(prefix);
+
+            boundHashOps.put("id", bo.getId());
+            boundHashOps.put("serialNumber", bo.getSerialNumber());
+            boundHashOps.put("prefix", bo.getPrefix());
         } else {
             bo.setSerialNumber(bo.getSerialNumber() + 1);
+
+            boundHashOps.put("serialNumber", bo.getSerialNumber());
         }
-        redisTemplate.boundHashOps(RedissonLockKey.objUnqid(prefix)).put(prefix, bo);
         return bo.getSerialNumber();
     }
 
@@ -78,20 +86,24 @@ public class SysUnqidV2ServiceImpl extends SysUnqidServiceImpl {
      * @return 序列号前缀对应的序列号对象信息
      */
     private SysUnqid getSysUnqidPriorityCache(String prefix) {
-        Object obj = redisTemplate.boundHashOps(RedissonLockKey.objUnqid(prefix)).get(prefix);
+        BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedissonLockKey.objUnqid(prefix));
+        Object obj = boundHashOps.get("id");
         SysUnqid bo;
         if (obj == null) {
+            // redis缓存里没有序列号数据，从mysql里查询，如果还没有，就直接返回空
             bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
-            if (bo != null) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                try {
-                    redisTemplate.boundHashOps(RedissonLockKey.objUnqid(prefix)).put(prefix, objectMapper.writeValueAsString(bo));
-                } catch (JsonProcessingException e) {
-                    throw new BusinessException(e.getMessage());
-                }
+            if (bo == null) {
+                return null;
             }
+            boundHashOps.put("id", bo.getId());
+            boundHashOps.put("serialNumber", bo.getSerialNumber());
+            boundHashOps.put("prefix", bo.getPrefix());
         } else {
-            bo = (SysUnqid) obj;
+            // redis缓存里有序列号数据
+            bo = new SysUnqid();
+            bo.setId(obj.toString());
+            bo.setSerialNumber((Integer) Objects.requireNonNull(boundHashOps.get("serialNumber")));
+            bo.setPrefix((String) boundHashOps.get("prefix"));
         }
         return bo;
     }

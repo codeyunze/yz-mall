@@ -32,6 +32,12 @@ nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHO
 
 
 
+生产环境加锁，减少数据库访问量，不用 `super.saveOrUpdate` ，使用redis存储序列号的流水号记录数据西悉尼，不用每次获取序列号都需要去数据库查询该序列号前缀对应的流水号用到了哪里
+
+![image-20240710233619887](./images/image-20240710233619887.png)
+
+
+
 > Label:请求的名称，就是我们在进行测试的httprequest sampler的名称
 >
 > Samples:总共发给服务器的请求数量，如果模拟10个用户，每个用户迭代10次，那么总的请求数为：10*10 =100次；
