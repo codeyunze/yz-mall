@@ -123,6 +123,14 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
         }
     }
 
+    @Override
+    public boolean exists(String prefix) {
+        LambdaQueryWrapper<SysUnqid> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(SysUnqid::getId).eq(SysUnqid::getPrefix, prefix).last("limit 1");
+        SysUnqid one = baseMapper.selectOne(queryWrapper);
+        return one != null;
+    }
+
     /**
      * 流水号生成加工
      *

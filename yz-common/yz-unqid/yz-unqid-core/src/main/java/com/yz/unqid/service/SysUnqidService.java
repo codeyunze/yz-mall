@@ -1,5 +1,6 @@
 package com.yz.unqid.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.unqid.dto.SysUnqidAddDto;
@@ -62,5 +63,11 @@ public interface SysUnqidService extends IService<SysUnqid> {
      */
     List<String> generateSerialNumbers(String prefix, Integer numberLength, Integer quantity);
 
+    /**
+     * 数据是否存在
+     * @param prefix 序列号前缀
+     * @return true: 数据已经存在;    false: 数据不存在
+     */
+    boolean exists(String prefix);
 }
 
