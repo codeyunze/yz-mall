@@ -8,10 +8,8 @@ import com.yz.tools.RedissonLockKey;
 import com.yz.unqid.entity.SysUnqid;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -23,9 +21,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Service("sysUnqidV2ServiceImpl")
 public class SysUnqidV2ServiceImpl extends SysUnqidServiceImpl {
-
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public String generateSerialNumber(String prefix, Integer numberLength) {

@@ -45,7 +45,7 @@ public class SysUnqidController extends ApiController {
      */
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysUnqidUpdateDto dto) {
-        return success(this.service.update(dto));
+        return success(this.service.cachePersistence(dto));
     }
 
     /**

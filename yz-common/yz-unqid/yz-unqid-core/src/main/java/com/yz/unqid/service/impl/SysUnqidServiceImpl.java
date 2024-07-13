@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
 import com.yz.tools.PageFilter;
+import com.yz.tools.RedisCacheKey;
 import com.yz.tools.RedissonLockKey;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
@@ -16,6 +17,8 @@ import com.yz.unqid.service.SysUnqidService;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.BoundHashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,6 +38,9 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
     @Resource
     protected Redisson redisson;
 
+    @Resource
+    protected RedisTemplate<String, Object> redisTemplate;
+
     @Override
     public String save(SysUnqidAddDto dto) {
         SysUnqid bo = new SysUnqid();
@@ -45,10 +51,37 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
     }
 
     @Override
-    public boolean update(SysUnqidUpdateDto dto) {
+    public boolean cachePersistence(SysUnqidUpdateDto dto) {
         SysUnqid bo = new SysUnqid();
         BeanUtils.copyProperties(dto, bo);
         return baseMapper.updateById(bo) > 0;
+    }
+
+    @Override
+    public void cachePersistence(String prefix) {
+        RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
+        redissonLock.lock(10, TimeUnit.SECONDS);
+
+        try {
+            SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
+
+            BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+            Integer serialNumber = (Integer) boundHashOps.get("serialNumber");
+
+            if (bo == null) {
+                bo = new SysUnqid();
+                String id = (String) boundHashOps.get("id");
+                bo.setId(id);
+                bo.setSerialNumber(serialNumber);
+                bo.setPrefix(prefix);
+                baseMapper.insert(bo);
+            } else {
+                bo.setSerialNumber(serialNumber);
+                baseMapper.updateById(bo);
+            }
+        } finally {
+            redissonLock.unlock();
+        }
     }
 
     @Override

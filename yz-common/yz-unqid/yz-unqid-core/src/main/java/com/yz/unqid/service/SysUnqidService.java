@@ -1,13 +1,12 @@
 package com.yz.unqid.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yz.tools.PageFilter;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;
 import com.yz.unqid.entity.SysUnqid;
-import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,7 +33,14 @@ public interface SysUnqidService extends IService<SysUnqid> {
      * @param dto 更新基础数据
      * @return 是否操作成功
      */
-    boolean update(@Valid SysUnqidUpdateDto dto);
+    boolean cachePersistence(@Valid SysUnqidUpdateDto dto);
+
+    /**
+     * 更新数据
+     *
+     * @param prefix 序列号前缀
+     */
+    void cachePersistence(String prefix);
 
     /**
      * 分页查询
@@ -65,6 +71,7 @@ public interface SysUnqidService extends IService<SysUnqid> {
 
     /**
      * 数据是否存在
+     *
      * @param prefix 序列号前缀
      * @return true: 数据已经存在;    false: 数据不存在
      */
