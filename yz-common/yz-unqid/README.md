@@ -12,6 +12,16 @@ nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHO
 
 
 
+## 性能测试参数
+
+| 线程数（模拟用户数量） | Ramp-Up时间(秒) | 循环次数（每个线程） |
+| ---------------------- | --------------- | -------------------- |
+| 2000                   | 10              | 20                   |
+
+空接口性能（接口无任何业务逻辑）
+
+![image-20240714232004794](./images/image-20240714232004794.png)
+
 本地环境不加锁
 
 ![image-20240706164909238](./images/Aggregate Report Unlocked.png)
@@ -34,9 +44,7 @@ nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHO
 
 生产环境加锁，减少数据库访问量，不用 `super.saveOrUpdate` ，使用redis存储序列号的流水号记录数据西悉尼，不用每次获取序列号都需要去数据库查询该序列号前缀对应的流水号用到了哪里
 
-![image-20240710233619887](./images/image-20240710233619887.png)
-
-
+![image-20240714225625810](./images/image-20240714225625810.png)
 
 > Label:请求的名称，就是我们在进行测试的httprequest sampler的名称
 >

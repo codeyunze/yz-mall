@@ -26,7 +26,7 @@ public class ScheduleCachePersistence {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
-    @Autowired
+    @Resource(name = "sysUnqidServiceImpl")
     private SysUnqidService service;
 
     /**
@@ -40,7 +40,7 @@ public class ScheduleCachePersistence {
         for (String key : keys) {
             log.info(key);
             // 截取序列号前缀
-            String prefix = key.substring(key.lastIndexOf(":"));
+            String prefix = key.substring(key.lastIndexOf(":") + 1);
 
             // 缓存数据持久存储到mysql
             service.cachePersistence(prefix);
