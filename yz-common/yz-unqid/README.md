@@ -18,33 +18,29 @@ nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHO
 | ---------------------- | --------------- | -------------------- |
 | 2000                   | 10              | 20                   |
 
+### 示例
+
 空接口性能（接口无任何业务逻辑）
 
 ![image-20240714232004794](./images/image-20240714232004794.png)
 
-本地环境不加锁
-
-![image-20240706164909238](./images/Aggregate Report Unlocked.png)
-
-本地环境加锁
-
-![image-20240706164536431](./images/Aggregate Report Locked.png)
-
-生产环境加锁
-
-![Aggregate Report Prod](./images/Aggregate Report Prod.png)
+### 版本一：存MySQL
 
 生产环境加锁，减少数据库访问量，不用 `super.saveOrUpdate` , 明确使用`baseMapper.updateById` 或 `baseMapper.insert` ，因为 `saveOrUpdate` 在执行更新和插入之前还会去select一下指定数据是否存在。
 
-![Aggregate Report Prod-2](./images/Aggregate Report Prod-2.png)
+![image-20240715000811165](./images/image-20240715000811165.png)
 
-![image-20240706171929928](./images/image-20240706171929928.png)
+### 版本二：MySQL + Redis
+
+生产环境加锁，减少数据库访问量，不用 `super.saveOrUpdate` ，使用redis存储序列号的流水号记录数据，不用每次获取序列号都需要去数据库查询该序列号前缀对应的流水号用到了哪里
+
+![image-20240715002348456](./images/image-20240715002348456.png)
+
+### 版本三：MySQL + Redis + 提前生成批量序列号
 
 
 
-生产环境加锁，减少数据库访问量，不用 `super.saveOrUpdate` ，使用redis存储序列号的流水号记录数据西悉尼，不用每次获取序列号都需要去数据库查询该序列号前缀对应的流水号用到了哪里
 
-![image-20240714225625810](./images/image-20240714225625810.png)
 
 > Label:请求的名称，就是我们在进行测试的httprequest sampler的名称
 >

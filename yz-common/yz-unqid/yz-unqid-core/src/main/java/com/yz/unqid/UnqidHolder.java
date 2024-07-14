@@ -1,9 +1,9 @@
 package com.yz.unqid;
 
-import com.yz.unqid.dto.SysUnqidUpdateDto;
+import com.yz.unqid.entity.SysUnqid;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author yunze
@@ -11,16 +11,7 @@ import java.util.List;
  */
 public class UnqidHolder {
 
-    private static List<SysUnqidUpdateDto> addUnqids = new ArrayList<>();
+    private static ConcurrentHashMap<String, LinkedList<SysUnqid>> serialNumbers = new ConcurrentHashMap<>();
 
-    private static List<SysUnqidUpdateDto> updateUnqids = new ArrayList<>();
-
-    public List<SysUnqidUpdateDto> getAddUnqids() {
-        return addUnqids;
-    }
-
-    public static void addNewUnqid(SysUnqidUpdateDto dto) {
-        addUnqids.add(dto);
-    }
 
 }
