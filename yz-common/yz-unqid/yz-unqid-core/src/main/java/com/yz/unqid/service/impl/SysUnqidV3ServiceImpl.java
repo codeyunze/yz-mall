@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yz.advice.exception.BusinessException;
 import com.yz.tools.RedisCacheKey;
 import com.yz.tools.RedissonLockKey;
+import com.yz.unqid.UnqidHolder;
+import com.yz.unqid.dto.SerialNumberDto;
 import com.yz.unqid.entity.SysUnqid;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -22,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 @Service("sysUnqidV3ServiceImpl")
 public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
 
+    private final Integer numberPoolSize = 1000;
+
     @Override
     public String generateSerialNumber(String prefix, Integer numberLength) {
         // 加锁用于控制防止出现重复序列号情况
@@ -29,19 +33,25 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
         redissonLock.lock(10, TimeUnit.SECONDS);
 
         try {
+            // 从流水号号池获取流水号
+            SerialNumberDto serialNumberDto = UnqidHolder.get(prefix);
+            if (serialNumberDto != null) {
+                return serialNumberDto.getCode();
+            }
+
             // 从缓存获取序列号对象信息
             SysUnqid bo = getSysUnqidPriorityCache(prefix);
 
-            // 获取序列号的最新流水号，并更新缓存信息
+            // 获取本批次第一个号的序列号，并更新缓存信息
             Integer serialNumber = updateSysUnqidCache(prefix, bo);
 
-            if (serialNumber == null) {
-                throw new BusinessException(prefix + "流水号生成失败");
+            for (int i = 0; i < numberPoolSize; i++) {
+                Integer currentSerialNumber = serialNumber + i;
+                String code = generateProcessor(prefix, numberLength, currentSerialNumber);
+                UnqidHolder.add(prefix, new SerialNumberDto(code, currentSerialNumber));
             }
 
-            String code = generateProcessor(prefix, numberLength, serialNumber);
-            // baseMapper.record(code);
-            return code;
+            return Objects.requireNonNull(UnqidHolder.get(prefix)).getCode();
         } finally {
             redissonLock.unlock();
         }
@@ -52,25 +62,30 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
      *
      * @param prefix 序列号前缀
      * @param bo     序列号对象信息
+     * @return 本次初始序列号（第一个流水号的序列号）
      */
     private Integer updateSysUnqidCache(String prefix, SysUnqid bo) {
         BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+        Integer currentInitialNumber;
         if (bo == null) {
+            currentInitialNumber = 1;
+
             bo = new SysUnqid();
             bo.setId(IdUtil.getSnowflakeNextIdStr());
-            bo.setSerialNumber(1);
+            bo.setSerialNumber(numberPoolSize);
             bo.setPrefix(prefix);
 
             boundHashOps.put("id", bo.getId());
             boundHashOps.put("serialNumber", bo.getSerialNumber());
             boundHashOps.put("prefix", bo.getPrefix());
         } else {
-            bo.setSerialNumber(bo.getSerialNumber() + 1);
+            currentInitialNumber = bo.getSerialNumber() + 1;
+
+            bo.setSerialNumber(bo.getSerialNumber() + numberPoolSize);
 
             boundHashOps.put("serialNumber", bo.getSerialNumber());
         }
-
-        return bo.getSerialNumber();
+        return currentInitialNumber;
     }
 
     /**
