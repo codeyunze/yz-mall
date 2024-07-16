@@ -79,6 +79,7 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
                 bo.setSerialNumber(serialNumber);
                 baseMapper.updateById(bo);
             }
+            redisTemplate.delete(RedisCacheKey.objUnqid(prefix));
         } finally {
             redissonLock.unlock();
         }
