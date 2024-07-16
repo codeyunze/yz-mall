@@ -3,7 +3,7 @@ spring:
     nacos:
       server-addr: 127.0.0.1:8848
       config:
-        namespace: mall
+        namespace: mall-prod
         extension-configs[0]:
           data-id: yz-mall-datasource.yaml
           refresh: true

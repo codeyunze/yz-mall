@@ -29,7 +29,7 @@ public class SysUnqidController extends ApiController {
     /**
      * 服务对象
      */
-    @Resource
+    @Resource(name = "sysUnqidServiceImpl")
     private SysUnqidService service;
 
     /**
@@ -45,7 +45,7 @@ public class SysUnqidController extends ApiController {
      */
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysUnqidUpdateDto dto) {
-        return success(this.service.update(dto));
+        return success(this.service.cachePersistence(dto));
     }
 
     /**
