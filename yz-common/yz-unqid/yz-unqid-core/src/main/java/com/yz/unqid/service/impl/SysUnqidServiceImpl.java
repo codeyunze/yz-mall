@@ -6,18 +6,25 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
 import com.yz.tools.PageFilter;
+import com.yz.tools.RedisCacheKey;
+import com.yz.tools.RedissonLockKey;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;
 import com.yz.unqid.entity.SysUnqid;
 import com.yz.unqid.mapper.SysUnqidMapper;
 import com.yz.unqid.service.SysUnqidService;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.BoundHashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 系统-序列号表(SysUnqid)表服务实现类
@@ -25,8 +32,14 @@ import java.util.List;
  * @author yunze
  * @since 2024-06-23 22:52:36
  */
-@Service
+@Service("sysUnqidServiceImpl")
 public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> implements SysUnqidService {
+
+    @Resource
+    protected Redisson redisson;
+
+    @Resource
+    protected RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public String save(SysUnqidAddDto dto) {
@@ -38,10 +51,38 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
     }
 
     @Override
-    public boolean update(SysUnqidUpdateDto dto) {
+    public boolean cachePersistence(SysUnqidUpdateDto dto) {
         SysUnqid bo = new SysUnqid();
         BeanUtils.copyProperties(dto, bo);
         return baseMapper.updateById(bo) > 0;
+    }
+
+    @Override
+    public void cachePersistence(String prefix) {
+        RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
+        redissonLock.lock(10, TimeUnit.SECONDS);
+
+        try {
+            SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
+
+            BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+            Integer serialNumber = (Integer) boundHashOps.get("serialNumber");
+
+            if (bo == null) {
+                bo = new SysUnqid();
+                String id = (String) boundHashOps.get("id");
+                bo.setId(id);
+                bo.setSerialNumber(serialNumber);
+                bo.setPrefix(prefix);
+                baseMapper.insert(bo);
+            } else {
+                bo.setSerialNumber(serialNumber);
+                baseMapper.updateById(bo);
+            }
+            redisTemplate.delete(RedisCacheKey.objUnqid(prefix));
+        } finally {
+            redissonLock.unlock();
+        }
     }
 
     @Override
@@ -52,57 +93,87 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
 
     @Override
     public String generateSerialNumber(String prefix, Integer numberLength) {
-        SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
-        if (bo == null) {
-            bo = new SysUnqid();
-            bo.setId(IdUtil.getSnowflakeNextIdStr());
-            bo.setSerialNumber(1);
-            bo.setPrefix(prefix);
-        } else {
-            bo.setSerialNumber(bo.getSerialNumber() + 1);
-        }
+        // 加锁用于控制防止出现重复序列号情况
+        RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
+        redissonLock.lock(10, TimeUnit.SECONDS);
 
-        boolean saved = super.saveOrUpdate(bo);
-        if (!saved) {
-            throw new BusinessException(prefix + "流水号生成失败");
-        }
+        try {
+            SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
+            boolean saved;
+            if (bo == null) {
+                bo = new SysUnqid();
+                bo.setId(IdUtil.getSnowflakeNextIdStr());
+                bo.setSerialNumber(1);
+                bo.setPrefix(prefix);
+                saved = baseMapper.insert(bo) > 0;
+            } else {
+                bo.setSerialNumber(bo.getSerialNumber() + 1);
+                saved = baseMapper.updateById(bo) > 0;
+            }
 
-        return generateProcessor(prefix, numberLength, bo.getSerialNumber());
+            // TODO: 2024/7/3 星期三 yunze 调整为redis+mysql的模式记录序列号的流水号
+            // boolean saved = super.saveOrUpdate(bo);
+            if (!saved) {
+                throw new BusinessException(prefix + "流水号生成失败");
+            }
+
+            String code = generateProcessor(prefix, numberLength, bo.getSerialNumber());
+            // baseMapper.record(code);
+
+            return code;
+        } finally {
+            redissonLock.unlock();
+        }
     }
 
     @Override
     public List<String> generateSerialNumbers(String prefix, Integer numberLength, Integer quantity) {
-        SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
-        if (bo == null) {
-            bo = new SysUnqid();
-            bo.setId(IdUtil.getSnowflakeNextIdStr());
-            bo.setSerialNumber(0);
-            bo.setPrefix(prefix);
-        }
+        RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
+        redissonLock.lock(10, TimeUnit.SECONDS);
 
-        List<String> serialNumbers = new ArrayList<>();
+        try {
+            SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
+            if (bo == null) {
+                bo = new SysUnqid();
+                bo.setId(IdUtil.getSnowflakeNextIdStr());
+                bo.setSerialNumber(0);
+                bo.setPrefix(prefix);
+            }
 
-        for (int i = 1; i <= quantity; i++) {
-            serialNumbers.add(generateProcessor(prefix, numberLength, bo.getSerialNumber() + i));
-        }
-        bo.setSerialNumber(bo.getSerialNumber() + quantity);
+            List<String> serialNumbers = new ArrayList<>();
 
-        boolean saved = super.saveOrUpdate(bo);
-        if (!saved) {
-            throw new BusinessException(prefix + "流水号生成失败");
+            for (int i = 1; i <= quantity; i++) {
+                serialNumbers.add(generateProcessor(prefix, numberLength, bo.getSerialNumber() + i));
+            }
+            bo.setSerialNumber(bo.getSerialNumber() + quantity);
+
+            boolean saved = super.saveOrUpdate(bo);
+            if (!saved) {
+                throw new BusinessException(prefix + "流水号生成失败");
+            }
+            return serialNumbers;
+        } finally {
+            redissonLock.unlock();
         }
-        return serialNumbers;
+    }
+
+    @Override
+    public boolean exists(String prefix) {
+        LambdaQueryWrapper<SysUnqid> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(SysUnqid::getId).eq(SysUnqid::getPrefix, prefix).last("limit 1");
+        SysUnqid one = baseMapper.selectOne(queryWrapper);
+        return one != null;
     }
 
     /**
      * 流水号生成加工
      *
-     * @param prefix 流水号前缀
+     * @param prefix       流水号前缀
      * @param numberLength 流水号的序号长度
      * @param serialNumber 流水号的本次序号
      * @return 流水号
      */
-    private String generateProcessor(String prefix, Integer numberLength, Integer serialNumber) {
+    protected String generateProcessor(String prefix, Integer numberLength, Integer serialNumber) {
         StringBuilder codeSerialNumber = new StringBuilder(serialNumber.toString());
 
         // 补零 zero padding

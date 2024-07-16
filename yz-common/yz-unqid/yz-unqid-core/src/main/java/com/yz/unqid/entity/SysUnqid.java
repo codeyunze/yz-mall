@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
  * @author yunze
  * @since 2024-06-23 22:52:36
  */
-public class SysUnqid {
+public class SysUnqid implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键标识
