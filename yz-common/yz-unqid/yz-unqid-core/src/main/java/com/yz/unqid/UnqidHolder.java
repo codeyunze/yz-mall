@@ -3,11 +3,9 @@ package com.yz.unqid;
 import com.yz.unqid.dto.SerialNumberDto;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 流水号号池
@@ -20,7 +18,7 @@ public class UnqidHolder {
     /**
      * 流水号号池
      */
-    private static ConcurrentHashMap<String, LinkedList<SerialNumberDto>> serialNumbers = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, ConcurrentLinkedQueue<SerialNumberDto>> serialNumberPool = new ConcurrentHashMap<>();
 
     /**
      * 本批次流水号生成时间
@@ -35,13 +33,11 @@ public class UnqidHolder {
      * @return 流水号信息
      */
     public static SerialNumberDto get(String prefix) {
-        LinkedList<SerialNumberDto> list = serialNumbers.get(prefix);
-        if (CollectionUtils.isEmpty(list)) {
+        ConcurrentLinkedQueue<SerialNumberDto> array = serialNumberPool.get(prefix);
+        if (CollectionUtils.isEmpty(array)) {
             return null;
         }
-        SerialNumberDto serialNumber = list.get(0);
-        list.remove(0);
-        return serialNumber;
+        return array.poll();
     }
 
     /**
@@ -51,40 +47,25 @@ public class UnqidHolder {
      * @return 剩余流水号数量
      */
     public static Integer getCount(String prefix) {
-        if (!serialNumbers.containsKey(prefix)) {
+        if (!serialNumberPool.containsKey(prefix)) {
             return 0;
         }
-        return serialNumbers.get(prefix).size();
+        return serialNumberPool.get(prefix).size();
     }
 
     /**
      * 补充指定前缀的流水号
      *
-     * @param prefix  序列号前缀
-     * @param serials 流水号
-     */
-    public static void add(String prefix, LinkedList<SerialNumberDto> serials) {
-        if (serialNumbers.containsKey(prefix)) {
-            serialNumbers.get(prefix).addAll(serials);
-        } else {
-            serialNumbers.put(prefix, serials);
-        }
-
-        generateTimes.put(prefix, LocalDateTime.now());
-    }
-
-    /**
-     * 补充指定前缀的流水号
      * @param prefix 序列号前缀
      * @param serial 流水号
      */
-    public static void add(String prefix, SerialNumberDto serial) {
-        if (serialNumbers.containsKey(prefix)) {
-            serialNumbers.get(prefix).add(serial);
+    public synchronized static void add(String prefix, SerialNumberDto serial) {
+        if (serialNumberPool.containsKey(prefix)) {
+            serialNumberPool.get(prefix).add(serial);
         } else {
-            LinkedList<SerialNumberDto> list = new LinkedList<>();
-            list.add(serial);
-            serialNumbers.put(prefix, list);
+            ConcurrentLinkedQueue<SerialNumberDto> array = new ConcurrentLinkedQueue<>();
+            array.add(serial);
+            serialNumberPool.put(prefix, array);
         }
 
         generateTimes.put(prefix, LocalDateTime.now());

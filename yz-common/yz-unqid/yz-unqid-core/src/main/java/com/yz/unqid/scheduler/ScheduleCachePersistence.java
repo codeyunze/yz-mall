@@ -4,7 +4,6 @@ import com.yz.tools.RedisCacheKey;
 import com.yz.unqid.service.SysUnqidService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -30,9 +29,9 @@ public class ScheduleCachePersistence {
     private SysUnqidService service;
 
     /**
-     * 每10秒持久化一次
+     * 每20秒持久化一次
      */
-    @Scheduled(fixedDelay = 1000 * 10)
+    @Scheduled(fixedDelay = 1000 * 20)
     public void scheduleCachePersistence() {
         log.info("缓存数据持久化");
         Set<String> keys = redisTemplate.keys(RedisCacheKey.objUnqid("*"));

@@ -24,26 +24,34 @@ import java.util.concurrent.TimeUnit;
 @Service("sysUnqidV3ServiceImpl")
 public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
 
-    private final Integer numberPoolSize = 1000;
+    private final Integer numberPoolSize = 10000;
 
     @Override
     public String generateSerialNumber(String prefix, Integer numberLength) {
+        // 直接从号池获取流水号
+        SerialNumberDto serialNumberDto = UnqidHolder.get(prefix);
+        if (serialNumberDto != null) {
+            baseMapper.record(serialNumberDto.getCode());
+            return serialNumberDto.getCode();
+        }
+
         // 加锁用于控制防止出现重复序列号情况
         RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
         redissonLock.lock(10, TimeUnit.SECONDS);
 
         try {
-            // 从流水号号池获取流水号
-            SerialNumberDto serialNumberDto = UnqidHolder.get(prefix);
-            if (serialNumberDto != null) {
-                return serialNumberDto.getCode();
+            // 防止获取到锁之后，但是号池已经存在大量流水号的情况（防止出现如下场景：A和B两个线程等待锁，A先获取到了锁，线程A生成1000个流水号到号池，A释放锁，然后B获取到了锁，B再生成1000个流水号到号池，但此时号池里已经存在了A生成的1000个流水号）
+            SerialNumberDto secondSerialNumberDto = UnqidHolder.get(prefix);
+            if (secondSerialNumberDto != null) {
+                baseMapper.record(secondSerialNumberDto.getCode());
+                return secondSerialNumberDto.getCode();
             }
 
             // 从缓存获取序列号对象信息
             SysUnqid bo = getSysUnqidPriorityCache(prefix);
 
             // 获取本批次第一个号的序列号，并更新缓存信息
-            Integer serialNumber = updateSysUnqidCache(prefix, bo);
+            int serialNumber = updateSysUnqidCache(prefix, bo);
 
             for (int i = 0; i < numberPoolSize; i++) {
                 Integer currentSerialNumber = serialNumber + i;
@@ -51,7 +59,10 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
                 UnqidHolder.add(prefix, new SerialNumberDto(code, currentSerialNumber));
             }
 
-            return Objects.requireNonNull(UnqidHolder.get(prefix)).getCode();
+            String code = Objects.requireNonNull(UnqidHolder.get(prefix)).getCode();
+            baseMapper.record(code);
+
+            return code;
         } finally {
             redissonLock.unlock();
         }
@@ -66,7 +77,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
      */
     private Integer updateSysUnqidCache(String prefix, SysUnqid bo) {
         BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
-        Integer currentInitialNumber;
+        int currentInitialNumber;
         if (bo == null) {
             currentInitialNumber = 1;
 
