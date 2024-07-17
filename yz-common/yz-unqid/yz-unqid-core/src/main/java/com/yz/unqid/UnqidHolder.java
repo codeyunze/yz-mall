@@ -1,5 +1,7 @@
 package com.yz.unqid;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.yz.unqid.dto.SerialNumberDto;
 import org.springframework.util.CollectionUtils;
 
@@ -17,11 +19,13 @@ public class UnqidHolder {
 
     /**
      * 流水号号池
+     * Map<流水号前缀, List<流水号>>
      */
     private static ConcurrentHashMap<String, ConcurrentLinkedQueue<SerialNumberDto>> serialNumberPool = new ConcurrentHashMap<>();
 
     /**
      * 本批次流水号生成时间
+     * Map<流水号前缀, 最后一次生成流水号时间>
      */
     private static ConcurrentHashMap<String, LocalDateTime> generateTimes = new ConcurrentHashMap<>();
 
@@ -69,5 +73,30 @@ public class UnqidHolder {
         }
 
         generateTimes.put(prefix, LocalDateTime.now());
+    }
+
+    public synchronized static void cleanAll() {
+        serialNumberPool.clear();
+    }
+
+    public synchronized static void clean(String prefix) {
+        if (serialNumberPool.containsKey(prefix)) {
+            serialNumberPool.get(prefix).clear();
+        }
+    }
+
+    /**
+     * 清理号池里过期的号
+     */
+    public synchronized static void cleanExpiredNumber() {
+        // 当前时间的年月日
+        String now = LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.NORM_DATE_PATTERN);
+        generateTimes.forEach((prefix, localDateTime) -> {
+            String generateTime = LocalDateTimeUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN);
+            if (!now.equals(generateTime)) {
+                // 清理号池里该流水号前缀的号
+                clean(prefix);
+            }
+        });
     }
 }

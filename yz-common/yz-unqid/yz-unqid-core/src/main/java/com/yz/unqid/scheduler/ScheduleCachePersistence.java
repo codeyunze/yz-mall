@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.Set;
 
 /**
- * 序列号缓存数据持久化
+ * 流水号缓存数据持久化
  *
  * @author yunze
  * @date 2024/7/11 12:56
