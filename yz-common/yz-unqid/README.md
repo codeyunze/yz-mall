@@ -38,6 +38,8 @@ nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHO
 
 ### 版本三：MySQL + Redis + 提前生成批量序列号
 
+![image-20240717215226584](images/image-20240717215226584.png)
+
 
 
 
