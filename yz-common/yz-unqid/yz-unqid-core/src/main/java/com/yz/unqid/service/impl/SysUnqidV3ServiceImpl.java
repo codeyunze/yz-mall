@@ -55,13 +55,15 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
 
             for (int i = 0; i < numberPoolSize; i++) {
                 Integer currentSerialNumber = serialNumber + i;
+                // 生成流水号
                 String code = generateProcessor(prefix, numberLength, currentSerialNumber);
+                // 存入流水号号池
                 UnqidHolder.add(prefix, new SerialNumberDto(code, currentSerialNumber));
             }
 
+            // 从号池获取流水号
             String code = Objects.requireNonNull(UnqidHolder.get(prefix)).getCode();
-            baseMapper.record(code);
-
+            // baseMapper.record(code);
             return code;
         } finally {
             redissonLock.unlock();
