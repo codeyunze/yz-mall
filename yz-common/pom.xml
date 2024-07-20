@@ -17,7 +17,6 @@
     <modules>
         <module>yz-tools</module>
         <module>yz-advice</module>
-        <module>yz-unqid</module>
         <module>yz-redisson</module>
     </modules>
 

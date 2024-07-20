@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>yz-common</artifactId>
+        <artifactId>yz-mall</artifactId>
         <version>${revision}</version>
     </parent>
 

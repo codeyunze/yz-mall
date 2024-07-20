@@ -19,6 +19,7 @@
 
     <modules>
         <module>yz-common</module>
+        <module>yz-unqid</module>
         <module>yz-mall-seata</module>
         <module>yz-design-patterns</module>
         <module>yz-dynamic-datasource</module>
