@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.Set;
 
 /**
- * 序列号缓存数据持久化
+ * 流水号缓存数据持久化
  *
  * @author yunze
  * @date 2024/7/11 12:56
@@ -29,9 +29,9 @@ public class ScheduleCachePersistence {
     private SysUnqidService service;
 
     /**
-     * 每20秒持久化一次
+     * 每30秒持久化一次
      */
-    @Scheduled(fixedDelay = 1000 * 20)
+    @Scheduled(fixedDelay = 1000 * 30)
     public void scheduleCachePersistence() {
         log.info("缓存数据持久化");
         Set<String> keys = redisTemplate.keys(RedisCacheKey.objUnqid("*"));
