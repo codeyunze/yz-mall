@@ -20,7 +20,7 @@ public class ScheduleCleanNumberPool {
     /**
      * 每天0点清理一次流水号号池
      */
-    @Scheduled(cron = "0 0 0 * * ? *")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void scheduleCleanNumberPool() {
         log.info("清理号池过期流水号");
         UnqidHolder.cleanExpiredNumber();
