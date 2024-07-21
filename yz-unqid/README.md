@@ -1,14 +1,7 @@
-# 序列号生成功能
+# 流水号生成功能
 
-序列号生成规则：序号前缀+流水号（可以指定流水号位数，流水号是有序的从1开始递增）
-
-模式一：使用mysql记录流水号
-
-
-
-```shell
-nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHOT.jar >> console.log 2>&1 &
-```
+> 流水号生成规则：前缀+有序序号（可以指定序号位数，序号是有序的从1开始递增）
+>
 
 
 
@@ -24,25 +17,27 @@ nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHO
 
 ![image-20240714232004794](images/image-20240714232004794.png)
 
-### 版本一：存MySQL
+### V1：直接使用MySQL存储各前缀流水号的相关信息
 
-生产环境加锁，减少数据库访问量，不用 `super.saveOrUpdate` , 明确使用`baseMapper.updateById` 或 `baseMapper.insert` ，因为 `saveOrUpdate` 在执行更新和插入之前还会去select一下指定数据是否存在。
+生产环境加锁，减少数据库访问量，不用 `saveOrUpdate` , 明确使用`baseMapper.updateById` 或 `baseMapper.insert` ，因为 `saveOrUpdate` 在执行更新和插入之前还会去select一下指定数据是否存在。
 
 ![image-20240715000811165](images/image-20240715000811165.png)
 
-### 版本二：MySQL + Redis
+### V2：MySQL + Redis
 
-生产环境加锁，减少数据库访问量，不用 `super.saveOrUpdate` ，使用redis存储序列号的流水号记录数据，不用每次获取序列号都需要去数据库查询该序列号前缀对应的流水号用到了哪里
+生产环境加锁，使用redis存储序列号的流水号记录数据，不用每次获取序列号都需要去数据库查询该序列号前缀对应的流水号用到了哪里
 
 ![image-20240715002348456](images/image-20240715002348456.png)
 
-### 版本三：MySQL + Redis + 提前生成批量序列号
+### V3：MySQL + Redis + 提前生成批量序列号
 
 ![image-20240717215226584](images/image-20240717215226584.png)
 
 ![image-20240720181627755](images/image-20240720181627755.png)
 
+在两台服务器上部署该服务，然后接入gateway使用负载均衡
 
+![image-20240721185646834](images/image-20240721185646834.png)
 
 
 
