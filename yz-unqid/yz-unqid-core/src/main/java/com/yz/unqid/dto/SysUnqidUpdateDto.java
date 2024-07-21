@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * 系统-序列号表(SysUnqid)表更新数据模型类
+ * 系统-流水号表(SysUnqid)表更新数据模型类
  *
  * @author yunze
  * @since 2024-06-23 22:52:36
@@ -20,12 +20,12 @@ public class SysUnqidUpdateDto implements Serializable {
     private String id;
 
     /**
-     * 序号前缀
+     * 流水号前缀
      */
     private String prefix;
 
     /**
-     * 序列号
+     * 流水号的序号
      */
     private Integer serialNumber;
 

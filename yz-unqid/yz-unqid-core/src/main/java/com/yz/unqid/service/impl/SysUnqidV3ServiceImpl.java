@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 系统-序列号表(SysUnqid)表服务实现类
+ * 系统-流水号表(SysUnqid)表服务实现类
  *
  * @author yunze
  * @since 2024-06-23 22:52:36
@@ -35,7 +35,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
             return serialNumberDto.getCode();
         }
 
-        // 加锁用于控制防止出现重复序列号情况
+        // 加锁用于控制防止出现重复流水号情况
         RLock redissonLock = redisson.getLock(RedissonLockKey.keyUnqid(prefix));
         redissonLock.lock(10, TimeUnit.SECONDS);
 
@@ -47,10 +47,10 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
                 return secondSerialNumberDto.getCode();
             }
 
-            // 从缓存获取序列号对象信息
+            // 从缓存获取流水号对象信息
             SysUnqid bo = getSysUnqidPriorityCache(prefix);
 
-            // 获取本批次第一个号的序列号，并更新缓存信息
+            // 获取本批次第一个号的序号，并更新缓存信息
             int serialNumber = updateSysUnqidCache(prefix, bo);
 
             for (int i = 0; i < numberPoolSize; i++) {
@@ -71,11 +71,11 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
     }
 
     /**
-     * 更新缓存的序列号对象信息
+     * 更新缓存的流水号对象信息
      *
-     * @param prefix 序列号前缀
-     * @param bo     序列号对象信息
-     * @return 本次初始序列号（第一个流水号的序列号）
+     * @param prefix 流水号前缀
+     * @param bo     流水号对象信息
+     * @return 本次初始序号（第一个流水号的序号）
      */
     private Integer updateSysUnqidCache(String prefix, SysUnqid bo) {
         BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
@@ -102,17 +102,17 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
     }
 
     /**
-     * 获取指定前缀的序列号对象信息-优先从缓存获取数据
+     * 获取指定前缀的流水号对象信息-优先从缓存获取数据
      *
-     * @param prefix 序列号前缀
-     * @return 序列号前缀对应的序列号对象信息
+     * @param prefix 流水号前缀
+     * @return 流水号前缀对应的对象信息
      */
     private SysUnqid getSysUnqidPriorityCache(String prefix) {
         BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
         Object obj = boundHashOps.get("id");
         SysUnqid bo;
         if (obj == null) {
-            // redis缓存里没有序列号数据，从mysql里查询，如果还没有，就直接返回空
+            // redis缓存里没有流水号数据，从mysql里查询，如果还没有，就直接返回空
             bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
             if (bo == null) {
                 return null;
@@ -121,7 +121,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
             boundHashOps.put("serialNumber", bo.getSerialNumber());
             boundHashOps.put("prefix", bo.getPrefix());
         } else {
-            // redis缓存里有序列号数据
+            // redis缓存里有流水号数据
             bo = new SysUnqid();
             bo.setId(obj.toString());
             bo.setSerialNumber((Integer) Objects.requireNonNull(boundHashOps.get("serialNumber")));

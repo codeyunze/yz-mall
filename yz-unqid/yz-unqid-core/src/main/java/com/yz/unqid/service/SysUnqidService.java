@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 系统-序列号表(SysUnqid)表服务接口
+ * 系统-流水号表(SysUnqid)表服务接口
  *
  * @author yunze
  * @since 2024-06-23 22:52:36
@@ -63,7 +63,7 @@ public interface SysUnqidService extends IService<SysUnqid> {
      * 批量生成流水号
      *
      * @param prefix       流水号前缀
-     * @param numberLength 流水号的序号长度()
+     * @param numberLength 流水号的序号长度
      * @param quantity     生成流水号数量
      * @return 流水号列表
      */

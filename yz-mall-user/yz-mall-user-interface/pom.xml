@@ -11,6 +11,7 @@
 
 
     <artifactId>yz-mall-user-interface</artifactId>
+    <packaging>jar</packaging>
     <description>用户对外接口服务</description>
 
     <properties>
@@ -29,14 +30,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-    </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-advice</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
 </project>

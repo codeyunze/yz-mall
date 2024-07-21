@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
- * 系统-序列号表(SysUnqid)表控制层
+ * 系统-流水号表(SysUnqid)表控制层
  *
  * @author yunze
  * @since 2024-06-23 22:52:36

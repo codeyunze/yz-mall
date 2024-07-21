@@ -40,6 +40,8 @@ nohup /usr/local/tools/jdk1.8.0_301/bin/java -jar yz-unqid-startup-0.0.1-SNAPSHO
 
 ![image-20240717215226584](images/image-20240717215226584.png)
 
+![image-20240720181627755](images/image-20240720181627755.png)
+
 
 
 

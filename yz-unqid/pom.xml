@@ -11,8 +11,8 @@
     </parent>
 
     <artifactId>yz-unqid</artifactId>
-    <description>流水号生成服务</description>
     <packaging>pom</packaging>
+    <description>流水号生成服务</description>
 
     <modules>
         <module>yz-unqid-interface</module>
@@ -30,5 +30,12 @@
     <dependencies>
 
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+        </dependencies>
+    </dependencyManagement>
+
 
 </project>

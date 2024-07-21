@@ -5,12 +5,11 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-design-patterns</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
 
     </parent>
 
     <artifactId>yz-design-factory-strategy</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>yz-design-factory-strategy</name>
     <description>yz-design-factory-strategy</description>
     <packaging>jar</packaging>

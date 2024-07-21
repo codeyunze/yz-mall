@@ -1,7 +1,7 @@
 spring:
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: 10.0.12.16:8848
       config:
         namespace: mall-prod
         extension-configs[0]:
@@ -11,6 +11,6 @@ spring:
           data-id: yz-unqid.yaml
           refresh: true
       discovery:
-        namespace: mall
+        namespace: mall-prod
       username: nacos
       password: nacos

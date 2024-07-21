@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-mall</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>yz-dynamic-datasource</artifactId>
@@ -20,7 +20,6 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <yz-common.version>0.0.1-SNAPSHOT</yz-common.version>
     </properties>
 
     <dependencies>
@@ -64,7 +63,7 @@
             <dependency>
                 <groupId>com.yz</groupId>
                 <artifactId>yz-tools</artifactId>
-                <version>${yz-common.version}</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

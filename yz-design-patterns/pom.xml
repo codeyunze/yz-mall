@@ -6,11 +6,10 @@
 	<parent>
 		<groupId>com.yz</groupId>
 		<artifactId>yz-mall</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 
 	<artifactId>yz-design-patterns</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>yz-design-patterns</name>
 	<description>yz-design-patterns</description>
 	<packaging>pom</packaging>

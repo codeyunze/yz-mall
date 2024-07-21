@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 系统-序列号表(SysUnqid)表查询过滤条件数据模型类
+ * 系统-流水号表(SysUnqid)表查询过滤条件数据模型类
  *
  * @author yunze
  * @since 2024-06-23 22:52:36
@@ -24,7 +24,7 @@ public class SysUnqidQueryDto implements Serializable {
     private LocalDateTime createdTime;
 
     /**
-     * 序号前缀
+     * 流水号前缀
      */
     private String prefix;
 

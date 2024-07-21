@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 系统-序列号表(SysUnqid)表实体类
+ * 系统-流水号表(SysUnqid)表实体类
  *
  * @author yunze
  * @since 2024-06-23 22:52:36
@@ -44,12 +44,12 @@ public class SysUnqid implements Serializable {
     private Integer invalid;
 
     /**
-     * 序号前缀
+     * 流水号的前缀
      */
     private String prefix;
 
     /**
-     * 序列号
+     * 流水号的序号
      */
     private Integer serialNumber;
 

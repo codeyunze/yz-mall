@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 系统-序列号表(SysUnqid)表服务实现类
+ * 系统-流水号表(SysUnqid)表服务实现类
  *
  * @author yunze
  * @since 2024-06-23 22:52:36
@@ -111,8 +111,6 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
                 saved = baseMapper.updateById(bo) > 0;
             }
 
-            // TODO: 2024/7/3 星期三 yunze 调整为redis+mysql的模式记录序列号的流水号
-            // boolean saved = super.saveOrUpdate(bo);
             if (!saved) {
                 throw new BusinessException(prefix + "流水号生成失败");
             }
