@@ -19,6 +19,7 @@
 
     <modules>
         <module>yz-common</module>
+        <module>yz-gateway</module>
         <module>yz-unqid</module>
         <module>yz-mall-user</module>
         <module>yz-mall-pms</module>
@@ -27,8 +28,6 @@
         <module>yz-design-patterns</module>
         <!-- <module>yz-dynamic-datasource</module> -->
 
-
-
         <!-- <module>yz-test-cases</module> -->
     </modules>
 
@@ -36,7 +35,7 @@
         <java.version>8</java.version>
         <revision>0.0.1-SNAPSHOT</revision>
         <yz-mall.version>0.0.1-SNAPSHOT</yz-mall.version>
-        <spring-boot.version>2.6.13</spring-boot.version>
+        <spring-boot.version>2.6.15</spring-boot.version>
         <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <lombok.version>1.18.24</lombok.version>
@@ -120,21 +119,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!-- <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build> -->
-
-
 </project>

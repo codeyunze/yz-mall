@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2024-06-23 22:52:36
  */
 @RestController
-@RequestMapping("sys/unqid")
+@RequestMapping("/unqid")
 public class SysUnqidController extends ApiController {
 
     /**

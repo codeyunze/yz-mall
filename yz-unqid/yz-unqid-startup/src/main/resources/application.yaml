@@ -2,3 +2,6 @@
 server:
   port: 30008
 
+spring:
+  application:
+    name: yz-unqid
