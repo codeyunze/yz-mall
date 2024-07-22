@@ -16,7 +16,7 @@ public class InternalUnqidServiceImpl implements InternalUnqidService {
 
     private final SysUnqidService service;
 
-    public InternalUnqidServiceImpl(@Qualifier("sysUnqidServiceImpl") SysUnqidService service) {
+    public InternalUnqidServiceImpl(@Qualifier("sysUnqidV3ServiceImpl") SysUnqidService service) {
         this.service = service;
     }
 

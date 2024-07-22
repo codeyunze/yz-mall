@@ -24,7 +24,7 @@ import java.util.List;
  * @since 2024-06-18 12:49:54
  */
 @RestController
-@RequestMapping("omsOrder")
+@RequestMapping("oms/order")
 public class OmsOrderController extends ApiController {
 
     /**
@@ -36,7 +36,7 @@ public class OmsOrderController extends ApiController {
     /**
      * 生成订单
      */
-    @PostMapping("generateOrder")
+    @PostMapping("generate")
     public Result<String> generateOrder(@RequestBody @Valid OmsOrderGenerateDto dto) {
         return success(this.service.generateOrder(dto));
     }
