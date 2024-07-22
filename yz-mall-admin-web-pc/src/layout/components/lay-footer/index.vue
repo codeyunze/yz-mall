@@ -16,6 +16,20 @@ const TITLE = getConfig("Title");
     >
       &nbsp;{{ TITLE }}
     </a>
+    <img
+      alt="备案图标"
+      src="../../../../public/national-emblem-icon.png"
+      height="20"
+      width="18"
+      style="margin: 0 5px 0 20px"
+    />
+    <a
+      href="https://beian.mps.gov.cn/#/query/webSearch?code=42900402000709"
+      rel="noreferrer"
+      target="_blank"
+    >
+      鄂公网安备42900402000709
+    </a>
   </footer>
 </template>
 
