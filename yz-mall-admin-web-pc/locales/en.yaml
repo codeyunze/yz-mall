@@ -70,6 +70,10 @@ menus:
   purePermission: Permission Manage
   purePermissionPage: Page Permission
   purePermissionButton: Button Permission
+  menusManage: Menus Manage
+  sysManagePage: System Manage
+  sysSerialNumberSetting: Serial Number Setting
+  sysDataDictionary: Data Dictionary
 status:
   pureLoad: Loading...
   pureMessage: Message

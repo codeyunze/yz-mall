@@ -70,6 +70,10 @@ menus:
   purePermission: 权限管理
   purePermissionPage: 页面权限
   purePermissionButton: 按钮权限
+  menusManage: 菜单管理
+  sysManagePage: 系统管理
+  sysSerialNumberSetting: 流水号配置
+  sysDataDictionary: 数据字典
 status:
   pureLoad: 加载中...
   pureMessage: 消息

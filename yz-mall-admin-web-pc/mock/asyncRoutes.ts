@@ -38,6 +38,31 @@ const permissionRouter = {
   ]
 };
 
+const sysRouter = {
+  path: "/sys",
+  meta: {
+    title: "menus.sysManagePage"
+  },
+  children: [
+    {
+      path: "/sys/serial/index",
+      name: "SerialNumber",
+      meta: {
+        title: "menus.sysSerialNumberSetting",
+        roles: ["admin", "common"]
+      }
+    },
+    {
+      path: "/sys/dictionary/index",
+      name: "DataDictionary",
+      meta: {
+        title: "menus.sysDataDictionary",
+        roles: ["admin", "common"]
+      }
+    }
+  ]
+};
+
 export default defineFakeRoute([
   {
     url: "/get-async-routes",
@@ -45,7 +70,7 @@ export default defineFakeRoute([
     response: () => {
       return {
         success: true,
-        data: [permissionRouter]
+        data: [permissionRouter, sysRouter]
       };
     }
   }
