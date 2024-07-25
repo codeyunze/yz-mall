@@ -4,22 +4,17 @@ import { ref, nextTick, computed } from "vue";
 import { useNav } from "@/layout/hooks/useNav";
 import LaySearch from "../lay-search/index.vue";
 import LayNotice from "../lay-notice/index.vue";
-import { useTranslationLang } from "../../hooks/useTranslationLang";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import LaySidebarItem from "../lay-sidebar/components/SidebarItem.vue";
 import LaySidebarFullScreen from "../lay-sidebar/components/SidebarFullScreen.vue";
 
-import GlobalizationIcon from "@/assets/svg/globalization.svg?component";
-import AccountSettingsIcon from "@iconify-icons/ri/user-settings-line";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
-import Check from "@iconify-icons/ep/check";
 
 const menuRef = ref();
 
-const { t, route, locale, translationCh, translationEn } =
-  useTranslationLang(menuRef);
 const {
+  route,
   title,
   logout,
   onPanel,
@@ -27,9 +22,7 @@ const {
   username,
   userAvatar,
   backTopMenu,
-  avatarsStyle,
-  getDropdownItemStyle,
-  getDropdownItemClass
+  avatarsStyle
 } = useNav();
 
 const defaultActive = computed(() =>
@@ -67,36 +60,6 @@ nextTick(() => {
     <div class="horizontal-header-right">
       <!-- 菜单搜索 -->
       <LaySearch id="header-search" />
-      <!-- 国际化 -->
-      <el-dropdown id="header-translation" trigger="click">
-        <GlobalizationIcon
-          class="navbar-bg-hover w-[40px] h-[48px] p-[11px] cursor-pointer outline-none"
-        />
-        <template #dropdown>
-          <el-dropdown-menu class="translation">
-            <el-dropdown-item
-              :style="getDropdownItemStyle(locale, 'zh')"
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'zh')]"
-              @click="translationCh"
-            >
-              <span v-show="locale === 'zh'" class="check-zh">
-                <IconifyIconOffline :icon="Check" />
-              </span>
-              简体中文
-            </el-dropdown-item>
-            <el-dropdown-item
-              :style="getDropdownItemStyle(locale, 'en')"
-              :class="['dark:!text-white', getDropdownItemClass(locale, 'en')]"
-              @click="translationEn"
-            >
-              <span v-show="locale === 'en'" class="check-en">
-                <IconifyIconOffline :icon="Check" />
-              </span>
-              English
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
       <!-- 全屏 -->
       <LaySidebarFullScreen id="full-screen" />
       <!-- 消息通知 -->
@@ -114,14 +77,14 @@ nextTick(() => {
                 :icon="LogoutCircleRLine"
                 style="margin: 5px"
               />
-              {{ t("buttons.pureLoginOut") }}
+              退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
       <span
         class="set-icon navbar-bg-hover"
-        :title="t('buttons.pureOpenSystemSet')"
+        title="打开系统配置"
         @click="onPanel"
       >
         <IconifyIconOffline :icon="Setting" />
@@ -133,22 +96,6 @@ nextTick(() => {
 <style lang="scss" scoped>
 :deep(.el-loading-mask) {
   opacity: 0.45;
-}
-
-.translation {
-  ::v-deep(.el-dropdown-menu__item) {
-    padding: 5px 40px;
-  }
-
-  .check-zh {
-    position: absolute;
-    left: 20px;
-  }
-
-  .check-en {
-    position: absolute;
-    left: 20px;
-  }
 }
 
 .logout {

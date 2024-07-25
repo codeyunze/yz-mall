@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useNav } from "@/layout/hooks/useNav";
 import MdiKeyboardEsc from "@/assets/svg/keyboard_esc.svg?component";
 import EnterOutlined from "@/assets/svg/enter_outlined.svg?component";
@@ -10,7 +9,6 @@ withDefaults(defineProps<{ total: number }>(), {
   total: 0
 });
 
-const { t } = useI18n();
 const { device } = useNav();
 </script>
 
@@ -18,19 +16,19 @@ const { device } = useNav();
   <div class="search-footer text-[#333] dark:text-white">
     <span class="search-footer-item">
       <EnterOutlined class="icon" />
-      {{ t("buttons.pureConfirm") }}
+      确认
     </span>
     <span class="search-footer-item">
       <IconifyIconOffline :icon="ArrowUpLine" class="icon" />
       <IconifyIconOffline :icon="ArrowDownLine" class="icon" />
-      {{ t("buttons.pureSwitch") }}
+      切换
     </span>
     <span class="search-footer-item">
       <MdiKeyboardEsc class="icon" />
-      {{ t("buttons.pureClose") }}
+      关闭
     </span>
     <p v-if="device !== 'mobile' && total > 0" class="search-footer-total">
-      {{ `${t("search.pureTotal")} ${total}` }}
+      {{ `共 ${total} 项` }}
     </p>
   </div>
 </template>

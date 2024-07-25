@@ -9,7 +9,7 @@ import { defineFakeRoute } from "vite-plugin-fake-server/client";
 const permissionRouter = {
   path: "/permission",
   meta: {
-    title: "menus.purePermission",
+    title: "权限管理",
     icon: "ep:lollipop",
     rank: 10
   },
@@ -18,7 +18,7 @@ const permissionRouter = {
       path: "/permission/page/index",
       name: "PermissionPage",
       meta: {
-        title: "menus.purePermissionPage",
+        title: "页面权限",
         roles: ["admin", "common"]
       }
     },
@@ -26,7 +26,7 @@ const permissionRouter = {
       path: "/permission/button/index",
       name: "PermissionButton",
       meta: {
-        title: "menus.purePermissionButton",
+        title: "按钮权限",
         roles: ["admin", "common"],
         auths: [
           "permission:btn:add",
@@ -39,24 +39,24 @@ const permissionRouter = {
 };
 
 const sysRouter = {
-  path: "/sys",
+  path: "/system",
   meta: {
-    title: "menus.sysManagePage"
+    title: "系统管理"
   },
   children: [
     {
-      path: "/sys/serial/index",
+      path: "/system/serial/index",
       name: "SerialNumber",
       meta: {
-        title: "menus.sysSerialNumberSetting",
+        title: "流水号配置",
         roles: ["admin", "common"]
       }
     },
     {
-      path: "/sys/dictionary/index",
+      path: "/system/dictionary/index",
       name: "DataDictionary",
       meta: {
-        title: "menus.sysDataDictionary",
+        title: "数据字典",
         roles: ["admin", "common"]
       }
     }

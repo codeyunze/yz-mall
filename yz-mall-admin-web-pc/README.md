@@ -1,4 +1,4 @@
-<h1>vue-pure-admin精简版（国际化版本）</h1>
+<h1>vue-pure-admin精简版（非国际化版本）</h1>
 
 [![license](https://img.shields.io/github/license/pure-admin/vue-pure-admin.svg)](LICENSE)
 
@@ -10,7 +10,7 @@
 
 ## 版本选择
 
-当前是国际化版本，如果您需要非国际化版本 [请点击](https://github.com/pure-admin/pure-admin-thin)
+当前是非国际化版本，如果您需要国际化版本 [请点击](https://github.com/pure-admin/pure-admin-thin/tree/i18n)
 
 ## `js` 版本
 

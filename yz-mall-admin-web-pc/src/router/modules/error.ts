@@ -1,12 +1,10 @@
-import { $t } from "@/plugins/i18n";
-
 export default {
   path: "/error",
   redirect: "/error/403",
   meta: {
     icon: "ri:information-line",
     // showLink: false,
-    title: $t("menus.pureAbnormal"),
+    title: "异常页面",
     rank: 9
   },
   children: [
@@ -15,7 +13,7 @@ export default {
       name: "403",
       component: () => import("@/views/error/403.vue"),
       meta: {
-        title: $t("menus.pureFourZeroOne")
+        title: "403"
       }
     },
     {
@@ -23,7 +21,7 @@ export default {
       name: "404",
       component: () => import("@/views/error/404.vue"),
       meta: {
-        title: $t("menus.pureFourZeroFour")
+        title: "404"
       }
     },
     {
@@ -31,7 +29,7 @@ export default {
       name: "500",
       component: () => import("@/views/error/500.vue"),
       meta: {
-        title: $t("menus.pureFive")
+        title: "500"
       }
     }
   ]

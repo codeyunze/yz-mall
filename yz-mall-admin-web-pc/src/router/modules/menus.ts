@@ -1,5 +1,3 @@
-import { $t } from "@/plugins/i18n";
-
 const Layout = () => import("@/layout/index.vue");
 
 export default {
@@ -7,7 +5,7 @@ export default {
   component: Layout,
   redirect: "/menus/index",
   meta: {
-    title: $t("menus.menusManage")
+    title: "菜单管理"
   },
   children: [
     {
@@ -15,8 +13,8 @@ export default {
       name: "MenusManage",
       component: () => import("@/views/menus/index.vue"),
       meta: {
-        title: $t("menus.menusManage")
+        title: "菜单管理"
       }
     }
   ]
-};
+} satisfies RouteConfigsTable;

@@ -3,7 +3,6 @@ import "animate.css";
 // 引入 src/components/ReIcon/src/offlineIcon.ts 文件中所有使用addIcon添加过的本地图标
 import "@/components/ReIcon/src/offlineIcon";
 import { setType } from "./types";
-import { useI18n } from "vue-i18n";
 import { useLayout } from "./hooks/useLayout";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useSettingStoreHook } from "@/store/modules/settings";
@@ -32,7 +31,6 @@ import NavVertical from "./components/lay-sidebar/NavVertical.vue";
 import NavHorizontal from "./components/lay-sidebar/NavHorizontal.vue";
 import BackTopIcon from "@/assets/svg/back_top.svg?component";
 
-const { t } = useI18n();
 const appWrapperRef = ref();
 const { isDark } = useDark();
 const { layout } = useLayout();
@@ -188,7 +186,7 @@ const LayHeader = defineComponent({
       </div>
       <el-scrollbar v-else>
         <el-backtop
-          :title="t('buttons.pureBackTop')"
+          title="回到顶部"
           target=".main-container .el-scrollbar__wrap"
         >
           <BackTopIcon />

@@ -1,18 +1,16 @@
 import { storeToRefs } from "pinia";
 import { getConfig } from "@/config";
-import { useRouter } from "vue-router";
 import { emitter } from "@/utils/mitt";
 import Avatar from "@/assets/user.jpg";
 import { getTopMenu } from "@/router/utils";
 import { useFullscreen } from "@vueuse/core";
 import type { routeMetaType } from "../types";
-import { transformI18n } from "@/plugins/i18n";
+import { useRouter, useRoute } from "vue-router";
 import { router, remainingPaths } from "@/router";
 import { computed, type CSSProperties } from "vue";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useGlobal, isAllEmpty } from "@pureadmin/utils";
-import { useEpThemeStoreHook } from "@/store/modules/epTheme";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import ExitFullscreen from "@iconify-icons/ri/fullscreen-exit-fill";
 import Fullscreen from "@iconify-icons/ri/fullscreen-fill";
@@ -21,6 +19,7 @@ const errorInfo =
   "The current routing configuration is incorrect, please check the configuration";
 
 export function useNav() {
+  const route = useRoute();
   const pureApp = useAppStoreHook();
   const routers = useRouter().options.routes;
   const { isFullscreen, toggle } = useFullscreen();
@@ -52,22 +51,6 @@ export function useNav() {
       : useUserStoreHook()?.nickname;
   });
 
-  /** 设置国际化选中后的样式 */
-  const getDropdownItemStyle = computed(() => {
-    return (locale, t) => {
-      return {
-        background: locale === t ? useEpThemeStoreHook().epThemeColor : "",
-        color: locale === t ? "#f4f4f5" : "#000"
-      };
-    };
-  });
-
-  const getDropdownItemClass = computed(() => {
-    return (locale, t) => {
-      return locale === t ? "" : "dark:hover:!text-primary";
-    };
-  });
-
   const avatarsStyle = computed(() => {
     return username.value ? { marginRight: "10px" } : "";
   });
@@ -92,8 +75,8 @@ export function useNav() {
   /** 动态title */
   function changeTitle(meta: routeMetaType) {
     const Title = getConfig().Title;
-    if (Title) document.title = `${transformI18n(meta.title)} | ${Title}`;
-    else document.title = transformI18n(meta.title);
+    if (Title) document.title = `${meta.title} | ${Title}`;
+    else document.title = meta.title;
   }
 
   /** 退出登录 */
@@ -144,6 +127,7 @@ export function useNav() {
   }
 
   return {
+    route,
     title,
     device,
     layout,
@@ -168,8 +152,6 @@ export function useNav() {
     username,
     userAvatar,
     avatarsStyle,
-    tooltipEffect,
-    getDropdownItemStyle,
-    getDropdownItemClass
+    tooltipEffect
   };
 }

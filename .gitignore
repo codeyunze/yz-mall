@@ -37,5 +37,8 @@ out
 *.iml
 .DS_Store
 
+# Web files
+.vite
+
 ### Log ###
 *.gz

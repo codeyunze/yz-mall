@@ -1,4 +1,4 @@
-<h1>vue-pure-admin Lite Edition（i18n version）</h1>
+<h1>vue-pure-admin Lite Edition（no i18n version）</h1>
 
 [![license](https://img.shields.io/github/license/pure-admin/vue-pure-admin.svg)](LICENSE)
 
