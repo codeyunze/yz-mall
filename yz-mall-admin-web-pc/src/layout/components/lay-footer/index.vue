@@ -8,7 +8,7 @@ const TITLE = getConfig("Title");
   <footer
     class="layout-footer text-[rgba(0,0,0,0.6)] dark:text-[rgba(220,220,242,0.8)]"
   >
-    Copyright © 2020-3xj
+    Copyright © 2020-yunze
     <a
       class="hover:text-primary"
       href="https://gitee.com/cnyunze/3xj"

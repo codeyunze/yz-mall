@@ -155,6 +155,32 @@ onBeforeUnmount(() => {
       </div>
     </div>
   </div>
+  <footer
+    class="layout-footer text-[rgba(0,0,0,0.6)] dark:text-[rgba(220,220,242,0.8)]"
+  >
+    Copyright © 2022-yunze
+    <img
+      alt="备案图标"
+      src="/public/national-emblem-icon.png"
+      height="20"
+      width="18"
+      style="margin: 0 5px 0 20px"
+    />
+    <a
+      href="https://beian.mps.gov.cn/#/query/webSearch?code=42900402000709"
+      rel="noreferrer"
+      target="_blank"
+    >
+      鄂公网安备42900402000709
+    </a>
+    <a
+      href="https://beian.miit.gov.cn/"
+      target="_blank"
+      style="margin-left: 20px"
+    >
+      鄂ICP备19029486号-3
+    </a>
+  </footer>
 </template>
 
 <style scoped>
@@ -164,5 +190,14 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 :deep(.el-input-group__append, .el-input-group__prepend) {
   padding: 0;
+}
+
+.layout-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 0 8px;
+  font-size: 14px;
 }
 </style>
