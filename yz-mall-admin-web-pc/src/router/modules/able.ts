@@ -83,18 +83,6 @@ export default {
       }
     },
     {
-      path: "/able/draggable",
-      name: "Draggable",
-      component: () => import("@/views/able/draggable.vue"),
-      meta: {
-        title: "拖拽",
-        transition: {
-          enterTransition: "animate__zoomIn",
-          leaveTransition: "animate__zoomOut"
-        }
-      }
-    },
-    {
       path: "/able/pdf",
       name: "Pdf",
       component: () => import("@/views/able/pdf.vue"),

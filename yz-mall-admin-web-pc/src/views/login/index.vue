@@ -24,9 +24,7 @@ import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
-import globalization from "@/assets/svg/globalization.svg?component";
 import Lock from "@iconify-icons/ri/lock-fill";
-import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
 import Info from "@iconify-icons/ri/information-line";
 
@@ -50,7 +48,7 @@ initStorage();
 
 const { dataTheme, overallStyle, dataThemeChange } = useDataThemeChange();
 dataThemeChange(overallStyle.value);
-const { title } = useNav();
+const { title, icpRecord, publicNetworkRecord } = useNav();
 
 const ruleForm = reactive({
   username: "admin",
@@ -302,7 +300,7 @@ watch(loginDay, value => {
       Copyright © 2022-present
       <a
         class="hover:text-primary"
-        href="https://github.com/pure-admin"
+        href="https://github.com/YUNZE-GH/yz-mall"
         target="_blank"
       >
         &nbsp;{{ title }}
@@ -315,18 +313,18 @@ watch(loginDay, value => {
         style="margin: 0 5px 0 20px"
       />
       <a
-        href="https://beian.mps.gov.cn/#/query/webSearch?code=42900402000709"
+        href="https://beian.mps.gov.cn/#/query/webSearch"
         rel="noreferrer"
         target="_blank"
       >
-        鄂公网安备42900402000709
+        {{ publicNetworkRecord }}
       </a>
       <a
         href="https://beian.miit.gov.cn/"
         target="_blank"
         style="margin-left: 20px"
       >
-        鄂ICP备19029486号-3
+        {{ icpRecord }}
       </a>
     </div>
   </div>

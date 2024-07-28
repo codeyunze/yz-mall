@@ -1,6 +1,8 @@
 {
   "Version": "5.7.0",
   "Title": "云梦泽",
+  "ICPRecord": "粤ICP备00000000号-1",
+  "PublicNetworkRecord": "粤公网安备44010000000001",
   "FixedHeader": true,
   "HiddenSideBar": false,
   "MultiTagsCache": false,

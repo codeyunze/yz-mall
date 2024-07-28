@@ -1,18 +1,18 @@
-<script setup lang="ts">
-import { useI18n } from "vue-i18n";
+<script setup lang="tsx">
 import { ref, reactive } from "vue";
 import Motion from "../utils/motion";
 import { message } from "@/utils/message";
 import { updateRules } from "../utils/rule";
 import type { FormInstance } from "element-plus";
 import { useVerifyCode } from "../utils/verifyCode";
+import Agreement from "./Agreement.vue";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { addDialog } from "@/components/ReDialog";
 import Lock from "@iconify-icons/ri/lock-fill";
 import Iphone from "@iconify-icons/ep/iphone";
 import User from "@iconify-icons/ri/user-3-fill";
 
-const { t } = useI18n();
 const checked = ref(false);
 const loading = ref(false);
 const ruleForm = reactive({
@@ -64,6 +64,14 @@ const onUpdate = async (formEl: FormInstance | undefined) => {
   });
 };
 
+function onAgreement() {
+  addDialog({
+    title: "隐私政策及权限声明",
+    hideFooter: true,
+    contentRenderer: () => Agreement // jsx 语法 （注意在.vue文件启用jsx语法，需要在script开启lang="tsx"）
+  });
+}
+
 function onBack() {
   useVerifyCode().end();
   useUserStoreHook().SET_CURRENTPAGE(0);
@@ -91,7 +99,7 @@ function onBack() {
         <el-input
           v-model="ruleForm.username"
           clearable
-          :placeholder="t('login.pureUsername')"
+          :placeholder="'账号'"
           :prefix-icon="useRenderIcon(User)"
         />
       </el-form-item>
@@ -102,7 +110,7 @@ function onBack() {
         <el-input
           v-model="ruleForm.phone"
           clearable
-          :placeholder="t('login.purePhone')"
+          :placeholder="'手机号码'"
           :prefix-icon="useRenderIcon(Iphone)"
         />
       </el-form-item>
@@ -114,7 +122,7 @@ function onBack() {
           <el-input
             v-model="ruleForm.verifyCode"
             clearable
-            :placeholder="t('login.pureSmsVerifyCode')"
+            :placeholder="'短信验证码'"
             :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
           />
           <el-button
@@ -122,11 +130,7 @@ function onBack() {
             class="ml-2"
             @click="useVerifyCode().start(ruleFormRef, 'phone')"
           >
-            {{
-              text.length > 0
-                ? text + t("login.pureInfo")
-                : t("login.pureGetVerifyCode")
-            }}
+            {{ text.length > 0 ? text + "秒后重新获取" : "获取验证码" }}
           </el-button>
         </div>
       </el-form-item>
@@ -138,7 +142,7 @@ function onBack() {
           v-model="ruleForm.password"
           clearable
           show-password
-          :placeholder="t('login.purePassword')"
+          :placeholder="'密码'"
           :prefix-icon="useRenderIcon(Lock)"
         />
       </el-form-item>
@@ -150,7 +154,7 @@ function onBack() {
           v-model="ruleForm.repeatPassword"
           clearable
           show-password
-          :placeholder="t('login.pureSure')"
+          :placeholder="'确认密码'"
           :prefix-icon="useRenderIcon(Lock)"
         />
       </el-form-item>
@@ -158,11 +162,9 @@ function onBack() {
 
     <Motion :delay="300">
       <el-form-item>
-        <el-checkbox v-model="checked">
-          {{ t("login.pureReadAccept") }}
-        </el-checkbox>
-        <el-button link type="primary">
-          {{ t("login.purePrivacyPolicy") }}
+        <el-checkbox v-model="checked">我已仔细阅读并接受</el-checkbox>
+        <el-button link type="primary" @click="onAgreement()">
+          《隐私政策》
         </el-button>
       </el-form-item>
     </Motion>
@@ -176,7 +178,7 @@ function onBack() {
           :loading="loading"
           @click="onUpdate(ruleFormRef)"
         >
-          {{ t("login.pureDefinite") }}
+          确定
         </el-button>
       </el-form-item>
     </Motion>
@@ -184,7 +186,7 @@ function onBack() {
     <Motion :delay="400">
       <el-form-item>
         <el-button class="w-full" size="default" @click="onBack">
-          {{ t("login.pureBack") }}
+          返回
         </el-button>
       </el-form-item>
     </Motion>
