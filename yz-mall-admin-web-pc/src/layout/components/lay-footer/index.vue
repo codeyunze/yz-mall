@@ -2,13 +2,15 @@
 import { getConfig } from "@/config";
 
 const TITLE = getConfig("Title");
+const ICPRecord = getConfig("ICPRecord");
+const PublicNetworkRecord = getConfig("PublicNetworkRecord");
 </script>
 
 <template>
   <footer
     class="layout-footer text-[rgba(0,0,0,0.6)] dark:text-[rgba(220,220,242,0.8)]"
   >
-    Copyright © 2020-yunze
+    Copyright © 2022-present
     <a
       class="hover:text-primary"
       href="https://gitee.com/cnyunze/3xj"
@@ -24,11 +26,18 @@ const TITLE = getConfig("Title");
       style="margin: 0 5px 0 20px"
     />
     <a
-      href="https://beian.mps.gov.cn/#/query/webSearch?code=42900402000709"
+      href="https://beian.mps.gov.cn/#/query/webSearch"
       rel="noreferrer"
       target="_blank"
     >
-      鄂公网安备42900402000709
+      {{ PublicNetworkRecord }}
+    </a>
+    <a
+      href="https://beian.miit.gov.cn/"
+      target="_blank"
+      style="margin-left: 20px"
+    >
+      {{ ICPRecord }}
     </a>
   </footer>
 </template>

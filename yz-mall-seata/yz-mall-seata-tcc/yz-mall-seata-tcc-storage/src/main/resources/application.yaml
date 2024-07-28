@@ -7,7 +7,7 @@ spring:
     name: yz-mall-seata-tcc-storage
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://159.75.135.41:3306/mall_storage?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/mall_storage?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: mall_storage
     password: AZ3ibypxMPEp3tee
     driver-class-name: com.mysql.cj.jdbc.Driver
