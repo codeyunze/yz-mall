@@ -1,4 +1,5 @@
 import { http } from "@/utils/http";
+import { baseUrlApi } from "./utils";
 
 export type SerialNumberResult = {
   /**
@@ -19,7 +20,7 @@ export type SerialNumberResult = {
 export const generateSerialNumber = (data?: object) => {
   return http.request<SerialNumberResult>(
     "post",
-    "/internal/unqid/v3/generateSerialNumber",
+    baseUrlApi("internal/unqid/v3/generateSerialNumber"),
     { data }
   );
 };
