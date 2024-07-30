@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2024-06-18 12:51:39
  */
 @RestController
-@RequestMapping("omsOrderProductRelation")
+@RequestMapping("oms/orderProductRelation")
 public class OmsOrderProductRelationController extends ApiController {
 
     /**
