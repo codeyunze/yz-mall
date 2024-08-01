@@ -1,13 +1,14 @@
 # 服务端口分配
 
-| 服务           | 端口    | 作用       |
-|--------------|-------|----------|
-| yz-mall-web  | 30000 | 前端服务     |
-| yz-gateway   | 30001 | 网关服务     |
-| yz-unqid     | 30008 | 流水号生成    |
-| yz-mall-user | 30004 | 基础用户信息   |
-| yz-mall-oms  | 30006 | 订单管理模块   |
-| yz-mall-pms  | 30005 | 商品库存管理模块 |
+| 服务               | 端口    | 作用          |
+|------------------|-------|-------------|
+| yz-mall-web      | 30000 | 前端服务        |
+| yz-gateway       | 30001 | 网关服务        |
+| yz-mall-security | 30002 | 身份认证与访问授权服务 |
+| yz-unqid         | 30008 | 流水号生成       |
+| yz-mall-user     | 30004 | 基础用户信息      |
+| yz-mall-oms      | 30006 | 订单管理模块      |
+| yz-mall-pms      | 30005 | 商品库存管理模块    |
 
 
 
@@ -134,3 +135,34 @@ S: 91d4eb697e2e4b26c18b8f69a2c481fe9299df88 10.0.20.10:6378
 [OK] All 16384 slots covered.
 
 ```
+
+
+docker 切换阿里云镜像
+https://blog.csdn.net/Suyiixx/article/details/129891688
+
+docker 安装redis
+
+1. 拉取redis镜像
+   ```shell
+    docker pull redis:latest
+    ```
+
+2. 查看本地镜像
+   ```shell
+    docker images
+    ```
+
+3. 运行容器
+    ```shell
+    docker run -itd --name redis-dev -p 6379:6379 redis
+    ```   
+
+4. 查看运行中的容器
+    ```shell
+    docker ps
+    ```   
+
+5. 进入容器空间操作
+    ```shell
+    docker exec -it redis-dev /bin/bash
+    ```
