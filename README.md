@@ -135,3 +135,34 @@ S: 91d4eb697e2e4b26c18b8f69a2c481fe9299df88 10.0.20.10:6378
 [OK] All 16384 slots covered.
 
 ```
+
+
+docker 切换阿里云镜像
+https://blog.csdn.net/Suyiixx/article/details/129891688
+
+docker 安装redis
+
+1. 拉取redis镜像
+   ```shell
+    docker pull redis:latest
+    ```
+
+2. 查看本地镜像
+   ```shell
+    docker images
+    ```
+
+3. 运行容器
+    ```shell
+    docker run -itd --name redis-dev -p 6379:6379 redis
+    ```   
+
+4. 查看运行中的容器
+    ```shell
+    docker ps
+    ```   
+
+5. 进入容器空间操作
+    ```shell
+    docker exec -it redis-dev /bin/bash
+    ```
