@@ -2,18 +2,22 @@ package com.yz.mall.security.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.temp.SaTempUtil;
+import cn.dev33.satoken.util.SaResult;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.yz.mall.security.dto.AuthLoginDto;
+import com.yz.mall.security.vo.AuthLoginVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 
 /**
  * 身份认证接口
@@ -30,13 +34,22 @@ public class LoginController extends ApiController {
      * 登录接口
      */
     @PostMapping("login")
-    public Result<SaTokenInfo> login(@RequestBody @Valid AuthLoginDto loginDto) {
+    public Result<AuthLoginVo> login(@RequestBody @Valid AuthLoginDto loginDto) {
         // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
-        if("root,admin".contains(loginDto.getUsername()) && "123456".equals(loginDto.getPassword())) {
+        if("root,admin".contains(loginDto.getUsername()) && "a1234567".equals(loginDto.getPassword())) {
             StpUtil.login(loginDto.getUsername());
 
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-            return success(tokenInfo);
+            AuthLoginVo vo = new AuthLoginVo();
+            vo.setUsername(loginDto.getUsername());
+            vo.setNickname(loginDto.getUsername());
+            vo.setAccessToken(tokenInfo.tokenValue);
+            vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
+            // 刷新令牌有效期1天
+            vo.setRefreshToken(SaTempUtil.createToken(loginDto.getUsername(), 86400));
+            vo.setRoles(Collections.singletonList("admin"));
+            vo.setAvatar("https://avatars.githubusercontent.com/u/56632502");
+            return success(vo);
         }
         return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "登录失败");
     }
@@ -86,4 +99,21 @@ public class LoginController extends ApiController {
 
         return success(Boolean.TRUE);
     }
+
+
+    @RequestMapping("/refreshToken/{refreshToken}")
+    public SaResult refreshToken(@PathVariable String refreshToken) {
+        // 1、验证
+        Object userId = SaTempUtil.parseToken(refreshToken);
+        if(userId == null) {
+            return SaResult.error("无效 refreshToken");
+        }
+
+        // 2、为其生成新的短 token
+        String accessToken = StpUtil.createLoginSession(userId);
+
+        // 3、返回
+        return SaResult.data(accessToken);
+    }
+
 }

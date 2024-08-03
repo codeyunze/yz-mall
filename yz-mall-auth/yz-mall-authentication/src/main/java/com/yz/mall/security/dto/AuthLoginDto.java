@@ -4,11 +4,14 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**
- * 登录基础信息
+ * 登录请求基础信息
  * @author yunze
  * @date 2024/7/30 23:18
  */
 public class AuthLoginDto implements Serializable {
+
+    private final static long serialVersionUID = 1L;
+
     /**
      * 登录账号
      */

@@ -52,7 +52,7 @@ const { title, icpRecord, publicNetworkRecord } = useNav();
 
 const ruleForm = reactive({
   username: "admin",
-  password: "admin123",
+  password: "a1234567",
   verifyCode: ""
 });
 
@@ -62,12 +62,14 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     if (valid) {
       loading.value = true;
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername({ username: ruleForm.username, password: "a1234567" })
         .then(res => {
-          if (res.success) {
+          console.log("登录返回信息：" + res.data);
+          if (res.code === 0) {
             // 获取后端路由
             return initRouter().then(() => {
               disabled.value = true;
+              console.log(getTopMenu(true).path);
               router
                 .push(getTopMenu(true).path)
                 .then(() => {

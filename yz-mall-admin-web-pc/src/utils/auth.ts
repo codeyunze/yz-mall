@@ -47,6 +47,8 @@ export function setToken(data: DataInfo<Date>) {
   let expires = 0;
   const { accessToken, refreshToken } = data;
   const { isRemembered, loginDay } = useUserStoreHook();
+  console.log(data.expires);
+  console.log(new Date(data.expires));
   expires = new Date(data.expires).getTime(); // 如果后端直接设置时间戳，将此处代码改为expires = data.expires，然后把上面的DataInfo<Date>改成DataInfo<number>即可
   const cookieString = JSON.stringify({ accessToken, expires, refreshToken });
 
