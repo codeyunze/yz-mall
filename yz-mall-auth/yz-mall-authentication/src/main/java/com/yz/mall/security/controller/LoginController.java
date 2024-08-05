@@ -54,6 +54,28 @@ public class LoginController extends ApiController {
         return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "登录失败");
     }
 
+
+    /**
+     * 更新访问令牌
+     * @param refreshToken 刷新令牌
+     * @return 新的访问令牌
+     */
+    @RequestMapping("/refreshToken/{refreshToken}")
+    public Result<SaResult> refreshToken(@PathVariable String refreshToken) {
+        // 1、验证
+        Object userId = SaTempUtil.parseToken(refreshToken);
+        if(userId == null) {
+            return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "无效 refreshToken");
+        }
+
+        // 2、为其生成新的短 token
+        String accessToken = StpUtil.createLoginSession(userId);
+
+        // 3、返回
+        SaResult data = SaResult.data(accessToken);
+        return new Result<>(CodeEnum.SUCCESS.get(), data, "访问令牌更新成功");
+    }
+
     /**
      * 查询登录状态
      * @return true: 已登录    false: 未登录
@@ -101,19 +123,6 @@ public class LoginController extends ApiController {
     }
 
 
-    @RequestMapping("/refreshToken/{refreshToken}")
-    public SaResult refreshToken(@PathVariable String refreshToken) {
-        // 1、验证
-        Object userId = SaTempUtil.parseToken(refreshToken);
-        if(userId == null) {
-            return SaResult.error("无效 refreshToken");
-        }
 
-        // 2、为其生成新的短 token
-        String accessToken = StpUtil.createLoginSession(userId);
-
-        // 3、返回
-        return SaResult.data(accessToken);
-    }
 
 }
