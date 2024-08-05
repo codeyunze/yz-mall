@@ -145,24 +145,44 @@ docker 安装redis
 1. 拉取redis镜像
    ```shell
     docker pull redis:latest
-    ```
+   ```
 
 2. 查看本地镜像
    ```shell
     docker images
-    ```
+   ```
 
 3. 运行容器
     ```shell
     docker run -itd --name redis-dev -p 6379:6379 redis
-    ```   
+    ```
 
 4. 查看运行中的容器
     ```shell
     docker ps
-    ```   
+    ```
 
 5. 进入容器空间操作
     ```shell
     docker exec -it redis-dev /bin/bash
     ```
+
+6. 关闭运行中的容器
+
+   先使用命令 `docker ps` 查看处于运行中的容器
+
+   ```shell
+   yunze@yunzedeMacBook-Pro ~ % docker ps
+   CONTAINER ID   IMAGE     COMMAND                   CREATED        STATUS        PORTS                    NAMES
+   039e8dbc0fed   redis     "docker-entrypoint.s…"   40 hours ago   Up 40 hours   0.0.0.0:6379->6379/tcp   redis-dev
+   ```
+
+   然后根据运行中容器的 `CONTAINER ID` 去关闭容器
+
+   ```shell
+   yunze@yunzedeMacBook-Pro ~ % docker stop 039e8dbc0fed
+   039e8dbc0fed
+   ```
+
+   
+

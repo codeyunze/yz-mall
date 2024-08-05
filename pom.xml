@@ -22,7 +22,7 @@
         <module>yz-gateway</module>
         <module>yz-unqid</module>
         <module>yz-mall-user</module>
-        <module>yz-mall-security</module>
+        <module>yz-mall-auth</module>
         <module>yz-mall-pms</module>
         <module>yz-mall-oms</module>
 
@@ -124,6 +124,12 @@
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis-jackson</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
 
