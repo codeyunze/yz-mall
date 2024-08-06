@@ -23,6 +23,7 @@
         <module>yz-unqid</module>
         <module>yz-mall-user</module>
         <module>yz-mall-auth</module>
+        <module>yz-mall-oauth2</module>
         <module>yz-mall-pms</module>
         <module>yz-mall-oms</module>
 
