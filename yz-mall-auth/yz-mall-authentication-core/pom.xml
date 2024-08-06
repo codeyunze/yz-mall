@@ -10,7 +10,7 @@
     </parent>
 
 
-    <artifactId>yz-mall-authentication</artifactId>
+    <artifactId>yz-mall-authentication-core</artifactId>
     <description>安全-登录认证服务</description>
 
     <properties>

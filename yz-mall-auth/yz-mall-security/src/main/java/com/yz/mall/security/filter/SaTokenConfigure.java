@@ -8,6 +8,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yz.tools.Result;
+import com.yz.tools.enums.CodeEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,7 +37,7 @@ public class SaTokenConfigure {
                     System.out.println("---------- 进入Sa-Token全局认证 -----------");
 
                     // 登录认证 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
-                    SaRouter.match("/**", "/auth/login", () -> StpUtil.checkLogin());
+                    SaRouter.match("/**", "/auth/login", StpUtil::checkLogin);
 
                     // 更多拦截处理方式，请参考“路由拦截式鉴权”章节 */
                 })
@@ -48,7 +50,7 @@ public class SaTokenConfigure {
                     // 使用封装的 JSON 工具类转换数据格式
                     ObjectMapper objectMapper = new ObjectMapper();
                     try {
-                        return objectMapper.writeValueAsString(SaResult.error(e.getMessage()));
+                        return objectMapper.writeValueAsString(new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "无效访问令牌"));
                     } catch (JsonProcessingException ex) {
                         throw new RuntimeException(ex);
                     }

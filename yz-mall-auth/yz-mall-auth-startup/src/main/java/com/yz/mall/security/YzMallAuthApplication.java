@@ -9,9 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2024/7/30 23:14
  */
 @SpringBootApplication
-public class YzMallSecurityApplication {
+public class YzMallAuthApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(YzMallSecurityApplication.class, args);
+        SpringApplication.run(YzMallAuthApplication.class, args);
     }
 }

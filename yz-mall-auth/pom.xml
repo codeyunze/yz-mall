@@ -14,10 +14,10 @@
     <description>安全-认证与授权服务</description>
 
     <modules>
-        <module>yz-mall-authentication</module>
-        <module>yz-mall-authorization</module>
         <module>yz-mall-security</module>
-        <module>yz-mall-security-startup</module>
+        <module>yz-mall-authentication-core</module>
+        <module>yz-mall-authorization-core</module>
+        <module>yz-mall-auth-startup</module>
     </modules>
 
     <properties>

@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 10.0.12.16:8848
+      config:
+        namespace: mall-prod
+        extension-configs[0]:
+          data-id: yz-mall-datasource.yaml
+          refresh: true
+      discovery:
+        namespace: mall-prod
+      username: nacos
+      password: nacos
