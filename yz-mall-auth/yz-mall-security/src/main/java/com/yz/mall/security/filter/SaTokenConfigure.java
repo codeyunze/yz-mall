@@ -13,6 +13,9 @@ import com.yz.tools.enums.CodeEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * [Sa-Token 权限认证] 配置类
  *
@@ -36,8 +39,13 @@ public class SaTokenConfigure {
                 .setAuth(obj -> {
                     System.out.println("---------- 进入Sa-Token全局认证 -----------");
 
-                    // 登录认证 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
-                    SaRouter.match("/**", "/auth/login", StpUtil::checkLogin);
+                    // 登录认证 -- 拦截所有路由，并排除/auth/login 用于开放登录
+                    SaRouter.match("/**")
+                            // 不拦截的接口
+                            .notMatch("/auth/login")
+                            .notMatch("/refreshToken/*")
+                            // 要执行的校验动作
+                            .check(StpUtil::checkLogin);
 
                     // 更多拦截处理方式，请参考“路由拦截式鉴权”章节 */
                 })
