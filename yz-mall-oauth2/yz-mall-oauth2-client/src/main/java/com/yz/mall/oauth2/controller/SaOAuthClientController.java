@@ -3,10 +3,10 @@ package com.yz.mall.oauth2.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.ejlchina.okhttps.OkHttps;
+import com.yz.mall.oauth2.dto.AuthLoginDto;
 import com.yz.mall.oauth2.utils.SoMap;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author yunze
  * @date 2024/8/6 星期二 23:51
  */
+@Slf4j
 @RestController
 public class SaOAuthClientController {
 
@@ -86,15 +87,15 @@ public class SaOAuthClientController {
     }
 
     // 模式三：密码式-授权登录
-    @RequestMapping("/passwordLogin")
-    public SaResult passwordLogin(String username, String password) {
+    @PostMapping("/passwordLogin")
+    public SaResult passwordLogin(@RequestBody AuthLoginDto loginDto) {
         // 模式三：密码式-授权登录
         String str = OkHttps.sync(serverUrl + "/oauth2/token")
                 .addBodyPara("grant_type", "password")
                 .addBodyPara("client_id", clientId)
                 .addBodyPara("client_secret", clientSecret)
-                .addBodyPara("username", username)
-                .addBodyPara("password", password)
+                .addBodyPara("username", loginDto.getUsername())
+                .addBodyPara("password", loginDto.getPassword())
                 .post()
                 .getBody()
                 .toString();
@@ -108,6 +109,7 @@ public class SaOAuthClientController {
 
         // 根据openid获取其对应的userId
         SoMap data = so.getMap("data");
+        log.info("获取openid: {}", data.getString("openid"));
         long uid = getUserIdByOpenid(data.getString("openid"));
         data.set("uid", uid);
 

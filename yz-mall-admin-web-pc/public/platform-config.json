@@ -3,6 +3,8 @@
   "Title": "云梦泽",
   "ICPRecord": "粤ICP备00000000号-1",
   "PublicNetworkRecord": "粤公网安备44010000000001",
+  "ClientId": "1001",
+  "ClientSecret": "aaaa-bbbb-cccc-dddd-eeee",
   "FixedHeader": true,
   "HiddenSideBar": false,
   "MultiTagsCache": false,

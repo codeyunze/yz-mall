@@ -150,12 +150,16 @@
 
     // 模式三：密码式-授权登录
     function passwordLogin() {
+        let params = {
+            "username": $('[name=username]').val(),
+            "password": $('[name=password]').val()
+        };
+
         $.ajax({
             url: '/passwordLogin',
-            data: {
-                username: $('[name=username]').val(),
-                password: $('[name=password]').val()
-            },
+            type: "post",
+            data: JSON.stringify(params),
+            contentType: 'application/json',
             dataType: 'json',
             success: function(res) {
                 console.log('返回：', res);

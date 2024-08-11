@@ -35,13 +35,13 @@
             },
             dataType: 'json',
             success: function(res) {
-                if(res.code == 200) {
+                if(res.code === 0) {
                     layer.msg('登录成功！');
                     setTimeout(function() {
                         location.reload(true);
                     }, 800);
                 } else {
-                    layer.alert(res.msg);
+                    layer.alert(res.message);
                 }
             },
             error: function(e) {

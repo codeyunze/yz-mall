@@ -61,3 +61,24 @@ create table test_serial_number
 insert into test_serial_number (code) values ('1000001');
 
 select * from test_serial_number;
+
+
+CREATE TABLE sys_application
+(
+    `id`            VARCHAR(32) NOT NULL COMMENT '主键标识',
+    `created_id`    VARCHAR(32) COMMENT '创建人',
+    `created_time`  DATETIME DEFAULT current_timestamp COMMENT '创建时间',
+    `updated_id`    VARCHAR(32) COMMENT '更新人',
+    `updated_time`  DATETIME COMMENT '更新时间',
+    `invalid`       INT      DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `client_id`     VARCHAR(36) NOT NULL COMMENT '应用id',
+    `client_secret` VARCHAR(36) NOT NULL COMMENT '应用密钥',
+    `client_name`   VARCHAR(36) NOT NULL COMMENT '应用名称',
+    `remark`        VARCHAR(255) COMMENT '备注说明信息',
+    PRIMARY KEY (id)
+) COMMENT = '应用配置';
+
+
+CREATE UNIQUE INDEX idx_sys_app_clientId ON sys_application(client_id);
+
+INSERT INTO sys_application (id, created_id, created_time, updated_id, updated_time, invalid, client_id, client_secret, client_name, remark) VALUES ('1', 'admin', '2024-08-11 20:19:32', 'admin', null, 0, '1001', 'aaaa-bbbb-cccc-dddd-eeee', '默认应用', '系统自带应用客户端');
