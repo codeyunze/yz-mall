@@ -31,7 +31,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
         // 直接从号池获取流水号
         SerialNumberDto serialNumberDto = UnqidHolder.get(prefix);
         if (serialNumberDto != null) {
-            baseMapper.record(serialNumberDto.getCode());
+            // baseMapper.record(serialNumberDto.getCode());
             return serialNumberDto.getCode();
         }
 
@@ -43,7 +43,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
             // 防止获取到锁之后，但是号池已经存在大量流水号的情况（防止出现如下场景：A和B两个线程等待锁，A先获取到了锁，线程A生成1000个流水号到号池，A释放锁，然后B获取到了锁，B再生成1000个流水号到号池，但此时号池里已经存在了A生成的1000个流水号）
             SerialNumberDto secondSerialNumberDto = UnqidHolder.get(prefix);
             if (secondSerialNumberDto != null) {
-                baseMapper.record(secondSerialNumberDto.getCode());
+                // baseMapper.record(secondSerialNumberDto.getCode());
                 return secondSerialNumberDto.getCode();
             }
 

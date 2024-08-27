@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-unqid</artifactId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>yz-unqid-startup</artifactId>
@@ -46,11 +46,11 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-security</artifactId>
             <version>${revision}</version>
-        </dependency>
+        </dependency> -->
     </dependencies>
 
 
