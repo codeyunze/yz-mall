@@ -43,3 +43,6 @@ out
 
 ### Log ###
 *.gz
+
+### tools ###
+script/.back_mall

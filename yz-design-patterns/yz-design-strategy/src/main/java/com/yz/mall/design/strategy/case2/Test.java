@@ -16,16 +16,18 @@ public class Test {
         persons[4] = new Person("刘七", 28, 77F, 178.9F);
 
         System.out.println("排序前==========");
-
         for (Person person : persons) {
             System.out.println(person.toString());
         }
 
-        // Arrays.sort(persons, new HeightOrder());
         Arrays.sort(persons, new WeightOrder());
+        System.out.println("体重排序后==========");
+        for (Person person : persons) {
+            System.out.println(person.toString());
+        }
 
-        System.out.println("排序后==========");
-
+        Arrays.sort(persons, new HeightOrder());
+        System.out.println("身高排序后==========");
         for (Person person : persons) {
             System.out.println(person.toString());
         }
