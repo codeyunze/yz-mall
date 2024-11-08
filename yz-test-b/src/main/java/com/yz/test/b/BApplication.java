@@ -1,18 +1,17 @@
-package com.yz.mall.oms;
+package com.yz.test.b;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
- * 订单管理系统
  * @author yunze
- * @date 2024/6/18 12:47
+ * @date 2024/11/5 17:39
  */
-@SpringBootApplication
 @EnableFeignClients
-public class YzMallOmsApplication {
+@SpringBootApplication
+public class BApplication {
     public static void main(String[] args) {
-        SpringApplication.run(YzMallOmsApplication.class, args);
+        SpringApplication.run(BApplication.class, args);
     }
 }

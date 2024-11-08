@@ -11,6 +11,7 @@ import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,6 +33,18 @@ public class OmsOrderController extends ApiController {
      */
     @Resource
     private OmsOrderService service;
+
+    @Resource
+    private InternalUnqidService internalUnqidService;
+
+    /**
+     * 测试
+     */
+    @RequestMapping("test")
+    public Result<String> test() {
+        String serialNumber = internalUnqidService.generateSerialNumber("ABC241105", 6);
+        return success(serialNumber);
+    }
 
     /**
      * 生成订单

@@ -134,6 +134,12 @@
                 <version>${sa-token.version}</version>
             </dependency>
 
+            <!-- Web服务接入prometheus工具 -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <version>1.8.13</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

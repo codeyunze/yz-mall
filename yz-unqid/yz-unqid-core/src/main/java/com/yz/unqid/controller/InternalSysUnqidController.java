@@ -32,7 +32,8 @@ public class InternalSysUnqidController extends ApiController {
      * 生成流水号
      */
     @PostMapping("generateSerialNumber")
-    public Result<String> generateSerialNumber(@RequestBody @Valid InternalUnqidDto dto) {
+    public Result<String> generateSerialNumber(@RequestBody @Valid InternalUnqidDto dto) throws InterruptedException {
+        Thread.sleep(30000);
         return success(this.service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
     }
 
