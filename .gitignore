@@ -46,3 +46,6 @@ out
 
 ### tools ###
 script/.back_mall
+
+### docker ###
+docker/*.jar

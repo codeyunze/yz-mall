@@ -2,6 +2,7 @@ package com.yz.unqid.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yz.unqid.dto.InternalUnqidDto;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;
@@ -31,6 +32,17 @@ public class SysUnqidController extends ApiController {
      */
     @Resource(name = "sysUnqidServiceImpl")
     private SysUnqidService service;
+
+    @Resource(name = "sysUnqidV3ServiceImpl")
+    private SysUnqidService v3Service;
+
+    /**
+     * 生成流水号
+     */
+    @PostMapping("generateSerialNumber")
+    public Result<String> generateSerialNumber(@RequestBody @Valid InternalUnqidDto dto) {
+        return success(this.v3Service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
+    }
 
     /**
      * 新增

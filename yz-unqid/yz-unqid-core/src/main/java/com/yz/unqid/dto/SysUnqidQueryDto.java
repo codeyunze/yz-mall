@@ -21,7 +21,7 @@ public class SysUnqidQueryDto implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 流水号前缀
@@ -43,11 +43,11 @@ public class SysUnqidQueryDto implements Serializable {
     }
 
     public LocalDateTime getCreatedTime() {
-        return createdTime;
+        return createTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setCreatedTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public String getPrefix() {
