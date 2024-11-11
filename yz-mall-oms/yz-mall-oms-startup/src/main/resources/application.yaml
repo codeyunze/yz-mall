@@ -5,3 +5,10 @@ server:
 spring:
   application:
     name: yz-mall-oms
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5

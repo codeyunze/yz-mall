@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * mybatis-plus分页插件配置
+ *
  * @author yunze
  * @date 2023/10/29 0029 17:45
  */

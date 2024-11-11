@@ -12,6 +12,7 @@ import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
 import com.yz.unqid.service.InternalUnqidService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -41,9 +42,20 @@ public class OmsOrderController extends ApiController {
      * 测试
      */
     @RequestMapping("test")
+    @CircuitBreaker(name = "OmsOrderController", fallbackMethod = "omsCircuitFallback")
     public Result<String> test() {
         String serialNumber = internalUnqidService.generateSerialNumber("ABC241105", 6);
         return success(serialNumber);
+    }
+
+    /**
+     * omsCircuitFallback就是服务降级后的兜底处理方法
+     * @param t
+     * @return
+     */
+    public Result<String> omsCircuitFallback(Throwable t) {
+        // 这里是容错处理逻辑，返回备用结果
+        return failed("omsCircuitFallback，系统繁忙，请稍后再试-----/(ㄒoㄒ)/~~");
     }
 
     /**
