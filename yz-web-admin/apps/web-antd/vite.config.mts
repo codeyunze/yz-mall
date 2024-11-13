@@ -13,6 +13,13 @@ export default defineConfig(async () => {
             target: 'http://localhost:5320/api',
             ws: true,
           },
+          '/gateway': {
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/gateway/, ''),
+            // mock代理目标地址
+            target: 'http://192.168.3.77:30001/gateway',
+            ws: true,
+          },
         },
       },
     },
