@@ -209,5 +209,6 @@ const transitionMain = defineComponent({
 
 .main-content {
   margin: 24px;
+  border-radius: 18px;
 }
 </style>

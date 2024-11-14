@@ -11,6 +11,7 @@ import com.yz.unqid.service.SysUnqidService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,6 +28,9 @@ import java.util.List;
 @RequestMapping("/unqid")
 public class SysUnqidController extends ApiController {
 
+    @Value("${server.port}")
+    private String port;
+
     /**
      * 服务对象
      */
@@ -41,6 +45,7 @@ public class SysUnqidController extends ApiController {
      */
     @PostMapping("generateSerialNumber")
     public Result<String> generateSerialNumber(@RequestBody @Valid InternalUnqidDto dto) {
+        System.out.println("节点：" + port);
         return success(this.v3Service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
     }
 
