@@ -1,11 +1,12 @@
 <script lang="ts" setup>
+import type { UserInfo } from '@vben/types';
+
 import { Page } from '@vben/common-ui';
 
 import { Button, Card, message } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { getUnqidApi } from '#/api';
-import type { UnqidResult } from "#/api/core/unqid";
+import { getUnqidApi, getUserInfoApi } from '#/api';
 
 const [BaseForm, baseFormApi] = useVbenForm({
   // 所有表单项共用，可单独在表单内覆盖
@@ -39,14 +40,21 @@ const [BaseForm, baseFormApi] = useVbenForm({
   wrapperClass: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
 });
 
-function onSubmit(values: Record<string, any>) {
+async function onSubmit(values: Record<string, any>) {
   message.success({
     content: `form values: ${JSON.stringify(values)}`,
   });
-  const { unqidResult } = getUnqidApi({ prefix: values.prefix });
-  message.warning({
-    content: `api request result: ${JSON.stringify(unqidResult)}`,
-  });
+  let userInfo: null | UserInfo = null;
+  userInfo = await getUserInfoApi();
+  console.log(userInfo);
+  // let unqidResult: null | UnqidResult = null;
+  const unqidApi = getUnqidApi({ prefix: values.prefix });
+  await unqidApi;
+  console.log(unqidApi);
+
+  // message.warning({
+  //   content: `api request result: ${unqidResult.data}`,
+  // });
 }
 
 function handleSetFormValue() {

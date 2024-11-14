@@ -1,4 +1,4 @@
-import { otherRequestClient } from '#/api/request';
+import { otherRequestClient } from "#/api/request";
 
 export namespace UnqidApi {
   export interface UnqidParams {
