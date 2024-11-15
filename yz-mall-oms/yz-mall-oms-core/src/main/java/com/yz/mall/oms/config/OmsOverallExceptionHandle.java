@@ -20,6 +20,6 @@ public class OmsOverallExceptionHandle {
      */
     @ExceptionHandler(CallNotPermittedException.class)
     Result<?> callNotPermittedExceptionHandle(CallNotPermittedException e) {
-        return Result.failed(e.getMessage());
+        return Result.error(e.getMessage());
     }
 }

@@ -47,7 +47,7 @@
         <dynamic-datasource.version>3.5.2</dynamic-datasource.version>
         <hutool-all.version>5.8.26</hutool-all.version>
         <redisson.version>3.32.0</redisson.version>
-        <sa-token.version>1.38.0</sa-token.version>
+        <sa-token.version>1.39.0</sa-token.version>
     </properties>
 
     <dependencies>
@@ -125,6 +125,13 @@
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
 

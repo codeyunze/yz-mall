@@ -13,6 +13,7 @@ import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
 import com.yz.unqid.service.InternalUnqidService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ import java.util.List;
  * @author yunze
  * @since 2024-06-18 12:49:54
  */
+@Slf4j
 @RestController
 @RequestMapping("oms/order")
 public class OmsOrderController extends ApiController {
@@ -35,21 +37,24 @@ public class OmsOrderController extends ApiController {
     @Resource
     private OmsOrderService service;
 
+    /**
+     * 测试
+     */
+    @CircuitBreaker(name = "OmsOrderController", fallbackMethod = "omsCircuitFallback")
+    @RequestMapping("test")
+    public Result<String> test() {
+        log.info("生成序列号");
+        String serialNumber = internalUnqidService.generateSerialNumber("ABC241105", 6);
+        log.info("serialNumber:{}", serialNumber);
+        return success(serialNumber);
+    }
+
     @Resource
     private InternalUnqidService internalUnqidService;
 
     /**
-     * 测试
-     */
-    @RequestMapping("test")
-    @CircuitBreaker(name = "OmsOrderController", fallbackMethod = "omsCircuitFallback")
-    public Result<String> test() {
-        String serialNumber = internalUnqidService.generateSerialNumber("ABC241105", 6);
-        return success(serialNumber);
-    }
-
-    /**
      * omsCircuitFallback就是服务降级后的兜底处理方法
+     *
      * @param t
      * @return
      */

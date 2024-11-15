@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
  * @author yunze
  * @since 2024-06-18 12:49:55
  */
+@DS("slave")
 @Service
 public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> implements OmsOrderService {
 
@@ -94,7 +95,6 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         return baseMapper.updateById(bo) > 0;
     }
 
-    @DS("slave")
     @Override
     public Page<OmsOrder> page(PageFilter<OmsOrderQueryDto> filter) {
         LambdaQueryWrapper<OmsOrder> queryWrapper = new LambdaQueryWrapper<>();

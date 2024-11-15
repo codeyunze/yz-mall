@@ -43,7 +43,7 @@ public class SaTokenConfigure {
                     SaRouter.match("/**")
                             // 不拦截的接口
                             .notMatch("/auth/login")
-                            .notMatch("/refreshToken/*")
+                            .notMatch("/auth/refreshToken/*")
                             // 要执行的校验动作
                             .check(StpUtil::checkLogin);
 

@@ -41,6 +41,67 @@
 
 
 
+### 调整线程数
+
+1. max-connections=32
+
+```properties
+server.tomcat.threads.max-connections=32
+```
+
+![image-20241113105048399](images/image-20241113105048399.png)
+
+![image-20241113111920499](images/image-20241113111920499.png)
+
+去除网关后
+
+![image-20241113135900485](images/image-20241113135900485.png)
+
+![image-20241113140502082](images/image-20241113140502082.png)
+
+![image-20241113141605438](images/image-20241113141605438.png)
+
+![image-20241113141649038](images/image-20241113141649038.png)
+
+![image-20241113142321587](images/image-20241113142321587.png)
+
+![image-20241113171431313](images/image-20241113171431313.png)
+
+2. max-connections=1024
+
+
+```properties
+server.tomcat.threads.max-connections=1024
+```
+
+![image-20241113105931407](images/image-20241113105931407.png)
+
+
+
+3. max-connections=512
+
+```properties
+server.tomcat.threads.max-connections=512
+```
+
+![image-20241113110634157](images/image-20241113110634157.png)
+
+
+
+4. max-connections=128
+
+```properties
+server.tomcat.threads.max-connections=128
+```
+
+![image-20241113111649323](images/image-20241113111649323.png)
+
+
+
+
+
+
+
 ![image-20241108152526568](images/image-20241108152526568.png)
 
 
@@ -69,3 +130,12 @@
 >
 > KB/sec: 每秒从服务器端接收到的数据量
 
+
+
+
+
+
+
+![image-20241112225543000](images/image-20241112225543000.png)
+
+![image-20241112233616789](images/image-20241112233616789.png)

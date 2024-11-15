@@ -7,9 +7,9 @@ import java.io.Serializable;
 /**
  * 后端返回给前端的数据对象
  *
- * @Author yunze
- * @Date 2022/11/13 23:23
- * @Version 1.0
+ * @author yunze
+ * @date 2022/11/13 23:23
+ * @version 1.0
  */
 public class Result<T> implements Serializable {
 
@@ -44,8 +44,8 @@ public class Result<T> implements Serializable {
      *
      * @return 请求成功返回数据
      */
-    public static Result success() {
-        return new Result(CodeEnum.SUCCESS.get(), null, "成功");
+    public static Result<?> success() {
+        return new Result<>(CodeEnum.SUCCESS.get(), null, "成功");
     }
 
 
@@ -55,8 +55,8 @@ public class Result<T> implements Serializable {
      * @param data 返回前端数据信息
      * @return 请求成功返回数据
      */
-    public static <T> Result success(T data) {
-        return new Result(CodeEnum.SUCCESS.get(), data, "成功");
+    public static <T> Result<T> success(T data) {
+        return new Result<>(CodeEnum.SUCCESS.get(), data, "成功");
     }
 
     /**
@@ -67,7 +67,7 @@ public class Result<T> implements Serializable {
      * @return 请求成功返回数据
      */
     public static <T> Result<T> success(T data, String message) {
-        return new Result<T>(CodeEnum.SUCCESS.get(), data, message);
+        return new Result<>(CodeEnum.SUCCESS.get(), data, message);
     }
 
     /**
@@ -75,8 +75,8 @@ public class Result<T> implements Serializable {
      *
      * @return 请求成功返回数据
      */
-    public static Result failed() {
-        return new Result(CodeEnum.BUSINESS_ERROR.get(), null, "失败");
+    public static Result<?> error() {
+        return new Result<>(CodeEnum.BUSINESS_ERROR.get(), null, "失败");
     }
 
     /**
@@ -85,8 +85,8 @@ public class Result<T> implements Serializable {
      * @param message 返回前端提示信息
      * @return 请求成功返回数据
      */
-    public static Result failed(String message) {
-        return new Result(CodeEnum.BUSINESS_ERROR.get(), null, message);
+    public static Result<?> error(String message) {
+        return new Result<>(CodeEnum.BUSINESS_ERROR.get(), null, message);
     }
 
     /**
@@ -96,7 +96,7 @@ public class Result<T> implements Serializable {
      * @param message 返回前端提示信息
      * @return 请求成功返回数据
      */
-    public static <T> Result<T> failed(T data, String message) {
+    public static <T> Result<T> error(T data, String message) {
         return new Result<T>(CodeEnum.BUSINESS_ERROR.get(), data, message);
     }
 

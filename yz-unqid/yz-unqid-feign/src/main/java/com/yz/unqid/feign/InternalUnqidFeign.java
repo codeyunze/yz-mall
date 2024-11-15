@@ -13,7 +13,7 @@ import java.util.List;
  * @author yunze
  * @date 2024/6/24 星期一 23:36
  */
-@FeignClient(name = "yz-unqid", contextId = "internalUnqid")
+@FeignClient(name = "yz-unqid", value = "yz-unqid", contextId = "internalUnqid")
 public interface InternalUnqidFeign {
 
     /**

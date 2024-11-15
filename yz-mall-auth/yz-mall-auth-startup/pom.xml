@@ -40,11 +40,11 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-security</artifactId>
             <version>${revision}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-authentication-core</artifactId>

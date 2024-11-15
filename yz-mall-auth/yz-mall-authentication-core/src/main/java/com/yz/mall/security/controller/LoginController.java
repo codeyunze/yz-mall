@@ -1,5 +1,6 @@
 package com.yz.mall.security.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.temp.SaTempUtil;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -47,7 +49,7 @@ public class LoginController extends ApiController {
             vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
             // 刷新令牌有效期1天
             vo.setRefreshToken(SaTempUtil.createToken(loginDto.getUsername(), 86400));
-            vo.setRoles(Collections.singletonList("admin"));
+            vo.setRoles(Arrays.asList("admin", "unqid"));
             vo.setAvatar("https://avatars.githubusercontent.com/u/56632502");
             return success(vo);
         }
@@ -61,7 +63,7 @@ public class LoginController extends ApiController {
      * @return 新的访问令牌
      */
     @RequestMapping("/refreshToken/{refreshToken}")
-    public Result<SaResult> refreshToken(@PathVariable String refreshToken) {
+    public Result<Object> refreshToken(@PathVariable String refreshToken) {
         // 1、验证
         Object userId = SaTempUtil.parseToken(refreshToken);
         if(userId == null) {
@@ -73,7 +75,7 @@ public class LoginController extends ApiController {
 
         // 3、返回
         SaResult data = SaResult.data(accessToken);
-        return new Result<>(CodeEnum.SUCCESS.get(), data, "访问令牌更新成功");
+        return new Result<>(CodeEnum.SUCCESS.get(), data.getData(), "访问令牌更新成功");
     }
 
     /**

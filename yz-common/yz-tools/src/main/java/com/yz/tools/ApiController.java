@@ -1,12 +1,5 @@
 package com.yz.tools;
 
-/**
- * @ClassName ApiController
- * @Description TODO
- * @Author yunze
- * @Date 2023/2/6 23:03
- * @Version 1.0
- */
 public class ApiController {
 
     public ApiController() {
@@ -28,7 +21,7 @@ public class ApiController {
         return TableResult.success(data, total);
     }
 
-    protected <T> Result<T> failed(String msg) {
-        return Result.failed(msg);
+    protected Result failed(String msg) {
+        return Result.error(msg);
     }
 }

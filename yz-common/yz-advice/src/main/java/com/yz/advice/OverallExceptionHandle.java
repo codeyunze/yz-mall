@@ -20,6 +20,6 @@ public class OverallExceptionHandle {
      */
     @ExceptionHandler(BusinessException.class)
     Result businessExceptionHandle(BusinessException e) {
-        return Result.failed(e.getMessage());
+        return Result.error(e.getMessage());
     }
 }
