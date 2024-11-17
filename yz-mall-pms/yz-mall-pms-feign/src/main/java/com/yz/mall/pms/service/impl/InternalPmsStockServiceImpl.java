@@ -29,7 +29,7 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     public Boolean deduct(String productId, Integer quantity) {
         Result<Boolean> result = feign.deduct(new InternalPmsStockDto(productId, quantity));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMessage());
+            throw new BusinessException(result.getMsg());
         }
         return result.getData();
     }
@@ -38,7 +38,7 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     public void deductBatch(List<InternalPmsStockDto> productStocks) {
         Result<Boolean> result = feign.deductBatch(productStocks);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMessage());
+            throw new BusinessException(result.getMsg());
         }
     }
 
@@ -46,7 +46,7 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     public Boolean add(String productId, Integer quantity) {
         Result<Boolean> result = feign.add(new InternalPmsStockDto(productId, quantity));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMessage());
+            throw new BusinessException(result.getMsg());
         }
         return result.getData();
     }
@@ -55,7 +55,7 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     public Integer getStockByProductId(String productId) {
         Result<Integer> result = feign.getStockByProductId(productId);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMessage());
+            throw new BusinessException(result.getMsg());
         }
         return result.getData();
     }

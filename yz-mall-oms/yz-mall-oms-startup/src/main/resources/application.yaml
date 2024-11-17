@@ -24,5 +24,4 @@ resilience4j:
         slidingWindowSize: 2          # 滑动窗口的大小配置，配置TIME_BASED表示2秒
         minimumNumberOfCalls: 2       # 断路器计算失败率或慢调用率之前所需的最小样本(每个滑动窗口周期)
         permittedNumberOfCallsInHalfOpenState: 10  # 半开状态允许的最大请求数，默认值为10。
-
-
+        

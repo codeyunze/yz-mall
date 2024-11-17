@@ -27,7 +27,7 @@ public class InternalUnqidServiceImpl implements InternalUnqidService {
     public String generateSerialNumber(String prefix, Integer numberLength) {
         Result<String> result = feign.generateSerialNumber(new InternalUnqidDto(prefix, numberLength));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMessage());
+            throw new BusinessException(result.getMsg());
         }
         return result.getData();
     }
@@ -36,7 +36,7 @@ public class InternalUnqidServiceImpl implements InternalUnqidService {
     public List<String> generateSerialNumbers(String prefix, Integer numberLength, Integer quantity) {
         Result<List<String>> result = feign.generateSerialNumbers(new InternalUnqidDto(prefix, numberLength, quantity));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMessage());
+            throw new BusinessException(result.getMsg());
         }
         return result.getData();
     }

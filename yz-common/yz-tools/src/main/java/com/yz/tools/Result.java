@@ -23,7 +23,7 @@ public class Result<T> implements Serializable {
     /**
      * 提示信息
      */
-    private String message;
+    private String msg;
 
     /**
      * 返回数据
@@ -33,9 +33,9 @@ public class Result<T> implements Serializable {
     public Result() {
     }
 
-    public Result(int code, T data, String message) {
+    public Result(int code, T data, String msg) {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
         this.data = data;
     }
 
@@ -108,12 +108,12 @@ public class Result<T> implements Serializable {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public T getData() {

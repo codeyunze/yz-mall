@@ -1,6 +1,8 @@
 package com.yz.mall.oms.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.oms.dto.OmsOrderAddDto;
 import com.yz.mall.oms.dto.OmsOrderGenerateDto;
@@ -104,6 +106,7 @@ public class OmsOrderController extends ApiController {
     /**
      * 分页查询
      */
+    @SaCheckPermission("oms")
     @PostMapping("page")
     public Result<List<OmsOrder>> page(@RequestBody @Valid PageFilter<OmsOrderQueryDto> filter) {
         Page<OmsOrder> page = this.service.page(filter);

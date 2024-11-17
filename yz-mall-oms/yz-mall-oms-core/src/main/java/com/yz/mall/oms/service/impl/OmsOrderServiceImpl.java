@@ -14,14 +14,13 @@ import com.yz.mall.oms.service.OmsOrderProductRelationService;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsStockService;
-import com.yz.mall.user.service.InternalBaseUserService;
+import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.tools.PageFilter;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
  * @author yunze
  * @since 2024-06-18 12:49:55
  */
-@DS("slave")
+
 @Service
 public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> implements OmsOrderService {
 
@@ -42,9 +41,9 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final InternalPmsStockService internalPmsStockService;
 
-    private final InternalBaseUserService internalBaseUserService;
+    private final InternalSysUserService internalBaseUserService;
 
-    public OmsOrderServiceImpl(OmsOrderProductRelationService omsOrderProductRelationService, InternalUnqidService internalUnqidService, InternalPmsStockService internalPmsStockService, InternalBaseUserService internalBaseUserService) {
+    public OmsOrderServiceImpl(OmsOrderProductRelationService omsOrderProductRelationService, InternalUnqidService internalUnqidService, InternalPmsStockService internalPmsStockService, InternalSysUserService internalBaseUserService) {
         this.omsOrderProductRelationService = omsOrderProductRelationService;
         this.internalUnqidService = internalUnqidService;
         this.internalPmsStockService = internalPmsStockService;
@@ -95,6 +94,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         return baseMapper.updateById(bo) > 0;
     }
 
+    @DS("slave")
     @Override
     public Page<OmsOrder> page(PageFilter<OmsOrderQueryDto> filter) {
         LambdaQueryWrapper<OmsOrder> queryWrapper = new LambdaQueryWrapper<>();

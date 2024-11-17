@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 自定义权限验证接口扩展
+ * 自定义权限加载接口实现类
  * @author yunze
  * @date 2024/11/15 16:09
  */
@@ -16,9 +16,9 @@ import java.util.List;
 public class StpInterfaceImpl implements StpInterface {
 
     @Override
-    public List<String> getPermissionList(Object o, String s) {
+    public List<String> getPermissionList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的权限列表
-        return Arrays.asList("admin", "unqid", "user");
+        return Arrays.asList("admin", "unqid", "user", "oms");
     }
 
     @Override

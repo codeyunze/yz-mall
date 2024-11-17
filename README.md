@@ -190,7 +190,7 @@ docker 安装redis
    ```
    
 7. 删除容器
- 
+
    ```shell
    docker rm 039e8dbc0fed # (容器ID，CONTAINER ID)
    ```
@@ -208,3 +208,15 @@ docker 安装redis
    
 
 提交测试
+
+
+
+
+
+
+
+## 权限设计
+
+![权限设计图](images/权限设计图.jpg)
+
+![mall-sys[系统表]-20241116164804](images/mall-sys[系统表]-20241116164804.png)

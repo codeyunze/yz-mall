@@ -11,7 +11,7 @@ import java.security.PublicKey;
  */
 public class Test {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         RSA rsa = new RSA();
 
         //获得私钥
@@ -26,5 +26,5 @@ public class Test {
         String publicKeyBase64 = rsa.getPublicKeyBase64();
         System.out.println(publicKey);
         System.out.println(publicKeyBase64);
-    }
+    }*/
 }

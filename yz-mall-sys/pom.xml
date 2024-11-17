@@ -14,11 +14,11 @@
     <description>商城-系统信息服务</description>
 
     <modules>
-        <module>yz-mall-user-interface</module>
-        <module>yz-mall-user-service</module>
-        <module>yz-mall-user-core</module>
-        <module>yz-mall-user-feign</module>
-        <module>yz-mall-user-startup</module>
+        <module>yz-mall-sys-interface</module>
+        <module>yz-mall-sys-service</module>
+        <module>yz-mall-sys-core</module>
+        <module>yz-mall-sys-feign</module>
+        <module>yz-mall-sys-startup</module>
     </modules>
 
     <properties>

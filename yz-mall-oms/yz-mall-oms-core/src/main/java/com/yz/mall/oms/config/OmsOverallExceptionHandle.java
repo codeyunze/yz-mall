@@ -1,5 +1,6 @@
 package com.yz.mall.oms.config;
 
+import cn.dev33.satoken.exception.SaTokenException;
 import com.yz.tools.Result;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.springframework.core.annotation.Order;
@@ -20,6 +21,11 @@ public class OmsOverallExceptionHandle {
      */
     @ExceptionHandler(CallNotPermittedException.class)
     Result<?> callNotPermittedExceptionHandle(CallNotPermittedException e) {
+        return Result.error(e.getMessage());
+    }
+
+    @ExceptionHandler(SaTokenException.class)
+    Result<?> SaTokenExceptionHandle(SaTokenException e) {
         return Result.error(e.getMessage());
     }
 }
