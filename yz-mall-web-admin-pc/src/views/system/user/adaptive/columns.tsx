@@ -31,6 +31,10 @@ export function useColumns() {
   const form = reactive({
     phone: "",
     email: "",
+    phone2: "",
+    email2: "",
+    phone3: "",
+    email3: "",
     createTime: ""
   });
   const dataList = ref([]);
