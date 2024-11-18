@@ -10,6 +10,11 @@ import { clone, delay } from "@pureadmin/utils";
 export function useColumns() {
   const dataList = ref([]);
   const loading = ref(true);
+  const form = reactive({
+    module: "",
+    status: "",
+    operatingTime: ""
+  });
   const columns: TableColumnList = [
     {
       label: "日期",
@@ -78,6 +83,19 @@ export function useColumns() {
     });
   }
 
+  async function onSearch() {
+    loading.value = true;
+    const { data } = await getOperationLogsList(toRaw(form));
+    dataList.value = data.list;
+    pagination.total = data.total;
+    pagination.pageSize = data.pageSize;
+    pagination.currentPage = data.currentPage;
+
+    setTimeout(() => {
+      loading.value = false;
+    }, 500);
+  }
+
   onMounted(() => {
     delay(600).then(() => {
       const newList = [];
@@ -94,6 +112,7 @@ export function useColumns() {
 
   return {
     loading,
+    form,
     columns,
     dataList,
     pagination,
