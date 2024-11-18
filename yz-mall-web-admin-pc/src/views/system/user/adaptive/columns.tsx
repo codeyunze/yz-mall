@@ -3,33 +3,37 @@ import type {
   AdaptiveConfig,
   PaginationProps
 } from "@pureadmin/table";
-import { tableData } from "../data";
+// import { tableData } from "../data";
+import { pageUserInfo } from "@/api/user";
 import { ref, onMounted, reactive } from "vue";
-import { clone, delay } from "@pureadmin/utils";
+import { delay } from "@pureadmin/utils";
 
 export function useColumns() {
-  const dataList = ref([]);
   const loading = ref(true);
-  const form = reactive({
-    module: "",
-    status: "",
-    operatingTime: ""
-  });
   const columns: TableColumnList = [
     {
-      label: "日期",
-      prop: "date"
+      label: "ID",
+      prop: "id"
     },
     {
-      label: "姓名",
-      prop: "name"
+      label: "手机号",
+      prop: "phone"
     },
     {
-      label: "地址",
-      prop: "address"
+      label: "邮件",
+      prop: "email"
+    },
+    {
+      label: "创建日期",
+      prop: "createTime"
     }
   ];
-
+  const form = reactive({
+    phone: "",
+    email: "",
+    createTime: ""
+  });
+  const dataList = ref([]);
   /** 分页配置 */
   const pagination = reactive<PaginationProps>({
     pageSize: 20,
@@ -83,41 +87,61 @@ export function useColumns() {
     });
   }
 
-  async function onSearch() {
+  function onSearch() {
     loading.value = true;
-    const { data } = await getOperationLogsList(toRaw(form));
-    dataList.value = data.list;
-    pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
-
+    const queryFilter = {
+      size: pagination.pageSize,
+      current: pagination.currentPage,
+      filter: form
+    };
+    console.log("请求过滤" + JSON.stringify(queryFilter));
+    // const { data } = await pageUserInfo(queryFilter);
+    // pagination.total = data.total
+    // dataList.value = data.data;
+    // pagination.total = data.total;
+    // pagination.pageSize = data.pageSize;
+    // pagination.currentPage = data.currentPage;
+    pageUserInfo(queryFilter).then(data => {
+      console.log("接口数据" + JSON.stringify(data));
+      dataList.value = data.data.items;
+      pagination.total = data.data.total;
+    });
     setTimeout(() => {
       loading.value = false;
     }, 500);
   }
 
+  const resetForm = formEl => {
+    if (!formEl) return;
+    formEl.resetFields();
+    onSearch();
+  };
+
   onMounted(() => {
-    delay(600).then(() => {
-      const newList = [];
-      Array.from({ length: 6 }).forEach(() => {
-        newList.push(clone(tableData, true));
-      });
-      newList.flat(Infinity).forEach((item, index) => {
-        dataList.value.push({ id: index, ...item });
-      });
-      pagination.total = dataList.value.length;
-      loading.value = false;
-    });
+    onSearch();
+    // delay(600).then(() => {
+    //   const newList = [];
+    //   Array.from({ length: 6 }).forEach(() => {
+    //     newList.push(clone(tableData, true));
+    //   });
+    //   newList.flat(Infinity).forEach((item, index) => {
+    //     dataList.value.push({ id: index, ...item });
+    //   });
+    //   pagination.total = dataList.value.length;
+    //   loading.value = false;
+    // });
   });
 
   return {
     loading,
-    form,
     columns,
+    form,
     dataList,
     pagination,
     loadingConfig,
     adaptiveConfig,
+    onSearch,
+    resetForm,
     onSizeChange,
     onCurrentChange
   };

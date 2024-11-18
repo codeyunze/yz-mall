@@ -34,6 +34,24 @@ export type RefreshTokenResult = {
   };
 };
 
+export type UserInfoResult = {
+  code: number;
+  msg: string;
+  data: {
+    items: Array<any>;
+    total: number;
+  };
+};
+
+export type UserInfo = {
+  id: string;
+  phone: string;
+  email: string;
+  createTime: string;
+  updateTime: string;
+  balance: number;
+};
+
 /** 登录 */
 export const getLogin = (data?: object) => {
   return http.request<UserResult>("post", baseUrlApi("auth/login"), { data });
@@ -42,4 +60,11 @@ export const getLogin = (data?: object) => {
 /** 刷新`token` */
 export const refreshTokenApi = (data?: object) => {
   return http.request<RefreshTokenResult>("post", "refresh-token", { data });
+};
+
+/** 分页查询用户信息 */
+export const pageUserInfo = (data?: object) => {
+  return http.request<UserInfoResult>("post", baseUrlApi("sys/user/page"), {
+    data
+  });
 };

@@ -10,6 +10,8 @@ import com.yz.mall.sys.service.SysUserRelationOrgService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
+import com.yz.tools.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -62,9 +64,9 @@ public class SysUserRelationOrgController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<SysUserRelationOrg>> page(@RequestBody @Valid PageFilter<SysUserRelationOrgQueryDto> filter) {
+    public Result<ResultTable<SysUserRelationOrg>> page(@RequestBody @Valid PageFilter<SysUserRelationOrgQueryDto> filter) {
         Page<SysUserRelationOrg> page = this.service.page(filter);
-        return success(page.getRecords(), page.getTotal());
+        return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(page.getRecords(), page.getTotal()), "查询成功");
     }
 
     /**

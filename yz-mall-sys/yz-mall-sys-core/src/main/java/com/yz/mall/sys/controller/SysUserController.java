@@ -10,11 +10,12 @@ import com.yz.mall.sys.service.SysUserService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
+import com.yz.tools.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 基础-用户(BaseUser)表控制层
@@ -62,9 +63,9 @@ public class SysUserController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<SysUser>> page(@RequestBody @Valid PageFilter<SysUserQueryDto> filter) {
+    public Result<ResultTable<SysUser>> page(@RequestBody @Valid PageFilter<SysUserQueryDto> filter) {
         Page<SysUser> page = this.service.page(filter);
-        return success(page.getRecords(), page.getTotal());
+        return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(page.getRecords(), page.getTotal()), "查询成功");
     }
 
     /**

@@ -2,3 +2,9 @@
 export const baseUrlApi = (url: string) => `/api/${url}`;
 // 第二个代理后端地址
 // export const baseUrlOtherApi = (url: string) => `/otherApi/${url}`;
+
+// export interface baseResult<T> {
+//   code: number;
+//   msg: string;
+//   data: T;
+// }

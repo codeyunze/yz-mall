@@ -1,17 +1,24 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useColumns } from "./columns";
+import { getPickerShortcuts } from "../../utils";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
+import Refresh from "@iconify-icons/ep/refresh";
+
+const formRef = ref();
 const tableRef = ref();
 
 const {
   loading,
   columns,
+  form,
   dataList,
   pagination,
-  onSearch,
   loadingConfig,
   adaptiveConfig,
+  onSearch,
+  resetForm,
   onSizeChange,
   onCurrentChange
 } = useColumns();
@@ -25,28 +32,25 @@ const {
       :model="form"
       class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px] overflow-auto"
     >
-      <el-form-item label="所属模块" prop="module">
+      <el-form-item label="手机号" prop="phone">
         <el-input
-          v-model="form.module"
-          placeholder="请输入所属模块"
+          v-model="form.phone"
+          placeholder="请输入手机号"
           clearable
           class="!w-[170px]"
         />
       </el-form-item>
-      <el-form-item label="操作状态" prop="status">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择"
+      <el-form-item label="邮件" prop="email">
+        <el-input
+          v-model="form.email"
+          placeholder="请输入邮件"
           clearable
-          class="!w-[150px]"
-        >
-          <el-option label="成功" value="1" />
-          <el-option label="失败" value="0" />
-        </el-select>
+          class="!w-[170px]"
+        />
       </el-form-item>
-      <el-form-item label="操作时间" prop="operatingTime">
+      <el-form-item label="创建时间" prop="createTime">
         <el-date-picker
-          v-model="form.operatingTime"
+          v-model="form.createTime"
           :shortcuts="getPickerShortcuts()"
           type="datetimerange"
           range-separator="至"

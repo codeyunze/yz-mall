@@ -39,22 +39,22 @@ const permissionRouter = {
 };
 
 const sysRouter = {
-  path: "/system",
+  path: "/sys",
   meta: {
-    title: "系统管理"
+    title: "管理"
   },
   children: [
     {
-      path: "/system/serial/index",
-      name: "SerialNumber",
+      path: "/sys/serial/index",
+      name: "SerialNumber1",
       meta: {
         title: "流水号配置",
         roles: ["admin", "common"]
       }
     },
     {
-      path: "/system/dictionary/index",
-      name: "DataDictionary",
+      path: "/sys/user/index",
+      name: "DataDictionary1",
       meta: {
         title: "数据字典",
         roles: ["admin", "common"]

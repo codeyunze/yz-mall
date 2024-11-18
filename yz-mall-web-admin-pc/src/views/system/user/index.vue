@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import { list } from "./list";
-import Adaptive from "@/views/system/dictionary/adaptive/index.vue";
+import Adaptive from "./adaptive/index.vue";
 
 defineOptions({
   name: "DataDictionary"

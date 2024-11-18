@@ -16,6 +16,7 @@ import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -49,6 +50,8 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
     @Override
     public Page<SysUser> page(PageFilter<SysUserQueryDto> filter) {
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.hasText(filter.getFilter().getPhone()), SysUser::getPhone, filter.getFilter().getPhone());
+        queryWrapper.like(StringUtils.hasText(filter.getFilter().getEmail()), SysUser::getEmail, filter.getFilter().getEmail());
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 
