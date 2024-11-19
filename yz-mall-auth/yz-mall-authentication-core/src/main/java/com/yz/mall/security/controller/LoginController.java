@@ -8,7 +8,9 @@ import cn.dev33.satoken.util.SaResult;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.yz.mall.security.dto.AuthLoginDto;
+import com.yz.mall.security.dto.RefreshTokenDto;
 import com.yz.mall.security.vo.AuthLoginVo;
+import com.yz.mall.security.vo.RefreshTokenVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
@@ -28,7 +30,7 @@ import java.util.Collections;
  */
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping
 public class LoginController extends ApiController {
 
 
@@ -59,15 +61,15 @@ public class LoginController extends ApiController {
 
     /**
      * 更新访问令牌
-     * @param refreshToken 刷新令牌
+     * @param refreshTokenDto 刷新令牌
      * @return 新的访问令牌
      */
-    @RequestMapping("/refreshToken/{refreshToken}")
-    public Result<Object> refreshToken(@PathVariable String refreshToken) {
+    @PostMapping("/refreshToken")
+    public Result<RefreshTokenVo> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
         // 1、验证
-        Object userId = SaTempUtil.parseToken(refreshToken);
-        if(userId == null) {
-            return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "无效 refreshToken");
+        Object userId = SaTempUtil.parseToken(refreshTokenDto.getRefreshToken());
+        if(userId == null || !userId.toString().equals(refreshTokenDto.getUserId())) {
+            return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "无效的刷新令牌");
         }
 
         // 2、为其生成新的短 token
@@ -75,7 +77,16 @@ public class LoginController extends ApiController {
 
         // 3、返回
         SaResult data = SaResult.data(accessToken);
-        return new Result<>(CodeEnum.SUCCESS.get(), data.getData(), "访问令牌更新成功");
+
+        RefreshTokenVo vo = new RefreshTokenVo();
+        vo.setAccessToken((String) data.getData());
+        vo.setRefreshToken(SaTempUtil.createToken(userId, 86400));
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
+
+        // 清理临时token
+        SaTempUtil.deleteToken(refreshTokenDto.getRefreshToken());
+        return new Result<>(CodeEnum.SUCCESS.get(), vo, "访问令牌更新成功");
     }
 
     /**
