@@ -38,6 +38,11 @@ public class SysRoleUpdateDto implements Serializable {
      */
     private Long orgId;
 
+    /**
+     * 备注说明
+     */
+    private String remark;
+
 
 }
 
