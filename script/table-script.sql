@@ -119,6 +119,8 @@ CREATE TABLE sys_role
     PRIMARY KEY (id)
 ) COMMENT = '系统-角色数据表';
 
+alter table sys_role add column `status` INT  DEFAULT 1 COMMENT '状态1-启用,0-停用';
+
 CREATE UNIQUE INDEX uk_sys_role ON sys_role (org_id, role_code, invalid);
 
 

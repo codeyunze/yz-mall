@@ -29,7 +29,7 @@ public class SysRoleQueryDto implements Serializable {
     /**
      * 所属组织
      */
-    private Long orgId;
+    private Long orgId = -1L;
 
 
 }

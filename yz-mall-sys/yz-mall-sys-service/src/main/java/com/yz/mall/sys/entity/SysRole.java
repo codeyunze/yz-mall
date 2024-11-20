@@ -65,6 +65,16 @@ public class SysRole extends Model<SysRole> {
     private Long orgId;
 
     /**
+     * 状态1-启用,0-停用
+     */
+    private Integer status;
+
+    /**
+     * 备注说明
+     */
+    private String remark;
+
+    /**
      * 获取主键值
      *
      * @return 主键值
