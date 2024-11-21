@@ -1,5 +1,9 @@
 package com.yz.tools;
 
+import com.yz.tools.enums.CodeEnum;
+
+import java.util.List;
+
 public class ApiController {
 
     public ApiController() {
@@ -23,5 +27,16 @@ public class ApiController {
 
     protected Result failed(String msg) {
         return Result.error(msg);
+    }
+
+    /**
+     * 列表查询成功返回信息
+     * @param data 列表数据
+     * @param total 总数
+     * @return
+     * @param <T>
+     */
+    protected <T> Result<ResultTable<T>> success(List<T> data, Long total) {
+        return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(data, total), "查询成功");
     }
 }

@@ -58,11 +58,6 @@ public class SysPermission extends Model<SysPermission> {
     private String permissionName;
 
     /**
-     * 所属角色Id
-     */
-    private Long roleId;
-
-    /**
      * 获取主键值
      *
      * @return 主键值

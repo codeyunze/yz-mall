@@ -131,8 +131,7 @@ CREATE TABLE sys_permission
     `update_time`     DATETIME             DEFAULT current_timestamp ON UPDATE current_timestamp COMMENT '更新时间',
     `invalid`         BIGINT      NOT NULL DEFAULT 0 COMMENT '数据是否有效：0数据有效',
     `permission_code` VARCHAR(36) NOT NULL COMMENT '权限编码',
-    `permission_name` VARCHAR(36) COMMENT '权限名称',
-    `role_id`         BIGINT      NOT NULL COMMENT '所属角色Id',
+    `permission_name` VARCHAR(36) COMMENT '权限名称'
     PRIMARY KEY (id)
 ) COMMENT = '系统-权限数据表';
 
@@ -148,7 +147,7 @@ CREATE TABLE sys_role_relation
     `role_id`     BIGINT NOT NULL COMMENT '关联角色Id',
     `relation_id` BIGINT NOT NULL COMMENT '关联用户Id/组织Id',
     PRIMARY KEY (id)
-) COMMENT = '系统-关联角色数据表';
+) COMMENT = '系统-用户与组织关联角色表';
 
 CREATE UNIQUE INDEX uk_sys_role_relation_by_user ON sys_role_relation (relation_id, invalid, role_id);
 CREATE INDEX ix_sys_role_relation_by_role ON sys_role_relation (role_id, invalid, relation_id);
@@ -185,3 +184,34 @@ CREATE TABLE sys_user
 
 CREATE UNIQUE INDEX uk_sys_user_phone ON sys_user (invalid, phone);
 CREATE UNIQUE INDEX uk_sys_user_email ON sys_user (email, invalid);
+
+
+CREATE TABLE sys_menu
+(
+    `id`               INT      NOT NULL COMMENT '主键标识',
+    `create_time`      DATETIME NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
+    `update_time`      DATETIME          DEFAULT current_timestamp COMMENT '更新时间',
+    `invalid`          INT      NOT NULL DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `parent_id`        VARCHAR(255) COMMENT '上级菜单',
+    `menu_type`        INT COMMENT '菜单类型0-菜单,1-iframe,2-外链接,3-按钮,4-接口',
+    `title`            VARCHAR(50) COMMENT '菜单名称',
+    `name`             VARCHAR(36) COMMENT '路由名称',
+    `path`             VARCHAR(50) COMMENT '路由路径',
+    `component`        VARCHAR(50) COMMENT '组件路径',
+    `rank`             INT COMMENT '排序',
+    `redirect`         VARCHAR(50) COMMENT '路由重定向',
+    `icon`             VARCHAR(100) COMMENT '菜单图标',
+    `extra_icon`       VARCHAR(100) COMMENT '菜单右侧额外图标',
+    `enter_transition` VARCHAR(10) COMMENT '进场动画',
+    `leave_transition` VARCHAR(10) COMMENT '离场动画',
+    `active_path`      VARCHAR(100) COMMENT '菜单激活',
+    `auths`            VARCHAR(50) COMMENT '按钮权限标识',
+    `frame_src`        VARCHAR(100) COMMENT '链接地址(嵌入iframe链接地址)',
+    `frame_loading`    INT               DEFAULT 1 COMMENT '加载动画(内嵌的iframe页面是否开启首次加载动画)',
+    `keep_alive`       INT               DEFAULT 0 COMMENT '缓存页面(是否缓存该路由页面)',
+    `hidden_tag`       INT               DEFAULT 1 COMMENT '标签页(当前菜单名称或自定义信息禁止添加到标签页)',
+    `fixed_tag`        INT               DEFAULT 0 COMMENT '固定标签页(当前菜单名称是否固定显示在标签页且不可关闭)',
+    `show_link`        INT               DEFAULT 1 COMMENT '是否显示该菜单',
+    `show_parent`      INT               DEFAULT 0 COMMENT '是否显示父级菜单',
+    PRIMARY KEY (id)
+) COMMENT = '系统-菜单资源表';

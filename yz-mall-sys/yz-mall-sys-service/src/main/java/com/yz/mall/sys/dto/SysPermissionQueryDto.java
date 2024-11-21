@@ -36,11 +36,6 @@ public class SysPermissionQueryDto implements Serializable {
      */
     private String permissionName;
 
-    /**
-     * 所属角色Id
-     */
-    private Long roleId;
-
 
 }
 

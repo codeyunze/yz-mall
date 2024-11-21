@@ -27,13 +27,5 @@ public class SysPermissionAddDto implements Serializable {
      * 权限名称
      */
     private String permissionName;
-
-    /**
-     * 所属角色Id
-     */
-    @NotNull(message = "所属角色Id不能为空")
-    private Long roleId;
-
-
 }
 

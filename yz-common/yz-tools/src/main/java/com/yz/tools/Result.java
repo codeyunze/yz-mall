@@ -3,6 +3,7 @@ package com.yz.tools;
 import com.yz.tools.enums.CodeEnum;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 后端返回给前端的数据对象
@@ -68,6 +69,10 @@ public class Result<T> implements Serializable {
      */
     public static <T> Result<T> success(T data, String message) {
         return new Result<>(CodeEnum.SUCCESS.get(), data, message);
+    }
+
+    public Result<ResultTable<T>> success(List<T> data, Long count) {
+        return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(data, count), "查询成功");
     }
 
     /**

@@ -67,6 +67,7 @@ public class SysRoleController extends ApiController {
     public Result<ResultTable<SysRole>> page(@RequestBody @Valid PageFilter<SysRoleQueryDto> filter) {
         Page<SysRole> page = this.service.page(filter);
         return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(page.getRecords(), page.getTotal()), "查询成功");
+        // return success(page.getRecords(), page.getTotal());
     }
 
     /**

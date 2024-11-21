@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-11-20 17:02:25",
+  "updatedTime": "2024-11-21 17:45:08",
   "dbConns": [],
   "profile": {
     "default": {
@@ -596,7 +596,7 @@
       "#DDE5FF"
     ],
     "DDLToggleCase": "L",
-    "menuWidth": "396px"
+    "menuWidth": "313px"
   },
   "entities": [
     {
@@ -4757,7 +4757,7 @@
         }
       },
       "defKey": "sys_permission",
-      "defName": "系统-权限数据表",
+      "defName": "系统-接口权限表",
       "comment": "",
       "properties": {
         "partitioned by": "(date string)",
@@ -5107,24 +5107,6 @@
           "extProps": {},
           "domain": "",
           "id": "BEC6F5F6-6AB7-4A69-BBA4-8050D2731817"
-        },
-        {
-          "defKey": "role_id",
-          "defName": "所属角色Id",
-          "comment": "",
-          "type": "INT",
-          "len": "",
-          "scale": "",
-          "primaryKey": false,
-          "notNull": true,
-          "autoIncrement": false,
-          "defaultValue": "",
-          "hideInGraph": false,
-          "refDict": "",
-          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
-          "extProps": {},
-          "domain": "",
-          "id": "6D22DF42-B7BC-4A35-8E42-CDBF67307A16"
         }
       ],
       "correlations": [],
@@ -5135,11 +5117,6 @@
           "unique": true,
           "comment": "查询对应角色的所拥有的权限",
           "fields": [
-            {
-              "fieldDefKey": "6D22DF42-B7BC-4A35-8E42-CDBF67307A16",
-              "ascOrDesc": "A",
-              "id": "74CBE35E-64AA-490D-BDF9-376AB83AA42B"
-            },
             {
               "fieldDefKey": "8599C98A-C2A6-4432-B081-38A1C9F70C9B",
               "ascOrDesc": "A",
@@ -5165,7 +5142,7 @@
         }
       },
       "defKey": "sys_role_relation",
-      "defName": "系统-关联角色数据表",
+      "defName": "系统-用户与组织关联角色表",
       "comment": "",
       "properties": {
         "partitioned by": "(date string)",
@@ -6057,6 +6034,1137 @@
         }
       ],
       "type": "P"
+    },
+    {
+      "id": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
+      "env": {
+        "base": {
+          "nameSpace": "",
+          "codeRoot": ""
+        }
+      },
+      "defKey": "sys_menu",
+      "defName": "系统-菜单资源表",
+      "comment": "",
+      "properties": {
+        "partitioned by": "(date string)",
+        "row format delimited": "",
+        "fields terminated by ','": "",
+        "collection items terminated by '-'": "",
+        "map keys terminated by ':'": "",
+        "store as textfile;": ""
+      },
+      "sysProps": {
+        "nameTemplate": "{defKey}[{defName}]"
+      },
+      "notes": {},
+      "headers": [
+        {
+          "refKey": "hideInGraph",
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "defName",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "primaryKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "notNull",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "autoIncrement",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "domain",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "type",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "len",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "scale",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "comment",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "refDict",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defaultValue",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "isStandard",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "uiHint",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "extProps",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr1",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr2",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr3",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr4",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr5",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr6",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr7",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr8",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr9",
+          "freeze": false,
+          "hideInGraph": true
+        }
+      ],
+      "fields": [
+        {
+          "defKey": "id",
+          "defName": "主键标识",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": true,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "3BD745A2-C917-4B9C-A43F-C33146BC313B"
+        },
+        {
+          "defKey": "create_time",
+          "defName": "创建时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "ACFF4F56-6FD1-481B-A7D9-7D82401DD7A2",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "update_time",
+          "defName": "更新时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "C35AE441-32FA-42A6-A63F-694CC61E59E0",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "invalid",
+          "defName": "数据是否有效：0数据有效",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "6BC8F04B-6CFA-4995-98D3-318F5CDD774E",
+          "id": "561A4282-2131-47B7-986F-805E3D5CCECC"
+        },
+        {
+          "defKey": "parent_id",
+          "defName": "上级菜单",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "9092C4E0-1A54-4859-ABBB-5B62DBC27573",
+          "id": "DFE3512F-571F-4CA4-8F75-B96E32FCDDFB"
+        },
+        {
+          "defKey": "menu_type",
+          "defName": "菜单类型0-菜单,1-iframe,2-外链接,3-按钮,4-接口",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "870162A2-9886-4950-9339-61050C4839C5"
+        },
+        {
+          "defKey": "title",
+          "defName": "菜单名称",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 50,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "631D859C-9880-448A-837A-07E31F32AC16"
+        },
+        {
+          "defKey": "name",
+          "defName": "路由名称",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 36,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "27081DC2-DA28-4558-B7D6-9407C4CF7BAA"
+        },
+        {
+          "defKey": "path",
+          "defName": "路由路径",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 50,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "9747C0A8-1042-4015-8302-0FD1DE177675"
+        },
+        {
+          "defKey": "component",
+          "defName": "组件路径",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 50,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "089E9A31-B2F4-47A5-86A4-44AD28757251"
+        },
+        {
+          "defKey": "rank",
+          "defName": "排序",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "7B455062-BECC-4F3C-8E50-DFEEAE7146EE"
+        },
+        {
+          "defKey": "redirect",
+          "defName": "路由重定向",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 50,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "579E4F05-B819-49FD-8248-F9B8F1B11C45"
+        },
+        {
+          "defKey": "icon",
+          "defName": "菜单图标",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 100,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "21AD5187-198E-448C-98B4-69FC40388F55"
+        },
+        {
+          "defKey": "extra_icon",
+          "defName": "菜单右侧额外图标",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 100,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "BAF1EF92-7733-4091-9D6B-E3598179A7ED"
+        },
+        {
+          "defKey": "enter_transition",
+          "defName": "进场动画",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 10,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "56823964-BE23-4FF3-8281-3E486F765F54"
+        },
+        {
+          "defKey": "leave_transition",
+          "defName": "离场动画",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 10,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "3DF6EC37-C359-4DD2-8D1D-1B45E95247D6"
+        },
+        {
+          "defKey": "active_path",
+          "defName": "菜单激活",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 100,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "A3D05CEB-0F03-46F0-AD74-1640C9987ACD"
+        },
+        {
+          "defKey": "auths",
+          "defName": "按钮权限标识",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 50,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "8040E447-3CF4-4C7B-AC12-B1953ADCD48A"
+        },
+        {
+          "defKey": "frame_src",
+          "defName": "链接地址(嵌入iframe链接地址)",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 100,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "740890C6-8B10-4DD1-9F56-B2F5424DA1C5"
+        },
+        {
+          "defKey": "frame_loading",
+          "defName": "加载动画(内嵌的iframe页面是否开启首次加载动画)",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "B346CA3A-2A71-4248-8D96-F148BD49638B"
+        },
+        {
+          "defKey": "keep_alive",
+          "defName": "缓存页面(是否缓存该路由页面)",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "A97E4CEF-11FF-468B-96F3-90A8DD64BF44"
+        },
+        {
+          "defKey": "hidden_tag",
+          "defName": "标签页(当前菜单名称或自定义信息禁止添加到标签页)",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "E88BCCB1-8891-42E2-B6D4-AB5BE169E01A"
+        },
+        {
+          "defKey": "fixed_tag",
+          "defName": "固定标签页(当前菜单名称是否固定显示在标签页且不可关闭)",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "248683C2-4265-44AE-A9F5-07A44832B15D"
+        },
+        {
+          "defKey": "show_link",
+          "defName": "是否显示该菜单",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "B1C10A9F-AA4F-4B40-925D-E1BB64F79DDB"
+        },
+        {
+          "defKey": "show_parent",
+          "defName": "是否显示父级菜单",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "01C6CADA-A048-4D6A-A75D-5F18A47E4BF3"
+        }
+      ],
+      "correlations": [],
+      "indexes": [],
+      "type": "P"
+    },
+    {
+      "id": "F9037679-F2F7-48AF-A28E-1FF5D054350A",
+      "env": {
+        "base": {
+          "nameSpace": "",
+          "codeRoot": ""
+        }
+      },
+      "defKey": "sys_menu_relation_permission",
+      "defName": "系统-菜单关联接口权限表",
+      "comment": "",
+      "properties": {
+        "partitioned by": "(date string)",
+        "row format delimited": "",
+        "fields terminated by ','": "",
+        "collection items terminated by '-'": "",
+        "map keys terminated by ':'": "",
+        "store as textfile;": ""
+      },
+      "sysProps": {
+        "nameTemplate": "{defKey}[{defName}]"
+      },
+      "notes": {},
+      "headers": [
+        {
+          "refKey": "hideInGraph",
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "defName",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "primaryKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "notNull",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "autoIncrement",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "domain",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "type",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "len",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "scale",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "comment",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "refDict",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defaultValue",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "isStandard",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "uiHint",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "extProps",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr1",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr2",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr3",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr4",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr5",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr6",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr7",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr8",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr9",
+          "freeze": false,
+          "hideInGraph": true
+        }
+      ],
+      "fields": [
+        {
+          "defKey": "id",
+          "defName": "主键标识",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": true,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "133EC636-BCD1-4CFB-BEE2-B5C5B6813A15"
+        },
+        {
+          "defKey": "create_time",
+          "defName": "创建时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "DA444111-AA0E-4C49-BE7B-7B59C57D00B8",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "update_time",
+          "defName": "更新时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "F73C50A9-D482-4AC7-A0F4-3A2C617A2FE6",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "invalid",
+          "defName": "数据是否有效：0数据有效",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "6BC8F04B-6CFA-4995-98D3-318F5CDD774E",
+          "id": "B0A89787-E318-40D4-A4B2-04353BEEA3EF"
+        },
+        {
+          "defKey": "menu_id",
+          "defName": "菜单Id",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "A3F1E2A7-823D-444E-A86B-0E1A48615C6C"
+        },
+        {
+          "defKey": "permission_id",
+          "defName": "接口权限Id",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "4B231052-3CDA-4B88-8E5E-B0480AD3AA8F"
+        }
+      ],
+      "correlations": [],
+      "indexes": [],
+      "type": "P"
+    },
+    {
+      "id": "7552FDD3-4D11-4D21-822C-93581943503C",
+      "env": {
+        "base": {
+          "nameSpace": "",
+          "codeRoot": ""
+        }
+      },
+      "defKey": "sys_role_relation_menu",
+      "defName": "系统-角色关联菜单表",
+      "comment": "",
+      "properties": {
+        "partitioned by": "(date string)",
+        "row format delimited": "",
+        "fields terminated by ','": "",
+        "collection items terminated by '-'": "",
+        "map keys terminated by ':'": "",
+        "store as textfile;": ""
+      },
+      "sysProps": {
+        "nameTemplate": "{defKey}[{defName}]"
+      },
+      "notes": {},
+      "headers": [
+        {
+          "refKey": "hideInGraph",
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "defName",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "primaryKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "notNull",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "autoIncrement",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "domain",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "type",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "len",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "scale",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "comment",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "refDict",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defaultValue",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "isStandard",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "uiHint",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "extProps",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr1",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr2",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr3",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr4",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr5",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr6",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr7",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr8",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr9",
+          "freeze": false,
+          "hideInGraph": true
+        }
+      ],
+      "fields": [
+        {
+          "defKey": "id",
+          "defName": "主键标识",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": true,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "732953D4-3AA5-4A5E-BAA0-363AE014DAB3"
+        },
+        {
+          "defKey": "create_time",
+          "defName": "创建时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "8B65BE34-6A66-49A4-969F-B1864E35EC92",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "update_time",
+          "defName": "更新时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "1F5B6C4B-997C-4E36-8DC0-68C91DB895EE",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "invalid",
+          "defName": "数据是否有效：0数据有效",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "6BC8F04B-6CFA-4995-98D3-318F5CDD774E",
+          "id": "CD114C81-BF6A-418E-A697-E9436A7551D5"
+        },
+        {
+          "defKey": "role_id",
+          "defName": "角色Id",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "9092C4E0-1A54-4859-ABBB-5B62DBC27573",
+          "id": "06A1264A-3F39-44BE-AFB9-41F85AC057C9"
+        },
+        {
+          "defKey": "menu_id",
+          "defName": "菜单Id",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "9092C4E0-1A54-4859-ABBB-5B62DBC27573",
+          "id": "D5BA3416-7D2A-4379-8C20-7652ADA52BB4"
+        }
+      ],
+      "correlations": [],
+      "indexes": [],
+      "type": "P"
     }
   ],
   "views": [],
@@ -6635,28 +7743,6 @@
       "canvasData": {
         "cells": [
           {
-            "id": "5bed7b12-5695-4c61-952c-d749df054a37",
-            "shape": "erdRelation",
-            "source": {
-              "cell": "5e972235-bee3-4940-afb3-fffd08bbf8d5",
-              "port": "6D22DF42-B7BC-4A35-8E42-CDBF67307A16%in"
-            },
-            "target": {
-              "cell": "25d1f28a-70a2-4183-8f13-550ad764e29b",
-              "port": "C16E995B-6332-46BD-B44D-F6184D52E3EA%out"
-            },
-            "relation": "1:n",
-            "fillColor": "#ACDAFC",
-            "router": {
-              "name": "manhattan"
-            },
-            "attrs": {
-              "line": {
-                "strokeDasharray": ""
-              }
-            }
-          },
-          {
             "id": "a3190d78-361b-498a-b799-fdf3ac6652f2",
             "shape": "erdRelation",
             "source": {
@@ -6669,9 +7755,6 @@
             },
             "relation": "1:n",
             "fillColor": "#ACDAFC",
-            "router": {
-              "name": "manhattan"
-            },
             "attrs": {
               "line": {
                 "strokeDasharray": ""
@@ -6691,9 +7774,6 @@
             },
             "relation": "1:n",
             "fillColor": "#ACDAFC",
-            "router": {
-              "name": "manhattan"
-            },
             "attrs": {
               "line": {
                 "strokeDasharray": ""
@@ -6713,28 +7793,10 @@
             },
             "relation": "1:n",
             "fillColor": "#ACDAFC",
-            "router": {
-              "name": "manhattan"
-            },
             "attrs": {
               "line": {
                 "strokeDasharray": ""
               }
-            }
-          },
-          {
-            "id": "3b587707-c545-4af6-90fb-5c25824b160e",
-            "shape": "table",
-            "position": {
-              "x": -572,
-              "y": 589
-            },
-            "count": 0,
-            "originKey": "DB00A387-43DC-44E7-A14A-F845142E7A51",
-            "type": "P",
-            "size": {
-              "width": 421,
-              "height": 169
             }
           },
           {
@@ -6750,9 +7812,6 @@
             },
             "relation": "1:n",
             "fillColor": "#ACDAFC",
-            "router": {
-              "name": "manhattan"
-            },
             "attrs": {
               "line": {
                 "strokeDasharray": ""
@@ -6760,7 +7819,26 @@
             }
           },
           {
-            "id": "325a8ff7-973d-480f-9bda-71ab77619bdd",
+            "id": "1d77f665-850c-4757-bae3-baac36d45572",
+            "shape": "erdRelation",
+            "source": {
+              "cell": "111841d3-78bd-46f5-ad3f-b54e46f45b3b",
+              "port": "88FF0BDE-895C-4F5E-A1DF-4D9EDCBE9B8C%out"
+            },
+            "target": {
+              "cell": "cebf45b3-89f7-48af-a3a6-5edc2e0b0218",
+              "port": "445DBEA9-9281-45A9-B274-F7A4730E6C72%in"
+            },
+            "relation": "1:n",
+            "fillColor": "#ACDAFC",
+            "attrs": {
+              "line": {
+                "strokeDasharray": ""
+              }
+            }
+          },
+          {
+            "id": "9d3d0d10-5fc0-4439-ad06-5460673d958f",
             "shape": "erdRelation",
             "source": {
               "cell": "b4cc9c65-4d81-4232-9f60-c608558f396a",
@@ -6782,15 +7860,15 @@
             }
           },
           {
-            "id": "1d77f665-850c-4757-bae3-baac36d45572",
+            "id": "339d0682-dd2a-4fc8-91f4-273d155c2021",
             "shape": "erdRelation",
             "source": {
-              "cell": "111841d3-78bd-46f5-ad3f-b54e46f45b3b",
-              "port": "88FF0BDE-895C-4F5E-A1DF-4D9EDCBE9B8C%out"
+              "cell": "177ce7dd-e947-45c9-912f-2d049c889236",
+              "port": "A3F1E2A7-823D-444E-A86B-0E1A48615C6C%out"
             },
             "target": {
-              "cell": "cebf45b3-89f7-48af-a3a6-5edc2e0b0218",
-              "port": "445DBEA9-9281-45A9-B274-F7A4730E6C72%in"
+              "cell": "c30d0978-3fe2-47de-b51c-5bbf65c95c02",
+              "port": "3BD745A2-C917-4B9C-A43F-C33146BC313B%in"
             },
             "relation": "1:n",
             "fillColor": "#ACDAFC",
@@ -6804,41 +7882,33 @@
             }
           },
           {
-            "id": "111841d3-78bd-46f5-ad3f-b54e46f45b3b",
-            "shape": "table",
-            "position": {
-              "x": -20,
-              "y": 370
+            "id": "1b9c8c37-8b55-4764-ae14-9c9d266b7a15",
+            "shape": "erdRelation",
+            "source": {
+              "cell": "177ce7dd-e947-45c9-912f-2d049c889236",
+              "port": "4B231052-3CDA-4B88-8E5E-B0480AD3AA8F%in"
             },
-            "count": 0,
-            "originKey": "D2D17249-3478-4F5C-88AD-09FC491E7DC7",
-            "type": "P",
-            "size": {
-              "width": 437,
-              "height": 169
-            }
-          },
-          {
-            "id": "b4cc9c65-4d81-4232-9f60-c608558f396a",
-            "shape": "table",
-            "position": {
-              "x": 555.5,
-              "y": 30
+            "target": {
+              "cell": "5e972235-bee3-4940-afb3-fffd08bbf8d5",
+              "port": "FFB857D0-F9F2-482B-B5C0-0A80AAE6728E%in"
             },
-            "count": 0,
-            "originKey": "FAA55EB9-9E6E-43E6-BCDB-FF90FB1CACD4",
-            "type": "P",
-            "size": {
-              "width": 474,
-              "height": 169
+            "relation": "1:n",
+            "fillColor": "#ACDAFC",
+            "router": {
+              "name": "manhattan"
+            },
+            "attrs": {
+              "line": {
+                "strokeDasharray": ""
+              }
             }
           },
           {
             "id": "cebf45b3-89f7-48af-a3a6-5edc2e0b0218",
             "shape": "table",
             "position": {
-              "x": 555.5,
-              "y": 589
+              "x": 310,
+              "y": -20
             },
             "count": 0,
             "originKey": "5AC82B59-34F5-4592-8837-C12CB730603F",
@@ -6849,11 +7919,85 @@
             }
           },
           {
+            "id": "b4cc9c65-4d81-4232-9f60-c608558f396a",
+            "shape": "table",
+            "position": {
+              "x": 310,
+              "y": 300
+            },
+            "count": 0,
+            "originKey": "FAA55EB9-9E6E-43E6-BCDB-FF90FB1CACD4",
+            "type": "P",
+            "size": {
+              "width": 474,
+              "height": 169
+            }
+          },
+          {
+            "id": "c7c41f93-5031-4b50-9014-db1cdb6dd440",
+            "shape": "erdRelation",
+            "source": {
+              "cell": "3c3c5a78-aba5-4d93-8195-3813d9430e1f",
+              "port": "06A1264A-3F39-44BE-AFB9-41F85AC057C9%out"
+            },
+            "target": {
+              "cell": "25d1f28a-70a2-4183-8f13-550ad764e29b",
+              "port": "C16E995B-6332-46BD-B44D-F6184D52E3EA%out"
+            },
+            "relation": "1:n",
+            "fillColor": "#ACDAFC",
+            "router": {
+              "name": "manhattan"
+            },
+            "attrs": {
+              "line": {
+                "strokeDasharray": ""
+              }
+            }
+          },
+          {
+            "id": "25d1f28a-70a2-4183-8f13-550ad764e29b",
+            "shape": "table",
+            "position": {
+              "x": -790,
+              "y": 370
+            },
+            "count": 0,
+            "originKey": "7A6D5C29-6EC7-4470-B0BD-127489278044",
+            "type": "P",
+            "size": {
+              "width": 429,
+              "height": 192
+            }
+          },
+          {
+            "id": "d92406ce-ad3c-4e75-ae9f-cc046be1318c",
+            "shape": "erdRelation",
+            "source": {
+              "cell": "3c3c5a78-aba5-4d93-8195-3813d9430e1f",
+              "port": "D5BA3416-7D2A-4379-8C20-7652ADA52BB4%out"
+            },
+            "target": {
+              "cell": "c30d0978-3fe2-47de-b51c-5bbf65c95c02",
+              "port": "3BD745A2-C917-4B9C-A43F-C33146BC313B%in"
+            },
+            "relation": "1:n",
+            "fillColor": "#ACDAFC",
+            "router": {
+              "name": "manhattan"
+            },
+            "attrs": {
+              "line": {
+                "strokeDasharray": ""
+              }
+            }
+          },
+          {
             "id": "5e972235-bee3-4940-afb3-fffd08bbf8d5",
             "shape": "table",
             "position": {
-              "x": -20,
-              "y": 30
+              "x": -731,
+              "y": 1130
             },
             "count": 0,
             "originKey": "9731A74F-1ABF-4505-B320-D43893AA74A5",
@@ -6864,17 +8008,77 @@
             }
           },
           {
-            "id": "25d1f28a-70a2-4183-8f13-550ad764e29b",
+            "id": "c30d0978-3fe2-47de-b51c-5bbf65c95c02",
             "shape": "table",
             "position": {
-              "x": -580,
-              "y": 30
+              "x": -50,
+              "y": 640
             },
             "count": 0,
-            "originKey": "7A6D5C29-6EC7-4470-B0BD-127489278044",
+            "originKey": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
             "type": "P",
             "size": {
-              "width": 429,
+              "width": 641,
+              "height": 606
+            }
+          },
+          {
+            "id": "111841d3-78bd-46f5-ad3f-b54e46f45b3b",
+            "shape": "table",
+            "position": {
+              "x": -280,
+              "y": -10
+            },
+            "count": 0,
+            "originKey": "D2D17249-3478-4F5C-88AD-09FC491E7DC7",
+            "type": "P",
+            "size": {
+              "width": 437,
+              "height": 169
+            }
+          },
+          {
+            "id": "3b587707-c545-4af6-90fb-5c25824b160e",
+            "shape": "table",
+            "position": {
+              "x": -770,
+              "y": 120
+            },
+            "count": 0,
+            "originKey": "DB00A387-43DC-44E7-A14A-F845142E7A51",
+            "type": "P",
+            "size": {
+              "width": 421,
+              "height": 169
+            }
+          },
+          {
+            "id": "3c3c5a78-aba5-4d93-8195-3813d9430e1f",
+            "shape": "table",
+            "position": {
+              "x": -794.5,
+              "y": 654
+            },
+            "count": 0,
+            "originKey": "7552FDD3-4D11-4D21-822C-93581943503C",
+            "type": "P",
+            "size": {
+              "width": 438,
+              "height": 169
+            }
+          },
+          {
+            "id": "177ce7dd-e947-45c9-912f-2d049c889236",
+            "shape": "table",
+            "position": {
+              "x": -731,
+              "y": 906
+            },
+            "count": 0,
+            "originKey": "F9037679-F2F7-48AF-A28E-1FF5D054350A",
+            "type": "P",
+            "size": {
+              "width": 534,
               "height": 192
             }
           }
