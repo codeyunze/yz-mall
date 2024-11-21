@@ -75,7 +75,7 @@ public class TProductController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<TProduct>> page(@RequestBody @Valid PageFilter<TProductQueryDto> filter, HttpServletRequest request) {
+    public Result<ResultTable<TProduct>> page(@RequestBody @Valid PageFilter<TProductQueryDto> filter, HttpServletRequest request) {
         String datasourceId = filter.getFilter().getDatasourceId();
         if (!dataSource.getDataSources().containsKey(datasourceId)) {
             SysDatasource sysDatasource = sysDatasourceService.getById(datasourceId);

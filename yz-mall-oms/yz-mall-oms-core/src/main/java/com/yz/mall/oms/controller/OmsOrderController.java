@@ -13,6 +13,7 @@ import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
 import com.yz.unqid.service.InternalUnqidService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
@@ -108,7 +109,7 @@ public class OmsOrderController extends ApiController {
      */
     @SaCheckPermission("oms")
     @PostMapping("page")
-    public Result<List<OmsOrder>> page(@RequestBody @Valid PageFilter<OmsOrderQueryDto> filter) {
+    public Result<ResultTable<OmsOrder>> page(@RequestBody @Valid PageFilter<OmsOrderQueryDto> filter) {
         Page<OmsOrder> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

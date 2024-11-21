@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yz.tools.enums.CodeEnum;
 
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * 后端返回给前端的列表数据对象
@@ -12,6 +13,7 @@ import java.util.Collections;
  * @Date 2022/11/22 23:49
  * @Version 1.0
  */
+@Deprecated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TableResult<T> extends Result<T> {
 
@@ -54,7 +56,7 @@ public class TableResult<T> extends Result<T> {
      * @return 返回成功编码与成功消息
      */
     public static TableResult success() {
-        return TableResult.success(Collections.emptyList(), 0L);
+        return TableResult.success(Optional.of(Collections.emptyList()), 0L);
     }
 
     /**

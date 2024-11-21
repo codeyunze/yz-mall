@@ -2,6 +2,7 @@ package com.yz.unqid.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yz.tools.ResultTable;
 import com.yz.unqid.dto.InternalUnqidDto;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
@@ -79,7 +80,7 @@ public class SysUnqidController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<SysUnqid>> page(@RequestBody @Valid PageFilter<SysUnqidQueryDto> filter) {
+    public Result<ResultTable<SysUnqid>> page(@RequestBody @Valid PageFilter<SysUnqidQueryDto> filter) {
         Page<SysUnqid> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

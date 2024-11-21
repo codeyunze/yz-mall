@@ -8,13 +8,12 @@ import com.yz.dynamic.datasource.one.entity.TProduct;
 import com.yz.dynamic.datasource.one.service.TProductService;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
 import com.yz.tools.enums.CodeEnum;
-import com.yz.tools.enums.DataSourceTypeEnum;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 商品信息(TProduct)表控制层
@@ -51,7 +50,7 @@ public class TProductController extends ApiController {
      * 列表查询
      */
     @PostMapping("list/{key}")
-    public Result<List<TProduct>> list(@PathVariable String key) {
+    public Result<ResultTable<TProduct>> list(@PathVariable String key) {
         DynamicDataSource.name.set(key);
         // DynamicDataSource.name.set(DataSourceTypeEnum.product.get());
         return new Result<>(CodeEnum.SUCCESS.get(), this.tProductService.customList(), "成功");

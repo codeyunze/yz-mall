@@ -427,3 +427,42 @@ Content-Type: application/json
 
 <> 2024-11-17T203728.200.json
 <> 2024-11-17T203229.500.json
+
+### 系统-菜单-分页查询
+POST http://localhost:30004/sys/menu/page
+Content-Type: application/json
+
+{
+  "filter": {}
+}
+
+<> 2024-11-22T001115.200.json
+<> 2024-11-22T001050.500.json
+<> 2024-11-21T234135.200.json
+<> 2024-11-21T234125.404.json
+<> 2024-11-21T234058.404.json
+
+### 系统-菜单-新增
+POST http://localhost:30004/sys/menu/add
+Content-Type: application/json
+
+{
+  "parentId": 0,
+  "menuType": 0,
+  "title": "menus.pureSysManagement",
+  "name": "PureSystem",
+  "path": "/system",
+  "rank": 10,
+  "icon": "ri:settings-3-line",
+  "frameLoading": 1,
+  "keepAlive": 0,
+  "hiddenTag": 0,
+  "fixedTag": 0,
+  "showLink": 1,
+  "showParent": 0
+}
+
+<> 2024-11-22T000428.500.json
+<> 2024-11-22T000342.500.json
+<> 2024-11-21T235952.500.json
+<> 2024-11-21T235706.500.json

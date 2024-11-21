@@ -62,7 +62,7 @@ public class SysDatasourceController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<SysDatasource>> page(@RequestBody @Valid PageFilter<SysDatasourceQueryDto> filter) {
+    public Result<ResultTable<SysDatasource>> page(@RequestBody @Valid PageFilter<SysDatasourceQueryDto> filter) {
         Page<SysDatasource> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

@@ -198,7 +198,7 @@ CREATE TABLE sys_menu
     `name`             VARCHAR(36) COMMENT '路由名称',
     `path`             VARCHAR(50) COMMENT '路由路径',
     `component`        VARCHAR(50) COMMENT '组件路径',
-    `rank`             INT COMMENT '排序',
+    `sort`             INT COMMENT '排序',
     `redirect`         VARCHAR(50) COMMENT '路由重定向',
     `icon`             VARCHAR(100) COMMENT '菜单图标',
     `extra_icon`       VARCHAR(100) COMMENT '菜单右侧额外图标',

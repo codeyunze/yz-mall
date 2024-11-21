@@ -33,8 +33,6 @@ public class ApiController {
      * 列表查询成功返回信息
      * @param data 列表数据
      * @param total 总数
-     * @return
-     * @param <T>
      */
     protected <T> Result<ResultTable<T>> success(List<T> data, Long total) {
         return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(data, total), "查询成功");

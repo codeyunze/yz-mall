@@ -10,6 +10,7 @@ import com.yz.mall.sys.service.SysRoleRelationService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -62,7 +63,7 @@ public class SysRoleRelationController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<SysRoleRelation>> page(@RequestBody @Valid PageFilter<SysRoleRelationQueryDto> filter) {
+    public Result<ResultTable<SysRoleRelation>> page(@RequestBody @Valid PageFilter<SysRoleRelationQueryDto> filter) {
         Page<SysRoleRelation> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

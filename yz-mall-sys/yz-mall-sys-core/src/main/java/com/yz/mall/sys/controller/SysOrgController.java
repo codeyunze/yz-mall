@@ -10,6 +10,7 @@ import com.yz.mall.sys.service.SysOrgService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -62,7 +63,7 @@ public class SysOrgController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<SysOrg>> page(@RequestBody @Valid PageFilter<SysOrgQueryDto> filter) {
+    public Result<ResultTable<SysOrg>> page(@RequestBody @Valid PageFilter<SysOrgQueryDto> filter) {
         Page<SysOrg> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

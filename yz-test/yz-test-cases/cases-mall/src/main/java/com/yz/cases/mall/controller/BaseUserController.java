@@ -62,7 +62,7 @@ public class BaseUserController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<BaseUser>> page(@RequestBody @Valid PageFilter<BaseUserQueryDto> filter) {
+    public Result<ResultTable<BaseUser>> page(@RequestBody @Valid PageFilter<BaseUserQueryDto> filter) {
         Page<BaseUser> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

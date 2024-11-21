@@ -2,42 +2,43 @@ package com.yz.mall.sys.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.sys.dto.SysPermissionAddDto;
-import com.yz.mall.sys.dto.SysPermissionQueryDto;
-import com.yz.mall.sys.dto.SysPermissionUpdateDto;
-import com.yz.mall.sys.entity.SysPermission;
-import com.yz.mall.sys.service.SysPermissionService;
+import com.yz.mall.sys.dto.SysMenuAddDto;
+import com.yz.mall.sys.dto.SysMenuQueryDto;
+import com.yz.mall.sys.dto.SysMenuUpdateDto;
+import com.yz.mall.sys.entity.SysMenu;
+import com.yz.mall.sys.service.SysMenuService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
 import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
- * 系统-权限数据表(SysPermission)表控制层
+ * 系统-菜单资源表(SysMenu)表控制层
  *
  * @author yunze
- * @since 2024-11-17 20:08:25
+ * @since 2024-11-21 23:29:01
  */
 @RestController
-@RequestMapping("sys/permission")
-public class SysPermissionController extends ApiController {
+@RequestMapping("sys/menu")
+public class SysMenuController extends ApiController {
 
     /**
      * 服务对象
      */
-    @Resource
-    private SysPermissionService service;
+    private final SysMenuService service;
+
+    public SysMenuController(SysMenuService service) {
+        this.service = service;
+    }
 
     /**
      * 新增
      */
     @PostMapping("add")
-    public Result<Long> insert(@RequestBody @Valid SysPermissionAddDto dto) {
+    public Result<Long> insert(@RequestBody @Valid SysMenuAddDto dto) {
         return success(this.service.save(dto));
     }
 
@@ -45,7 +46,7 @@ public class SysPermissionController extends ApiController {
      * 更新
      */
     @PostMapping("update")
-    public Result<Boolean> update(@RequestBody @Valid SysPermissionUpdateDto dto) {
+    public Result<Boolean> update(@RequestBody @Valid SysMenuUpdateDto dto) {
         return success(this.service.update(dto));
     }
 
@@ -63,8 +64,8 @@ public class SysPermissionController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<ResultTable<SysPermission>> page(@RequestBody @Valid PageFilter<SysPermissionQueryDto> filter) {
-        Page<SysPermission> page = this.service.page(filter);
+    public Result<ResultTable<SysMenu>> page(@RequestBody @Valid PageFilter<SysMenuQueryDto> filter) {
+        Page<SysMenu> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
@@ -72,7 +73,7 @@ public class SysPermissionController extends ApiController {
      * 详情查询
      */
     @GetMapping("get/{id}")
-    public Result<SysPermission> page(@PathVariable String id) {
+    public Result<SysMenu> page(@PathVariable String id) {
         return success(this.service.getById(id));
     }
 

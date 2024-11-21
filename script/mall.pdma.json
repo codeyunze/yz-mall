@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-11-21 17:45:08",
+  "updatedTime": "2024-11-22 00:10:36",
   "dbConns": [],
   "profile": {
     "default": {
@@ -6261,7 +6261,7 @@
           "defKey": "parent_id",
           "defName": "上级菜单",
           "comment": "",
-          "type": "",
+          "type": "INT",
           "len": "",
           "scale": "",
           "primaryKey": false,
@@ -6270,9 +6270,9 @@
           "defaultValue": "",
           "hideInGraph": false,
           "refDict": "",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
           "extProps": {},
-          "domain": "9092C4E0-1A54-4859-ABBB-5B62DBC27573",
+          "domain": "",
           "id": "DFE3512F-571F-4CA4-8F75-B96E32FCDDFB"
         },
         {
@@ -6366,7 +6366,7 @@
           "id": "089E9A31-B2F4-47A5-86A4-44AD28757251"
         },
         {
-          "defKey": "rank",
+          "defKey": "sort",
           "defName": "排序",
           "comment": "",
           "type": "INT",

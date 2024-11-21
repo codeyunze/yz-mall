@@ -1,4 +1,4 @@
-package com.yz.mall.sys.controller;
+package com.yz.mall.sys.internal;
 
 
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;

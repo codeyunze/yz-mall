@@ -44,7 +44,7 @@ public class TStorageController extends ApiController {
     }
 
     @PostMapping("list")
-    public Result<List<TStorage>> list() {
+    public Result<ResultTable<TStorage>> list() {
         return new Result<>(CodeEnum.SUCCESS.get(), this.tStockService.list(), "成功");
     }
 }

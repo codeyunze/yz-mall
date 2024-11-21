@@ -10,6 +10,7 @@ import com.yz.mall.oms.service.OmsOrderProductRelationService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -62,7 +63,7 @@ public class OmsOrderProductRelationController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<OmsOrderProductRelation>> page(@RequestBody @Valid PageFilter<OmsOrderProductRelationQueryDto> filter) {
+    public Result<ResultTable<OmsOrderProductRelation>> page(@RequestBody @Valid PageFilter<OmsOrderProductRelationQueryDto> filter) {
         Page<OmsOrderProductRelation> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

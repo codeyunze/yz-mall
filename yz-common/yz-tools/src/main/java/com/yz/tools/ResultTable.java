@@ -37,7 +37,7 @@ public class ResultTable<T> implements Serializable {
         this.items = items;
     }
 
-    public <T> ResultTable(T data, Long count) {
+    public ResultTable(T data, Long count) {
     }
 
     public Long getTotal() {
