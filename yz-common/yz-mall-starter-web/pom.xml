@@ -3,16 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>yz-mall-sys</artifactId>
+        <artifactId>yz-common</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
-    <artifactId>yz-mall-sys-core</artifactId>
-    <packaging>jar</packaging>
-    <description>用户服务</description>
+    <artifactId>yz-mall-starter-web</artifactId>
+    <description>web公共配置管理</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -22,9 +21,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-mall-sys-service</artifactId>
-            <version>${revision}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
 

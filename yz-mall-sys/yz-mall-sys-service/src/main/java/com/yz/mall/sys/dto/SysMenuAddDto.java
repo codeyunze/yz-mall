@@ -1,5 +1,7 @@
 package com.yz.mall.sys.dto;
 
+import com.yz.mall.sys.enums.MenuTypeEnum;
+import com.yz.mall.sys.validators.ValidSysMenuAdd;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +14,7 @@ import java.io.Serializable;
  * @author yunze
  * @since 2024-11-21 23:29:02
  */
+@ValidSysMenuAdd
 @Data
 public class SysMenuAddDto implements Serializable {
 
@@ -26,7 +29,7 @@ public class SysMenuAddDto implements Serializable {
      * 菜单类型0-菜单,1-iframe,2-外链接,3-按钮,4-接口
      */
     @NotNull(message = "菜单类型不能为空")
-    private Integer menuType;
+    private MenuTypeEnum menuType;
 
     /**
      * 菜单名称
@@ -37,13 +40,11 @@ public class SysMenuAddDto implements Serializable {
     /**
      * 路由名称
      */
-    @NotBlank(message = "路由名称不能为空")
     private String name;
 
     /**
      * 路由路径
      */
-    @NotBlank(message = "路由路径不能为空")
     private String path;
 
     /**

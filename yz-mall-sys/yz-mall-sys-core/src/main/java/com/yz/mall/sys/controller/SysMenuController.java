@@ -1,19 +1,17 @@
 package com.yz.mall.sys.controller;
 
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.service.SysMenuService;
 import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 系统-菜单资源表(SysMenu)表控制层
@@ -47,7 +45,8 @@ public class SysMenuController extends ApiController {
      */
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysMenuUpdateDto dto) {
-        return success(this.service.update(dto));
+        boolean updated = this.service.update(dto);
+        return updated ? success(true) : failed("更新失败");
     }
 
     /**
@@ -63,10 +62,9 @@ public class SysMenuController extends ApiController {
     /**
      * 分页查询
      */
-    @PostMapping("page")
-    public Result<ResultTable<SysMenu>> page(@RequestBody @Valid PageFilter<SysMenuQueryDto> filter) {
-        Page<SysMenu> page = this.service.page(filter);
-        return success(page.getRecords(), page.getTotal());
+    @PostMapping("list")
+    public Result<List<SysMenu>> list(@RequestBody @Valid SysMenuQueryDto filter) {
+        return success(this.service.page(filter));
     }
 
     /**

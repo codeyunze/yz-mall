@@ -9,6 +9,7 @@ import com.yz.mall.sys.entity.SysMenu;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 系统-菜单资源表(SysMenu)表服务接口
@@ -40,7 +41,7 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<SysMenu> page(PageFilter<SysMenuQueryDto> filter);
+    List<SysMenu> page(SysMenuQueryDto filter);
 
 }
 

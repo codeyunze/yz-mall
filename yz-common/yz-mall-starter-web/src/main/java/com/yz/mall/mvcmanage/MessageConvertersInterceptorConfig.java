@@ -1,4 +1,4 @@
-package com.yz.mall.security;
+package com.yz.mall.mvcmanage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

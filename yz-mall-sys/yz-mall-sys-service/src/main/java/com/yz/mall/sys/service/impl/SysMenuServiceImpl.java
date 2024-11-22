@@ -14,6 +14,8 @@ import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 系统-菜单资源表(SysMenu)表服务实现类
  *
@@ -28,6 +30,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenu bo = new SysMenu();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
+        bo.setMenuType(dto.getMenuType().get());
         baseMapper.insert(bo);
         return bo.getId();
     }
@@ -40,9 +43,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public Page<SysMenu> page(PageFilter<SysMenuQueryDto> filter) {
+    public List<SysMenu> page(SysMenuQueryDto filter) {
         LambdaQueryWrapper<SysMenu> queryWrapper = new LambdaQueryWrapper<>();
-        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        return baseMapper.selectList(queryWrapper);
     }
 }
 
