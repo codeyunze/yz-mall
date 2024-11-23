@@ -8,6 +8,7 @@ import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.service.SysMenuService;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
+import com.yz.tools.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,7 +47,7 @@ public class SysMenuController extends ApiController {
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysMenuUpdateDto dto) {
         boolean updated = this.service.update(dto);
-        return updated ? success(true) : failed("更新失败");
+        return updated ? success(true) : error(CodeEnum.BUSINESS_ERROR);
     }
 
     /**

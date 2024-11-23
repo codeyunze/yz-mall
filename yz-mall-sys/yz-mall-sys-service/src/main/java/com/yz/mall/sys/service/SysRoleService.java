@@ -35,6 +35,14 @@ public interface SysRoleService extends IService<SysRole> {
     boolean update(@Valid SysRoleUpdateDto dto);
 
     /**
+     * 更新指定角色的状态
+     *
+     * @param id 角色Id
+     * @return 是否操作成功
+     */
+    boolean updateRoleStatusById(Long id);
+
+    /**
      * 分页查询
      *
      * @param filter 过滤条件

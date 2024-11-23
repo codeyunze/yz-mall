@@ -65,7 +65,7 @@ public class SysRole extends Model<SysRole> {
     private Long orgId;
 
     /**
-     * 状态1-启用,0-停用
+     * 状态1-启用,0-停用 {@link com.yz.mall.sys.enums.EnableEnum}
      */
     private Integer status;
 

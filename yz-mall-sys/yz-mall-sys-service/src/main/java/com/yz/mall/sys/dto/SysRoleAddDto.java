@@ -1,6 +1,7 @@
 package com.yz.mall.sys.dto;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -19,14 +20,22 @@ public class SysRoleAddDto implements Serializable {
     /**
      * 角色编码
      */
+    @Length(max = 36, message = "角色编码不能超过36个字符")
     @NotBlank(message = "角色编码不能为空")
     private String roleCode;
 
     /**
      * 角色名称
      */
+    @Length(max = 36, message = "角色名称不能超过36个字符")
     @NotBlank(message = "角色名称不能为空")
     private String roleName;
+
+    /**
+     * 备注说明
+     */
+    @Length(max = 100, message = "备注说明不能超过100个字符")
+    private String remark;
 
     /**
      * 所属组织

@@ -11,6 +11,7 @@ import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
 import com.yz.tools.ResultTable;
+import com.yz.tools.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -46,6 +47,18 @@ public class SysRoleController extends ApiController {
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysRoleUpdateDto dto) {
         return success(this.service.update(dto));
+    }
+
+    /**
+     * 切换角色状态
+     *
+     * @param id 角色Id
+     * @return 是否切换成功
+     */
+    @PostMapping("switch/{id}")
+    public Result<Boolean> switchRole(@PathVariable Long id) {
+        boolean updated = service.updateRoleStatusById(id);
+        return updated ? success(true) : error(CodeEnum.BUSINESS_ERROR);
     }
 
     /**
