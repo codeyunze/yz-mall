@@ -98,14 +98,20 @@ CREATE TABLE sys_org
 (
     `id`          BIGINT       NOT NULL COMMENT '主键标识',
     `create_time` DATETIME              DEFAULT current_timestamp COMMENT '创建时间',
-    `update_time` DATETIME              DEFAULT current_timestamp ON UPDATE current_timestamp COMMENT '更新时间',
+    `update_time` DATETIME              DEFAULT current_timestamp on update current_timestamp COMMENT '更新时间',
     `invalid`     INT          NOT NULL DEFAULT 0 COMMENT '数据是否有效：0数据有效',
     `org_name`    VARCHAR(255) NOT NULL COMMENT '组织名称',
     `user_id`     BIGINT       NOT NULL COMMENT '组织所属用户',
+    `parent_id`   BIGINT       NOT NULL DEFAULT -1 COMMENT '上级组织',
+    `status`      INT          NOT NULL DEFAULT 1 COMMENT '状态1-启用,0-停用',
+    `remark`      VARCHAR(100) COMMENT '备注说明',
+    `sort`        INT          NOT NULL DEFAULT 99 COMMENT '排序',
+    `org_path_id` VARCHAR(100) NOT NULL COMMENT '组织路径',
     PRIMARY KEY (id)
 ) COMMENT = '系统-组织表';
 
 CREATE INDEX ix_sys_org ON sys_org (user_id, org_name);
+CREATE INDEX uk_org_path ON sys_org (org_path_id);
 
 CREATE TABLE sys_role
 (
@@ -181,6 +187,8 @@ CREATE TABLE sys_user
     `balance`     decimal(15, 2) default 0.00 null comment '账户余额',
     PRIMARY KEY (id)
 ) COMMENT = '系统-用户表';
+
+alter table sys_user add column name varchar(32) not null comment '昵称';
 
 CREATE UNIQUE INDEX uk_sys_user_phone ON sys_user (invalid, phone);
 CREATE UNIQUE INDEX uk_sys_user_email ON sys_user (email, invalid);

@@ -69,6 +69,14 @@ public class SysOrgController extends ApiController {
     }
 
     /**
+     * 列表查询
+     */
+    @PostMapping("list")
+    public Result<List<SysOrg>> list(@RequestBody @Valid SysOrgQueryDto filter) {
+        return success(this.service.list(filter));
+    }
+
+    /**
      * 详情查询
      */
     @GetMapping("get/{id}")

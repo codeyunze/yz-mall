@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -68,6 +71,25 @@ public class SysUser extends Model<SysUser> {
      */
     private BigDecimal balance;
 
+    /**
+     * 昵称
+     */
+    private String username;
+
+    /**
+     * 状态1-启用,0-停用 {@link com.yz.mall.sys.enums.EnableEnum}
+     */
+    private Integer status;
+
+    /**
+     * 头像
+     */
+    private String avatar;
+
+    /**
+     * 性别 {@link com.yz.mall.sys.enums.SexEnum}
+     */
+    private Integer sex;
 
     /**
      * 获取主键值

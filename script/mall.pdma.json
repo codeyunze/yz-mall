@@ -2,9 +2,9 @@
   "name": "mall",
   "describe": "mall",
   "avatar": "",
-  "version": "4.9.2",
+  "version": "4.9.4",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-11-22 00:10:36",
+  "updatedTime": "2024-11-23 23:55:25",
   "dbConns": [],
   "profile": {
     "default": {
@@ -5671,8 +5671,8 @@
           "defKey": "org_name",
           "defName": "组织名称",
           "comment": "",
-          "type": "",
-          "len": "",
+          "type": "VARCHAR",
+          "len": 100,
           "scale": "",
           "primaryKey": false,
           "notNull": true,
@@ -5682,7 +5682,7 @@
           "refDict": "",
           "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
           "extProps": {},
-          "domain": "9092C4E0-1A54-4859-ABBB-5B62DBC27573",
+          "domain": "",
           "id": "1FE306AD-E509-4AD3-AC19-CE2F9D3F3A4D"
         },
         {
@@ -5702,6 +5702,96 @@
           "extProps": {},
           "domain": "",
           "id": "88FF0BDE-895C-4F5E-A1DF-4D9EDCBE9B8C"
+        },
+        {
+          "defKey": "parent_id",
+          "defName": "上级组织",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "-1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "91300827-D19E-454C-BB00-C33456BBC92F"
+        },
+        {
+          "defKey": "status",
+          "defName": "状态1-启用,0-停用",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "38828A74-1487-4A51-94F1-B01D578A0031"
+        },
+        {
+          "defKey": "remark",
+          "defName": "备注说明",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 100,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "424650D6-C233-4A50-A3CC-45E594165219"
+        },
+        {
+          "defKey": "sort",
+          "defName": "排序",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "99",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "6BC8F04B-6CFA-4995-98D3-318F5CDD774E",
+          "id": "86CE628D-5A0C-4CA7-9120-D13BC695C395"
+        },
+        {
+          "defKey": "org_path_id",
+          "defName": "组织路径",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 100,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "9991E8CA-4183-4B5B-BBB3-7CE0795C02F5"
         }
       ],
       "correlations": [],
@@ -5710,7 +5800,7 @@
           "defKey": "ix_sys_org",
           "defName": null,
           "unique": false,
-          "comment": "",
+          "comment": "查询用户参与的组织",
           "fields": [
             {
               "fieldDefKey": "88FF0BDE-895C-4F5E-A1DF-4D9EDCBE9B8C",
@@ -5724,6 +5814,20 @@
             }
           ],
           "id": "45AC8F49-D885-4FD7-B45B-1BBA9CA27E73"
+        },
+        {
+          "defKey": "uk_org_path",
+          "defName": null,
+          "unique": false,
+          "comment": "",
+          "fields": [
+            {
+              "fieldDefKey": "9991E8CA-4183-4B5B-BBB3-7CE0795C02F5",
+              "ascOrDesc": "A",
+              "id": "1CEEDD3A-B650-496F-A9E5-4C1C7FADDD00"
+            }
+          ],
+          "id": "6EE62BF2-5126-48F5-A1BD-134EC272C5B6"
         }
       ],
       "type": "P"

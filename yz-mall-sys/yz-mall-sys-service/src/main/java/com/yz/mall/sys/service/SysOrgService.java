@@ -9,6 +9,7 @@ import com.yz.mall.sys.entity.SysOrg;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 系统-组织表(SysOrg)表服务接口
@@ -41,6 +42,14 @@ public interface SysOrgService extends IService<SysOrg> {
      * @return 分页列表数据
      */
     Page<SysOrg> page(PageFilter<SysOrgQueryDto> filter);
+
+    /**
+     * 列表查询
+     *
+     * @param filter 过滤条件
+     * @return 列表数据
+     */
+    List<SysOrg> list(SysOrgQueryDto filter);
 
 }
 

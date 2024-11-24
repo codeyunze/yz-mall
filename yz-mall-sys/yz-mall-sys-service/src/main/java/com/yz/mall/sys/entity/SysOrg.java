@@ -58,6 +58,31 @@ public class SysOrg extends Model<SysOrg> {
     private Long userId;
 
     /**
+     * 上级组织
+     */
+    private Long parentId;
+
+    /**
+     * 状态1-启用,0-停用 {@link com.yz.mall.sys.enums.EnableEnum}
+     */
+    private Integer status;
+
+    /**
+     * 备注说明
+     */
+    private String remark;
+
+    /**
+     * 排序
+     */
+    private Integer sort;
+
+    /**
+     * 组织路径
+     */
+    private String orgPathId;
+
+    /**
      * 获取主键值
      *
      * @return 主键值
