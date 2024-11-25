@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
 import com.yz.advice.exception.DataNotExistException;
+import com.yz.mall.sys.config.SysProperties;
 import com.yz.mall.sys.dto.SysRoleAddDto;
 import com.yz.mall.sys.dto.SysRoleQueryDto;
 import com.yz.mall.sys.dto.SysRoleUpdateDto;
@@ -29,6 +30,12 @@ import java.util.Objects;
 @Service
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
 
+    private final SysProperties sysProperties;
+
+    public SysRoleServiceImpl(SysProperties sysProperties) {
+        this.sysProperties = sysProperties;
+    }
+
     @Override
     public Long save(SysRoleAddDto dto) {
         SysRole bo = new SysRole();
@@ -47,7 +54,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Override
     public boolean updateRoleStatusById(Long id) {
-        if (1858098107289014272L == id) {
+        if (sysProperties.getSuperAdminRoleId().equals(id.toString())) {
             throw new BusinessException("禁止操作默认数据");
         }
         SysRole role = baseMapper.selectById(id);

@@ -50,6 +50,18 @@ public class SysUserController extends ApiController {
     }
 
     /**
+     * 切换角色状态
+     *
+     * @param id 角色Id
+     * @return 是否切换成功
+     */
+    @PostMapping("switch/{id}")
+    public Result<Boolean> switchRole(@PathVariable Long id) {
+        boolean updated = service.updateUserStatusById(id);
+        return updated ? success(true) : error(CodeEnum.BUSINESS_ERROR);
+    }
+
+    /**
      * 删除
      *
      * @param id 删除数据主键ID

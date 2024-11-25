@@ -17,4 +17,9 @@ public class SysProperties {
      * 超级管理员Id
      */
     private String superAdminId = "1858113817985785856";
+
+    /**
+     * 超级管理员角色
+     */
+    private String superAdminRoleId = "1858098107289014272";
 }

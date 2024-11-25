@@ -37,6 +37,14 @@ public interface SysUserService extends IService<SysUser> {
     boolean update(@Valid SysUserUpdateDto dto);
 
     /**
+     * 切换指定用户的状态
+     *
+     * @param id 用户Id
+     * @return 是否操作成功
+     */
+    boolean updateUserStatusById(Long id);
+
+    /**
      * 分页查询
      *
      * @param filter 过滤条件

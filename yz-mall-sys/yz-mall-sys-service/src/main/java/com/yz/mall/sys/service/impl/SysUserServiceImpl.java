@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
+import com.yz.advice.exception.DataNotExistException;
+import com.yz.mall.sys.config.SysProperties;
 import com.yz.mall.sys.dto.SysUserAddDto;
 import com.yz.mall.sys.dto.SysUserQueryDto;
 import com.yz.mall.sys.dto.SysUserUpdateDto;
-import com.yz.mall.sys.mapper.BaseUserMapper;
 import com.yz.mall.sys.entity.SysUser;
+import com.yz.mall.sys.enums.EnableEnum;
+import com.yz.mall.sys.mapper.BaseUserMapper;
 import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.tools.PageFilter;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 基础-用户(BaseUser)表服务实现类
@@ -28,6 +32,12 @@ import java.math.BigDecimal;
  */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> implements SysUserService {
+
+    private final SysProperties sysProperties;
+
+    public SysUserServiceImpl(SysProperties sysProperties) {
+        this.sysProperties = sysProperties;
+    }
 
     @Override
     public String save(SysUserAddDto dto) {
@@ -43,6 +53,20 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
         SysUser bo = new SysUser();
         BeanUtils.copyProperties(dto, bo);
         return baseMapper.updateById(bo) > 0;
+    }
+
+    @Override
+    public boolean updateUserStatusById(Long id) {
+        if (sysProperties.getSuperAdminId().equals(id.toString())) {
+            throw new BusinessException("禁止操作默认数据");
+        }
+        SysUser user = baseMapper.selectById(id);
+        if (user == null) {
+            throw new DataNotExistException();
+        }
+
+        user.setStatus(Objects.equals(EnableEnum.ENABLE.get(), user.getStatus()) ? EnableEnum.Disable.get() : EnableEnum.ENABLE.get());
+        return baseMapper.updateById(user) > 0;
     }
 
 
