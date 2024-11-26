@@ -8,9 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
 import com.yz.advice.exception.DataNotExistException;
 import com.yz.mall.sys.config.SysProperties;
-import com.yz.mall.sys.dto.SysUserAddDto;
-import com.yz.mall.sys.dto.SysUserQueryDto;
-import com.yz.mall.sys.dto.SysUserUpdateDto;
+import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.mapper.BaseUserMapper;
@@ -105,6 +103,19 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
         if (recharged == 0) {
             throw new BusinessException("账户充值失败");
         }
+    }
+
+    @Override
+    public InternalLoginInfoDto checkLogin(InternalSysUserCheckLoginDto dto) {
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getPhone, dto.getPhone());
+        SysUser user = baseMapper.selectOne(queryWrapper);
+        if (user == null || !dto.getPassword().equals(user.getPassword())) {
+            throw new BusinessException("账号或密码错误");
+        }
+        InternalLoginInfoDto loginInfo = new InternalLoginInfoDto();
+        BeanUtils.copyProperties(user, loginInfo);
+        return loginInfo;
     }
 }
 

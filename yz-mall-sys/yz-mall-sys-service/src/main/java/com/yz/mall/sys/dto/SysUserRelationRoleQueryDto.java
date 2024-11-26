@@ -6,13 +6,13 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- * 系统-关联角色数据表(SysRoleRelation)表查询过滤条件数据模型类
+ * 系统-用户与组织关联角色表(SysUserRelationRole)表查询过滤条件数据模型类
  *
  * @author yunze
- * @since 2024-11-17 19:56:00
+ * @since 2024-11-26 11:46:13
  */
 @Data
-public class SysRoleRelationQueryDto implements Serializable {
+public class SysUserRelationRoleQueryDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 

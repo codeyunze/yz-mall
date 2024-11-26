@@ -2,9 +2,7 @@ package com.yz.mall.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.sys.dto.SysUserAddDto;
-import com.yz.mall.sys.dto.SysUserQueryDto;
-import com.yz.mall.sys.dto.SysUserUpdateDto;
+import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.tools.PageFilter;
@@ -75,5 +73,10 @@ public interface SysUserService extends IService<SysUser> {
      * @param amount 充值金额
      */
     void recharge(String userId, BigDecimal amount);
+
+    /**
+     * 手机号登录校验
+     */
+    InternalLoginInfoDto checkLogin(@Valid InternalSysUserCheckLoginDto dto);
 }
 

@@ -1,7 +1,9 @@
 package com.yz.mall.sys.internal;
 
 
+import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
+import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
@@ -44,6 +46,15 @@ public class InternalSysUserController extends ApiController {
     public Result<Boolean> recharge(@RequestBody @Valid InternalSysUserBalanceDto dto) {
         service.recharge(dto.getUserId(), dto.getAmount());
         return success(true);
+    }
+
+    /**
+     * 登录校验
+     */
+    @PostMapping("checkLogin")
+    public Result<InternalLoginInfoDto> checkLogin(@RequestBody @Valid InternalSysUserCheckLoginDto dto) {
+        InternalLoginInfoDto loginInfo = service.checkLogin(dto);
+        return success(loginInfo);
     }
 
 }

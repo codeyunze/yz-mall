@@ -1,5 +1,7 @@
 package com.yz.mall.sys.service.impl;
 
+import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.service.InternalSysUserService;
 import org.springframework.stereotype.Service;
@@ -27,5 +29,10 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     @Override
     public void recharge(String userId, BigDecimal amount) {
         this.service.recharge(userId, amount);
+    }
+
+    @Override
+    public InternalLoginInfoDto checkLogin(InternalSysUserCheckLoginDto dto) {
+        return service.checkLogin(dto);
     }
 }

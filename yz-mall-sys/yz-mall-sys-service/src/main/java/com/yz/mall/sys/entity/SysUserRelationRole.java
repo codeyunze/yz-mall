@@ -14,13 +14,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 
 /**
- * 系统-关联角色数据表(SysRoleRelation)表实体类
+ * 系统-用户与组织关联角色表(SysUserRelationRole)表实体类
  *
  * @author yunze
- * @since 2024-11-17 19:55:59
+ * @since 2024-11-26 11:46:12
  */
 @Data
-public class SysRoleRelation extends Model<SysRoleRelation> {
+public class SysUserRelationRole extends Model<SysUserRelationRole> {
 
     /**
      * 主键标识

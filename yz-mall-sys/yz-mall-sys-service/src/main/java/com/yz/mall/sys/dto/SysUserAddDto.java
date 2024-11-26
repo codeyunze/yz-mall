@@ -1,6 +1,5 @@
 package com.yz.mall.sys.dto;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 

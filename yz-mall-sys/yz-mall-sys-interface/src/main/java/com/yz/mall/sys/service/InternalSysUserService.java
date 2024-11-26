@@ -1,5 +1,11 @@
 package com.yz.mall.sys.service;
 
+import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
+import com.yz.tools.Result;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
 import java.math.BigDecimal;
 
 /**
@@ -24,4 +30,8 @@ public interface InternalSysUserService {
      */
     void recharge(String userId, BigDecimal amount);
 
+    /**
+     * 手机号登录校验
+     */
+    InternalLoginInfoDto checkLogin(@Valid InternalSysUserCheckLoginDto dto);
 }

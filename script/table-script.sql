@@ -144,7 +144,7 @@ CREATE TABLE sys_permission
 CREATE UNIQUE INDEX uk_sys_permission_role ON sys_permission (role_id, permission_code, invalid);
 
 
-CREATE TABLE sys_role_relation
+CREATE TABLE sys_user_relation_role
 (
     `id`          BIGINT NOT NULL COMMENT '主键标识',
     `create_time` DATETIME        DEFAULT current_timestamp COMMENT '创建时间',
@@ -155,8 +155,8 @@ CREATE TABLE sys_role_relation
     PRIMARY KEY (id)
 ) COMMENT = '系统-用户与组织关联角色表';
 
-CREATE UNIQUE INDEX uk_sys_role_relation_by_user ON sys_role_relation (relation_id, invalid, role_id);
-CREATE INDEX ix_sys_role_relation_by_role ON sys_role_relation (role_id, invalid, relation_id);
+CREATE UNIQUE INDEX uk_sys_role_relation_by_user ON sys_user_relation_role (relation_id, invalid, role_id);
+CREATE INDEX ix_sys_role_relation_by_role ON sys_user_relation_role (role_id, invalid, relation_id);
 
 
 

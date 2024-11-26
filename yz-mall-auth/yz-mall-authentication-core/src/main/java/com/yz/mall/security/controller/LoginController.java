@@ -1,6 +1,5 @@
 package com.yz.mall.security.controller;
 
-import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.temp.SaTempUtil;
@@ -11,20 +10,28 @@ import com.yz.mall.security.dto.AuthLoginDto;
 import com.yz.mall.security.dto.RefreshTokenDto;
 import com.yz.mall.security.vo.AuthLoginVo;
 import com.yz.mall.security.vo.RefreshTokenVo;
+import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
+import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * 身份认证接口
+ *
  * @author yunze
  * @date 2024/7/30 23:16
  */
@@ -33,6 +40,8 @@ import java.util.Collections;
 @RequestMapping
 public class LoginController extends ApiController {
 
+    @Resource
+    private InternalSysUserService internalSysUserService;
 
     /**
      * 登录接口
@@ -40,17 +49,19 @@ public class LoginController extends ApiController {
     @PostMapping("login")
     public Result<AuthLoginVo> login(@RequestBody @Valid AuthLoginDto loginDto) {
         // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
-        if("root,admin".contains(loginDto.getUsername()) && "a1234567".equals(loginDto.getPassword())) {
-            StpUtil.login(loginDto.getUsername());
+        InternalLoginInfoDto loginInfo = internalSysUserService.checkLogin(new InternalSysUserCheckLoginDto(loginDto.getUsername(), loginDto.getPassword()));
+        if (loginInfo != null) {
+            // 登录
+            StpUtil.login(loginInfo.getId());
 
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             AuthLoginVo vo = new AuthLoginVo();
-            vo.setUsername(loginDto.getUsername());
-            vo.setNickname(loginDto.getUsername());
+
+            BeanUtils.copyProperties(loginInfo, vo);
             vo.setAccessToken(tokenInfo.tokenValue);
             vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
             // 刷新令牌有效期1天
-            vo.setRefreshToken(SaTempUtil.createToken(loginDto.getUsername(), 86400));
+            vo.setRefreshToken(SaTempUtil.createToken(loginInfo.getId(), 86400));
             vo.setRoles(Arrays.asList("admin", "unqid"));
             vo.setAvatar("https://avatars.githubusercontent.com/u/56632502");
             return success(vo);
@@ -58,9 +69,23 @@ public class LoginController extends ApiController {
         return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "登录失败");
     }
 
+    /**
+     * 登出系统
+     */
+    @PostMapping("logout")
+    public Result<?> logout() {
+        // 清理刷新token
+        String userId = StpUtil.getLoginIdAsString();
+        SaTempUtil.deleteToken(userId);
+        // 清理登录token
+        StpUtil.logout();
+        return new Result<>(CodeEnum.SUCCESS.get(), null, "系统登出成功");
+    }
+
 
     /**
      * 更新访问令牌
+     *
      * @param refreshTokenDto 刷新令牌
      * @return 新的访问令牌
      */
@@ -68,7 +93,7 @@ public class LoginController extends ApiController {
     public Result<RefreshTokenVo> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
         // 1、验证
         Object userId = SaTempUtil.parseToken(refreshTokenDto.getRefreshToken());
-        if(userId == null || !userId.toString().equals(refreshTokenDto.getUserId())) {
+        if (userId == null || !userId.toString().equals(refreshTokenDto.getUserId())) {
             return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "无效的刷新令牌");
         }
 
@@ -91,6 +116,7 @@ public class LoginController extends ApiController {
 
     /**
      * 查询登录状态
+     *
      * @return true: 已登录    false: 未登录
      */
     @RequestMapping("isLogin")
@@ -134,8 +160,6 @@ public class LoginController extends ApiController {
 
         return success(Boolean.TRUE);
     }
-
-
 
 
 }

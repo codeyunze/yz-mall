@@ -6,13 +6,13 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 系统-关联角色数据表(SysRoleRelation)表新增数据模型类
+ * 系统-用户与组织关联角色表(SysUserRelationRole)表新增数据模型类
  *
  * @author yunze
- * @since 2024-11-17 19:56:00
+ * @since 2024-11-26 11:46:13
  */
 @Data
-public class SysRoleRelationAddDto implements Serializable {
+public class SysUserRelationRoleAddDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 
