@@ -85,7 +85,8 @@ public class SysUserRelationRoleController extends ApiController {
      */
     @GetMapping("getRoleId")
     public Result<List<Long>> getRole() {
-        List<Long> roleIdsByRelationId = service.getRoleIdsByRelationId(0L);
+        long userId = StpUtil.getLoginIdAsLong();
+        List<Long> roleIdsByRelationId = service.getRoleIdsByRelationId(userId);
         return success(roleIdsByRelationId);
     }
 }

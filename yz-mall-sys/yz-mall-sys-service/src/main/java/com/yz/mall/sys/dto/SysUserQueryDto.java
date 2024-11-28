@@ -1,5 +1,6 @@
 package com.yz.mall.sys.dto;
 
+import com.yz.mall.sys.entity.SysOrg;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -37,5 +38,9 @@ public class SysUserQueryDto implements Serializable {
      */
     private String email;
 
+    /**
+     * 组织Id {@link SysOrg#getId()}
+     */
+    private Long orgId;
 }
 

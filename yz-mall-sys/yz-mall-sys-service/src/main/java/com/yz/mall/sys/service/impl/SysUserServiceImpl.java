@@ -12,14 +12,17 @@ import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.mapper.BaseUserMapper;
+import com.yz.mall.sys.service.SysUserRelationOrgService;
 import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,8 +36,11 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
 
     private final SysProperties sysProperties;
 
-    public SysUserServiceImpl(SysProperties sysProperties) {
+    private final SysUserRelationOrgService sysUserRelationOrgService;
+
+    public SysUserServiceImpl(SysProperties sysProperties, SysUserRelationOrgService sysUserRelationOrgService) {
         this.sysProperties = sysProperties;
+        this.sysUserRelationOrgService = sysUserRelationOrgService;
     }
 
     @Override
@@ -74,6 +80,15 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.hasText(filter.getFilter().getPhone()), SysUser::getPhone, filter.getFilter().getPhone());
         queryWrapper.like(StringUtils.hasText(filter.getFilter().getEmail()), SysUser::getEmail, filter.getFilter().getEmail());
+
+        if (filter.getFilter().getOrgId() != null) {
+            List<Long> userIds = sysUserRelationOrgService.getUserIdByOrgId(filter.getFilter().getOrgId());
+            if (CollectionUtils.isEmpty(userIds)) {
+                return new Page<>();
+            }
+            queryWrapper.in(SysUser::getId, userIds);
+        }
+
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 系统-角色数据表(SysRole)表控制层
@@ -78,6 +79,14 @@ public class SysRoleController extends ApiController {
     public Result<ResultTable<SysRole>> page(@RequestBody @Valid PageFilter<SysRoleQueryDto> filter) {
         Page<SysRole> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
+    }
+
+    /**
+     * 列表查询
+     */
+    @PostMapping("list")
+    public Result<List<SysRole>> list(@RequestBody @Valid SysRoleQueryDto filter) {
+        return success(service.list(filter));
     }
 
     /**

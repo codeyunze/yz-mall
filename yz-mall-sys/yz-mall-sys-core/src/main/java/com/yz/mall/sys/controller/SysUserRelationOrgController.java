@@ -25,7 +25,7 @@ import java.util.List;
  * @since 2024-11-17 20:26:16
  */
 @RestController
-@RequestMapping("sys/user/relation/org")
+@RequestMapping("sys/user/org")
 public class SysUserRelationOrgController extends ApiController {
 
     /**

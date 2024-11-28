@@ -4,9 +4,11 @@ spring:
       server-addr: 10.0.12.16:8848
       config:
         namespace: mall-prod
-        extension-configs[0]:
-          data-id: yz-mall-datasource.yaml
-          refresh: true
+        extension-configs:
+          - data-id: yz-mall-datasource.yaml
+            refresh: true
+          - data-id: security.yaml
+            refresh: true
       discovery:
         namespace: mall-prod
       username: nacos

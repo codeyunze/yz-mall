@@ -18,7 +18,10 @@ import com.yz.mall.sys.service.SysRoleService;
 import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -71,6 +74,15 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public Page<SysRole> page(PageFilter<SysRoleQueryDto> filter) {
         LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+    }
+
+    @DS("slave")
+    @Override
+    public List<SysRole> list(SysRoleQueryDto filter) {
+        LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.hasText(filter.getRoleName()), SysRole::getRoleName, filter.getRoleName());
+        queryWrapper.eq(StringUtils.hasText(filter.getRoleCode()), SysRole::getRoleCode, filter.getRoleCode());
+        return baseMapper.selectList(queryWrapper);
     }
 }
 

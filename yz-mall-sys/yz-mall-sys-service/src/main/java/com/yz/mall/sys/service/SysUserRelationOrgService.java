@@ -9,6 +9,7 @@ import com.yz.mall.sys.entity.SysUserRelationOrg;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 系统-用户关联组织数据表(SysUserRelationOrg)表服务接口
@@ -42,5 +43,12 @@ public interface SysUserRelationOrgService extends IService<SysUserRelationOrg> 
      */
     Page<SysUserRelationOrg> page(PageFilter<SysUserRelationOrgQueryDto> filter);
 
+    /**
+     * 获取指定组织下的所有用户Id
+     *
+     * @param orgId 指定的组织Id
+     * @return 用户Id
+     */
+    List<Long> getUserIdByOrgId(Long orgId);
 }
 

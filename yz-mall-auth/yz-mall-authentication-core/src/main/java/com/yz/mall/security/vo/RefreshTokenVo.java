@@ -15,6 +15,11 @@ public class RefreshTokenVo implements Serializable {
     private final static long serialVersionUID = 1L;
 
     /**
+     * 用户Id
+     */
+    private String userId;
+
+    /**
      * 刷新令牌
      */
     private String refreshToken;
@@ -29,6 +34,14 @@ public class RefreshTokenVo implements Serializable {
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime expires;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getRefreshToken() {
         return refreshToken;

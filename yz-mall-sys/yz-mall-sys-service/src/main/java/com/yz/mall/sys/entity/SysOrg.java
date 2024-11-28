@@ -6,6 +6,8 @@ import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,6 +25,7 @@ public class SysOrg extends Model<SysOrg> {
     /**
      * 主键标识
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
@@ -53,11 +56,13 @@ public class SysOrg extends Model<SysOrg> {
     /**
      * 组织所属用户
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**
      * 上级组织
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /**

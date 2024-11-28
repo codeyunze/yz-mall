@@ -18,6 +18,7 @@ import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +59,7 @@ public class LoginController extends ApiController {
             AuthLoginVo vo = new AuthLoginVo();
 
             BeanUtils.copyProperties(loginInfo, vo);
+            vo.setUserId(loginInfo.getId());
             vo.setAccessToken(tokenInfo.tokenValue);
             vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
             // 刷新令牌有效期1天
@@ -76,6 +78,9 @@ public class LoginController extends ApiController {
     public Result<?> logout() {
         // 清理刷新token
         String userId = StpUtil.getLoginIdAsString();
+        if (!StringUtils.hasText(userId)) {
+            return new Result<>(CodeEnum.SUCCESS.get(), null, "系统登出成功");
+        }
         SaTempUtil.deleteToken(userId);
         // 清理登录token
         StpUtil.logout();
@@ -93,22 +98,20 @@ public class LoginController extends ApiController {
     public Result<RefreshTokenVo> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
         // 1、验证
         Object userId = SaTempUtil.parseToken(refreshTokenDto.getRefreshToken());
-        if (userId == null || !userId.toString().equals(refreshTokenDto.getUserId())) {
+        if (userId == null) {
             return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "无效的刷新令牌");
         }
 
         // 2、为其生成新的短 token
-        String accessToken = StpUtil.createLoginSession(userId);
-
-        // 3、返回
-        SaResult data = SaResult.data(accessToken);
-
-        RefreshTokenVo vo = new RefreshTokenVo();
-        vo.setAccessToken((String) data.getData());
-        vo.setRefreshToken(SaTempUtil.createToken(userId, 86400));
+        StpUtil.login(userId);
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
 
+        // 3、返回信息
+        RefreshTokenVo vo = new RefreshTokenVo();
+        vo.setAccessToken(tokenInfo.getTokenValue());
+        vo.setRefreshToken(SaTempUtil.createToken(userId, 86400));
+        vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
+        vo.setUserId(userId.toString());
         // 清理临时token
         SaTempUtil.deleteToken(refreshTokenDto.getRefreshToken());
         return new Result<>(CodeEnum.SUCCESS.get(), vo, "访问令牌更新成功");

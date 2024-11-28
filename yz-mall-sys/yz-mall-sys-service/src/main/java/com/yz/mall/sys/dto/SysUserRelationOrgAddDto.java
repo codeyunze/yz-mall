@@ -1,5 +1,7 @@
 package com.yz.mall.sys.dto;
 
+import com.yz.mall.sys.entity.SysOrg;
+import com.yz.mall.sys.entity.SysUser;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -17,13 +19,13 @@ public class SysUserRelationOrgAddDto implements Serializable {
     private static final long serialVesionUID = 1L;
 
     /**
-     * 用户Id
+     * 用户Id {@link SysUser#getId()}
      */
     @NotNull(message = "用户Id不能为空")
     private Long userId;
 
     /**
-     * 组织Id
+     * 组织Id {@link SysOrg#getId()}
      */
     @NotNull(message = "组织Id不能为空")
     private Long orgId;

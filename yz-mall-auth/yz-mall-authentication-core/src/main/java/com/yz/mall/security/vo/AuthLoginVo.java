@@ -17,7 +17,12 @@ public class AuthLoginVo implements Serializable {
     private final static long serialVersionUID = 1L;
 
     /**
-     * 登录账号
+     * 登录用户Id
+     */
+    private String userId;
+
+    /**
+     * 登录用户
      */
     private String username;
 
@@ -52,6 +57,13 @@ public class AuthLoginVo implements Serializable {
      */
     private String avatar;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getUsername() {
         return username;
