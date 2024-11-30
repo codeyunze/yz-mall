@@ -13,8 +13,10 @@ import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.mapper.BaseUserMapper;
 import com.yz.mall.sys.service.SysUserRelationOrgService;
+import com.yz.mall.sys.service.SysUserRelationRoleService;
 import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.vo.BaseUserVo;
+import com.yz.mall.sys.vo.InternalSysUserRoleVo;
 import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,9 +41,14 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
 
     private final SysUserRelationOrgService sysUserRelationOrgService;
 
-    public SysUserServiceImpl(SysProperties sysProperties, SysUserRelationOrgService sysUserRelationOrgService) {
+    private final SysUserRelationRoleService sysUserRelationRoleService;
+
+    public SysUserServiceImpl(SysProperties sysProperties
+            , SysUserRelationOrgService sysUserRelationOrgService
+            , SysUserRelationRoleService sysUserRelationRoleService) {
         this.sysProperties = sysProperties;
         this.sysUserRelationOrgService = sysUserRelationOrgService;
+        this.sysUserRelationRoleService = sysUserRelationRoleService;
     }
 
     @Override
@@ -131,6 +139,11 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
         InternalLoginInfoDto loginInfo = new InternalLoginInfoDto();
         BeanUtils.copyProperties(user, loginInfo);
         return loginInfo;
+    }
+
+    @Override
+    public List<Long> getUserRoles(Long userId) {
+        return sysUserRelationRoleService.getRoleIdsByRelationId(userId);
     }
 }
 

@@ -7,12 +7,10 @@ import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 基础-用户(BaseUser)表控制层
@@ -57,5 +55,15 @@ public class InternalSysUserController extends ApiController {
         return success(loginInfo);
     }
 
+    /**
+     * 获取指定用户所拥有的角色
+     *
+     * @param userId 用户Id
+     * @return 用户所拥有的角色
+     */
+    @GetMapping("getUserRoles/{userId}")
+    public Result<List<Long>> getUserRoles(@PathVariable Long userId) {
+        return success(service.getUserRoles(userId));
+    }
 }
 

@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.vo.BaseUserVo;
+import com.yz.mall.sys.vo.InternalSysUserRoleVo;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 基础-用户(BaseUser)表服务接口
@@ -78,5 +80,13 @@ public interface SysUserService extends IService<SysUser> {
      * 手机号登录校验
      */
     InternalLoginInfoDto checkLogin(@Valid InternalSysUserCheckLoginDto dto);
+
+    /**
+     * 获取指定用户所拥有的角色
+     *
+     * @param userId 用户Id
+     * @return 用户所拥有的角色
+     */
+    List<Long> getUserRoles(Long userId);
 }
 

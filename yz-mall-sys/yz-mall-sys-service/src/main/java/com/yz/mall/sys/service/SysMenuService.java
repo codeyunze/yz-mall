@@ -1,12 +1,11 @@
 package com.yz.mall.sys.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
-import com.yz.tools.PageFilter;
+import com.yz.mall.sys.vo.SysMenuSlimVo;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -41,7 +40,13 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    List<SysMenu> page(SysMenuQueryDto filter);
+    List<SysMenu> list(SysMenuQueryDto filter);
+
+    /**
+     * 查询请求者所拥有访问权限的菜单
+     * @param roleIds 请求则所拥有的所有角色Id
+     */
+    List<SysMenuSlimVo> listSlim(List<Long> roleIds);
 
 }
 

@@ -2,11 +2,11 @@ package com.yz.mall.sys.service;
 
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
-import com.yz.tools.Result;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.yz.mall.sys.vo.InternalSysUserRoleVo;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author yunze
@@ -34,4 +34,12 @@ public interface InternalSysUserService {
      * 手机号登录校验
      */
     InternalLoginInfoDto checkLogin(@Valid InternalSysUserCheckLoginDto dto);
+
+    /**
+     * 获取指定用户所拥有的角色
+     *
+     * @param userId 用户Id
+     * @return 用户所拥有的角色
+     */
+    List<Long> getUserRoles(Long userId);
 }

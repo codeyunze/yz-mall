@@ -11,6 +11,7 @@ import com.yz.tools.enums.CodeEnum;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author yunze
@@ -44,6 +45,15 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     @Override
     public InternalLoginInfoDto checkLogin(InternalSysUserCheckLoginDto dto) {
         Result<InternalLoginInfoDto> result = feign.checkLogin(dto);
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new BusinessException(result.getMsg());
+        }
+        return result.getData();
+    }
+
+    @Override
+    public List<Long> getUserRoles(Long userId) {
+        Result<List<Long>> result = feign.getUserRoles(userId);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }

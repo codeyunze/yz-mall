@@ -2,14 +2,17 @@ package com.yz.mall.security.vo;
 
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
+ * 刷新令牌返回信息
  * @author yunze
  * @date 2024/11/19 星期二 22:54
  */
+@Data
 public class RefreshTokenVo implements Serializable {
 
     private final static long serialVersionUID = 1L;
@@ -34,36 +37,4 @@ public class RefreshTokenVo implements Serializable {
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime expires;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public LocalDateTime getExpires() {
-        return expires;
-    }
-
-    public void setExpires(LocalDateTime expires) {
-        this.expires = expires;
-    }
 }

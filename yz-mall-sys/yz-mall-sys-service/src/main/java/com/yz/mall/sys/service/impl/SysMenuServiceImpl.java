@@ -2,15 +2,14 @@ package com.yz.mall.sys.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
-import com.yz.mall.sys.mapper.SysMenuMapper;
 import com.yz.mall.sys.entity.SysMenu;
+import com.yz.mall.sys.mapper.SysMenuMapper;
 import com.yz.mall.sys.service.SysMenuService;
-import com.yz.tools.PageFilter;
+import com.yz.mall.sys.vo.SysMenuSlimVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,7 @@ import java.util.List;
  */
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
+
 
     @Override
     public Long save(SysMenuAddDto dto) {
@@ -43,9 +43,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<SysMenu> page(SysMenuQueryDto filter) {
+    public List<SysMenu> list(SysMenuQueryDto filter) {
         LambdaQueryWrapper<SysMenu> queryWrapper = new LambdaQueryWrapper<>();
         return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<SysMenuSlimVo> listSlim(List<Long> roleIds) {
+        return baseMapper.selectMenuSlimByRoleIds(roleIds);
     }
 }
 

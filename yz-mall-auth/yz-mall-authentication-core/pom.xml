@@ -72,6 +72,12 @@
             <artifactId>yz-mall-sys-interface</artifactId>
             <version>${revision}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-redisson</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -223,3 +223,17 @@ CREATE TABLE sys_menu
     `show_parent`      INT               DEFAULT 0 COMMENT '是否显示父级菜单',
     PRIMARY KEY (id)
 ) COMMENT = '系统-菜单资源表';
+
+
+CREATE TABLE sys_role_relation_menu
+(
+    `id`          BIGINT NOT NULL COMMENT '主键标识',
+    `create_time` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
+    `update_time` DATETIME DEFAULT current_timestamp COMMENT '更新时间',
+    `invalid`     INT      DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `role_id`     BIGINT NOT NULL COMMENT '角色Id',
+    `menu_id`     BIGINT NOT NULL COMMENT '菜单Id',
+    PRIMARY KEY (id)
+) COMMENT = '系统-角色关联菜单表';
+CREATE UNIQUE INDEX uk_sys_role_menu ON sys_role_relation_menu (role_id, menu_id, invalid);
+

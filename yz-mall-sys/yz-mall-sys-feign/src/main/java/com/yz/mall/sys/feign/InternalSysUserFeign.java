@@ -5,10 +5,13 @@ import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.tools.Result;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author yunze
@@ -21,17 +24,26 @@ public interface InternalSysUserFeign {
      * 扣减余额
      */
     @PostMapping("deduct")
-    public Result<Boolean> deduct(@RequestBody @Valid InternalSysUserBalanceDto dto);
+    Result<Boolean> deduct(@RequestBody @Valid InternalSysUserBalanceDto dto);
 
     /**
      * 账户充值
      */
     @PostMapping("recharge")
-    public Result<Boolean> recharge(@RequestBody @Valid InternalSysUserBalanceDto dto);
+    Result<Boolean> recharge(@RequestBody @Valid InternalSysUserBalanceDto dto);
 
     /**
      * 登录校验
      */
     @PostMapping("checkLogin")
-    public Result<InternalLoginInfoDto> checkLogin(@RequestBody @Valid InternalSysUserCheckLoginDto dto);
+    Result<InternalLoginInfoDto> checkLogin(@RequestBody @Valid InternalSysUserCheckLoginDto dto);
+
+    /**
+     * 获取指定用户所拥有的角色
+     *
+     * @param userId 用户Id
+     * @return 用户所拥有的角色
+     */
+    @GetMapping("getUserRoles/{userId}")
+    Result<List<Long>> getUserRoles(@PathVariable Long userId);
 }

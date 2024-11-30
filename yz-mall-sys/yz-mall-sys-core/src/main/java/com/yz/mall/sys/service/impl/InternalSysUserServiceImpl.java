@@ -2,11 +2,12 @@ package com.yz.mall.sys.service.impl;
 
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
-import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.service.InternalSysUserService;
+import com.yz.mall.sys.service.SysUserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author yunze
@@ -34,5 +35,10 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     @Override
     public InternalLoginInfoDto checkLogin(InternalSysUserCheckLoginDto dto) {
         return service.checkLogin(dto);
+    }
+
+    @Override
+    public List<Long> getUserRoles(Long userId) {
+        return service.getUserRoles(userId);
     }
 }
