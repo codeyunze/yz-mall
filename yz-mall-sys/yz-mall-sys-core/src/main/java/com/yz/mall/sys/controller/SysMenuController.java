@@ -1,6 +1,8 @@
 package com.yz.mall.sys.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
@@ -84,6 +86,8 @@ public class SysMenuController extends ApiController {
     /**
      * 分页查询-菜单简略信息
      */
+    @SaCheckPermission("mall:sys:listSlim")
+    @SaCheckLogin
     @PostMapping("listSlim")
     public Result<List<SysMenuSlimVo>> listSlim() {
         String tokenValue = StpUtil.getTokenValue();
