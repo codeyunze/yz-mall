@@ -8,7 +8,6 @@ import cn.hutool.crypto.digest.BCrypt;
 import com.yz.mall.security.dto.AuthLoginDto;
 import com.yz.mall.security.dto.RefreshTokenDto;
 import com.yz.mall.security.vo.UserLoginInfoVo;
-import com.yz.mall.security.vo.RefreshTokenVo;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.service.InternalSysUserService;
@@ -18,7 +17,6 @@ import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -31,7 +29,6 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -65,7 +62,7 @@ public class LoginController extends ApiController {
         // 登录
         StpUtil.login(loginInfo.getId());
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        List<Long> roles = getRoleByUserId(Long.valueOf(loginInfo.getId()), tokenInfo.getTokenValue());
+        List<Long> roles = getRoleByUserId(loginInfo.getId());
 
         UserLoginInfoVo vo = new UserLoginInfoVo();
         BeanUtils.copyProperties(loginInfo, vo);
@@ -80,14 +77,18 @@ public class LoginController extends ApiController {
     }
 
 
-    private List<Long> getRoleByUserId(Long userId, String token) {
-        List<Long> roles = internalSysUserService.getUserRoles(userId);
+    /**
+     * 获取指定用户拥有的角色信息，并缓存到redis
+     *
+     * @param userId 指定用户Id
+     * @return 用户拥有的角色
+     */
+    private List<Long> getRoleByUserId(String userId) {
+        List<Long> roles = internalSysUserService.getUserRoles(Long.parseLong(userId));
         if (!CollectionUtils.isEmpty(roles)) {
             // 缓存用户所拥有的角色信息
-            roles.forEach(role -> {
-                redisTemplate.opsForList().rightPush(RedisCacheKey.permissionRole(token), role);
-            });
-            redisTemplate.expire(RedisCacheKey.permissionRole(token),86400, TimeUnit.SECONDS);
+            roles.forEach(role -> redisTemplate.opsForList().rightPush(RedisCacheKey.permissionRole(userId), role));
+            redisTemplate.expire(RedisCacheKey.permissionRole(userId), 86400, TimeUnit.SECONDS);
         }
         return roles;
     }
@@ -111,7 +112,7 @@ public class LoginController extends ApiController {
         StpUtil.login(userId);
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         // 获取并缓存角色信息
-        getRoleByUserId(Long.valueOf(userId.toString()), tokenInfo.getTokenValue());
+        getRoleByUserId(userId.toString());
 
         // 3、返回信息
         UserLoginInfoVo vo = new UserLoginInfoVo();
