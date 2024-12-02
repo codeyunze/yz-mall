@@ -3,7 +3,7 @@ package com.yz.mall.sys.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.sys.dto.SysUserRelationRoleAddDto;
+import com.yz.mall.sys.dto.SysUserRelationRoleBindDto;
 import com.yz.mall.sys.dto.SysUserRelationRoleQueryDto;
 import com.yz.mall.sys.dto.SysUserRelationRoleUpdateDto;
 import com.yz.mall.sys.entity.SysUserRelationRole;
@@ -35,19 +35,12 @@ public class SysUserRelationRoleController extends ApiController {
     private SysUserRelationRoleService service;
 
     /**
-     * 新增
+     * 给用户或组织分配角色
+     * @apiNote 用户组织信息与角色信息绑定
      */
-    @PostMapping("add")
-    public Result<Long> insert(@RequestBody @Valid SysUserRelationRoleAddDto dto) {
-        return success(this.service.save(dto));
-    }
-
-    /**
-     * 更新
-     */
-    @PostMapping("update")
-    public Result<Boolean> update(@RequestBody @Valid SysUserRelationRoleUpdateDto dto) {
-        return success(this.service.update(dto));
+    @PostMapping("bind")
+    public Result<Boolean> bind(@RequestBody @Valid SysUserRelationRoleBindDto dto) {
+        return success(this.service.bind(dto));
     }
 
     /**

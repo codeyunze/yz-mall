@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 身份认证接口
@@ -62,7 +63,7 @@ public class LoginController extends ApiController {
         // 登录
         StpUtil.login(loginInfo.getId());
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        List<Long> roles = getRoleByUserId(loginInfo.getId());
+        List<String> roles = getRoleByUserId(loginInfo.getId());
 
         UserLoginInfoVo vo = new UserLoginInfoVo();
         BeanUtils.copyProperties(loginInfo, vo);
@@ -83,14 +84,19 @@ public class LoginController extends ApiController {
      * @param userId 指定用户Id
      * @return 用户拥有的角色
      */
-    private List<Long> getRoleByUserId(String userId) {
+    private List<String> getRoleByUserId(String userId) {
+        // 清理用户角色缓存
+        redisTemplate.delete(RedisCacheKey.permissionRole(userId));
+
+        // 查询用户角色
         List<Long> roles = internalSysUserService.getUserRoles(Long.parseLong(userId));
         if (!CollectionUtils.isEmpty(roles)) {
             // 缓存用户所拥有的角色信息
             roles.forEach(role -> redisTemplate.opsForList().rightPush(RedisCacheKey.permissionRole(userId), role));
             redisTemplate.expire(RedisCacheKey.permissionRole(userId), 86400, TimeUnit.SECONDS);
         }
-        return roles;
+
+        return roles.stream().map(String::valueOf).collect(Collectors.toList());
     }
 
 

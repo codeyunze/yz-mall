@@ -2,7 +2,7 @@ package com.yz.mall.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.sys.dto.SysUserRelationRoleAddDto;
+import com.yz.mall.sys.dto.SysUserRelationRoleBindDto;
 import com.yz.mall.sys.dto.SysUserRelationRoleQueryDto;
 import com.yz.mall.sys.dto.SysUserRelationRoleUpdateDto;
 import com.yz.mall.sys.entity.SysOrg;
@@ -23,20 +23,12 @@ import java.util.List;
 public interface SysUserRelationRoleService extends IService<SysUserRelationRole> {
 
     /**
-     * 新增数据
+     * 用户/组织绑定角色
      *
      * @param dto 新增基础数据
-     * @return 主键Id
+     * @return 是否绑定成功
      */
-    Long save(SysUserRelationRoleAddDto dto);
-
-    /**
-     * 更新数据
-     *
-     * @param dto 更新基础数据
-     * @return 是否操作成功
-     */
-    boolean update(@Valid SysUserRelationRoleUpdateDto dto);
+    boolean bind(SysUserRelationRoleBindDto dto);
 
     /**
      * 分页查询

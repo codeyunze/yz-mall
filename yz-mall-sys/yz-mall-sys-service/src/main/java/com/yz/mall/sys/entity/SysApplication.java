@@ -1,7 +1,5 @@
 package com.yz.mall.sys.entity;
 
-import java.time.LocalDateTime;
-
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -10,6 +8,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 应用配置(SysApplication)表实体类
@@ -53,7 +52,7 @@ public class SysApplication extends Model<SysApplication> {
      * 数据是否有效：0数据有效
      */
     @TableLogic
-    private Integer invalid;
+    private Long invalid;
 
     /**
      * 应用id

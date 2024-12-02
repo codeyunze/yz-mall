@@ -1,17 +1,14 @@
 package com.yz.mall.sys.entity;
 
-import java.time.LocalDateTime;
-
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 系统-用户关联组织数据表(SysUserRelationOrg)表实体类
@@ -45,7 +42,7 @@ public class SysUserRelationOrg extends Model<SysUserRelationOrg> {
      * 数据是否有效：0数据有效
      */
     @TableLogic
-    private Integer invalid;
+    private Long invalid;
 
     /**
      * 用户Id

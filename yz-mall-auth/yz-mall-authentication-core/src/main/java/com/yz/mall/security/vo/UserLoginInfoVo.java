@@ -53,7 +53,7 @@ public class UserLoginInfoVo implements Serializable {
     /**
      * 用户角色
      */
-    private List<Long> roles;
+    private List<String> roles;
 
     /**
      * 头像

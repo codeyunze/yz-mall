@@ -1,17 +1,16 @@
 package com.yz.mall.sys.entity;
 
-import java.time.LocalDateTime;
-
 import cn.hutool.core.date.DatePattern;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 系统-用户与组织关联角色表(SysUserRelationRole)表实体类
@@ -44,8 +43,9 @@ public class SysUserRelationRole extends Model<SysUserRelationRole> {
     /**
      * 数据是否有效：0数据有效
      */
-    @TableLogic
-    private Integer invalid;
+    @TableField(fill = FieldFill.UPDATE)
+    @TableLogic(value = "0", delval = "current_timestamp")
+    private Long invalid;
 
     /**
      * 关联角色Id

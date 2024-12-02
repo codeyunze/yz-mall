@@ -12,10 +12,14 @@ import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
 import com.yz.tools.ResultTable;
 import com.yz.tools.enums.CodeEnum;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 基础-用户(BaseUser)表控制层
@@ -88,5 +92,19 @@ public class SysUserController extends ApiController {
         return success(this.service.getById(id));
     }
 
+    /**
+     * 获取指定用户所拥有的角色
+     *
+     * @param userId 用户Id
+     * @return 用户所拥有的角色
+     */
+    @GetMapping("getUserRoles/{userId}")
+    public Result<List<String>> getUserRoles(@PathVariable Long userId) {
+        List<Long> roles = service.getUserRoles(userId);
+        if (CollectionUtils.isEmpty(roles)) {
+            return success(Collections.emptyList());
+        }
+        return success(roles.stream().map(String::valueOf).collect(Collectors.toList()));
+    }
 }
 

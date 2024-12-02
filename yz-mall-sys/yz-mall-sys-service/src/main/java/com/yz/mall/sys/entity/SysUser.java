@@ -46,7 +46,7 @@ public class SysUser extends Model<SysUser> {
      * 数据是否有效：0数据有效
      */
     @TableLogic
-    private Integer invalid;
+    private Long invalid;
 
     /**
      * 手机号
