@@ -5,8 +5,9 @@
 | yz-mall-web-pc | 30000 | 前端服务        |
 | yz-gateway     | 30001 | 网关服务        |
 | yz-mall-auth   | 30002 | 身份认证与访问授权服务 |
+| yz-file-start  | 30003 | 文件服务        |
 | yz-unqid       | 30008 | 流水号生成       |
-| yz-mall-user   | 30004 | 基础用户信息      |
+| yz-mall-sys    | 30004 | 基础信息模块      |
 | yz-mall-oms    | 30006 | 订单管理模块      |
 | yz-mall-pms    | 30005 | 商品库存管理模块    |
 
