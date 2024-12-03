@@ -1,4 +1,4 @@
-package com.yz.mall.sys.service.impl;
+package com.yz.mall.sys.impl;
 
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;

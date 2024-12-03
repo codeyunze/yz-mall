@@ -1,6 +1,7 @@
 package com.yz.mall.sys.internal;
 
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
@@ -49,6 +50,7 @@ public class InternalSysUserController extends ApiController {
     /**
      * 登录校验
      */
+    @SaIgnore
     @PostMapping("checkLogin")
     public Result<InternalLoginInfoDto> checkLogin(@RequestBody @Valid InternalSysUserCheckLoginDto dto) {
         InternalLoginInfoDto loginInfo = service.checkLogin(dto);

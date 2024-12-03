@@ -53,7 +53,13 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-mall-sys-core</artifactId>
+            <artifactId>yz-mall-sys-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-mall-security-core</artifactId>
             <version>${revision}</version>
         </dependency>
 

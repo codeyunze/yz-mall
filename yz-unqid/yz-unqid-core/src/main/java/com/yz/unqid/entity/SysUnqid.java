@@ -78,11 +78,11 @@ public class SysUnqid implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Integer getInvalid() {
+    public Long getInvalid() {
         return invalid;
     }
 
-    public void setInvalid(Integer invalid) {
+    public void setInvalid(Long invalid) {
         this.invalid = invalid;
     }
 

@@ -16,7 +16,6 @@
     <modules>
         <module>yz-mall-sys-interface</module>
         <module>yz-mall-sys-service</module>
-        <module>yz-mall-sys-core</module>
         <module>yz-mall-sys-feign</module>
         <module>yz-mall-sys-startup</module>
     </modules>

@@ -22,18 +22,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-advice</artifactId>
+            <artifactId>yz-mall-starter-web</artifactId>
             <version>${revision}</version>
         </dependency>
     </dependencies>

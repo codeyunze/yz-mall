@@ -128,6 +128,7 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
         }
     }
 
+    @DS("slave")
     @Override
     public InternalLoginInfoDto checkLogin(InternalSysUserCheckLoginDto dto) {
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
