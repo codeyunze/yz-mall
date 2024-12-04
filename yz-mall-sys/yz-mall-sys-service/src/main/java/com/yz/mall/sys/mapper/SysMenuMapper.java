@@ -23,7 +23,14 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      * @param roleIds 角色Id列表
      * @return 指定角色所拥有的菜单（菜单有去重）
      */
-    List<SysMenuSlimVo> selectMenuSlimByRoleIds(@Param("roleIds") List<Long> roleIds);
+    @Deprecated
+    List<SysMenuSlimVo> selectMenusSlimByRoleIds(@Param("roleIds") List<Long> roleIds);
 
+    /**
+     * 查询所有菜单
+     *
+     * @return 所有菜单
+     */
+    List<SysMenuSlimVo> selectMenusSlim();
 }
 

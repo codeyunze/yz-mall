@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.sys.dto.SysRoleAddDto;
 import com.yz.mall.sys.dto.SysRoleQueryDto;
 import com.yz.mall.sys.dto.SysRoleUpdateDto;
+import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysRole;
 import com.yz.tools.PageFilter;
 
@@ -58,5 +59,13 @@ public interface SysRoleService extends IService<SysRole> {
      * @return 列表数据
      */
     List<SysRole> list(SysRoleQueryDto filter);
+
+    /**
+     * 根据指定角色Id获取其拥有的菜单
+     *
+     * @param roleId 指定的角色Id
+     * @return 菜单Id {@link SysMenu#getId()}
+     */
+    List<String> getRoleMenusByRoleId(Long roleId);
 }
 

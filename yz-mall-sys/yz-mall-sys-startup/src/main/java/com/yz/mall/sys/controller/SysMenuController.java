@@ -69,16 +69,16 @@ public class SysMenuController extends ApiController {
      * 分页查询-菜单简略信息
      */
     @SaCheckLogin
-    @SaCheckPermission("sys:menu:listSlim")
+    // @SaCheckPermission("sys:menu:listSlim")
     @PostMapping("listSlim")
     public Result<List<SysMenuSlimVo>> listSlim() {
-        String userId = StpUtil.getLoginIdAsString();
-        List<Object> roles = redisTemplate.boundListOps(RedisCacheKey.permissionRole(userId)).range(0, -1);
-        if (CollectionUtils.isEmpty(roles)) {
-            return success(Collections.emptyList());
-        }
-        List<Long> params = roles.stream().map(t -> Long.parseLong(String.valueOf(t))).collect(Collectors.toList());
-        return success(this.service.listSlim(params));
+        // String userId = StpUtil.getLoginIdAsString();
+        // List<Object> roles = redisTemplate.boundListOps(RedisCacheKey.permissionRole(userId)).range(0, -1);
+        // if (CollectionUtils.isEmpty(roles)) {
+        //     return success(Collections.emptyList());
+        // }
+        // List<Long> params = roles.stream().map(t -> Long.parseLong(String.valueOf(t))).collect(Collectors.toList());
+        return success(this.service.listSlim());
     }
 
     /**

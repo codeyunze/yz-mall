@@ -1,14 +1,8 @@
 package com.yz.mall.sys.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.sys.dto.SysRoleRelationMenuAddDto;
-import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
-import com.yz.mall.sys.dto.SysRoleRelationMenuUpdateDto;
+import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -39,10 +33,26 @@ public interface SysRoleRelationMenuService extends IService<SysRoleRelationMenu
 
     /**
      * 列表查询
+     *
      * @param filter 过滤条件
      * @return 查询列表数据
      */
     List<SysRoleRelationMenu> list(SysRoleRelationMenuQueryDto filter);
 
+    /**
+     * 获取指定角色所拥有的所有菜单Id
+     *
+     * @param roleId 指定的角色Id
+     * @return 菜单Id
+     */
+    List<String> getMenuIdsByRoleId(Long roleId);
+
+    /**
+     * 角色绑定菜单
+     *
+     * @param dto 绑定基础信息
+     * @return 是否绑定成功
+     */
+    boolean bind(SysRoleRelationMenuBindDto dto);
 }
 

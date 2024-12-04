@@ -41,7 +41,7 @@ public class SysUserRelationOrg extends Model<SysUserRelationOrg> {
     /**
      * 数据是否有效：0数据有效
      */
-    @TableLogic
+    @TableLogic(value = "0", delval = "current_timestamp")
     private Long invalid;
 
     /**

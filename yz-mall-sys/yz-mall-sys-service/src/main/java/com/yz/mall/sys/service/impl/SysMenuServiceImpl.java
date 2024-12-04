@@ -49,8 +49,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<SysMenuSlimVo> listSlim(List<Long> roleIds) {
-        return baseMapper.selectMenuSlimByRoleIds(roleIds);
+    public List<SysMenuSlimVo> listSlim() {
+        return baseMapper.selectMenusSlim();
     }
 }
 

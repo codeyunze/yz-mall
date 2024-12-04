@@ -11,9 +11,11 @@ import com.yz.mall.sys.config.SysProperties;
 import com.yz.mall.sys.dto.SysRoleAddDto;
 import com.yz.mall.sys.dto.SysRoleQueryDto;
 import com.yz.mall.sys.dto.SysRoleUpdateDto;
+import com.yz.mall.sys.entity.SysRole;
+import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.mapper.SysRoleMapper;
-import com.yz.mall.sys.entity.SysRole;
+import com.yz.mall.sys.service.SysRoleRelationMenuService;
 import com.yz.mall.sys.service.SysRoleService;
 import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
@@ -83,6 +85,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         queryWrapper.eq(StringUtils.hasText(filter.getRoleName()), SysRole::getRoleName, filter.getRoleName());
         queryWrapper.eq(StringUtils.hasText(filter.getRoleCode()), SysRole::getRoleCode, filter.getRoleCode());
         return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<String> getRoleMenusByRoleId(Long roleId) {
+        return Collections.emptyList();
     }
 }
 

@@ -1,16 +1,13 @@
 package com.yz.mall.sys.controller;
 
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysRoleRelationMenuAddDto;
+import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
-import com.yz.mall.sys.dto.SysRoleRelationMenuUpdateDto;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
 import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,17 +35,10 @@ public class SysRoleRelationMenuController extends ApiController {
     /**
      * 新增
      */
+    @Deprecated
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysRoleRelationMenuAddDto dto) {
         return success(this.service.save(dto));
-    }
-
-    /**
-     * 更新
-     */
-    @PostMapping("update")
-    public Result<Boolean> update(@RequestBody @Valid SysRoleRelationMenuUpdateDto dto) {
-        return success(this.service.update(dto));
     }
 
     /**
@@ -56,6 +46,7 @@ public class SysRoleRelationMenuController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @Deprecated
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -70,12 +61,24 @@ public class SysRoleRelationMenuController extends ApiController {
     }
 
     /**
-     * 详情查询
+     * 获取指定角色所拥有的菜单Id
+     *
+     * @param roleId 角色Id
+     * @return 角色所拥有的菜单
      */
-    @GetMapping("get/{id}")
-    public Result<SysRoleRelationMenu> page(@PathVariable String id) {
-        return success(this.service.getById(id));
+    @GetMapping("getRoleMenus/{roleId}")
+    public Result<List<String>> getRoleMenus(@PathVariable Long roleId) {
+        return success(this.service.getMenuIdsByRoleId(roleId));
     }
 
+    /**
+     * 给角色分配菜单
+     *
+     * @apiNote 为指定的角色绑定菜单
+     */
+    @PostMapping("bind")
+    public Result<Boolean> bind(@RequestBody @Valid SysRoleRelationMenuBindDto dto) {
+        return success(this.service.bind(dto));
+    }
 }
 

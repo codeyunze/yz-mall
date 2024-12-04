@@ -2,14 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yz.mall.sys.mapper.SysMenuMapper">
 
-    <select id="selectMenuSlimByRoleIds" resultType="com.yz.mall.sys.vo.SysMenuSlimVo">
+    <select id="selectMenusSlimByRoleIds" resultType="com.yz.mall.sys.vo.SysMenuSlimVo">
         select distinct sm.id, sm.parent_id, sm.menu_type, sm.title
         from sys_menu sm
                  inner join sys_role_relation_menu srrm on sm.id = srrm.menu_id
-        where role_id in
+        where sm.invalid = 0 and srrm.invalid = 0 role_id in
         <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
             #{roleId}
         </foreach>
+    </select>
+
+    <select id="selectMenusSlim" resultType="com.yz.mall.sys.vo.SysMenuSlimVo">
+        select sm.id, sm.parent_id, sm.menu_type, sm.title
+        from sys_menu sm
+        where sm.invalid = 0
     </select>
 
 </mapper>
