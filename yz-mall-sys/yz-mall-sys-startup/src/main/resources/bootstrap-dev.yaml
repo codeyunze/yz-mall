@@ -7,7 +7,7 @@ spring:
         extension-configs:
           - data-id: yz-mall-datasource.yaml
             refresh: true
-          - data-id: yz-gateway.yaml
+          - data-id: yz-mall-security.yaml
             refresh: true
       discovery:
         namespace: mall

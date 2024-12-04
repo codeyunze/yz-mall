@@ -9,6 +9,8 @@ spring:
             refresh: true
           - data-id: yz-gateway.yaml
             refresh: true
+          - data-id: yz-mall-security.yaml
+            refresh: true
       discovery:
         namespace: mall
       username: nacos
