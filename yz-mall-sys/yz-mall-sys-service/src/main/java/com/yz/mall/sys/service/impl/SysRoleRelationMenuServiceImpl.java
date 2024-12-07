@@ -1,6 +1,7 @@
 package com.yz.mall.sys.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -55,6 +56,7 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
         return baseMapper.selectList(queryWrapper);
     }
 
+    @DS("slave")
     @Override
     public List<String> getMenuIdsByRoleId(Long roleId) {
         LambdaQueryWrapper<SysRoleRelationMenu> queryWrapper = new LambdaQueryWrapper<>();
@@ -66,6 +68,20 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
         }
         // TODO: 2024/12/4 yunze 添加缓存操作，且在数据更新时需要清理缓存
         return menus.stream().map(t -> String.valueOf(t.getMenuId())).collect(Collectors.toList());
+    }
+
+    @DS("slave")
+    @Override
+    public List<Long> getMenuIdsByRoleIds(List<Long> roleIds) {
+        LambdaQueryWrapper<SysRoleRelationMenu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(SysRoleRelationMenu::getMenuId);
+        queryWrapper.in(SysRoleRelationMenu::getRoleId, roleIds);
+        List<SysRoleRelationMenu> menus = baseMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(menus)) {
+            return Collections.emptyList();
+        }
+        // TODO: 2024/12/5 yunze 添加缓存操作，且在数据更新时需要清理缓存
+        return menus.stream().map(SysRoleRelationMenu::getMenuId).collect(Collectors.toList());
     }
 
     @Override

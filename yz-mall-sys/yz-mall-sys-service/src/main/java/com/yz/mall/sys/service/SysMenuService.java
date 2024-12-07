@@ -6,6 +6,7 @@ import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
+import com.yz.mall.sys.vo.SysTreeMenuVo;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -35,10 +36,10 @@ public interface SysMenuService extends IService<SysMenu> {
     boolean update(@Valid SysMenuUpdateDto dto);
 
     /**
-     * 分页查询
+     * 列表查询
      *
      * @param filter 过滤条件
-     * @return 分页列表数据
+     * @return 列表数据
      */
     List<SysMenu> list(SysMenuQueryDto filter);
 
@@ -52,5 +53,14 @@ public interface SysMenuService extends IService<SysMenu> {
      * 查询所有菜单
      */
     List<SysMenuSlimVo> listSlim();
+
+    /**
+     * 将菜单列表信息加工处理为树形结构
+     *
+     * @param menus    菜单列表信息
+     * @param parentId 父级菜单Id
+     * @return 树形结构菜单信息
+     */
+    List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId);
 }
 

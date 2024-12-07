@@ -120,32 +120,32 @@ public class SysMenu extends Model<SysMenu> {
     private String frameSrc;
 
     /**
-     * 加载动画(内嵌的iframe页面是否开启首次加载动画)
+     * 加载动画(内嵌的iframe页面是否开启首次加载动画) {@link com.yz.mall.sys.enums.EnableEnum}
      */
     private Integer frameLoading;
 
     /**
-     * 缓存页面(是否缓存该路由页面)
+     * 缓存页面(是否缓存该路由页面) {@link com.yz.mall.sys.enums.EnableEnum}
      */
     private Integer keepAlive;
 
     /**
-     * 标签页(当前菜单名称或自定义信息禁止添加到标签页)
+     * 标签页(当前菜单名称或自定义信息禁止添加到标签页) {@link com.yz.mall.sys.enums.EnableEnum}
      */
     private Integer hiddenTag;
 
     /**
-     * 固定标签页(当前菜单名称是否固定显示在标签页且不可关闭)
+     * 固定标签页(当前菜单名称是否固定显示在标签页且不可关闭) {@link com.yz.mall.sys.enums.EnableEnum}
      */
     private Integer fixedTag;
 
     /**
-     * 是否显示该菜单
+     * 是否显示该菜单 {@link com.yz.mall.sys.enums.EnableEnum}
      */
     private Integer showLink;
 
     /**
-     * 是否显示父级菜单
+     * 是否显示父级菜单 {@link com.yz.mall.sys.enums.EnableEnum}
      */
     private Integer showParent;
 

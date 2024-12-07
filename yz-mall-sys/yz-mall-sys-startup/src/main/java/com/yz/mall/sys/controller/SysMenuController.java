@@ -66,7 +66,7 @@ public class SysMenuController extends ApiController {
     }
 
     /**
-     * 分页查询-菜单简略信息
+     * 查询-菜单简略信息
      */
     @SaCheckLogin
     // @SaCheckPermission("sys:menu:listSlim")
@@ -92,7 +92,7 @@ public class SysMenuController extends ApiController {
     }
 
     /**
-     * 分页查询
+     * 菜单列表信息查询
      */
     @PostMapping("list")
     public Result<List<SysMenu>> list(@RequestBody @Valid SysMenuQueryDto filter) {

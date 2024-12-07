@@ -9,14 +9,13 @@ import com.yz.advice.exception.BusinessException;
 import com.yz.advice.exception.DataNotExistException;
 import com.yz.mall.sys.config.SysProperties;
 import com.yz.mall.sys.dto.*;
+import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.mapper.BaseUserMapper;
-import com.yz.mall.sys.service.SysUserRelationOrgService;
-import com.yz.mall.sys.service.SysUserRelationRoleService;
-import com.yz.mall.sys.service.SysUserService;
+import com.yz.mall.sys.service.*;
 import com.yz.mall.sys.vo.BaseUserVo;
-import com.yz.mall.sys.vo.InternalSysUserRoleVo;
+import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -43,12 +42,20 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
 
     private final SysUserRelationRoleService sysUserRelationRoleService;
 
+    private final SysRoleRelationMenuService sysRoleRelationMenuService;
+
+    private final SysMenuService sysMenuService;
+
     public SysUserServiceImpl(SysProperties sysProperties
             , SysUserRelationOrgService sysUserRelationOrgService
-            , SysUserRelationRoleService sysUserRelationRoleService) {
+            , SysUserRelationRoleService sysUserRelationRoleService
+            , SysRoleRelationMenuService sysRoleRelationMenuService
+            , SysMenuService sysMenuService) {
         this.sysProperties = sysProperties;
         this.sysUserRelationOrgService = sysUserRelationOrgService;
         this.sysUserRelationRoleService = sysUserRelationRoleService;
+        this.sysRoleRelationMenuService = sysRoleRelationMenuService;
+        this.sysMenuService = sysMenuService;
     }
 
     @Override
@@ -145,6 +152,23 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
     @Override
     public List<Long> getUserRoles(Long userId) {
         return sysUserRelationRoleService.getRoleIdsByRelationId(userId);
+    }
+
+    @DS("slave")
+    @Override
+    public List<SysTreeMenuVo> getUserMenus(Long userId) {
+        List<Long> roleIds = sysUserRelationRoleService.getRoleIdsByRelationId(userId);
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return Collections.emptyList();
+        }
+        // 菜单Id列表
+        List<Long> menuIds = sysRoleRelationMenuService.getMenuIdsByRoleIds(roleIds);
+        // 查询指定菜单的详细信息
+        SysMenuQueryDto menuQueryDto = new SysMenuQueryDto();
+        menuQueryDto.setMenuIds(menuIds);
+        List<SysMenu> menus = sysMenuService.list(menuQueryDto);
+        // 解析菜单信息
+        return sysMenuService.menusInfoProcessor(menus, 0L);
     }
 }
 

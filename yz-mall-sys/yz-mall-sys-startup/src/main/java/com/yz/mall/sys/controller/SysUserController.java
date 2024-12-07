@@ -1,12 +1,14 @@
 package com.yz.mall.sys.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysUserAddDto;
 import com.yz.mall.sys.dto.SysUserQueryDto;
 import com.yz.mall.sys.dto.SysUserUpdateDto;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.service.SysUserService;
+import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
@@ -105,6 +107,14 @@ public class SysUserController extends ApiController {
             return success(Collections.emptyList());
         }
         return success(roles.stream().map(String::valueOf).collect(Collectors.toList()));
+    }
+
+    /**
+     * 获取请求用户可访问的菜单信息
+     */
+    @GetMapping("getUserMenus")
+    public Result<List<SysTreeMenuVo>> getUserMenus() {
+        return success(service.getUserMenus(StpUtil.getLoginIdAsLong()));
     }
 }
 

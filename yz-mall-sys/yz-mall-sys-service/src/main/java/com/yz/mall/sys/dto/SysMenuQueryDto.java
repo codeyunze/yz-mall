@@ -2,7 +2,9 @@ package com.yz.mall.sys.dto;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
 
+import com.yz.mall.sys.entity.SysMenu;
 import lombok.Data;
 
 /**
@@ -20,6 +22,11 @@ public class SysMenuQueryDto implements Serializable {
      * 主键标识
      */
     private Long id;
+
+    /**
+     * 菜单主键Id列表 {@link SysMenu#getId()}
+     */
+    private List<Long> menuIds;
 
     /**
      * 创建时间
@@ -52,84 +59,10 @@ public class SysMenuQueryDto implements Serializable {
     private String path;
 
     /**
-     * 组件路径
-     */
-    private String component;
-
-    /**
-     * 排序
-     */
-    private Integer sort;
-
-    /**
-     * 路由重定向
-     */
-    private String redirect;
-
-    /**
-     * 菜单图标
-     */
-    private String icon;
-
-    /**
-     * 菜单右侧额外图标
-     */
-    private String extraIcon;
-
-    /**
-     * 进场动画
-     */
-    private String enterTransition;
-
-    /**
-     * 离场动画
-     */
-    private String leaveTransition;
-
-    /**
-     * 菜单激活
-     */
-    private String activePath;
-
-    /**
      * 按钮权限标识
      */
     private String auths;
 
-    /**
-     * 链接地址(嵌入iframe链接地址)
-     */
-    private String frameSrc;
-
-    /**
-     * 加载动画(内嵌的iframe页面是否开启首次加载动画)
-     */
-    private Integer frameLoading;
-
-    /**
-     * 缓存页面(是否缓存该路由页面)
-     */
-    private Integer keepAlive;
-
-    /**
-     * 标签页(当前菜单名称或自定义信息禁止添加到标签页)
-     */
-    private Integer hiddenTag;
-
-    /**
-     * 固定标签页(当前菜单名称是否固定显示在标签页且不可关闭)
-     */
-    private Integer fixedTag;
-
-    /**
-     * 是否显示该菜单
-     */
-    private Integer showLink;
-
-    /**
-     * 是否显示父级菜单
-     */
-    private Integer showParent;
 
 
 }

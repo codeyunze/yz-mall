@@ -1,7 +1,10 @@
 package com.yz.mall.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.sys.dto.*;
+import com.yz.mall.sys.dto.SysRoleRelationMenuAddDto;
+import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
+import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
+import com.yz.mall.sys.dto.SysRoleRelationMenuUpdateDto;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 
 import javax.validation.Valid;
@@ -46,6 +49,14 @@ public interface SysRoleRelationMenuService extends IService<SysRoleRelationMenu
      * @return 菜单Id
      */
     List<String> getMenuIdsByRoleId(Long roleId);
+
+    /**
+     * 获取指定角色列表所拥有的所有菜单Id
+     *
+     * @param roleIds 指定的角色Id
+     * @return 菜单Id列表
+     */
+    List<Long> getMenuIdsByRoleIds(List<Long> roleIds);
 
     /**
      * 角色绑定菜单
