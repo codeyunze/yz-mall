@@ -162,13 +162,27 @@ Content-Type: application/json
 <> 2024-07-05T003124.200.json
 
 ### 流水号生成
-POST http://localhost:30001/unqid/generateSerialNumber
-Authorization: Bearer c1cf480fb8e74082a9f2e3928a1f1bea
+POST https://3xj.club/api/unqid/generateSerialNumber
 Content-Type: application/json
+Host: test.com
 
 {
-  "prefix": "ABC"
+  "prefix": "ABC2412"
 }
+
+<> 2024-12-03T103131.403.html
+<> 2024-12-03T095025.403.html
+<> 2024-12-03T092817.200.json
+<> 2024-12-03T092801.403.html
+<> 2024-12-03T092732.403.html
+<> 2024-12-03T092724.200.json
+<> 2024-12-03T092718.200.json
+<> 2024-12-03T092710.200.json
+<> 2024-12-03T091104.200.json
+<> 2024-12-03T091058.403.html
+<> 2024-12-03T091044.200.json
+<> 2024-12-03T091043.200.json
+<> 2024-12-03T091032.200.json
 
 
 ### 登录系统
@@ -176,14 +190,27 @@ POST http://localhost:30001/login
 Content-Type: application/json
 
 {
-  "username": "root",
+  "username": "15316666668",
   "password": "a1234567"
 }
 
+<> 2024-12-05T203733.200.json
+<> 2024-12-05T174725.200.json
+<> 2024-12-04T101759.200.json
+<> 2024-11-30T224425.200.json
+<> 2024-11-30T213152.200.json
+<> 2024-11-30T213023.200.json
+<> 2024-11-30T204836.200.json
+<> 2024-11-30T203630.200.json
 <> 2024-11-19T230707.200.json
 <> 2024-11-19T211501.200.json
 <> 2024-11-19T211420.200.json
 <> 2024-11-19T211314.200.json
+
+
+### 退出登录
+POST http://localhost:30001/logout
+Authorization: Bearer 8a9084d151934ee58b0efb151deb9141
 
 
 ### 订单信息查询
@@ -215,16 +242,14 @@ Content-Type: application/json
 
 ### 查询登录状态
 GET http://localhost:30001/auth/isLogin
-Authorization: Bearer c1cf480fb8e74082a9f2e3928a1f1bea
-
-
-### 测试-登录
-GET http://localhost:30006/login?username=root&password=a1234567
+Authorization: Bearer 8a9084d151934ee58b0efb151deb9141
 
 
 ### 测试-a
 GET http://localhost:30006/a
 Authorization: Bearer 7b115d71b0ce4e9b99125acdf47a705e
+
+<> 2024-11-17T135926.200.txt
 
 
 
@@ -254,14 +279,10 @@ Content-Type: application/json
   "orgId": -1
 }
 
-### 系统-角色管理-切换角色状态
-@id = 1860206762805207040
-POST http://localhost:30004/sys/role/switch/{{id}}
-
-<> 2024-11-23T151140.200.json
-<> 2024-11-23T151055.200.json
-<> 2024-11-23T150914.200.json
-
+<> 2024-11-17T190537.200.json
+<> 2024-11-17T184125.200.json
+<> 2024-11-17T183611.200.json
+<> 2024-11-17T183051.404.json
 
 ### 系统-角色-分页查询
 POST http://localhost:30004/sys/role/page
@@ -275,7 +296,11 @@ Content-Type: application/json
   }
 }
 
-<> 2024-11-20T222321.200.json
+<> 2024-11-17T190544.200.json
+<> 2024-11-17T190430.200.json
+<> 2024-11-17T185917.200.json
+<> 2024-11-17T185102.200.json
+<> 2024-11-17T184322.200.json
 
 ### 系统-用户-新增
 POST http://localhost:30004/sys/user/add
@@ -286,6 +311,9 @@ Content-Type: application/json
   "email": "834363368@qq.com",
   "password": "123456"
 }
+
+<> 2024-11-17T201609.200.json
+<> 2024-11-17T194351.200.json
 
 ### 系统-用户-分页查询
 POST http://localhost:30004/sys/user/page
@@ -305,6 +333,8 @@ Content-Type: application/json
 <> 2024-11-18T211411.200.json
 <> 2024-11-18T205607.200.json
 <> 2024-11-18T194747.200.json
+<> 2024-11-17T201616.200.json
+<> 2024-11-17T195335.200.json
 
 ### 系统-角色关联-分页查询
 POST http://localhost:30004/sys/role/relation/page
@@ -319,6 +349,9 @@ Content-Type: application/json
   }
 }
 
+<> 2024-11-17T200348.200.json
+<> 2024-11-17T195752.200.json
+
 ### 系统-角色关联-新增
 POST http://localhost:30004/sys/role/relation/add
 Content-Type: application/json
@@ -327,6 +360,11 @@ Content-Type: application/json
   "roleId": 1858104199268126720,
   "relationId": 1858121948841132032
 }
+
+<> 2024-11-17T201639.200.json
+<> 2024-11-17T200325.200.json
+<> 2024-11-17T200041.500.json
+<> 2024-11-17T200022.500.json
 
 ### 系统-权限-分页查询
 POST http://localhost:30004/sys/permission/page
@@ -342,6 +380,9 @@ Content-Type: application/json
   }
 }
 
+<> 2024-11-17T201513.200.json
+<> 2024-11-17T201039.200.json
+
 ### 系统-权限-新增
 POST http://localhost:30004/sys/permission/add
 Content-Type: application/json
@@ -350,6 +391,8 @@ Content-Type: application/json
   "permissionCode": "sys:user:detail",
   "roleId": 1858104199268126720
 }
+
+<> 2024-11-17T201449.200.json
 
 ### 系统-组织-分页查询
 POST http://localhost:30004/sys/org/page
@@ -364,51 +407,28 @@ Content-Type: application/json
   }
 }
 
+<> 2024-11-17T202512.200.json
+<> 2024-11-17T202037.404.json
+
 ### 系统-组织-列表查询
-POST http://localhost:30004/sys/org/list
+POST http://localhost:30001/sys/org/list
 Content-Type: application/json
 
 {
+  "filter": {
+
+  }
+}
+
+### 系统-组织-新增
+POST http://localhost:30004/sys/org/add
+Content-Type: application/json
+
+{
+  "orgName": "系统开发者组织",
   "userId": 1858121948841132032
 }
 
-<> 2024-11-24T180756.200.json
-<> 2024-11-23T235450.200.json
-<> 2024-11-23T231000.200.json
-<> 2024-11-23T230756.200.json
-<> 2024-11-23T230335.200.json
-<> 2024-11-23T225640.404.json
-
-
-### 系统-组织-新增
-POST http://localhost:30001/sys/org/add
-Content-Type: application/json
-
-{
-  "orgName": "华北大区",
-  "userId": 1858121948841132032,
-  "remark": "负责管理北京、天津、河北、山西、内蒙古地区的业务",
-  "sort": 4,
-  "parentId": 1860349881991331840
-}
-
-<> 2024-11-23T235432.200.json
-<> 2024-11-23T235413.200.json
-<> 2024-11-23T235359.200.json
-<> 2024-11-23T235343.200.json
-<> 2024-11-23T235127.200.json
-<> 2024-11-23T235101.200.json
-<> 2024-11-23T235032.200.json
-<> 2024-11-23T234910.200.json
-<> 2024-11-23T234843.500.json
-<> 2024-11-23T234817.500.json
-<> 2024-11-23T234741.500.json
-<> 2024-11-23T234611.500.json
-<> 2024-11-23T231617.200.json
-<> 2024-11-23T231548.200.json
-<> 2024-11-23T231506.200.json
-<> 2024-11-23T230946.200.json
-<> 2024-11-23T230749.200.json
 <> 2024-11-17T202508.200.json
 
 ### 系统-用户关联组织-分页查询
@@ -427,7 +447,7 @@ Content-Type: application/json
 <> 2024-11-17T204032.200.json
 
 ### 系统-用户关联组织-新增
-POST http://localhost:30001/sys/user/relation/org/add
+POST http://localhost:30004/sys/user/relation/org/add
 Content-Type: application/json
 
 {
@@ -435,7 +455,178 @@ Content-Type: application/json
   "orgId": 1858124207599665152
 }
 
-<> 2024-11-23T230700.500.json
 <> 2024-11-17T203728.200.json
 <> 2024-11-17T203229.500.json
 
+### 系统-菜单-分页查询
+POST http://localhost:30001/sys/menu/list
+Content-Type: application/json
+
+{
+
+}
+
+### 系统-菜单-新增
+POST http://localhost:30001/sys/menu/add
+Content-Type: application/json
+
+{
+  "parentId": 0,
+  "menuType": 0,
+  "title": "系统监控",
+  "name": "PureMonitor",
+  "path": "/monitor",
+  "sort": 11,
+  "icon": "ep:monitor",
+  "frameLoading": 1,
+  "keepAlive": 0,
+  "hiddenTag": 0,
+  "fixedTag": 0,
+  "showLink": 1,
+  "showParent": 0
+}
+
+### 系统-菜单-更新
+POST http://localhost:30004/sys/menu/update
+Content-Type: application/json
+
+{
+  "id": 1859819879732592640,
+  "parentId": 1859628986777321472,
+  "menuType": 0,
+  "title": "menus.pureDept",
+  "name": "SystemDept",
+  "path": "/system/dept/index",
+  "rank": 20,
+  "icon": "ri:git-branch-line",
+  "frameLoading": 1,
+  "keepAlive": 0,
+  "hiddenTag": 0,
+  "fixedTag": 0,
+  "showLink": 1,
+  "showParent": 0
+}
+
+### 系统-用户&组织-新增
+POST http://localhost:30001/sys/user/org/add
+Content-Type: application/json
+
+{
+  "userId": 1860982622661603328,
+  "orgId": 1860636923778412544
+}
+
+### 系统-用户&组织-分页查询
+POST http://localhost:30001/sys/user/org/page
+Content-Type: application/json
+
+{
+  "filter": {
+
+  }
+}
+
+### 系统-角色-列表查询
+POST http://localhost:30001/sys/role/list
+Content-Type: application/json
+
+{
+  "roleCode": "",
+  "roleName": "",
+  "orgId": 0
+}
+
+### 系统-角色&菜单-列表查询
+POST http://localhost:30001/sys/role/menu/list
+Authorization: Bearer 2e11ec4a80934a1e8bdd2d22c3f7a0e5
+Content-Type: application/json
+
+{
+  "roleId": 1858098107289014272
+}
+
+<> 2024-12-04T201719.200.json
+<> 2024-12-04T195638.200.json
+
+### 系统-角色&菜单-新增
+POST http://localhost:30001/sys/role/menu/add
+Authorization: Bearer 2e11ec4a80934a1e8bdd2d22c3f7a0e5
+Content-Type: application/json
+
+{
+  "roleId": 1858098107289014272,
+  "menuId": 1859885517716987904
+}
+
+<> 2024-12-04T200910.500.json
+<> 2024-12-04T200904.200.json
+<> 2024-12-04T200855.200.json
+
+### 系统-用户&角色-分页查询
+POST http://localhost:30001/sys/user/role/page
+Authorization: Bearer 19010199167b4af7954b057a41c5bd70
+Content-Type: application/json
+
+{
+  "filter": {}
+}
+
+### 系统-菜单-用户拥有菜单列表
+POST http://localhost:30001/sys/menu/listSlim
+Authorization: Bearer 2e11ec4a80934a1e8bdd2d22c3f7a0e5
+
+<> 2024-12-04T202853.200.json
+<> 2024-12-04T200247.200.json
+<> 2024-12-04T195920.200.json
+<> 2024-12-04T195832.200.json
+
+### 系统-用户-用户所拥有的角色
+@userId = 1858113817985785856
+GET http://localhost:30001/sys/user/getUserRoles/{{userId}}
+Authorization: Bearer 06be6e77978a4ce9afaac68c8f197ce7
+
+### 系统-用户&角色-绑定角色
+POST http://localhost:30001/sys/user/role/bind
+Authorization: Bearer 0ccec5efcd474bd5b535e32e0743a01b
+Content-Type: application/json
+
+{
+  "relationId": 1858113817985785856,
+  "roleIds": [
+    1858098107289014272
+  ]
+}
+
+### 文件-测试
+GET http://localhost:30001/file/test
+
+### 系统-角色&菜单-查询指定角色的菜单Id
+@roleId = 1858098107289014272
+GET http://localhost:30001/sys/role/menu/getRoleMenus/{{roleId}}
+Authorization: Bearer 372bc5f4ce84475b8643d5c763dd601d
+
+<> 2024-12-04T205536.200.json
+<> 2024-12-04T205453.200.json
+
+### 系统-角色&菜单-删除指定角色菜单关联关系
+@id = 1862010588568940544
+DELETE http://localhost:30001/sys/role/menu/delete/{{id}}
+Authorization: Bearer 372bc5f4ce84475b8643d5c763dd601d
+
+<> 2024-12-04T211227.200.json
+<> 2024-12-04T205941.200.json
+
+### 系统-用户-获取请求用户可访问的菜单信息
+GET http://localhost:30001/sys/user/getUserMenus
+Authorization: Bearer 0cfed1be33fb417a819b3f8bcbdcba83
+
+<> 2024-12-06T124853.200.json
+<> 2024-12-06T124507.200.json
+<> 2024-12-06T124404.200.json
+<> 2024-12-06T124308.200.json
+<> 2024-12-06T123850.200.json
+<> 2024-12-05T235657.200.json
+<> 2024-12-05T204338.200.json
+<> 2024-12-05T204119.200.json
+<> 2024-12-05T174905.500.json
+<> 2024-12-05T174739.500.json

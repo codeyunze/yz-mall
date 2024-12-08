@@ -2,8 +2,8 @@ package com.yz.mall.security.vo;
 
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -11,10 +11,12 @@ import java.util.List;
 
 /**
  * 登录返回基础信息
+ *
  * @author yunze
  * @date 2024/8/3 09:30
  */
 @Data
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class UserLoginInfoVo implements Serializable {
 
     private final static long serialVersionUID = 1L;
