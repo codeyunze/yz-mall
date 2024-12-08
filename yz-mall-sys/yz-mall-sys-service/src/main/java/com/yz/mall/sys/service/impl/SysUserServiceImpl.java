@@ -168,7 +168,7 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
         menuQueryDto.setMenuIds(menuIds);
         List<SysMenu> menus = sysMenuService.list(menuQueryDto);
         // 解析菜单信息
-        return sysMenuService.menusInfoProcessor(menus, 0L);
+        return sysMenuService.menusInfoProcessor(menus, 0L, roleIds);
     }
 }
 

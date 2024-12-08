@@ -34,7 +34,7 @@ public class SysMenuAddValidator implements ConstraintValidator<ValidSysMenuAdd,
             boolean nameValid = addNameValid(dto, context);
             boolean pathValid = addPathValid(dto, context);
             return nameValid && pathValid;
-        } else if (menuType == MenuTypeEnum.BUTTON) {
+        } else if (menuType == MenuTypeEnum.BUTTON || menuType == MenuTypeEnum.API) {
             return addAuthsValid(dto, context);
         }
 

@@ -58,9 +58,10 @@ public interface SysMenuService extends IService<SysMenu> {
      * 将菜单列表信息加工处理为树形结构
      *
      * @param menus    菜单列表信息
-     * @param parentId 父级菜单Id
+     * @param parentId 父级菜单Id (默认传0L，标识从第一级菜单开始往下处理)
+     * @param roleIds  用户所拥有的角色
      * @return 树形结构菜单信息
      */
-    List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId);
+    List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, List<Long> roleIds);
 }
 

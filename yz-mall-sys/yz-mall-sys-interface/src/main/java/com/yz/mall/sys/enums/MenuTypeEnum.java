@@ -24,9 +24,9 @@ public enum MenuTypeEnum {
      */
     BUTTON(3),
     /**
-     * 4-接口
+     * 4-接口资源
      */
-    // API(4)
+    API(4)
     ;
 
 

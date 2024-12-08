@@ -63,7 +63,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId) {
+    public List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, List<Long> roleIds) {
         List<SysMenu> localMenus = menus.stream().filter(menu -> menu.getParentId().equals(parentId)).collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(localMenus)) {
@@ -89,9 +89,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             // metaVo.setShowLink(EnableEnum.ENABLE.get().equals(menu.getShowLink()));
             // metaVo.setActivePath(menu.getActivePath());
 
+            if (!CollectionUtils.isEmpty(roleIds)) {
+                metaVo.setRoles(roleIds.stream().map(roleId -> roleId + "").collect(Collectors.toList()));
+            }
+
             if (0L != parentId) {
                 vo.setName(menu.getName());
-                metaVo.setRoles(Collections.singletonList("1858098107289014272"));
             } else {
                 metaVo.setRank(menu.getSort());
             }
@@ -104,7 +107,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 vo.setName(menu.getName());
             }
 
-            vo.setChildren(this.menusInfoProcessor(menus, menu.getId()));
+            vo.setChildren(this.menusInfoProcessor(menus, menu.getId(), roleIds));
 
             vo.setMeta(metaVo);
             treeMenuVos.add(vo);

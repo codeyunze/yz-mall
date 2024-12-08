@@ -2,9 +2,9 @@
   "name": "mall",
   "describe": "mall",
   "avatar": "",
-  "version": "4.9.2",
+  "version": "4.9.4",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-12-7 13:57:07",
+  "updatedTime": "2024-12-8 18:18:10",
   "dbConns": [],
   "profile": {
     "default": {
@@ -4737,7 +4737,32 @@
           "id": "74ECD441-32B2-40FE-8A1B-46339C6698F1"
         }
       ],
-      "correlations": [],
+      "correlations": [
+        {
+          "myField": "93F30857-02F9-4C70-A0F9-B42D9EEB0595",
+          "refEntity": "7A6D5C29-6EC7-4470-B0BD-127489278044",
+          "refField": "C16E995B-6332-46BD-B44D-F6184D52E3EA",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        },
+        {
+          "myField": "74ECD441-32B2-40FE-8A1B-46339C6698F1",
+          "refEntity": "D2D17249-3478-4F5C-88AD-09FC491E7DC7",
+          "refField": "0BD95C64-6C1B-442C-907D-1769ECF3492E",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        },
+        {
+          "myField": "74ECD441-32B2-40FE-8A1B-46339C6698F1",
+          "refEntity": "5AC82B59-34F5-4592-8837-C12CB730603F",
+          "refField": "445DBEA9-9281-45A9-B274-F7A4730E6C72",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        }
+      ],
       "indexes": [
         {
           "defKey": "uk_sys_role_relation_by_user",
@@ -5866,7 +5891,16 @@
           "id": "9991E8CA-4183-4B5B-BBB3-7CE0795C02F5"
         }
       ],
-      "correlations": [],
+      "correlations": [
+        {
+          "myField": "88FF0BDE-895C-4F5E-A1DF-4D9EDCBE9B8C",
+          "refEntity": "5AC82B59-34F5-4592-8837-C12CB730603F",
+          "refField": "445DBEA9-9281-45A9-B274-F7A4730E6C72",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        }
+      ],
       "indexes": [
         {
           "defKey": "ix_sys_org",
@@ -6163,7 +6197,24 @@
           "id": "8CE2C650-BB04-4B2C-8EF9-C4BE88D383BF"
         }
       ],
-      "correlations": [],
+      "correlations": [
+        {
+          "myField": "8CE2C650-BB04-4B2C-8EF9-C4BE88D383BF",
+          "refEntity": "D2D17249-3478-4F5C-88AD-09FC491E7DC7",
+          "refField": "0BD95C64-6C1B-442C-907D-1769ECF3492E",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        },
+        {
+          "myField": "63D46D75-253B-4540-92C8-E101D55180D2",
+          "refEntity": "5AC82B59-34F5-4592-8837-C12CB730603F",
+          "refField": "445DBEA9-9281-45A9-B274-F7A4730E6C72",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        }
+      ],
       "indexes": [
         {
           "defKey": "uk_sys_user_relation_org",
@@ -7075,7 +7126,24 @@
           "id": "4B231052-3CDA-4B88-8E5E-B0480AD3AA8F"
         }
       ],
-      "correlations": [],
+      "correlations": [
+        {
+          "myField": "A3F1E2A7-823D-444E-A86B-0E1A48615C6C",
+          "refEntity": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
+          "refField": "3BD745A2-C917-4B9C-A43F-C33146BC313B",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        },
+        {
+          "myField": "4B231052-3CDA-4B88-8E5E-B0480AD3AA8F",
+          "refEntity": "9731A74F-1ABF-4505-B320-D43893AA74A5",
+          "refField": "FFB857D0-F9F2-482B-B5C0-0A80AAE6728E",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        }
+      ],
       "indexes": [],
       "type": "P"
     },
@@ -7338,7 +7406,24 @@
           "id": "D5BA3416-7D2A-4379-8C20-7652ADA52BB4"
         }
       ],
-      "correlations": [],
+      "correlations": [
+        {
+          "myField": "06A1264A-3F39-44BE-AFB9-41F85AC057C9",
+          "refEntity": "7A6D5C29-6EC7-4470-B0BD-127489278044",
+          "refField": "C16E995B-6332-46BD-B44D-F6184D52E3EA",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        },
+        {
+          "myField": "D5BA3416-7D2A-4379-8C20-7652ADA52BB4",
+          "refEntity": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
+          "refField": "3BD745A2-C917-4B9C-A43F-C33146BC313B",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        }
+      ],
       "indexes": [
         {
           "defKey": "uk_sys_role_menu",
@@ -8000,21 +8085,6 @@
             }
           },
           {
-            "id": "5e972235-bee3-4940-afb3-fffd08bbf8d5",
-            "shape": "table",
-            "position": {
-              "x": -731,
-              "y": 1130
-            },
-            "count": 0,
-            "originKey": "9731A74F-1ABF-4505-B320-D43893AA74A5",
-            "type": "P",
-            "size": {
-              "width": 472,
-              "height": 192
-            }
-          },
-          {
             "id": "111841d3-78bd-46f5-ad3f-b54e46f45b3b",
             "shape": "table",
             "position": {
@@ -8041,6 +8111,21 @@
             "type": "P",
             "size": {
               "width": 421,
+              "height": 169
+            }
+          },
+          {
+            "id": "3c3c5a78-aba5-4d93-8195-3813d9430e1f",
+            "shape": "table",
+            "position": {
+              "x": -794.5,
+              "y": 654
+            },
+            "count": 0,
+            "originKey": "7552FDD3-4D11-4D21-822C-93581943503C",
+            "type": "P",
+            "size": {
+              "width": 438,
               "height": 169
             }
           },
@@ -8170,6 +8255,7 @@
               "port": "3BD745A2-C917-4B9C-A43F-C33146BC313B%in"
             },
             "relation": "1:n",
+            "vertices": [],
             "fillColor": "#ACDAFC",
             "attrs": {
               "line": {
@@ -8227,11 +8313,35 @@
               "port": "3BD745A2-C917-4B9C-A43F-C33146BC313B%in"
             },
             "relation": "1:n",
+            "labels": [
+              {
+                "attrs": {
+                  "text": {
+                    "text": ""
+                  }
+                }
+              }
+            ],
             "fillColor": "#ACDAFC",
             "attrs": {
               "line": {
                 "strokeDasharray": ""
               }
+            }
+          },
+          {
+            "id": "5e972235-bee3-4940-afb3-fffd08bbf8d5",
+            "shape": "table",
+            "position": {
+              "x": -731,
+              "y": 1130
+            },
+            "count": 0,
+            "originKey": "9731A74F-1ABF-4505-B320-D43893AA74A5",
+            "type": "P",
+            "size": {
+              "width": 472,
+              "height": 192
             }
           },
           {
@@ -8247,21 +8357,6 @@
             "size": {
               "width": 534,
               "height": 192
-            }
-          },
-          {
-            "id": "3c3c5a78-aba5-4d93-8195-3813d9430e1f",
-            "shape": "table",
-            "position": {
-              "x": -794.5,
-              "y": 654
-            },
-            "count": 0,
-            "originKey": "7552FDD3-4D11-4D21-822C-93581943503C",
-            "type": "P",
-            "size": {
-              "width": 438,
-              "height": 169
             }
           },
           {
