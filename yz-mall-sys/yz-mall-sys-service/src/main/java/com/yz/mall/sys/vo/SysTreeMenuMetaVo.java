@@ -75,6 +75,9 @@ public class SysTreeMenuMetaVo implements Serializable {
      */
     private Boolean hiddenTag;
 
-
+    /**
+     * 设置可访问当前路由菜单的角色
+     */
     private List<String> roles;
+    
 }

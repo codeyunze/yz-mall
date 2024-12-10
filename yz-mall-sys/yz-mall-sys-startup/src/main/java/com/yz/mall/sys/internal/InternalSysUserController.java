@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 基础-用户(BaseUser)表控制层
+ * 内部暴露接口：用户信息
  *
  * @author yunze
  * @since 2024-06-16 23:25:55

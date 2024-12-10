@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
+ * 内部暴露service实现类: 用户信息
+ *
  * @author yunze
  * @date 2024/6/19 星期三 23:49
  */

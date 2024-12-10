@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.sys.mapper.SysRoleRelationMenuMapper">
+
+    <select id="selectPermissionsByRoleIds" resultType="com.yz.mall.sys.dto.SysRolePermissionDto">
+        select srrm.role_id, sm.auths
+        from sys_role_relation_menu srrm
+        inner join sys_menu sm on srrm.menu_id = sm.id
+        where srrm.invalid = 0
+        and sm.menu_type = 3
+        and srrm.role_id in
+        <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+            #{roleId}
+        </foreach>
+        group by srrm.role_id, sm.auths
+    </select>
+
+    <select id="selectApiPermissionsByRoleIds" resultType="java.lang.String">
+        select distinct sm.auths
+        from sys_role_relation_menu srrm
+        inner join sys_menu sm on srrm.menu_id = sm.id
+        where srrm.invalid = 0
+        and sm.menu_type = 4
+        and srrm.role_id in
+        <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+
+</mapper>

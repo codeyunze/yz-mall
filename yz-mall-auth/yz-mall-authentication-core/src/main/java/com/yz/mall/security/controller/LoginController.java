@@ -10,6 +10,7 @@ import com.yz.mall.security.dto.RefreshTokenDto;
 import com.yz.mall.security.vo.UserLoginInfoVo;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
+import com.yz.mall.sys.service.InternalSysRoleRelationMenuService;
 import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.tools.ApiController;
 import com.yz.tools.RedisCacheKey;
@@ -29,7 +30,10 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -44,11 +48,20 @@ import java.util.stream.Collectors;
 @RequestMapping
 public class LoginController extends ApiController {
 
-    @Resource
-    private InternalSysUserService internalSysUserService;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final InternalSysUserService internalSysUserService;
+
+    private final InternalSysRoleRelationMenuService internalSysRoleRelationMenuService;
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public LoginController(RedisTemplate<String, Object> redisTemplate
+            , InternalSysUserService internalSysUserService
+            , InternalSysRoleRelationMenuService internalSysRoleRelationMenuService) {
+        this.redisTemplate = redisTemplate;
+        this.internalSysUserService = internalSysUserService;
+        this.internalSysRoleRelationMenuService = internalSysRoleRelationMenuService;
+    }
 
     /**
      * 登录接口
@@ -73,6 +86,7 @@ public class LoginController extends ApiController {
         // 刷新令牌有效期1天
         vo.setRefreshToken(SaTempUtil.createToken(loginInfo.getId(), 86400));
         vo.setRoles(roles);
+        vo.setPermissions(getPermissionButtonByRoleIds(roles));
         vo.setAvatar(loginInfo.getAvatar());
         return success(vo);
     }
@@ -97,6 +111,68 @@ public class LoginController extends ApiController {
         }
 
         return roles.stream().map(String::valueOf).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取指定角色所拥有的按钮权限
+     *
+     * @param roleIds 角色Id列表
+     * @return 按钮资源权限
+     */
+    private List<String> getPermissionButtonByRoleIds(List<String> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return Collections.emptyList();
+        }
+        // 所拥有的所有按钮权限
+        List<String> permissions = new ArrayList<>();
+
+        // 先从缓存查询角色对应的按钮权限
+        List<String> noDataRoleIds = new ArrayList<>();
+        for (String roleId : roleIds) {
+            // 判断缓存里是否存在该角色的按钮权限
+            if (Boolean.FALSE.equals(redisTemplate.hasKey(RedisCacheKey.permissionButton(roleId)))) {
+                // 缓存里不存在按钮权限的角色
+                noDataRoleIds.add(roleId);
+                continue;
+            }
+
+            // 从缓存里获取按钮权限
+            List<Object> permissionsByRoleId = redisTemplate.boundListOps(RedisCacheKey.permissionButton(roleId)).range(0, -1);
+            if (CollectionUtils.isEmpty(permissionsByRoleId)) {
+                // 缓存里存的按钮权限为空，是为了防止出现缓存穿透问题
+                continue;
+            }
+            permissions.addAll(permissionsByRoleId.stream().map(Object::toString).collect(Collectors.toList()));
+        }
+        // 去重
+        permissions = permissions.stream().distinct().collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(noDataRoleIds)) {
+            return permissions;
+        }
+
+        // 去查询缓存里没有存的角色的按钮权限
+        Map<String, List<String>> permissionsByRoleIds = internalSysRoleRelationMenuService.getPermissionsByRoleIds(noDataRoleIds.stream().map(Long::parseLong).collect(Collectors.toList()));
+
+        for (String roleId : noDataRoleIds) {
+            if (!permissionsByRoleIds.containsKey(roleId) || CollectionUtils.isEmpty(permissionsByRoleIds.get(roleId))) {
+                // 数据库里没有查询到该角色所拥有的按钮权限
+                redisTemplate.opsForList().rightPush(RedisCacheKey.permissionButton(roleId), Collections.emptyList());
+                continue;
+            }
+
+            // 将角色的按钮权限存入缓存
+            for (String permission : permissionsByRoleIds.get(roleId)) {
+                permissions.add(permission);
+                redisTemplate.opsForList().rightPush(RedisCacheKey.permissionButton(roleId), permission);
+            }
+            redisTemplate.expire(RedisCacheKey.permissionButton(roleId), 86400, TimeUnit.SECONDS);
+        }
+
+        if (CollectionUtils.isEmpty(permissions)) {
+            return Collections.emptyList();
+        }
+        return permissions.stream().distinct().collect(Collectors.toList());
     }
 
 

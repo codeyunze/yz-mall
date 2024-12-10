@@ -2,13 +2,14 @@ package com.yz.mall.sys.service;
 
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
-import com.yz.mall.sys.vo.InternalSysUserRoleVo;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
+ * 内部开放接口: 系统管理-用户信息
+ *
  * @author yunze
  * @date 2024/6/19 星期三 23:44
  */

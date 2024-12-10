@@ -58,6 +58,11 @@ public class UserLoginInfoVo implements Serializable {
     private List<String> roles;
 
     /**
+     * 用户资源权限（按钮）
+     */
+    private List<String> permissions;
+
+    /**
      * 头像
      */
     private String avatar;

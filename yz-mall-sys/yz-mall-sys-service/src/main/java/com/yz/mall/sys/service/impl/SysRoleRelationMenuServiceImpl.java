@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
-import com.yz.mall.sys.dto.SysRoleRelationMenuAddDto;
-import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
-import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
-import com.yz.mall.sys.dto.SysRoleRelationMenuUpdateDto;
+import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.mapper.SysRoleRelationMenuMapper;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
@@ -17,9 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -82,6 +77,19 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
         }
         // TODO: 2024/12/5 yunze 添加缓存操作，且在数据更新时需要清理缓存
         return menus.stream().map(SysRoleRelationMenu::getMenuId).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, List<String>> getPermissionsByRoleIds(List<Long> roleIds) {
+        List<SysRolePermissionDto> list = baseMapper.selectPermissionsByRoleIds(roleIds);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyMap();
+        }
+        return list.stream().collect(
+                Collectors.groupingBy(
+                        SysRolePermissionDto::getRoleId,
+                        Collectors.mapping(SysRolePermissionDto::getAuths, Collectors.toList())
+                ));
     }
 
     @Override

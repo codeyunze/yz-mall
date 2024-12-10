@@ -14,6 +14,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
+ * 内部暴露接口: 用户信息
+ *
  * @author yunze
  * @date 2024/6/22 23:44
  */
