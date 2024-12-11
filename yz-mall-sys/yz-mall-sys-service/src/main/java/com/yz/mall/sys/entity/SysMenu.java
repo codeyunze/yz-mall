@@ -51,6 +51,7 @@ public class SysMenu extends Model<SysMenu> {
 
     /**
      * 菜单类型0-菜单,1-iframe,2-外链接,3-按钮,4-接口
+     * {@link com.yz.mall.sys.enums.MenuTypeEnum}
      */
     private Integer menuType;
 

@@ -1,5 +1,6 @@
 package com.yz.mall.sys.impl;
 
+import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
 import com.yz.mall.sys.service.InternalSysRoleRelationMenuService;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class InternalSysRoleRelationMenuServiceImpl implements InternalSysRoleRe
     }
 
     @Override
-    public Map<String, List<String>> getPermissionsByRoleIds(List<Long> roleIds) {
-        return sysRoleRelationMenuService.getPermissionsByRoleIds(roleIds);
+    public Map<String, List<String>> getPermissionsByRoleIds(InternalRolePermissionQueryDto query) {
+        return sysRoleRelationMenuService.getPermissionsByRoleIds(query.getMenuType(), query.getRoleIds());
     }
 }

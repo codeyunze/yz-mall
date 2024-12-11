@@ -15,7 +15,7 @@
     <select id="selectMenusSlim" resultType="com.yz.mall.sys.vo.SysMenuSlimVo">
         select sm.id, sm.parent_id, sm.menu_type, sm.title
         from sys_menu sm
-        where sm.invalid = 0
+        where sm.invalid = 0 and sm.menu_type != 4
     </select>
 
 </mapper>

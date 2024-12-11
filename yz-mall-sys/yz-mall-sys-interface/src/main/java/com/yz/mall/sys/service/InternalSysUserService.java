@@ -1,6 +1,7 @@
 package com.yz.mall.sys.service;
 
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 
 import javax.validation.Valid;
@@ -43,4 +44,12 @@ public interface InternalSysUserService {
      * @return 用户所拥有的角色
      */
     List<Long> getUserRoles(Long userId);
+
+    /**
+     * 新增用户
+     *
+     * @param dto 新增用户信息数据
+     * @return 主键Id
+     */
+    String add(@Valid InternalSysUserAddDto dto);
 }

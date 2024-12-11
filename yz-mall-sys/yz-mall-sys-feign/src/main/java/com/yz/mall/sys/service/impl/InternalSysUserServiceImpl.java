@@ -2,6 +2,7 @@ package com.yz.mall.sys.service.impl;
 
 import com.yz.advice.exception.BusinessException;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.feign.InternalSysUserFeign;
@@ -56,6 +57,15 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     @Override
     public List<Long> getUserRoles(Long userId) {
         Result<List<Long>> result = feign.getUserRoles(userId);
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new BusinessException(result.getMsg());
+        }
+        return result.getData();
+    }
+
+    @Override
+    public String add(InternalSysUserAddDto dto) {
+        Result<String> result = feign.add(dto);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }

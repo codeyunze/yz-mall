@@ -8,9 +8,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
 import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
+import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.mapper.SysRoleRelationMenuMapper;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
+import com.yz.tools.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -25,6 +28,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationMenuMapper, SysRoleRelationMenu> implements SysRoleRelationMenuService {
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public SysRoleRelationMenuServiceImpl(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public Long save(SysRoleRelationMenuAddDto dto) {
@@ -80,16 +89,73 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
     }
 
     @Override
-    public Map<String, List<String>> getPermissionsByRoleIds(List<Long> roleIds) {
-        List<SysRolePermissionDto> list = baseMapper.selectPermissionsByRoleIds(roleIds);
-        if (CollectionUtils.isEmpty(list)) {
+    public Map<String, List<String>> getPermissionsByRoleIds(MenuTypeEnum menuType, List<Long> roleIds) {
+        if (!MenuTypeEnum.BUTTON.equals(menuType) && !MenuTypeEnum.API.equals(menuType)) {
             return Collections.emptyMap();
         }
-        return list.stream().collect(
+
+        // 最终汇总结果
+        Map<String, List<String>> result = new HashMap<>();
+
+        // 缓存里没有需要去数据库查询权限的角色Id
+        List<Long> needQueryRoleIds = new ArrayList<>();
+        for (Long roleId : roleIds) {
+            // 先从缓存查询角色对应的按钮权限
+            String cacheKey = RedisCacheKey.permission(menuType.name(), String.valueOf(roleId));
+            // 判断缓存里是否存在该角色的权限
+            if (Boolean.FALSE.equals(redisTemplate.hasKey(cacheKey))) {
+                // 没有缓存权限信息的角色
+                needQueryRoleIds.add(roleId);
+                continue;
+            }
+
+            // 从缓存里获取到角色权限
+            List<Object> permissionsByRoleId = redisTemplate.boundListOps(cacheKey).range(0, -1);
+            if (CollectionUtils.isEmpty(permissionsByRoleId)) {
+                // 缓存里存的按钮权限为空，是为了防止出现缓存穿透问题
+                continue;
+            }
+
+            result.put(String.valueOf(roleId), permissionsByRoleId.stream().map(Object::toString).collect(Collectors.toList()));
+        }
+
+        if (CollectionUtils.isEmpty(needQueryRoleIds)) {
+            return result;
+        }
+
+        // 从数据库获取到各个角色的权限
+        List<SysRolePermissionDto> list;
+        if (MenuTypeEnum.BUTTON.equals(menuType)) {
+            // 按钮权限
+            list = baseMapper.selectPermissionsButtonByRoleIds(needQueryRoleIds);
+        } else {
+            // 接口权限
+            list = baseMapper.selectPermissionsApiByRoleIds(needQueryRoleIds);
+        }
+
+        if (CollectionUtils.isEmpty(list)) {
+            // 需要查库获取权限的角色
+            needQueryRoleIds.forEach(roleId -> {
+                redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(roleId)), Collections.emptyList());
+            });
+            return result;
+        }
+
+        Map<String, List<String>> collect = list.stream().collect(
                 Collectors.groupingBy(
                         SysRolePermissionDto::getRoleId,
                         Collectors.mapping(SysRolePermissionDto::getAuths, Collectors.toList())
                 ));
+
+        // 权限信息存入缓存
+        collect.forEach((key, value) -> {
+            value.forEach(permission -> {
+                redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(key)), permission);
+            });
+        });
+
+        result.putAll(collect);
+        return result;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.yz.mall.sys.internal;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.service.InternalSysUserService;
@@ -66,6 +67,17 @@ public class InternalSysUserController extends ApiController {
     @GetMapping("getUserRoles/{userId}")
     public Result<List<Long>> getUserRoles(@PathVariable Long userId) {
         return success(service.getUserRoles(userId));
+    }
+
+    /**
+     * 新增用户
+     *
+     * @param dto 新增用户信息数据
+     * @return 主键Id
+     */
+    @PostMapping("add")
+    public Result<String> add(@Valid @RequestBody InternalSysUserAddDto dto) {
+        return success(service.add(dto));
     }
 }
 

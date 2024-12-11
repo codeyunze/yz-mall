@@ -6,7 +6,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +29,21 @@ public class StpInterfaceImpl implements StpInterface {
         List<String> permissionList = new ArrayList<>();
         permissionList.add("admin");
         permissionList.add("oms");
-        return permissionList;
+
+        List<Object> roles = redisTemplate.boundListOps(RedisCacheKey.permissionRole(loginId.toString())).range(0, -1);
+        if (CollectionUtils.isEmpty(roles)) {
+            return Collections.emptyList();
+        }
+        // 用户拥有的角色
+        List<String> roleIds = roles.stream().map(String::valueOf).collect(Collectors.toList());
+        roleIds.forEach(roleId -> {
+            List<Object> apiPermissions = redisTemplate.boundListOps(RedisCacheKey.permission("API", roleId)).range(0, -1);
+            if (!CollectionUtils.isEmpty(apiPermissions)) {
+                permissionList.addAll(apiPermissions.stream().map(String::valueOf).collect(Collectors.toList()));
+            }
+        });
+
+        return permissionList.stream().distinct().collect(Collectors.toList());
     }
 
     @Override

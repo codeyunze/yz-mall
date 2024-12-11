@@ -1,5 +1,6 @@
 package com.yz.mall.sys.feign;
 
+import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
 import com.yz.tools.IdsDto;
 import com.yz.tools.Result;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -23,10 +24,10 @@ public interface InternalSysRoleRelationMenuFeign {
     /**
      * 获取指定角色所拥有的按钮权限
      *
-     * @param idsDto 用户拥有的角色Id
+     * @param query 用户拥有的角色Id和查询的菜单权限类型
      * @return 按钮权限标识
      */
     @PostMapping("getPermissionsByRoleIds")
-    Result<Map<String, List<String>>> getPermissionsByRoleIds(@Valid @RequestBody IdsDto idsDto);
+    Result<Map<String, List<String>>> getPermissionsByRoleIds(@Valid @RequestBody InternalRolePermissionQueryDto query);
 
 }

@@ -1,6 +1,7 @@
 package com.yz.mall.sys.feign;
 
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.tools.Result;
@@ -48,4 +49,13 @@ public interface InternalSysUserFeign {
      */
     @GetMapping("getUserRoles/{userId}")
     Result<List<Long>> getUserRoles(@PathVariable Long userId);
+
+    /**
+     * 新增用户
+     *
+     * @param dto 新增用户信息数据
+     * @return 主键Id
+     */
+    @PostMapping("add")
+    Result<String> add(@Valid @RequestBody InternalSysUserAddDto dto);
 }

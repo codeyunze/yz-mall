@@ -1,9 +1,14 @@
 package com.yz.mall.sys.impl;
 
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
+import com.yz.mall.sys.dto.SysUserAddDto;
+import com.yz.mall.sys.enums.EnableEnum;
+import com.yz.mall.sys.enums.SexEnum;
 import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.mall.sys.service.SysUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -42,5 +47,14 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     @Override
     public List<Long> getUserRoles(Long userId) {
         return service.getUserRoles(userId);
+    }
+
+    @Override
+    public String add(InternalSysUserAddDto dto) {
+        SysUserAddDto userAddDto = new SysUserAddDto();
+        BeanUtils.copyProperties(dto, userAddDto);
+        userAddDto.setSex(SexEnum.MALE.get());
+        userAddDto.setStatus(EnableEnum.ENABLE.get());
+        return service.save(userAddDto);
     }
 }

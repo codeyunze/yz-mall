@@ -5,9 +5,9 @@ import com.yz.mall.sys.dto.SysRoleRelationMenuAddDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuUpdateDto;
-import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysRole;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
+import com.yz.mall.sys.enums.MenuTypeEnum;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -63,12 +63,13 @@ public interface SysRoleRelationMenuService extends IService<SysRoleRelationMenu
     List<Long> getMenuIdsByRoleIds(List<Long> roleIds);
 
     /**
-     * 获取指定角色所拥有的按钮权限
+     * 获取指定角色所拥有的权限
      *
-     * @param roleIds 用户拥有的角色Id {@link SysRole#getOrgId()}
-     * @return 按钮权限标识 <角色Id，List<权限标识>>
+     * @param menuType 菜单类型
+     * @param roleIds  用户拥有的角色Id {@link SysRole#getOrgId()}
+     * @return 权限标识 <角色Id，List<权限标识>>
      */
-    Map<String, List<String>> getPermissionsByRoleIds(@NotNull List<Long> roleIds);
+    Map<String, List<String>> getPermissionsByRoleIds(MenuTypeEnum menuType, @NotNull List<Long> roleIds);
 
     /**
      * 角色绑定菜单

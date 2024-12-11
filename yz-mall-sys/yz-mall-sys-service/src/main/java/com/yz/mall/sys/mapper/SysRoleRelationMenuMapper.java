@@ -22,18 +22,18 @@ public interface SysRoleRelationMenuMapper extends BaseMapper<SysRoleRelationMen
     /**
      * 获取指定角色所拥有的按钮权限
      *
-     * @param roleIds 用户拥有的角色Id {@link SysRole#getOrgId()}
+     * @param roleIds  用户拥有的角色Id {@link SysRole#getOrgId()}
      * @return 按钮权限标识 {@link SysMenu#getAuths()}
      */
-    List<SysRolePermissionDto> selectPermissionsByRoleIds(@Param("roleIds") List<Long> roleIds);
+    List<SysRolePermissionDto> selectPermissionsButtonByRoleIds(@Param("roleIds") List<Long> roleIds);
 
     /**
      * 获取指定角色所拥有的接口权限
      *
      * @param roleIds 用户拥有的角色Id {@link SysRole#getOrgId()}
-     * @return 按钮权限标识 {@link SysMenu#getAuths()}
+     * @return 接口权限标识 {@link SysMenu#getAuths()}
      */
-    List<String> selectApiPermissionsByRoleIds(@Param("roleIds") List<Long> roleIds);
+    List<SysRolePermissionDto> selectPermissionsApiByRoleIds(@Param("roleIds") List<Long> roleIds);
 
 }
 

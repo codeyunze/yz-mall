@@ -1,6 +1,8 @@
 package com.yz.mall.sys.service.impl;
 
 import com.yz.advice.exception.BusinessException;
+import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
+import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.feign.InternalSysRoleRelationMenuFeign;
 import com.yz.mall.sys.service.InternalSysRoleRelationMenuService;
 import com.yz.tools.IdsDto;
@@ -27,8 +29,8 @@ public class InternalSysRoleRelationMenuServiceImpl implements InternalSysRoleRe
     }
 
     @Override
-    public Map<String, List<String>> getPermissionsByRoleIds(List<Long> roleIds) {
-        Result<Map<String, List<String>>> result = feign.getPermissionsByRoleIds(new IdsDto(roleIds));
+    public Map<String, List<String>> getPermissionsByRoleIds(InternalRolePermissionQueryDto query) {
+        Result<Map<String, List<String>>> result = feign.getPermissionsByRoleIds(query);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }

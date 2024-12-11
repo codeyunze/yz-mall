@@ -17,7 +17,9 @@ import com.yz.mall.sys.service.*;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.tools.PageFilter;
+import com.yz.tools.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -26,6 +28,8 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 基础-用户(BaseUser)表服务实现类
@@ -46,16 +50,20 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
 
     private final SysMenuService sysMenuService;
 
+    private final RedisTemplate<String, Object> redisTemplate;
+
     public SysUserServiceImpl(SysProperties sysProperties
             , SysUserRelationOrgService sysUserRelationOrgService
             , SysUserRelationRoleService sysUserRelationRoleService
             , SysRoleRelationMenuService sysRoleRelationMenuService
-            , SysMenuService sysMenuService) {
+            , SysMenuService sysMenuService
+            , RedisTemplate<String, Object> redisTemplate) {
         this.sysProperties = sysProperties;
         this.sysUserRelationOrgService = sysUserRelationOrgService;
         this.sysUserRelationRoleService = sysUserRelationRoleService;
         this.sysRoleRelationMenuService = sysRoleRelationMenuService;
         this.sysMenuService = sysMenuService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -151,7 +159,13 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
 
     @Override
     public List<Long> getUserRoles(Long userId) {
-        return sysUserRelationRoleService.getRoleIdsByRelationId(userId);
+        List<Long> roleIds = sysUserRelationRoleService.getRoleIdsByRelationId(userId);
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            // 缓存用户所拥有的角色信息
+            roleIds.forEach(role -> redisTemplate.opsForList().rightPush(RedisCacheKey.permissionRole(String.valueOf(userId)), role));
+            redisTemplate.expire(RedisCacheKey.permissionRole(String.valueOf(userId)), 86400, TimeUnit.SECONDS);
+        }
+        return roleIds;
     }
 
     @DS("slave")

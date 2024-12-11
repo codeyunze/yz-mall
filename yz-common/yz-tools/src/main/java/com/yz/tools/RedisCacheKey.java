@@ -25,17 +25,14 @@ public class RedisCacheKey {
         return "permission:role:" + userId;
     }
 
-    /**
-     * 权限信息-按钮
-     */
-    public static String permissionButton(String roleId) {
-        return "permission:button:" + roleId;
-    }
 
     /**
-     * 权限信息-接口
+     * 权限信息缓存key
+     * @param menuTypeKey 菜单类型 (button或api)
+     * @param roleId 角色Id
      */
-    public static String permissionApi(String roleId) {
-        return "permission:api:" + roleId;
+    public static String permission(String menuTypeKey, String roleId) {
+        return "permission:" + menuTypeKey.toLowerCase() + ":" + roleId;
     }
+
 }

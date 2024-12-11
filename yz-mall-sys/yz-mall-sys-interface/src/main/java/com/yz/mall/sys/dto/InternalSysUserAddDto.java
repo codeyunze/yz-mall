@@ -4,7 +4,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -14,7 +13,7 @@ import java.io.Serializable;
  * @since 2024-06-16 23:25:56
  */
 @Data
-public class SysUserAddDto implements Serializable {
+public class InternalSysUserAddDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 
@@ -43,17 +42,5 @@ public class SysUserAddDto implements Serializable {
     @Length(max = 10, message = "昵称不能超过10个字符")
     @NotBlank(message = "昵称不能为空")
     private String username;
-
-    /**
-     * 状态1-启用,0-停用 {@link com.yz.mall.sys.enums.EnableEnum}
-     */
-    @NotNull(message = "用户状态不能为空")
-    private Integer status;
-
-    /**
-     * 性别 {@link com.yz.mall.sys.enums.SexEnum}
-     */
-    private Integer sex;
-
 }
 

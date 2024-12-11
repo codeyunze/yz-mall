@@ -7,9 +7,13 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.yz.mall.security.dto.AuthLoginDto;
 import com.yz.mall.security.dto.RefreshTokenDto;
+import com.yz.mall.security.dto.RegisterDto;
 import com.yz.mall.security.vo.UserLoginInfoVo;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
+import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
+import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
+import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.service.InternalSysRoleRelationMenuService;
 import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.tools.ApiController;
@@ -26,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -34,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -86,7 +88,7 @@ public class LoginController extends ApiController {
         // 刷新令牌有效期1天
         vo.setRefreshToken(SaTempUtil.createToken(loginInfo.getId(), 86400));
         vo.setRoles(roles);
-        vo.setPermissions(getPermissionButtonByRoleIds(roles));
+        vo.setPermissions(getPermissionByRoleIds(roles));
         vo.setAvatar(loginInfo.getAvatar());
         return success(vo);
     }
@@ -99,75 +101,43 @@ public class LoginController extends ApiController {
      * @return 用户拥有的角色
      */
     private List<String> getRoleByUserId(String userId) {
-        // 清理用户角色缓存
-        redisTemplate.delete(RedisCacheKey.permissionRole(userId));
-
         // 查询用户角色
         List<Long> roles = internalSysUserService.getUserRoles(Long.parseLong(userId));
-        if (!CollectionUtils.isEmpty(roles)) {
-            // 缓存用户所拥有的角色信息
-            roles.forEach(role -> redisTemplate.opsForList().rightPush(RedisCacheKey.permissionRole(userId), role));
-            redisTemplate.expire(RedisCacheKey.permissionRole(userId), 86400, TimeUnit.SECONDS);
+        if (CollectionUtils.isEmpty(roles)) {
+            return Collections.emptyList();
         }
 
         return roles.stream().map(String::valueOf).collect(Collectors.toList());
     }
 
     /**
-     * 获取指定角色所拥有的按钮权限
+     * 获取指定角色所拥有的按钮权限，同时查询接口权限，并缓存
      *
      * @param roleIds 角色Id列表
      * @return 按钮资源权限
      */
-    private List<String> getPermissionButtonByRoleIds(List<String> roleIds) {
+    private List<String> getPermissionByRoleIds(List<String> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptyList();
         }
         // 所拥有的所有按钮权限
         List<String> permissions = new ArrayList<>();
 
-        // 先从缓存查询角色对应的按钮权限
-        List<String> noDataRoleIds = new ArrayList<>();
-        for (String roleId : roleIds) {
-            // 判断缓存里是否存在该角色的按钮权限
-            if (Boolean.FALSE.equals(redisTemplate.hasKey(RedisCacheKey.permissionButton(roleId)))) {
-                // 缓存里不存在按钮权限的角色
-                noDataRoleIds.add(roleId);
-                continue;
-            }
+        InternalRolePermissionQueryDto queryDto = new InternalRolePermissionQueryDto();
+        queryDto.setMenuType(MenuTypeEnum.BUTTON);
+        queryDto.setRoleIds(roleIds.stream().map(Long::parseLong).collect(Collectors.toList()));
+        Map<String, List<String>> permissionsByRoleIds = internalSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
 
-            // 从缓存里获取按钮权限
-            List<Object> permissionsByRoleId = redisTemplate.boundListOps(RedisCacheKey.permissionButton(roleId)).range(0, -1);
-            if (CollectionUtils.isEmpty(permissionsByRoleId)) {
-                // 缓存里存的按钮权限为空，是为了防止出现缓存穿透问题
-                continue;
-            }
-            permissions.addAll(permissionsByRoleId.stream().map(Object::toString).collect(Collectors.toList()));
-        }
-        // 去重
-        permissions = permissions.stream().distinct().collect(Collectors.toList());
+        queryDto.setMenuType(MenuTypeEnum.API);
+        internalSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
 
-        if (CollectionUtils.isEmpty(noDataRoleIds)) {
+        if (CollectionUtils.isEmpty(permissionsByRoleIds)) {
             return permissions;
         }
 
-        // 去查询缓存里没有存的角色的按钮权限
-        Map<String, List<String>> permissionsByRoleIds = internalSysRoleRelationMenuService.getPermissionsByRoleIds(noDataRoleIds.stream().map(Long::parseLong).collect(Collectors.toList()));
-
-        for (String roleId : noDataRoleIds) {
-            if (!permissionsByRoleIds.containsKey(roleId) || CollectionUtils.isEmpty(permissionsByRoleIds.get(roleId))) {
-                // 数据库里没有查询到该角色所拥有的按钮权限
-                redisTemplate.opsForList().rightPush(RedisCacheKey.permissionButton(roleId), Collections.emptyList());
-                continue;
-            }
-
-            // 将角色的按钮权限存入缓存
-            for (String permission : permissionsByRoleIds.get(roleId)) {
-                permissions.add(permission);
-                redisTemplate.opsForList().rightPush(RedisCacheKey.permissionButton(roleId), permission);
-            }
-            redisTemplate.expire(RedisCacheKey.permissionButton(roleId), 86400, TimeUnit.SECONDS);
-        }
+        permissionsByRoleIds.forEach((key, value) -> {
+            permissions.addAll(value);
+        });
 
         if (CollectionUtils.isEmpty(permissions)) {
             return Collections.emptyList();
@@ -274,5 +244,17 @@ public class LoginController extends ApiController {
         return success(Boolean.TRUE);
     }
 
+    /**
+     * 注册用户
+     *
+     * @param registerDto 注册用户信息
+     * @return 注册用户Id
+     */
+    @PostMapping("register")
+    public Result<String> register(@Valid @RequestBody RegisterDto registerDto) {
+        InternalSysUserAddDto userAddDto = new InternalSysUserAddDto();
+        BeanUtils.copyProperties(registerDto, userAddDto);
+        return success(internalSysUserService.add(userAddDto));
+    }
 
 }
