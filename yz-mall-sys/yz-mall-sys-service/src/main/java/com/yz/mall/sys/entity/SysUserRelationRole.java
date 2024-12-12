@@ -3,6 +3,7 @@ package com.yz.mall.sys.entity;
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,6 +25,7 @@ public class SysUserRelationRole extends Model<SysUserRelationRole> {
     /**
      * 主键标识
      */
+    @TableId
     private Long id;
 
     /**

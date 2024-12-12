@@ -162,8 +162,10 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
         List<Long> roleIds = sysUserRelationRoleService.getRoleIdsByRelationId(userId);
         if (!CollectionUtils.isEmpty(roleIds)) {
             // 缓存用户所拥有的角色信息
-            roleIds.forEach(role -> redisTemplate.opsForList().rightPush(RedisCacheKey.permissionRole(String.valueOf(userId)), role));
-            redisTemplate.expire(RedisCacheKey.permissionRole(String.valueOf(userId)), 86400, TimeUnit.SECONDS);
+            String cacheKey = RedisCacheKey.permissionRole(String.valueOf(userId));
+            redisTemplate.delete(cacheKey);
+            roleIds.forEach(role -> redisTemplate.opsForList().rightPush(cacheKey, role));
+            redisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
         }
         return roleIds;
     }
