@@ -9,6 +9,7 @@ import com.yz.mall.sys.dto.SysUserUpdateDto;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
+import com.yz.mall.sys.vo.SysUserVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
@@ -81,8 +82,8 @@ public class SysUserController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<ResultTable<SysUser>> page(@RequestBody @Valid PageFilter<SysUserQueryDto> filter) {
-        Page<SysUser> page = this.service.page(filter);
+    public Result<ResultTable<SysUserVo>> page(@RequestBody @Valid PageFilter<SysUserQueryDto> filter) {
+        Page<SysUserVo> page = this.service.page(filter);
         return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(page.getRecords(), page.getTotal()), "查询成功");
     }
 

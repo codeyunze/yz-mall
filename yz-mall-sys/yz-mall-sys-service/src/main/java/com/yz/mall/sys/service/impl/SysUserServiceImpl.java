@@ -12,10 +12,11 @@ import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.enums.EnableEnum;
-import com.yz.mall.sys.mapper.BaseUserMapper;
+import com.yz.mall.sys.mapper.SysUserMapper;
 import com.yz.mall.sys.service.*;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
+import com.yz.mall.sys.vo.SysUserVo;
 import com.yz.tools.PageFilter;
 import com.yz.tools.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +30,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 基础-用户(BaseUser)表服务实现类
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @since 2024-06-16 23:25:56
  */
 @Service
-public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> implements SysUserService {
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
     private final SysProperties sysProperties;
 
@@ -99,20 +99,16 @@ public class SysUserServiceImpl extends ServiceImpl<BaseUserMapper, SysUser> imp
 
     @DS("slave")
     @Override
-    public Page<SysUser> page(PageFilter<SysUserQueryDto> filter) {
-        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.hasText(filter.getFilter().getPhone()), SysUser::getPhone, filter.getFilter().getPhone());
-        queryWrapper.like(StringUtils.hasText(filter.getFilter().getEmail()), SysUser::getEmail, filter.getFilter().getEmail());
-
+    public Page<SysUserVo> page(PageFilter<SysUserQueryDto> filter) {
         if (filter.getFilter().getOrgId() != null) {
             List<Long> userIds = sysUserRelationOrgService.getUserIdByOrgId(filter.getFilter().getOrgId());
             if (CollectionUtils.isEmpty(userIds)) {
                 return new Page<>();
             }
-            queryWrapper.in(SysUser::getId, userIds);
+            filter.getFilter().setUserIds(userIds);
         }
 
-        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
     }
 
     @DS("slave")

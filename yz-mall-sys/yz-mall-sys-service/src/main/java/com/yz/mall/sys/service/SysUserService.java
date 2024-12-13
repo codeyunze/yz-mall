@@ -6,6 +6,7 @@ import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
+import com.yz.mall.sys.vo.SysUserVo;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
@@ -50,7 +51,7 @@ public interface SysUserService extends IService<SysUser> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<SysUser> page(PageFilter<SysUserQueryDto> filter);
+    Page<SysUserVo> page(PageFilter<SysUserQueryDto> filter);
 
     /**
      * 获取用户信息

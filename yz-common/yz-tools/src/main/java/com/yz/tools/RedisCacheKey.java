@@ -22,7 +22,7 @@ public class RedisCacheKey {
      * 权限信息-角色
      */
     public static String permissionRole(String userId) {
-        return "permission:role:" + userId;
+        return "permission:role-by-user:" + userId;
     }
 
 
@@ -32,7 +32,7 @@ public class RedisCacheKey {
      * @param roleId 角色Id
      */
     public static String permission(String menuTypeKey, String roleId) {
-        return "permission:" + menuTypeKey.toLowerCase() + ":" + roleId;
+        return "permission:" + menuTypeKey.toLowerCase() + "-by-role:" + roleId;
     }
 
 }

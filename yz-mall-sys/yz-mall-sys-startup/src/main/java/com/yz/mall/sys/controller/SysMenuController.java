@@ -1,9 +1,7 @@
 package com.yz.mall.sys.controller;
 
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
@@ -11,20 +9,12 @@ import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.service.SysMenuService;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.tools.ApiController;
-import com.yz.tools.RedisCacheKey;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
-import org.springframework.data.redis.core.BoundListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 系统-菜单资源表(SysMenu)表控制层
@@ -45,12 +35,10 @@ public class SysMenuController extends ApiController {
         this.service = service;
     }
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
-
     /**
      * 新增
      */
+    @SaCheckPermission("api:system:menu:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysMenuAddDto dto) {
         return success(this.service.save(dto));
@@ -59,6 +47,7 @@ public class SysMenuController extends ApiController {
     /**
      * 更新
      */
+    @SaCheckPermission("api:system:menu:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysMenuUpdateDto dto) {
         boolean updated = this.service.update(dto);
@@ -68,16 +57,9 @@ public class SysMenuController extends ApiController {
     /**
      * 查询-菜单简略信息
      */
-    @SaCheckLogin
-    // @SaCheckPermission("sys:menu:listSlim")
+    @SaCheckPermission("api:system:menu:list")
     @PostMapping("listSlim")
     public Result<List<SysMenuSlimVo>> listSlim() {
-        // String userId = StpUtil.getLoginIdAsString();
-        // List<Object> roles = redisTemplate.boundListOps(RedisCacheKey.permissionRole(userId)).range(0, -1);
-        // if (CollectionUtils.isEmpty(roles)) {
-        //     return success(Collections.emptyList());
-        // }
-        // List<Long> params = roles.stream().map(t -> Long.parseLong(String.valueOf(t))).collect(Collectors.toList());
         return success(this.service.listSlim());
     }
 
@@ -86,6 +68,7 @@ public class SysMenuController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @SaCheckPermission("api:system:menu:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -94,6 +77,7 @@ public class SysMenuController extends ApiController {
     /**
      * 菜单列表信息查询
      */
+    @SaCheckPermission("api:system:menu:list")
     @PostMapping("list")
     public Result<List<SysMenu>> list(@RequestBody @Valid SysMenuQueryDto filter) {
         return success(this.service.list(filter));
@@ -102,6 +86,7 @@ public class SysMenuController extends ApiController {
     /**
      * 详情查询
      */
+    @SaCheckPermission("api:system:menu:list")
     @GetMapping("get/{id}")
     public Result<SysMenu> page(@PathVariable String id) {
         return success(this.service.getById(id));
