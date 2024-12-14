@@ -75,6 +75,7 @@ public class InternalSysUserController extends ApiController {
      * @param dto 新增用户信息数据
      * @return 主键Id
      */
+    @SaIgnore
     @PostMapping("add")
     public Result<String> add(@Valid @RequestBody InternalSysUserAddDto dto) {
         return success(service.add(dto));

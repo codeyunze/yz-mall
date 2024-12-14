@@ -1,6 +1,7 @@
 package com.yz.mall.sys.service.impl;
 
 import com.yz.advice.exception.BusinessException;
+import com.yz.advice.exception.FeignException;
 import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
 import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.feign.InternalSysRoleRelationMenuFeign;
@@ -32,7 +33,7 @@ public class InternalSysRoleRelationMenuServiceImpl implements InternalSysRoleRe
     public Map<String, List<String>> getPermissionsByRoleIds(InternalRolePermissionQueryDto query) {
         Result<Map<String, List<String>>> result = feign.getPermissionsByRoleIds(query);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMsg());
+            throw new FeignException(result.getCode(), result.getMsg());
         }
         return result.getData();
     }

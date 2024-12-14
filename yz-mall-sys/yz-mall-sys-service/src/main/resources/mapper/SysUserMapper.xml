@@ -12,13 +12,16 @@
         where su.invalid = 0
         <if test="filter.phone != null and filter.phone != ''">and su.phone like concat(#{filter.phone}, '%')</if>
         <if test="filter.email != null and filter.email != ''">and su.email like concat(#{filter.email}, '%')</if>
+        <if test="filter.comprehensive != null and filter.comprehensive != ''">
+            and (su.phone like concat('%', #{filter.comprehensive}, '%') or su.username like concat('%', #{filter.comprehensive}, '%'))
+        </if>
         <if test="filter.userIds != null">
-            and surr.invalid = 0 and su.id in
+            and su.id in
             <foreach collection="filter.userIds" item="userId" separator="," open="(" close=")">
                 #{userId}
             </foreach>
         </if>
-        <if test="filter.roleId != null and filter.roleId != ''">and surr.role_id = #{filter.roleId}</if>
+        <if test="filter.roleId != null and filter.roleId != ''">and surr.invalid = 0 and surr.role_id = #{filter.roleId}</if>
         order by su.id desc
     </select>
 </mapper>

@@ -48,5 +48,10 @@ public class SysUserQueryDto implements Serializable {
      * 角色Id {@link SysRole#getId()}
      */
     private Long roleId;
+
+    /**
+     * 综合查询
+     */
+    private String comprehensive;
 }
 

@@ -2,6 +2,7 @@ package com.yz.advice;
 
 import com.yz.advice.exception.BusinessException;
 import com.yz.advice.exception.DataNotExistException;
+import com.yz.advice.exception.FeignException;
 import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import org.springframework.core.annotation.Order;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Objects;
 
 /**
@@ -46,5 +48,23 @@ public class OverallExceptionHandle {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     Result<?> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException e) {
         return new Result<>(CodeEnum.PARAMS_ERROR.get(), null, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+    }
+
+    /**
+     * SQL完整性约束异常
+     */
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    Result<?> sqlIntegrityConstraintViolationExceptionHandle(SQLIntegrityConstraintViolationException e) {
+        e.printStackTrace();
+        return new Result<>(CodeEnum.ALREADY_EXISTS_ERROR.get(), null, CodeEnum.ALREADY_EXISTS_ERROR.getMsg());
+    }
+
+    /**
+     * Feign请求异常
+     */
+    @ExceptionHandler(FeignException.class)
+    Result<?> feignExceptionHandle(FeignException e) {
+        e.printStackTrace();
+        return new Result<>(e.getCode(), null, e.getMessage());
     }
 }

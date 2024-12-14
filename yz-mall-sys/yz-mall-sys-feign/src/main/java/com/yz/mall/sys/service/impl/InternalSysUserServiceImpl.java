@@ -1,6 +1,7 @@
 package com.yz.mall.sys.service.impl;
 
 import com.yz.advice.exception.BusinessException;
+import com.yz.advice.exception.FeignException;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
@@ -33,7 +34,7 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     public void deduct(String userId, BigDecimal amount) {
         Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMsg());
+            throw new FeignException(result.getCode(), result.getMsg());
         }
     }
 
@@ -41,7 +42,7 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     public void recharge(String userId, BigDecimal amount) {
         Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMsg());
+            throw new FeignException(result.getCode(), result.getMsg());
         }
     }
 
@@ -49,7 +50,7 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     public InternalLoginInfoDto checkLogin(InternalSysUserCheckLoginDto dto) {
         Result<InternalLoginInfoDto> result = feign.checkLogin(dto);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMsg());
+            throw new FeignException(result.getCode(), result.getMsg());
         }
         return result.getData();
     }
@@ -58,7 +59,7 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     public List<Long> getUserRoles(Long userId) {
         Result<List<Long>> result = feign.getUserRoles(userId);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMsg());
+            throw new FeignException(result.getCode(), result.getMsg());
         }
         return result.getData();
     }
@@ -67,7 +68,7 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     public String add(InternalSysUserAddDto dto) {
         Result<String> result = feign.add(dto);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
-            throw new BusinessException(result.getMsg());
+            throw new FeignException(result.getCode(), result.getMsg());
         }
         return result.getData();
     }
