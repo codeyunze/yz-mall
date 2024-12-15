@@ -1,7 +1,7 @@
 package com.yz.mall.sys.controller;
 
 
-import com.yz.mall.sys.dto.SysRoleRelationMenuAddDto;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
@@ -33,28 +33,9 @@ public class SysRoleRelationMenuController extends ApiController {
     }
 
     /**
-     * 新增
-     */
-    @Deprecated
-    @PostMapping("add")
-    public Result<Long> insert(@RequestBody @Valid SysRoleRelationMenuAddDto dto) {
-        return success(this.service.save(dto));
-    }
-
-    /**
-     * 删除
-     *
-     * @param id 删除数据主键ID
-     */
-    @Deprecated
-    @DeleteMapping("delete/{id}")
-    public Result<Boolean> delete(@PathVariable Long id) {
-        return success(this.service.removeById(id));
-    }
-
-    /**
      * 分页查询
      */
+    @SaCheckPermission("api:system:roleRelationMenu:list")
     @PostMapping("list")
     public Result<List<SysRoleRelationMenu>> list(@RequestBody @Valid SysRoleRelationMenuQueryDto filter) {
         return success(this.service.list(filter));
@@ -66,6 +47,7 @@ public class SysRoleRelationMenuController extends ApiController {
      * @param roleId 角色Id
      * @return 角色所拥有的菜单
      */
+    @SaCheckPermission("api:system:roleRelationMenu:getRoleMenus")
     @GetMapping("getRoleMenus/{roleId}")
     public Result<List<String>> getRoleMenus(@PathVariable Long roleId) {
         return success(this.service.getMenuIdsByRoleId(roleId));
@@ -76,6 +58,7 @@ public class SysRoleRelationMenuController extends ApiController {
      *
      * @apiNote 为指定的角色绑定菜单
      */
+    @SaCheckPermission("api:system:roleRelationMenu:bind")
     @PostMapping("bind")
     public Result<Boolean> bind(@RequestBody @Valid SysRoleRelationMenuBindDto dto) {
         return success(this.service.bind(dto));

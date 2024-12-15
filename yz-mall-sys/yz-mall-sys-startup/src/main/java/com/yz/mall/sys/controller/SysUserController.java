@@ -1,6 +1,7 @@
 package com.yz.mall.sys.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysUserAddDto;
@@ -43,6 +44,7 @@ public class SysUserController extends ApiController {
     /**
      * 新增
      */
+    @SaCheckPermission("api:system:user:add")
     @PostMapping("add")
     public Result<String> insert(@RequestBody @Valid SysUserAddDto dto) {
         return success(this.service.save(dto));
@@ -51,6 +53,7 @@ public class SysUserController extends ApiController {
     /**
      * 更新
      */
+    @SaCheckPermission("api:system:user:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysUserUpdateDto dto) {
         return success(this.service.update(dto));
@@ -62,6 +65,7 @@ public class SysUserController extends ApiController {
      * @param id 角色Id
      * @return 是否切换成功
      */
+    @SaCheckPermission("api:system:user:switch")
     @PostMapping("switch/{id}")
     public Result<Boolean> switchRole(@PathVariable Long id) {
         boolean updated = service.updateUserStatusById(id);
@@ -73,6 +77,7 @@ public class SysUserController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @SaCheckPermission("api:system:user:delete")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable String id) {
         return success(this.service.removeById(id));
@@ -81,6 +86,7 @@ public class SysUserController extends ApiController {
     /**
      * 分页查询
      */
+    @SaCheckPermission("api:system:user:list")
     @PostMapping("page")
     public Result<ResultTable<SysUserVo>> page(@RequestBody @Valid PageFilter<SysUserQueryDto> filter) {
         Page<SysUserVo> page = this.service.page(filter);
@@ -90,6 +96,7 @@ public class SysUserController extends ApiController {
     /**
      * 详情查询
      */
+    @SaCheckPermission("api:system:user:list")
     @GetMapping("get/{id}")
     public Result<SysUser> page(@PathVariable String id) {
         return success(this.service.getById(id));
@@ -101,6 +108,7 @@ public class SysUserController extends ApiController {
      * @param userId 用户Id
      * @return 用户所拥有的角色
      */
+    @SaCheckPermission("api:system:user:getUserRoles")
     @GetMapping("getUserRoles/{userId}")
     public Result<List<String>> getUserRoles(@PathVariable Long userId) {
         List<Long> roles = service.getUserRoles(userId);

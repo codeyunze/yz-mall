@@ -3,6 +3,7 @@ package com.yz.mall.sys.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.advice.exception.DataNotExistException;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
@@ -10,11 +11,18 @@ import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.mapper.SysMenuMapper;
+import com.yz.mall.sys.service.RefreshPermission;
 import com.yz.mall.sys.service.SysMenuService;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.mall.sys.vo.SysTreeMenuMetaVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
+import com.yz.redisson.RedisUtils;
+import com.yz.tools.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -32,9 +40,18 @@ import java.util.stream.Collectors;
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
+    private final RedisUtils redisUtils;
+
+    private final RefreshPermission refreshPermission;
+
+    public SysMenuServiceImpl(RedisUtils redisUtils, RefreshPermission refreshPermission) {
+        this.redisUtils = redisUtils;
+        this.refreshPermission = refreshPermission;
+    }
 
     @Override
     public Long save(SysMenuAddDto dto) {
+        // 新增菜单信息
         SysMenu bo = new SysMenu();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
@@ -45,9 +62,24 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public boolean update(SysMenuUpdateDto dto) {
+        SysMenu menu = baseMapper.selectById(dto.getId());
+        if (menu == null) {
+            throw new DataNotExistException("菜单数据不存在");
+        }
+
+        // 更新菜单信息
         SysMenu bo = new SysMenu();
         BeanUtils.copyProperties(dto, bo);
-        return baseMapper.updateById(bo) > 0;
+        boolean flag = baseMapper.updateById(bo) > 0;
+
+        // 清理角色的按钮和接口缓存
+        if (MenuTypeEnum.BUTTON.get().equals(menu.getMenuType())) {
+            refreshPermission.refreshButtonPermissionCache();
+        } else if (MenuTypeEnum.API.get().equals(menu.getMenuType())) {
+            refreshPermission.refreshApiPermissionCache();
+        }
+
+        return flag;
     }
 
     @Override

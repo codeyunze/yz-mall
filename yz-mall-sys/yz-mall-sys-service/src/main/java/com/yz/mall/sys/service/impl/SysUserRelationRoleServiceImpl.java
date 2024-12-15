@@ -38,6 +38,13 @@ public class SysUserRelationRoleServiceImpl extends ServiceImpl<SysUserRelationR
         return bindRoleForOrg(dto.getRelationId(), dto.getRoleIds());
     }
 
+    /**
+     * 给用户绑定角色权限
+     *
+     * @param userId  用户Id
+     * @param roleIds 角色Id列表
+     * @return 是否绑定成功
+     */
     private boolean bindRoleForUser(Long userId, List<Long> roleIds) {
         // 查询出用户拥有的所有角色
         List<Long> alreadyBindRoleIds = this.getRoleIdsByRelationId(userId);

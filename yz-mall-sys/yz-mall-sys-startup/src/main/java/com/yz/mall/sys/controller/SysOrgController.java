@@ -1,6 +1,7 @@
 package com.yz.mall.sys.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysOrgAddDto;
 import com.yz.mall.sys.dto.SysOrgQueryDto;
@@ -36,6 +37,7 @@ public class SysOrgController extends ApiController {
     /**
      * 新增
      */
+    @SaCheckPermission("api:system:org:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysOrgAddDto dto) {
         return success(this.service.save(dto));
@@ -44,6 +46,7 @@ public class SysOrgController extends ApiController {
     /**
      * 更新
      */
+    @SaCheckPermission("api:system:org:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysOrgUpdateDto dto) {
         return success(this.service.update(dto));
@@ -54,6 +57,7 @@ public class SysOrgController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @SaCheckPermission("api:system:org:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -62,6 +66,7 @@ public class SysOrgController extends ApiController {
     /**
      * 分页查询
      */
+    @SaCheckPermission("api:system:menu:list")
     @PostMapping("page")
     public Result<ResultTable<SysOrg>> page(@RequestBody @Valid PageFilter<SysOrgQueryDto> filter) {
         Page<SysOrg> page = this.service.page(filter);
@@ -71,6 +76,7 @@ public class SysOrgController extends ApiController {
     /**
      * 列表查询
      */
+    @SaCheckPermission("api:system:org:list")
     @PostMapping("list")
     public Result<List<SysOrg>> list(@RequestBody @Valid SysOrgQueryDto filter) {
         return success(this.service.list(filter));
@@ -79,6 +85,7 @@ public class SysOrgController extends ApiController {
     /**
      * 详情查询
      */
+    @SaCheckPermission("api:system:org:list")
     @GetMapping("get/{id}")
     public Result<SysOrg> page(@PathVariable String id) {
         return success(this.service.getById(id));

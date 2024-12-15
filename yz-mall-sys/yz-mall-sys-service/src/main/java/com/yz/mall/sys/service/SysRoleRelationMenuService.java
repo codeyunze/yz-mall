@@ -1,15 +1,12 @@
 package com.yz.mall.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.sys.dto.SysRoleRelationMenuAddDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
-import com.yz.mall.sys.dto.SysRoleRelationMenuUpdateDto;
 import com.yz.mall.sys.entity.SysRole;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.enums.MenuTypeEnum;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
@@ -21,22 +18,6 @@ import java.util.Map;
  * @since 2024-11-28 12:58:05
  */
 public interface SysRoleRelationMenuService extends IService<SysRoleRelationMenu> {
-
-    /**
-     * 新增数据
-     *
-     * @param dto 新增基础数据
-     * @return 主键Id
-     */
-    Long save(SysRoleRelationMenuAddDto dto);
-
-    /**
-     * 更新数据
-     *
-     * @param dto 更新基础数据
-     * @return 是否操作成功
-     */
-    boolean update(@Valid SysRoleRelationMenuUpdateDto dto);
 
     /**
      * 列表查询
@@ -63,13 +44,13 @@ public interface SysRoleRelationMenuService extends IService<SysRoleRelationMenu
     List<Long> getMenuIdsByRoleIds(List<Long> roleIds);
 
     /**
-     * 获取指定角色所拥有的权限
+     * 获取指定角色所拥有的权限,并进行缓存
      *
      * @param menuType 菜单类型
      * @param roleIds  用户拥有的角色Id {@link SysRole#getOrgId()}
      * @return 权限标识 <角色Id，List<权限标识>>
      */
-    Map<String, List<String>> getPermissionsByRoleIds(MenuTypeEnum menuType, @NotNull List<Long> roleIds);
+    Map<String, List<String>> getPermissionsAndCacheByRoleIds(MenuTypeEnum menuType, @NotNull List<Long> roleIds);
 
     /**
      * 角色绑定菜单

@@ -44,12 +44,6 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> list(SysMenuQueryDto filter);
 
     /**
-     * 查询请求者所拥有访问权限的菜单
-     * @param roleIds 请求则所拥有的所有角色Id
-     */
-    // List<SysMenuSlimVo> listSlim(List<Long> roleIds);
-
-    /**
      * 查询所有菜单
      */
     List<SysMenuSlimVo> listSlim();

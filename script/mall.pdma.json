@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.4",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-12-8 18:18:10",
+  "updatedTime": "2024-12-15 15:01:28",
   "dbConns": [],
   "profile": {
     "default": {
@@ -6863,7 +6863,16 @@
           "id": "01C6CADA-A048-4D6A-A75D-5F18A47E4BF3"
         }
       ],
-      "correlations": [],
+      "correlations": [
+        {
+          "myField": "DFE3512F-571F-4CA4-8F75-B96E32FCDDFB",
+          "refEntity": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
+          "refField": "3BD745A2-C917-4B9C-A43F-C33146BC313B",
+          "myRows": "1",
+          "refRows": "n",
+          "innerType": ""
+        }
+      ],
       "indexes": [],
       "type": "P"
     },
@@ -8070,21 +8079,6 @@
             }
           },
           {
-            "id": "25d1f28a-70a2-4183-8f13-550ad764e29b",
-            "shape": "table",
-            "position": {
-              "x": -790,
-              "y": 370
-            },
-            "count": 0,
-            "originKey": "7A6D5C29-6EC7-4470-B0BD-127489278044",
-            "type": "P",
-            "size": {
-              "width": 429,
-              "height": 192
-            }
-          },
-          {
             "id": "111841d3-78bd-46f5-ad3f-b54e46f45b3b",
             "shape": "table",
             "position": {
@@ -8127,6 +8121,36 @@
             "size": {
               "width": 438,
               "height": 169
+            }
+          },
+          {
+            "id": "5e972235-bee3-4940-afb3-fffd08bbf8d5",
+            "shape": "table",
+            "position": {
+              "x": -731,
+              "y": 1130
+            },
+            "count": 0,
+            "originKey": "9731A74F-1ABF-4505-B320-D43893AA74A5",
+            "type": "P",
+            "size": {
+              "width": 472,
+              "height": 192
+            }
+          },
+          {
+            "id": "177ce7dd-e947-45c9-912f-2d049c889236",
+            "shape": "table",
+            "position": {
+              "x": -731,
+              "y": 906
+            },
+            "count": 0,
+            "originKey": "F9037679-F2F7-48AF-A28E-1FF5D054350A",
+            "type": "P",
+            "size": {
+              "width": 534,
+              "height": 192
             }
           },
           {
@@ -8330,33 +8354,41 @@
             }
           },
           {
-            "id": "5e972235-bee3-4940-afb3-fffd08bbf8d5",
+            "id": "25d1f28a-70a2-4183-8f13-550ad764e29b",
             "shape": "table",
             "position": {
-              "x": -731,
-              "y": 1130
+              "x": -790,
+              "y": 370
             },
             "count": 0,
-            "originKey": "9731A74F-1ABF-4505-B320-D43893AA74A5",
+            "originKey": "7A6D5C29-6EC7-4470-B0BD-127489278044",
             "type": "P",
             "size": {
-              "width": 472,
+              "width": 429,
               "height": 192
             }
           },
           {
-            "id": "177ce7dd-e947-45c9-912f-2d049c889236",
-            "shape": "table",
-            "position": {
-              "x": -731,
-              "y": 906
+            "id": "01eaf4a6-989a-42dd-a859-d5c68848ef06",
+            "shape": "erdRelation",
+            "source": {
+              "cell": "c30d0978-3fe2-47de-b51c-5bbf65c95c02",
+              "port": "DFE3512F-571F-4CA4-8F75-B96E32FCDDFB%out"
             },
-            "count": 0,
-            "originKey": "F9037679-F2F7-48AF-A28E-1FF5D054350A",
-            "type": "P",
-            "size": {
-              "width": 534,
-              "height": 192
+            "target": {
+              "cell": "c30d0978-3fe2-47de-b51c-5bbf65c95c02",
+              "port": "3BD745A2-C917-4B9C-A43F-C33146BC313B%out"
+            },
+            "relation": "1:n",
+            "fillColor": "#ACDAFC",
+            "parent": "c30d0978-3fe2-47de-b51c-5bbf65c95c02",
+            "router": {
+              "name": "manhattan"
+            },
+            "attrs": {
+              "line": {
+                "strokeDasharray": ""
+              }
             }
           },
           {

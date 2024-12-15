@@ -6,13 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
-import com.yz.mall.sys.dto.*;
+import com.yz.mall.sys.dto.SysRolePermissionDto;
+import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
+import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.mapper.SysRoleRelationMenuMapper;
+import com.yz.mall.sys.service.RefreshPermission;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
 import com.yz.tools.RedisCacheKey;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -31,25 +33,11 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public SysRoleRelationMenuServiceImpl(RedisTemplate<String, Object> redisTemplate) {
+    private final RefreshPermission refreshPermission;
+
+    public SysRoleRelationMenuServiceImpl(RedisTemplate<String, Object> redisTemplate, RefreshPermission refreshPermission) {
         this.redisTemplate = redisTemplate;
-    }
-
-    @Override
-    public Long save(SysRoleRelationMenuAddDto dto) {
-        SysRoleRelationMenu bo = new SysRoleRelationMenu();
-        BeanUtils.copyProperties(dto, bo);
-        bo.setId(IdUtil.getSnowflakeNextId());
-        baseMapper.insert(bo);
-
-        return bo.getId();
-    }
-
-    @Override
-    public boolean update(SysRoleRelationMenuUpdateDto dto) {
-        SysRoleRelationMenu bo = new SysRoleRelationMenu();
-        BeanUtils.copyProperties(dto, bo);
-        return baseMapper.updateById(bo) > 0;
+        this.refreshPermission = refreshPermission;
     }
 
     @Override
@@ -89,7 +77,7 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
     }
 
     @Override
-    public Map<String, List<String>> getPermissionsByRoleIds(MenuTypeEnum menuType, List<Long> roleIds) {
+    public Map<String, List<String>> getPermissionsAndCacheByRoleIds(MenuTypeEnum menuType, List<Long> roleIds) {
         if (!MenuTypeEnum.BUTTON.equals(menuType) && !MenuTypeEnum.API.equals(menuType)) {
             return Collections.emptyMap();
         }
@@ -135,9 +123,7 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
 
         if (CollectionUtils.isEmpty(list)) {
             // 需要查库获取权限的角色
-            needQueryRoleIds.forEach(roleId -> {
-                redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(roleId)), Collections.emptyList());
-            });
+            needQueryRoleIds.forEach(roleId -> redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(roleId)), Collections.emptyList()));
             return result;
         }
 
@@ -148,18 +134,19 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
                 ));
 
         // 权限信息存入缓存
-        collect.forEach((key, value) -> {
-            value.forEach(permission -> {
-                redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(key)), permission);
-            });
-        });
+        collect.forEach((key, value) -> value.forEach(permission -> redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(key)), permission)));
 
         result.putAll(collect);
         return result;
     }
 
+
     @Override
     public boolean bind(SysRoleRelationMenuBindDto dto) {
+        // 清理角色的按钮和接口缓存
+        refreshPermission.refreshButtonPermissionCache();
+        refreshPermission.refreshApiPermissionCache();
+
         // 查询出角色拥有所有菜单
         List<String> alreadyBindMenuIds = this.getMenuIdsByRoleId(dto.getRoleId());
         // 归类出角色已经拥有的哪些菜单是需要去除的

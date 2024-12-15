@@ -25,6 +25,6 @@ public class InternalSysRoleRelationMenuServiceImpl implements InternalSysRoleRe
 
     @Override
     public Map<String, List<String>> getPermissionsByRoleIds(InternalRolePermissionQueryDto query) {
-        return sysRoleRelationMenuService.getPermissionsByRoleIds(query.getMenuType(), query.getRoleIds());
+        return sysRoleRelationMenuService.getPermissionsAndCacheByRoleIds(query.getMenuType(), query.getRoleIds());
     }
 }

@@ -26,11 +26,10 @@
             select srrm.role_id, srrm.menu_id
             from sys_role_relation_menu srrm
             inner join sys_menu sm on srrm.menu_id = sm.id
-            where srrm.invalid = 0 and sm.menu_type != 4
-                and srrm.role_id in
-                <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
-                    #{roleId}
-                </foreach>
+            where srrm.invalid = 0 and srrm.role_id in
+            <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+                #{roleId}
+            </foreach>
             group by srrm.role_id, srrm.menu_id
         ) permission on menu.parent_id = permission.menu_id
         group by permission.role_id, menu.auths
