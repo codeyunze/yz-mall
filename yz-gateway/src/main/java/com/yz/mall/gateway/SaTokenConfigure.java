@@ -34,7 +34,7 @@ public class SaTokenConfigure {
                     // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
                     // SaRouter.notMatch("/auth/isLogin").match("/**", "/auth/login", r -> StpUtil.checkLogin());
                     SaRouter.match("/**")
-                            .notMatch("/login", "/refreshToken", "/register", "/sys/**", "/file/**")
+                            .notMatch("/login", "/logout", "/refreshToken", "/register", "/sys/**", "/file/**")
                             .check(r -> StpUtil.checkLogin());
 
                     // 权限认证 -- 不同模块, 校验不同权限

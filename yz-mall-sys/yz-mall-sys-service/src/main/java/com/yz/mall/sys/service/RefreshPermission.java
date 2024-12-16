@@ -3,6 +3,7 @@ package com.yz.mall.sys.service;
 import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.redisson.RedisUtils;
 import com.yz.tools.RedisCacheKey;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -17,9 +18,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 权限信息刷新（按钮权限和接口权限）
  * @author yunze
  * @date 2024/12/15 星期日 11:07
  */
+@Slf4j
 @Component
 public class RefreshPermission {
 
@@ -53,6 +56,7 @@ public class RefreshPermission {
     }
 
     private void refreshPermissionCache(MenuTypeEnum type) {
+        log.info("refresh permission cache");
         String cacheKey = RedisCacheKey.permission(type.name(), "*");
         List<String> keys = redisUtils.getKeysByPattern(cacheKey);
         if (CollectionUtils.isEmpty(keys)) {

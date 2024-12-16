@@ -6,6 +6,7 @@ import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,7 +26,7 @@ public class OverallPermissionExceptionHandle {
      */
     @ExceptionHandler(NotLoginException.class)
     Result<?> notLoginExceptionHandle(NotLoginException e) {
-        return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, CodeEnum.ERROR_TOKEN_ILLEGAL.getMsg());
+        return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.ERROR_TOKEN_ILLEGAL.getMsg());
     }
 
     /**
