@@ -72,7 +72,7 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-mall-pms-core</artifactId>
+            <artifactId>yz-mall-pms-service</artifactId>
             <version>${revision}</version>
         </dependency>
     </dependencies>
