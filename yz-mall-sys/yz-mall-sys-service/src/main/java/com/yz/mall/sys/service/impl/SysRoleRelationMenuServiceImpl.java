@@ -143,10 +143,6 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
 
     @Override
     public boolean bind(SysRoleRelationMenuBindDto dto) {
-        // 清理角色的按钮和接口缓存
-        refreshPermission.refreshButtonPermissionCache();
-        refreshPermission.refreshApiPermissionCache();
-
         // 查询出角色拥有所有菜单
         List<String> alreadyBindMenuIds = this.getMenuIdsByRoleId(dto.getRoleId());
         // 归类出角色已经拥有的哪些菜单是需要去除的
@@ -176,7 +172,13 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
             info.setMenuId(menuId);
             addInfos.add(info);
         });
-        return super.saveBatch(addInfos);
+
+        boolean saved = super.saveBatch(addInfos);
+
+        // 清理角色的按钮和接口缓存
+        refreshPermission.refreshButtonPermissionCache();
+        refreshPermission.refreshApiPermissionCache();
+        return saved;
     }
 }
 
