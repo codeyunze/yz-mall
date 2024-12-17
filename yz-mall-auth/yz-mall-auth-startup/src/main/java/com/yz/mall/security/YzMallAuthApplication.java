@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * 身份认证与访问授权服务
+ *
  * @author yunze
  * @date 2024/7/30 23:14
  */

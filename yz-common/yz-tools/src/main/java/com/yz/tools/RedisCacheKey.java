@@ -28,11 +28,20 @@ public class RedisCacheKey {
 
     /**
      * 权限信息缓存key
+     *
      * @param menuTypeKey 菜单类型 (button或api)
-     * @param roleId 角色Id
+     * @param roleId      角色Id
      */
     public static String permission(String menuTypeKey, String roleId) {
         return "permission:" + menuTypeKey.toLowerCase() + "-by-role:" + roleId;
     }
 
+    /**
+     * 登录用户信息
+     *
+     * @param userId 用户信息
+     */
+    public static String loginInfo(String userId) {
+        return "Authorization:login:info:" + userId;
+    }
 }
