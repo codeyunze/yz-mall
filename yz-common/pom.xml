@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-mall</artifactId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>yz-common</artifactId>
@@ -17,6 +17,7 @@
         <module>yz-tools</module>
         <module>yz-advice</module>
         <module>yz-redisson</module>
+        <module>yz-mall-starter-web</module>
     </modules>
 
     <properties>

@@ -2,7 +2,6 @@ package com.yz.unqid.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.yz.advice.exception.BusinessException;
 import com.yz.tools.RedisCacheKey;
 import com.yz.tools.RedissonLockKey;
 import com.yz.unqid.UnqidHolder;
@@ -31,7 +30,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
         // 直接从号池获取流水号
         SerialNumberDto serialNumberDto = UnqidHolder.get(prefix);
         if (serialNumberDto != null) {
-            baseMapper.record(serialNumberDto.getCode());
+            // baseMapper.record(serialNumberDto.getCode());
             return serialNumberDto.getCode();
         }
 
@@ -43,7 +42,6 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
             // 防止获取到锁之后，但是号池已经存在大量流水号的情况（防止出现如下场景：A和B两个线程等待锁，A先获取到了锁，线程A生成1000个流水号到号池，A释放锁，然后B获取到了锁，B再生成1000个流水号到号池，但此时号池里已经存在了A生成的1000个流水号）
             SerialNumberDto secondSerialNumberDto = UnqidHolder.get(prefix);
             if (secondSerialNumberDto != null) {
-                baseMapper.record(secondSerialNumberDto.getCode());
                 return secondSerialNumberDto.getCode();
             }
 
@@ -62,9 +60,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
             }
 
             // 从号池获取流水号
-            String code = Objects.requireNonNull(UnqidHolder.get(prefix)).getCode();
-            // baseMapper.record(code);
-            return code;
+            return Objects.requireNonNull(UnqidHolder.get(prefix)).getCode();
         } finally {
             redissonLock.unlock();
         }

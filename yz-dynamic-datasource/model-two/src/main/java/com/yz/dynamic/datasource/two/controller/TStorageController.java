@@ -8,13 +8,12 @@ import com.yz.dynamic.datasource.two.service.TStorageService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
-import com.yz.tools.TableResult;
+import com.yz.tools.ResultTable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 库存信息(TStock)表控制层
@@ -39,7 +38,7 @@ public class TStorageController extends ApiController {
      * @return 所有数据
      */
     @PostMapping("/page")
-    public TableResult<List<TStorage>> page(@RequestBody @Validated PageFilter<TStorage> filter) {
+    public Result<ResultTable<TStorage>> page(@RequestBody @Validated PageFilter<TStorage> filter) {
         Page<TStorage> page = this.tStockService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
         return success(page.getRecords(), page.getTotal());
     }

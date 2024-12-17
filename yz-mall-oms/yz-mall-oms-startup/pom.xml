@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-mall-oms</artifactId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
 
@@ -42,6 +42,12 @@
 
         <dependency>
             <groupId>com.yz</groupId>
+            <artifactId>yz-mall-security-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- <dependency>
+            <groupId>com.yz</groupId>
             <artifactId>yz-mall-oms-core</artifactId>
             <version>${revision}</version>
         </dependency>
@@ -62,7 +68,9 @@
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-pms-feign</artifactId>
             <version>${revision}</version>
-        </dependency>
+        </dependency> -->
+
+
     </dependencies>
 
     <build>

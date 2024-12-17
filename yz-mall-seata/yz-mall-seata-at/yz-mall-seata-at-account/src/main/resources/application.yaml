@@ -14,7 +14,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: yunze.com:8848
 
 seata:
   application-id: ${spring.application.name}
@@ -28,11 +28,11 @@ seata:
     nacos:
       application: seata-server
       group: SEATA_GROUP
-      server-addr: 127.0.0.1:8848
+      server-addr: yunze.com:8848
   config:
     type: nacos
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: yunze.com:8848
       namespace: f0357fda-3e2d-42ae-ac6f-3848aaecf0db
       group: SEATA_GROUP
       data-id: seataServer.properties

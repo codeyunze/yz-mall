@@ -3,7 +3,6 @@ package com.yz.unqid.feign;
 import com.yz.tools.Result;
 import com.yz.unqid.dto.InternalUnqidDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -14,8 +13,7 @@ import java.util.List;
  * @author yunze
  * @date 2024/6/24 星期一 23:36
  */
-@Repository
-@FeignClient(name = "yz-unqid", contextId = "internalUnqid")
+@FeignClient(name = "yz-unqid", value = "yz-unqid", contextId = "internalUnqid")
 public interface InternalUnqidFeign {
 
     /**

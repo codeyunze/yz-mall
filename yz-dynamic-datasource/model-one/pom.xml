@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-dynamic-datasource</artifactId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>model-one</artifactId>

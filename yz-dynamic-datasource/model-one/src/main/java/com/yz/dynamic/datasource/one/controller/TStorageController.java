@@ -1,14 +1,12 @@
 package com.yz.dynamic.datasource.one.controller;
 
 
-import com.yz.dynamic.datasource.one.annotation.DS;
 import com.yz.dynamic.datasource.one.dto.TStorageAddDto;
 import com.yz.dynamic.datasource.one.entity.TStorage;
 import com.yz.dynamic.datasource.one.service.TStorageService;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
-import com.yz.tools.enums.DataSourceTypeEnum;
+import com.yz.tools.ResultTable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,8 +44,9 @@ public class TStorageController extends ApiController {
     }
 
     @PostMapping("list")
-    public Result<List<TStorage>> list() {
-        return new Result<>(CodeEnum.SUCCESS.get(), this.tStockService.list(), "成功");
+    public Result<ResultTable<TStorage>> list() {
+        List<TStorage> list = this.tStockService.list();
+        return success(list, (long) list.size());
     }
 }
 

@@ -43,3 +43,9 @@ out
 
 ### Log ###
 *.gz
+
+### tools ###
+script/.back_mall
+
+### docker ###
+docker/*.jar

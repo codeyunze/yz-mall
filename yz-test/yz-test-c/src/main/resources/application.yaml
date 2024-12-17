@@ -1,0 +1,31 @@
+
+server:
+  port: 20003
+
+spring:
+  application:
+    name: yz-test-c
+  redis:
+    host: yunze.com
+    port: 6379
+    password: foobared
+    database: 0
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池最大连接数
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
+
+############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
+sa-token:
+  # token 名称（同时也是 cookie 名称）
+  token-name: Authorization
+  # token前缀
+  token-prefix: Bearer

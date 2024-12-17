@@ -1,15 +1,23 @@
 package com.yz.tools;
 
-/**
- * @ClassName ApiController
- * @Description TODO
- * @Author yunze
- * @Date 2023/2/6 23:03
- * @Version 1.0
- */
+import com.yz.tools.enums.CodeEnum;
+
+import java.util.List;
+
 public class ApiController {
 
     public ApiController() {
+    }
+
+
+
+
+    protected Result error(CodeEnum codeEnum) {
+        return new Result<>(codeEnum.get(), null, codeEnum.getMsg());
+    }
+
+    protected Result failed(String msg) {
+        return Result.error(msg);
     }
 
     protected <T> Result<T> success(T data) {
@@ -21,14 +29,8 @@ public class ApiController {
      *
      * @param data  列表数据
      * @param total 总数
-     * @param <T>   列表对象类型
-     * @return 列表数据、数据总数、页面总数
      */
-    protected <T> TableResult<T> success(T data, Long total) {
-        return TableResult.success(data, total);
-    }
-
-    protected <T> Result<T> failed(String msg) {
-        return Result.failed(msg);
+    protected <T> Result<ResultTable<T>> success(List<T> data, Long total) {
+        return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(data, total), "查询成功");
     }
 }

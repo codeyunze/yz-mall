@@ -3,13 +3,14 @@ package com.yz.tools;
 import com.yz.tools.enums.CodeEnum;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 后端返回给前端的数据对象
  *
- * @Author yunze
- * @Date 2022/11/13 23:23
- * @Version 1.0
+ * @author yunze
+ * @date 2022/11/13 23:23
+ * @version 1.0
  */
 public class Result<T> implements Serializable {
 
@@ -23,7 +24,7 @@ public class Result<T> implements Serializable {
     /**
      * 提示信息
      */
-    private String message;
+    private String msg;
 
     /**
      * 返回数据
@@ -33,9 +34,9 @@ public class Result<T> implements Serializable {
     public Result() {
     }
 
-    public Result(int code, T data, String message) {
+    public Result(int code, T data, String msg) {
         this.code = code;
-        this.message = message;
+        this.msg = msg;
         this.data = data;
     }
 
@@ -44,8 +45,8 @@ public class Result<T> implements Serializable {
      *
      * @return 请求成功返回数据
      */
-    public static Result success() {
-        return new Result(CodeEnum.SUCCESS.get(), null, "成功");
+    public static Result<?> success() {
+        return new Result<>(CodeEnum.SUCCESS.get(), null, "成功");
     }
 
 
@@ -55,8 +56,8 @@ public class Result<T> implements Serializable {
      * @param data 返回前端数据信息
      * @return 请求成功返回数据
      */
-    public static <T> Result success(T data) {
-        return new Result(CodeEnum.SUCCESS.get(), data, "成功");
+    public static <T> Result<T> success(T data) {
+        return new Result<>(CodeEnum.SUCCESS.get(), data, "成功");
     }
 
     /**
@@ -67,7 +68,11 @@ public class Result<T> implements Serializable {
      * @return 请求成功返回数据
      */
     public static <T> Result<T> success(T data, String message) {
-        return new Result<T>(CodeEnum.SUCCESS.get(), data, message);
+        return new Result<>(CodeEnum.SUCCESS.get(), data, message);
+    }
+
+    public Result<ResultTable<T>> success(List<T> data, Long count) {
+        return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(data, count), "查询成功");
     }
 
     /**
@@ -75,8 +80,8 @@ public class Result<T> implements Serializable {
      *
      * @return 请求成功返回数据
      */
-    public static Result failed() {
-        return new Result(CodeEnum.BUSINESS_ERROR.get(), null, "失败");
+    public static Result<?> error() {
+        return new Result<>(CodeEnum.BUSINESS_ERROR.get(), null, "失败");
     }
 
     /**
@@ -85,8 +90,8 @@ public class Result<T> implements Serializable {
      * @param message 返回前端提示信息
      * @return 请求成功返回数据
      */
-    public static Result failed(String message) {
-        return new Result(CodeEnum.BUSINESS_ERROR.get(), null, message);
+    public static Result<?> error(String message) {
+        return new Result<>(CodeEnum.BUSINESS_ERROR.get(), null, message);
     }
 
     /**
@@ -96,7 +101,7 @@ public class Result<T> implements Serializable {
      * @param message 返回前端提示信息
      * @return 请求成功返回数据
      */
-    public static <T> Result<T> failed(T data, String message) {
+    public static <T> Result<T> error(T data, String message) {
         return new Result<T>(CodeEnum.BUSINESS_ERROR.get(), data, message);
     }
 
@@ -108,12 +113,12 @@ public class Result<T> implements Serializable {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public T getData() {

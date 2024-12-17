@@ -1,14 +1,15 @@
 # 服务端口分配
 
-| 服务               | 端口    | 作用          |
-|------------------|-------|-------------|
-| yz-mall-web      | 30000 | 前端服务        |
-| yz-gateway       | 30001 | 网关服务        |
-| yz-mall-security | 30002 | 身份认证与访问授权服务 |
-| yz-unqid         | 30008 | 流水号生成       |
-| yz-mall-user     | 30004 | 基础用户信息      |
-| yz-mall-oms      | 30006 | 订单管理模块      |
-| yz-mall-pms      | 30005 | 商品库存管理模块    |
+| 服务             | 端口    | 作用          |
+|----------------|-------|-------------|
+| yz-mall-web-pc | 30000 | 前端服务        |
+| yz-gateway     | 30001 | 网关服务        |
+| yz-mall-auth   | 30002 | 身份认证与访问授权服务 |
+| yz-file-start  | 30003 | 文件服务        |
+| yz-unqid       | 30008 | 流水号生成       |
+| yz-mall-sys    | 30004 | 基础信息模块      |
+| yz-mall-oms    | 30006 | 订单管理模块      |
+| yz-mall-pms    | 30005 | 商品库存管理模块    |
 
 
 
@@ -25,6 +26,11 @@
 | Nacos-2.2.0     | master   | 8848  |          | 是       |
 | Seata-1.6.1     | master   | 7091  |          |          |
 | RabbitMQ-3.10.0 | master   | 15672 |          | 是       |
+
+
+nginx
+/usr/local/nginx/conf
+
 
 ## 119 (10.0.20.12)
 4核4G（剩余2G）
@@ -154,7 +160,7 @@ docker 安装redis
 
 3. 运行容器
     ```shell
-    docker run -itd --name redis-dev -p 6379:6379 redis
+    docker run -itd --name redis-dev -p 6379:6379 redis --requirepass "foobared"
     ```
 
 4. 查看运行中的容器
@@ -183,6 +189,35 @@ docker 安装redis
    yunze@yunzedeMacBook-Pro ~ % docker stop 039e8dbc0fed
    039e8dbc0fed
    ```
+   
+7. 删除容器
 
+   ```shell
+   docker rm 039e8dbc0fed # (容器ID，CONTAINER ID)
+   ```
+   
+8. 删除镜像
+
+   ```shell
+   docker rmi [IMAGE ID]
+   ```
+9. 运行rabbitmq镜像
+
+   ```shell
+   docker run -d --name=rabbitmq -v /usr/local/docker/rabbitmq:/var/lib/rabbitmq -p 15672:15672 -p 5672:5672 -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin rabbitmq:management
+   ```
    
 
+提交测试
+
+
+
+
+
+
+
+## 权限设计
+
+![权限设计图](images/权限设计图.jpg)
+
+![mall-sys[系统表]-20241116164804](images/mall-sys[系统表]-20241116164804.png)

@@ -174,9 +174,9 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
     protected String generateProcessor(String prefix, Integer numberLength, Integer serialNumber) {
         StringBuilder codeSerialNumber = new StringBuilder(serialNumber.toString());
 
-        // 补零 zero padding
-        while (codeSerialNumber.length() < numberLength) {
-            codeSerialNumber.insert(0, "0");
+        if (codeSerialNumber.length() < numberLength) {
+            // 补零
+            return prefix + String.format("%06d", serialNumber);
         }
 
         return prefix + codeSerialNumber;

@@ -28,20 +28,20 @@ public class SysUnqid implements Serializable {
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     /**
      * 数据是否有效：0数据有效
      */
-    @TableLogic
-    private Integer invalid;
+    @TableLogic(value = "0", delval = "current_timestamp")
+    private Long invalid;
 
     /**
      * 流水号的前缀
@@ -62,27 +62,27 @@ public class SysUnqid implements Serializable {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
     }
 
-    public Integer getInvalid() {
+    public Long getInvalid() {
         return invalid;
     }
 
-    public void setInvalid(Integer invalid) {
+    public void setInvalid(Long invalid) {
         this.invalid = invalid;
     }
 

@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.dynamic.datasource.two.entity.TProduct;
 import com.yz.dynamic.datasource.two.service.TProductService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.TableResult;
+import com.yz.tools.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +38,7 @@ public class TProductController extends ApiController {
      * @return 所有数据
      */
     @PostMapping("/page")
-    public TableResult<List<TProduct>> page(@RequestBody @Validated PageFilter<TProduct> filter) {
+    public Result<ResultTable<TProduct>> page(@RequestBody @Validated PageFilter<TProduct> filter) {
         Page<TProduct> page = this.tProductService.page(new Page<>(filter.getCurrent(), filter.getSize()), new QueryWrapper<>(filter.getFilter()));
         return success(page.getRecords(), page.getTotal());
     }

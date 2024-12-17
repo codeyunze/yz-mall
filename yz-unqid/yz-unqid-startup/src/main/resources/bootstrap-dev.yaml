@@ -1,7 +1,7 @@
 spring:
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: yunze.com:8848
       config:
         namespace: mall
         extension-configs[0]:
@@ -12,5 +12,6 @@ spring:
           refresh: true
       discovery:
         namespace: mall
+#        ip: 192.168.3.77
       username: nacos
       password: nacos

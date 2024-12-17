@@ -1,12 +1,15 @@
 spring:
   cloud:
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: yunze.com:8848
       config:
         namespace: mall
-        extension-configs[0]:
-          data-id: yz-mall-datasource.yaml
-          refresh: true
+        extension-configs:
+          - data-id: yz-mall-datasource.yaml
+            refresh: true
+          - data-id: yz-mall-security.yaml
+            refresh: true
+        file-extension: yaml
       discovery:
         namespace: mall
       username: nacos

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-unqid</artifactId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>yz-unqid-startup</artifactId>
@@ -45,6 +45,16 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
     </dependencies>
 
 
@@ -53,6 +63,31 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!--docker需要的jar的复制操作-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- <copy todir = "src/main/docker" -->
+                                <!--       file = "target/${project.artifactId}-${project.version}.${project.packaging}"></copy> -->
+                                <copy todir="../../docker/yz-unqid"> <!-- 复制到本模块打包目录的libs目录 -->
+                                    <fileset dir="target"> <!-- 要复制的moduleA模块libs目录下的jar包 -->
+                                        <include name="*.jar"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

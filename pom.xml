@@ -12,7 +12,7 @@
 
     <groupId>com.yz</groupId>
     <artifactId>yz-mall</artifactId>
-    <version>${revision}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>yz-mall</name>
     <description>yz-mall</description>
     <packaging>pom</packaging>
@@ -21,7 +21,8 @@
         <module>yz-common</module>
         <module>yz-gateway</module>
         <module>yz-unqid</module>
-        <module>yz-mall-user</module>
+        <module>yz-file-startup</module>
+        <module>yz-mall-sys</module>
         <module>yz-mall-auth</module>
         <module>yz-mall-pms</module>
         <module>yz-mall-oms</module>
@@ -46,7 +47,7 @@
         <dynamic-datasource.version>3.5.2</dynamic-datasource.version>
         <hutool-all.version>5.8.26</hutool-all.version>
         <redisson.version>3.32.0</redisson.version>
-        <sa-token.version>1.38.0</sa-token.version>
+        <sa-token.version>1.39.0</sa-token.version>
     </properties>
 
     <dependencies>
@@ -127,12 +128,25 @@
                 <version>${sa-token.version}</version>
             </dependency>
 
+            <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-redis-jackson</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
 
+            <!-- Web服务接入prometheus工具 -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <version>1.8.13</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

@@ -11,6 +11,7 @@ import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -63,7 +64,7 @@ public class PmsProductController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<PmsProduct>> page(@RequestBody @Valid PageFilter<PmsProductQueryDto> filter) {
+    public Result<ResultTable<PmsProduct>> page(@RequestBody @Valid PageFilter<PmsProductQueryDto> filter) {
         Page<PmsProduct> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

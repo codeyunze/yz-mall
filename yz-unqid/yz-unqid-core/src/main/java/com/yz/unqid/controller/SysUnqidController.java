@@ -2,6 +2,8 @@ package com.yz.unqid.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yz.tools.ResultTable;
+import com.yz.unqid.dto.InternalUnqidDto;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;
@@ -10,6 +12,7 @@ import com.yz.unqid.service.SysUnqidService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,11 +29,26 @@ import java.util.List;
 @RequestMapping("/unqid")
 public class SysUnqidController extends ApiController {
 
+    @Value("${server.port}")
+    private String port;
+
     /**
      * 服务对象
      */
     @Resource(name = "sysUnqidServiceImpl")
     private SysUnqidService service;
+
+    @Resource(name = "sysUnqidV3ServiceImpl")
+    private SysUnqidService v3Service;
+
+    /**
+     * 生成流水号
+     */
+    @PostMapping("generateSerialNumber")
+    public Result<String> generateSerialNumber(@RequestBody @Valid InternalUnqidDto dto) {
+        System.out.println("节点：" + port);
+        return success(this.v3Service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
+    }
 
     /**
      * 新增
@@ -62,7 +80,7 @@ public class SysUnqidController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<List<SysUnqid>> page(@RequestBody @Valid PageFilter<SysUnqidQueryDto> filter) {
+    public Result<ResultTable<SysUnqid>> page(@RequestBody @Valid PageFilter<SysUnqidQueryDto> filter) {
         Page<SysUnqid> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }

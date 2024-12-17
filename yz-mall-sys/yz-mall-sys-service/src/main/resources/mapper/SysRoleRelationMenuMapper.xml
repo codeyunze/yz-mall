@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.sys.mapper.SysRoleRelationMenuMapper">
+
+    <select id="selectPermissionsButtonByRoleIds" resultType="com.yz.mall.sys.dto.SysRolePermissionDto">
+        select srrm.role_id, sm.auths
+        from sys_role_relation_menu srrm
+        inner join sys_menu sm on srrm.menu_id = sm.id
+        where srrm.invalid = 0
+        and sm.menu_type = 3
+        and srrm.role_id in
+        <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+            #{roleId}
+        </foreach>
+        group by srrm.role_id, sm.auths
+    </select>
+
+    <select id="selectPermissionsApiByRoleIds" resultType="com.yz.mall.sys.dto.SysRolePermissionDto">
+        select permission.role_id, menu.auths
+        from (
+            select sm.parent_id, sm.auths
+            from sys_menu sm
+            where sm.invalid = 0 and sm.menu_type = 4
+        ) menu
+        inner join (
+            select srrm.role_id, srrm.menu_id
+            from sys_role_relation_menu srrm
+            inner join sys_menu sm on srrm.menu_id = sm.id
+            where srrm.invalid = 0 and srrm.role_id in
+            <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+                #{roleId}
+            </foreach>
+            group by srrm.role_id, srrm.menu_id
+        ) permission on menu.parent_id = permission.menu_id
+        group by permission.role_id, menu.auths
+        order by permission.role_id
+    </select>
+</mapper>

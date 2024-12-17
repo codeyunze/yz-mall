@@ -19,12 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("sys/unqid/")
 public class TestController extends ApiController {
 
-    @Value("${message}")
+    @Value("${message:test}")
     private String message;
+
+    @Value("${abc:abc}")
+    private String abc;
 
     @RequestMapping("test")
     public Result<String> test() {
         return Result.success(message);
+    }
+
+    @RequestMapping("abc")
+    public Result<String> abc() {
+        return success(abc);
     }
 
 }
