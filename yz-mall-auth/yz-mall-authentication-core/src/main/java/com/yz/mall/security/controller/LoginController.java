@@ -71,6 +71,7 @@ public class LoginController extends ApiController {
     /**
      * 登录接口
      */
+    @SaIgnore
     @PostMapping("login")
     public Result<UserLoginInfoVo> login(@RequestBody @Valid AuthLoginDto loginDto) {
         InternalLoginInfoDto loginInfo = internalSysUserService.checkLogin(new InternalSysUserCheckLoginDto(loginDto.getUsername(), loginDto.getPassword()));
@@ -159,6 +160,7 @@ public class LoginController extends ApiController {
      * @param refreshTokenDto 刷新令牌
      * @return 新的访问令牌
      */
+    @SaIgnore
     @PostMapping("/refreshToken")
     public Result<UserLoginInfoVo> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
         // 1、验证
@@ -192,6 +194,7 @@ public class LoginController extends ApiController {
     /**
      * 登出系统
      */
+    @SaIgnore
     @RequestMapping("logout")
     public Result<?> logout() {
         if (!StpUtil.isLogin()) {
@@ -272,6 +275,7 @@ public class LoginController extends ApiController {
      * @param registerDto 注册用户信息
      * @return 注册用户Id
      */
+    @SaIgnore
     @PostMapping("register")
     public Result<String> register(@Valid @RequestBody RegisterDto registerDto) {
         InternalSysUserAddDto userAddDto = new InternalSysUserAddDto();

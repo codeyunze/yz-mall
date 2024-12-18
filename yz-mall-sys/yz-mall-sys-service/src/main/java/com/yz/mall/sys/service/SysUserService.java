@@ -97,5 +97,13 @@ public interface SysUserService extends IService<SysUser> {
      * @return 用户可访问的菜单
      */
     List<SysTreeMenuVo> getUserMenus(Long userId);
+
+    /**
+     * 重置用户密码
+     *
+     * @param dto 用户Id和用户密码
+     * @return 是否重置成功
+     */
+    boolean resetPassword(SysUserResetPasswordDto dto);
 }
 

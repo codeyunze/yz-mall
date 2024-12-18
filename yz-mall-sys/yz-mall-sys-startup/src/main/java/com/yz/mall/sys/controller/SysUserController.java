@@ -6,6 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysUserAddDto;
 import com.yz.mall.sys.dto.SysUserQueryDto;
+import com.yz.mall.sys.dto.SysUserResetPasswordDto;
 import com.yz.mall.sys.dto.SysUserUpdateDto;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.service.SysUserService;
@@ -124,6 +125,16 @@ public class SysUserController extends ApiController {
     @GetMapping("getUserMenus")
     public Result<List<SysTreeMenuVo>> getUserMenus() {
         return success(service.getUserMenus(StpUtil.getLoginIdAsLong()));
+    }
+
+    /**
+     * 重置用户密码
+     * @param dto 用户Id和用户密码
+     */
+    @SaCheckPermission("api:system:user:resetPassword")
+    @PostMapping("resetPassword")
+    public Result<Boolean> resetPassword(@RequestBody @Valid SysUserResetPasswordDto dto) {
+        return success(this.service.resetPassword(dto));
     }
 }
 
