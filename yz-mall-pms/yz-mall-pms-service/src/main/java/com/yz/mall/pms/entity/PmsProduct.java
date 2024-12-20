@@ -17,7 +17,7 @@ import java.io.Serializable;
  * 商品表(PmsProduct)表实体类
  *
  * @author yunze
- * @since 2024-06-16 16:06:43
+ * @since 2024-12-20 13:08:05
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -26,31 +26,31 @@ public class PmsProduct extends Model<PmsProduct> {
     /**
      * 主键标识
      */
-    private String id;
+    private Long id;
 
     /**
      * 创建人
      */
-    private String createdId;
+    private Long createId;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
-    private String updatedId;
+    private Long updateId;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     /**
      * 数据是否有效：0数据有效

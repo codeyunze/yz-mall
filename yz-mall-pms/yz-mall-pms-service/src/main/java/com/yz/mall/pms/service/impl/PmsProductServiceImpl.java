@@ -35,10 +35,10 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     @Transactional
     @Override
-    public String save(PmsProductAddDto dto) {
+    public Long save(PmsProductAddDto dto) {
         PmsProduct bo = new PmsProduct();
         BeanUtils.copyProperties(dto, bo);
-        bo.setId(IdUtil.getSnowflakeNextIdStr());
+        bo.setId(IdUtil.getSnowflakeNextId());
         baseMapper.insert(bo);
 
         // 添加商品库存信息
@@ -61,7 +61,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     @DS("slave")
     @Override
-    public PmsProductVo detail(String id) {
+    public PmsProductVo detail(Long id) {
         PmsProduct bo = baseMapper.selectById(id);
         PmsProductVo product = new PmsProductVo();
         BeanUtils.copyProperties(bo, product);

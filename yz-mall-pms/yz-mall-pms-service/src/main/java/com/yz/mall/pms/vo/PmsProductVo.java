@@ -38,18 +38,6 @@ public class PmsProductVo implements Serializable {
     private LocalDateTime createdTime;
 
     /**
-     * 更新人
-     */
-    private String updatedId;
-
-    /**
-     * 更新时间
-     */
-    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime updatedTime;
-
-    /**
      * 商品名称
      */
     private String name;

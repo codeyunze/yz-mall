@@ -24,7 +24,7 @@ public interface PmsStockMapper extends BaseMapper<PmsStock> {
      * @return 是否扣减成功
      */
     @Update("update pms_stock set quantity = quantity - #{quantity} where invalid = 0 and product_id = #{productId} and quantity >= #{quantity}")
-    boolean deduct(@Param("productId") String productId, @Param("quantity") Integer quantity);
+    boolean deduct(@Param("productId") Long productId, @Param("quantity") Integer quantity);
 
     /**
      * 获取指定商品的库存
@@ -33,6 +33,6 @@ public interface PmsStockMapper extends BaseMapper<PmsStock> {
      * @return 商品剩余库存
      */
     @Select("select quantity from pms_stock where invalid = 0 and product_id = #{productId}")
-    Integer getStockByProductId(@Param("productId") String productId);
+    Integer getStockByProductId(@Param("productId") Long productId);
 }
 

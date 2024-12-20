@@ -21,7 +21,7 @@ public class InternalPmsStockDto implements Serializable {
     public InternalPmsStockDto() {
     }
 
-    public InternalPmsStockDto(String productId, Integer quantity) {
+    public InternalPmsStockDto(Long productId, Integer quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -29,8 +29,8 @@ public class InternalPmsStockDto implements Serializable {
     /**
      * 商品信息Id
      */
-    @NotBlank(message = "商品信息Id不能为空")
-    private String productId;
+    @NotNull(message = "商品信息Id不能为空")
+    private Long productId;
 
     /**
      * 商品扣减/增加库存数量

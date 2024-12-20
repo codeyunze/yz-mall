@@ -14,7 +14,6 @@ import com.yz.tools.Result;
 import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -24,20 +23,20 @@ import javax.validation.Valid;
  * @since 2024-06-16 16:06:43
  */
 @RestController
-@RequestMapping("mall/product")
+@RequestMapping("pms/product")
 public class PmsProductController extends ApiController {
 
-    /**
-     * 服务对象
-     */
-    @Resource
-    private PmsProductService service;
+    private final PmsProductService service;
+
+    public PmsProductController(PmsProductService service) {
+        this.service = service;
+    }
 
     /**
      * 新增
      */
     @PostMapping("add")
-    public Result<String> insert(@RequestBody @Valid PmsProductAddDto dto) {
+    public Result<Long> insert(@RequestBody @Valid PmsProductAddDto dto) {
         return success(this.service.save(dto));
     }
 
@@ -55,7 +54,7 @@ public class PmsProductController extends ApiController {
      * @param id 删除数据主键ID
      */
     @DeleteMapping("delete/{id}")
-    public Result<Boolean> delete(@PathVariable String id) {
+    public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
     }
 
@@ -72,7 +71,7 @@ public class PmsProductController extends ApiController {
      * 详情查询
      */
     @GetMapping("get/{id}")
-    public Result<PmsProductVo> page(@PathVariable String id) {
+    public Result<PmsProductVo> page(@PathVariable Long id) {
         return success(this.service.detail(id));
     }
 
