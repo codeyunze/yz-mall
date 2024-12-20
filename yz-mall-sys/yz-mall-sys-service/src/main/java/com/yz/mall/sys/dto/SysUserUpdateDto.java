@@ -39,12 +39,6 @@ public class SysUserUpdateDto implements Serializable {
     private String email;
 
     /**
-     * 密码
-     */
-    @NotBlank(message = "密码不能为空")
-    private String password;
-
-    /**
      * 昵称
      */
     @Length(max = 10, message = "昵称不能超过10个字符")

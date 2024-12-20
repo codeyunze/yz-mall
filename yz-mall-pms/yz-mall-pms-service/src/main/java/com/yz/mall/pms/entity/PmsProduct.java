@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ import java.io.Serializable;
  * @since 2024-06-16 16:06:43
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class PmsProduct extends Model<PmsProduct> {
 
     /**

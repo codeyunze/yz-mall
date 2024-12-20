@@ -10,7 +10,7 @@
     </parent>
 
 
-    <artifactId>yz-mall-pms-core</artifactId>
+    <artifactId>yz-mall-pms-service</artifactId>
     <description>商品管理</description>
 
     <properties>

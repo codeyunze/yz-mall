@@ -23,8 +23,10 @@ import com.yz.tools.Result;
 import com.yz.tools.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +53,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping
 public class LoginController extends ApiController {
-
 
     private final InternalSysUserService internalSysUserService;
 
@@ -69,6 +71,7 @@ public class LoginController extends ApiController {
     /**
      * 登录接口
      */
+    @SaIgnore
     @PostMapping("login")
     public Result<UserLoginInfoVo> login(@RequestBody @Valid AuthLoginDto loginDto) {
         InternalLoginInfoDto loginInfo = internalSysUserService.checkLogin(new InternalSysUserCheckLoginDto(loginDto.getUsername(), loginDto.getPassword()));
@@ -91,6 +94,10 @@ public class LoginController extends ApiController {
         vo.setRoles(roles);
         vo.setPermissions(getPermissionByRoleIds(roles));
         vo.setAvatar(loginInfo.getAvatar());
+
+        BoundHashOperations<String, Object, Object> operations = redisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
+        operations.put("refreshToken", vo.getRefreshToken());
+        operations.expire(86400, TimeUnit.SECONDS);
         return success(vo);
     }
 
@@ -153,6 +160,7 @@ public class LoginController extends ApiController {
      * @param refreshTokenDto 刷新令牌
      * @return 新的访问令牌
      */
+    @SaIgnore
     @PostMapping("/refreshToken")
     public Result<UserLoginInfoVo> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
         // 1、验证
@@ -173,8 +181,12 @@ public class LoginController extends ApiController {
         vo.setRefreshToken(SaTempUtil.createToken(userId, 86400));
         vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
         vo.setUserId(userId.toString());
-        // 清理临时token
+        // 清理旧的临时token
         SaTempUtil.deleteToken(refreshTokenDto.getRefreshToken());
+
+        BoundHashOperations<String, Object, Object> operations = redisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
+        operations.put("refreshToken", vo.getRefreshToken());
+        operations.expire(86400, TimeUnit.SECONDS);
         return new Result<>(CodeEnum.SUCCESS.get(), vo, "访问令牌更新成功");
     }
 
@@ -182,8 +194,12 @@ public class LoginController extends ApiController {
     /**
      * 登出系统
      */
+    @SaIgnore
     @RequestMapping("logout")
     public Result<?> logout() {
+        if (!StpUtil.isLogin()) {
+            return new Result<>(CodeEnum.SUCCESS.get(), null, "系统登出成功");
+        }
         // 清理刷新token
         String userId = StpUtil.getLoginIdAsString();
         if (!StringUtils.hasText(userId)) {
@@ -191,7 +207,15 @@ public class LoginController extends ApiController {
         }
         // 清理角色缓存信息
         redisTemplate.delete(RedisCacheKey.permissionRole(StpUtil.getTokenValue()));
-        SaTempUtil.deleteToken(userId);
+
+        // 清理用户信息
+        Object refreshToken = redisTemplate.boundHashOps(RedisCacheKey.loginInfo(userId)).get("refreshToken");
+        if (!ObjectUtils.isEmpty(refreshToken)) {
+            redisTemplate.delete(RedisCacheKey.loginInfo(userId));
+            // 清理刷新token
+            SaTempUtil.deleteToken(refreshToken.toString());
+        }
+
         // 清理登录token
         StpUtil.logout();
         return new Result<>(CodeEnum.SUCCESS.get(), null, "系统登出成功");
@@ -251,6 +275,7 @@ public class LoginController extends ApiController {
      * @param registerDto 注册用户信息
      * @return 注册用户Id
      */
+    @SaIgnore
     @PostMapping("register")
     public Result<String> register(@Valid @RequestBody RegisterDto registerDto) {
         InternalSysUserAddDto userAddDto = new InternalSysUserAddDto();

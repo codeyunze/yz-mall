@@ -1,4 +1,4 @@
-package com.yz.mall.pms.controller;
+package com.yz.mall.pms.internal;
 
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsStockService;

@@ -18,6 +18,7 @@ import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
 import com.yz.tools.PageFilter;
+import com.yz.tools.RandomUtils;
 import com.yz.tools.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -181,6 +182,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<SysMenu> menus = sysMenuService.list(menuQueryDto);
         // 解析菜单信息
         return sysMenuService.menusInfoProcessor(menus, 0L, roleIds);
+    }
+
+    @Override
+    public boolean resetPassword(SysUserResetPasswordDto dto) {
+        SysUser user = baseMapper.selectById(dto.getId());
+        // user.setPassword(RandomUtils.randomPassword());
+        user.setPassword(dto.getPassword());
+        return baseMapper.updateById(user) > 0;
     }
 }
 

@@ -79,7 +79,7 @@ public class RefreshPermission {
         roleIds.forEach(roleId -> {
             // 参数一：redisScript，参数二：key列表，参数三：arg（可多个）
             String[] array = permissions.get(roleId).toArray(new String[0]);
-            redisTemplate.execute(redisScript, Collections.singletonList(RedisCacheKey.permission(MenuTypeEnum.API.name(), roleId)), array);
+            redisTemplate.execute(redisScript, Collections.singletonList(RedisCacheKey.permission(type.name(), roleId)), array);
         });
     }
 }
