@@ -2,9 +2,9 @@
   "name": "mall",
   "describe": "mall",
   "avatar": "",
-  "version": "4.9.4",
+  "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-12-15 15:01:28",
+  "updatedTime": "2024-12-20 13:42:15",
   "dbConns": [],
   "profile": {
     "default": {
@@ -1424,7 +1424,7 @@
           "defKey": "id",
           "defName": "主键标识",
           "comment": "",
-          "type": "",
+          "type": "BIGINT",
           "len": "",
           "scale": "",
           "primaryKey": true,
@@ -1433,18 +1433,18 @@
           "defaultValue": "",
           "hideInGraph": false,
           "refDict": "",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
           "extProps": {},
-          "domain": "16120F75-6AA7-4483-868D-F07F511BB081",
+          "domain": "",
           "id": "67F5D87B-2AE3-4756-8B76-C323851E5E3C"
         },
         {
-          "defKey": "created_id",
+          "defKey": "create_id",
           "defName": "创建人",
           "comment": "",
-          "domain": "16120F75-6AA7-4483-868D-F07F511BB081",
-          "type": "",
-          "len": 32,
+          "domain": "",
+          "type": "BIGINT",
+          "len": "",
           "scale": "",
           "primaryKey": false,
           "notNull": false,
@@ -1454,10 +1454,10 @@
           "refDict": "",
           "uiHint": "",
           "id": "89D3B8D8-F2FF-487F-A74C-58D2C5FDD4EB",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64"
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11"
         },
         {
-          "defKey": "created_time",
+          "defKey": "create_time",
           "defName": "创建时间",
           "comment": "",
           "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
@@ -1475,12 +1475,12 @@
           "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
         },
         {
-          "defKey": "updated_id",
+          "defKey": "update_id",
           "defName": "更新人",
           "comment": "",
-          "domain": "16120F75-6AA7-4483-868D-F07F511BB081",
-          "type": "",
-          "len": 32,
+          "domain": "",
+          "type": "BIGINT",
+          "len": "",
           "scale": "",
           "primaryKey": false,
           "notNull": false,
@@ -1490,10 +1490,10 @@
           "refDict": "",
           "uiHint": "",
           "id": "9B2F944A-F505-4E7B-A3E2-5032DB9EE5F4",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64"
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11"
         },
         {
-          "defKey": "updated_time",
+          "defKey": "update_time",
           "defName": "更新时间",
           "comment": "",
           "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
@@ -1665,7 +1665,27 @@
         }
       ],
       "correlations": [],
-      "indexes": [],
+      "indexes": [
+        {
+          "defKey": "ix_pms_product_status",
+          "defName": null,
+          "unique": false,
+          "comment": "",
+          "fields": [
+            {
+              "fieldDefKey": "96B54408-0C66-457E-8ABF-8AEABEFB8B35",
+              "ascOrDesc": "A",
+              "id": "C21BDAB8-D605-4424-9535-080A7C5378D3"
+            },
+            {
+              "fieldDefKey": "4A9A0DD3-A799-4279-97F3-A1F6B42DEF99",
+              "ascOrDesc": "A",
+              "id": "5E08418C-50C6-473A-B8B0-AFDBD1C2BB67"
+            }
+          ],
+          "id": "86B292E5-34A5-459F-B661-70F366B5F073"
+        }
+      ],
       "type": "P"
     },
     {
@@ -1822,7 +1842,7 @@
           "defKey": "id",
           "defName": "主键标识",
           "comment": "",
-          "type": "",
+          "type": "BIGINT",
           "len": "",
           "scale": "",
           "primaryKey": true,
@@ -1831,17 +1851,17 @@
           "defaultValue": "",
           "hideInGraph": false,
           "refDict": "",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
           "extProps": {},
-          "domain": "16120F75-6AA7-4483-868D-F07F511BB081",
+          "domain": "",
           "id": "C15415D5-3F14-4AD6-B102-A4D84C0AD647"
         },
         {
-          "defKey": "created_id",
+          "defKey": "create_id",
           "defName": "创建人",
           "comment": "",
-          "domain": "16120F75-6AA7-4483-868D-F07F511BB081",
-          "type": "",
+          "domain": "",
+          "type": "BIGINT",
           "len": 32,
           "scale": "",
           "primaryKey": false,
@@ -1852,10 +1872,10 @@
           "refDict": "",
           "uiHint": "",
           "id": "096DE246-6F09-4DF4-8840-BC814BD21258",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64"
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11"
         },
         {
-          "defKey": "created_time",
+          "defKey": "create_time",
           "defName": "创建时间",
           "comment": "",
           "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
@@ -1873,12 +1893,12 @@
           "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
         },
         {
-          "defKey": "updated_id",
+          "defKey": "update_id",
           "defName": "更新人",
           "comment": "",
-          "domain": "16120F75-6AA7-4483-868D-F07F511BB081",
-          "type": "",
-          "len": 32,
+          "domain": "",
+          "type": "BIGINT",
+          "len": "",
           "scale": "",
           "primaryKey": false,
           "notNull": false,
@@ -1888,10 +1908,10 @@
           "refDict": "",
           "uiHint": "",
           "id": "D90F1F9F-CCC3-486F-A9B6-CBE10594859D",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64"
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11"
         },
         {
-          "defKey": "updated_time",
+          "defKey": "update_time",
           "defName": "更新时间",
           "comment": "",
           "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
@@ -1930,8 +1950,8 @@
           "defKey": "product_id",
           "defName": "商品信息Id",
           "comment": "",
-          "type": "VARCHAR",
-          "len": 32,
+          "type": "BIGINT",
+          "len": "",
           "scale": "",
           "primaryKey": false,
           "notNull": false,
@@ -1939,7 +1959,7 @@
           "defaultValue": "",
           "hideInGraph": false,
           "refDict": "",
-          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
           "extProps": {},
           "domain": "",
           "id": "BB50A046-3F97-4C5D-BD3D-D886CA76609B"
@@ -1964,7 +1984,32 @@
         }
       ],
       "correlations": [],
-      "indexes": [],
+      "indexes": [
+        {
+          "defKey": "ix_pms_stock_product_id",
+          "defName": null,
+          "unique": false,
+          "comment": "",
+          "fields": [
+            {
+              "fieldDefKey": "BB50A046-3F97-4C5D-BD3D-D886CA76609B",
+              "ascOrDesc": "A",
+              "id": "07DB1CFF-1949-4416-9AEB-5A674035DDBE"
+            },
+            {
+              "fieldDefKey": "EB263DF6-4DCE-4BA9-9A10-CB19231E7327",
+              "ascOrDesc": "A",
+              "id": "2EA666BD-6069-4C34-A266-6C4E5C6F337B"
+            },
+            {
+              "fieldDefKey": "B3F211CA-69B1-4893-9677-3B5004A3E883",
+              "ascOrDesc": "A",
+              "id": "7030D662-EF5E-4CAA-AF23-2007DBA86C23"
+            }
+          ],
+          "id": "82379DD0-2B02-47F9-B502-5560B3E9FA61"
+        }
+      ],
       "type": "P"
     },
     {
@@ -4737,32 +4782,7 @@
           "id": "74ECD441-32B2-40FE-8A1B-46339C6698F1"
         }
       ],
-      "correlations": [
-        {
-          "myField": "93F30857-02F9-4C70-A0F9-B42D9EEB0595",
-          "refEntity": "7A6D5C29-6EC7-4470-B0BD-127489278044",
-          "refField": "C16E995B-6332-46BD-B44D-F6184D52E3EA",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        },
-        {
-          "myField": "74ECD441-32B2-40FE-8A1B-46339C6698F1",
-          "refEntity": "D2D17249-3478-4F5C-88AD-09FC491E7DC7",
-          "refField": "0BD95C64-6C1B-442C-907D-1769ECF3492E",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        },
-        {
-          "myField": "74ECD441-32B2-40FE-8A1B-46339C6698F1",
-          "refEntity": "5AC82B59-34F5-4592-8837-C12CB730603F",
-          "refField": "445DBEA9-9281-45A9-B274-F7A4730E6C72",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        }
-      ],
+      "correlations": [],
       "indexes": [
         {
           "defKey": "uk_sys_role_relation_by_user",
@@ -5891,16 +5911,7 @@
           "id": "9991E8CA-4183-4B5B-BBB3-7CE0795C02F5"
         }
       ],
-      "correlations": [
-        {
-          "myField": "88FF0BDE-895C-4F5E-A1DF-4D9EDCBE9B8C",
-          "refEntity": "5AC82B59-34F5-4592-8837-C12CB730603F",
-          "refField": "445DBEA9-9281-45A9-B274-F7A4730E6C72",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        }
-      ],
+      "correlations": [],
       "indexes": [
         {
           "defKey": "ix_sys_org",
@@ -6197,24 +6208,7 @@
           "id": "8CE2C650-BB04-4B2C-8EF9-C4BE88D383BF"
         }
       ],
-      "correlations": [
-        {
-          "myField": "8CE2C650-BB04-4B2C-8EF9-C4BE88D383BF",
-          "refEntity": "D2D17249-3478-4F5C-88AD-09FC491E7DC7",
-          "refField": "0BD95C64-6C1B-442C-907D-1769ECF3492E",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        },
-        {
-          "myField": "63D46D75-253B-4540-92C8-E101D55180D2",
-          "refEntity": "5AC82B59-34F5-4592-8837-C12CB730603F",
-          "refField": "445DBEA9-9281-45A9-B274-F7A4730E6C72",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        }
-      ],
+      "correlations": [],
       "indexes": [
         {
           "defKey": "uk_sys_user_relation_org",
@@ -6863,16 +6857,7 @@
           "id": "01C6CADA-A048-4D6A-A75D-5F18A47E4BF3"
         }
       ],
-      "correlations": [
-        {
-          "myField": "DFE3512F-571F-4CA4-8F75-B96E32FCDDFB",
-          "refEntity": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
-          "refField": "3BD745A2-C917-4B9C-A43F-C33146BC313B",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        }
-      ],
+      "correlations": [],
       "indexes": [],
       "type": "P"
     },
@@ -7135,24 +7120,7 @@
           "id": "4B231052-3CDA-4B88-8E5E-B0480AD3AA8F"
         }
       ],
-      "correlations": [
-        {
-          "myField": "A3F1E2A7-823D-444E-A86B-0E1A48615C6C",
-          "refEntity": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
-          "refField": "3BD745A2-C917-4B9C-A43F-C33146BC313B",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        },
-        {
-          "myField": "4B231052-3CDA-4B88-8E5E-B0480AD3AA8F",
-          "refEntity": "9731A74F-1ABF-4505-B320-D43893AA74A5",
-          "refField": "FFB857D0-F9F2-482B-B5C0-0A80AAE6728E",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        }
-      ],
+      "correlations": [],
       "indexes": [],
       "type": "P"
     },
@@ -7415,24 +7383,7 @@
           "id": "D5BA3416-7D2A-4379-8C20-7652ADA52BB4"
         }
       ],
-      "correlations": [
-        {
-          "myField": "06A1264A-3F39-44BE-AFB9-41F85AC057C9",
-          "refEntity": "7A6D5C29-6EC7-4470-B0BD-127489278044",
-          "refField": "C16E995B-6332-46BD-B44D-F6184D52E3EA",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        },
-        {
-          "myField": "D5BA3416-7D2A-4379-8C20-7652ADA52BB4",
-          "refEntity": "C0720388-F1F5-41AD-AE74-89F308C0EEA6",
-          "refField": "3BD745A2-C917-4B9C-A43F-C33146BC313B",
-          "myRows": "1",
-          "refRows": "n",
-          "innerType": ""
-        }
-      ],
+      "correlations": [],
       "indexes": [
         {
           "defKey": "uk_sys_role_menu",

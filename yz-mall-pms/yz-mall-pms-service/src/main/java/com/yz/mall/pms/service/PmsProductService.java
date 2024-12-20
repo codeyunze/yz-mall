@@ -25,7 +25,7 @@ public interface PmsProductService extends IService<PmsProduct> {
      * @param dto 新增基础数据
      * @return 主键Id
      */
-    String save(PmsProductAddDto dto);
+    Long save(PmsProductAddDto dto);
 
     /**
      * 更新数据
@@ -49,7 +49,7 @@ public interface PmsProductService extends IService<PmsProduct> {
      * @param id 商品id
      * @return 商品详情
      */
-    PmsProductVo detail(String id);
+    PmsProductVo detail(Long id);
 
 }
 

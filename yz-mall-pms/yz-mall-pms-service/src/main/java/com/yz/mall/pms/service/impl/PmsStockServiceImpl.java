@@ -34,7 +34,7 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
 
     // TODO: 2024/6/16 星期日 yunze 加事务
     @Override
-    public Boolean deduct(String productId, Integer quantity) {
+    public Boolean deduct(Long productId, Integer quantity) {
         // TODO: 2024/6/16 星期日 yunze 加锁
         return baseMapper.deduct(productId, quantity);
     }
@@ -63,12 +63,12 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
 
     // TODO: 2024/6/16 星期日 yunze 加事务
     @Override
-    public Boolean add(String productId, Integer quantity) {
+    public Boolean add(Long productId, Integer quantity) {
         // TODO: 2024/6/16 星期日 yunze 加锁
         PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getQuantity).eq(PmsStock::getProductId, productId));
         if (stock == null) {
             stock = new PmsStock();
-            stock.setId(IdUtil.getSnowflakeNextIdStr());
+            stock.setId(IdUtil.getSnowflakeNextId());
             stock.setProductId(productId);
             stock.setQuantity(quantity);
         } else {
@@ -78,7 +78,7 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     }
 
     @Override
-    public Integer getStockByProductId(String productId) {
+    public Integer getStockByProductId(Long productId) {
         return baseMapper.getStockByProductId(productId);
     }
 }

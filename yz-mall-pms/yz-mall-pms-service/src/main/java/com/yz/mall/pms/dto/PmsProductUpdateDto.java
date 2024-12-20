@@ -6,6 +6,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 商品表(PmsProduct)表更新数据模型类
@@ -21,8 +22,8 @@ public class PmsProductUpdateDto implements Serializable {
     /**
      * 主键标识
      */
-    @NotBlank(message = "主键标识不能为空")
-    private String id;
+    @NotNull(message = "主键标识不能为空")
+    private Long id;
 
     /**
      * 商品名称

@@ -22,7 +22,7 @@ import javax.validation.Valid;
  * @since 2024-06-16 16:14:09
  */
 @RestController
-@RequestMapping("mall/stock")
+@RequestMapping("pms/stock")
 public class PmsStockController extends ApiController {
 
     /**
