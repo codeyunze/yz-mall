@@ -2,6 +2,7 @@ package com.yz.mall.sys.dto;
 
 import com.yz.mall.sys.entity.SysOrg;
 import com.yz.mall.sys.entity.SysRole;
+import com.yz.mall.sys.enums.EnableEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -53,5 +54,15 @@ public class SysUserQueryDto implements Serializable {
      * 综合查询
      */
     private String comprehensive;
+
+    /**
+     * 用户状态 {@link EnableEnum}
+     */
+    private Integer status;
+
+    /**
+     * 用户名称
+     */
+    private String username;
 }
 

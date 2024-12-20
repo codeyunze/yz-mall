@@ -10,8 +10,11 @@
             inner join sys_user_relation_role surr on su.id = surr.relation_id
         </if>
         where su.invalid = 0
-        <if test="filter.phone != null and filter.phone != ''">and su.phone like concat(#{filter.phone}, '%')</if>
-        <if test="filter.email != null and filter.email != ''">and su.email like concat(#{filter.email}, '%')</if>
+        <if test="filter.phone != null and filter.phone != ''">and su.phone like concat('%', #{filter.phone}, '%')</if>
+        <if test="filter.email != null and filter.email != ''">and su.email like concat('%', #{filter.email}, '%')</if>
+        <if test="filter.username != null and filter.username != ''">and su.username like concat('%', #{filter.username}, '%')</if>
+        <if test="filter.status != null">and su.status = #{filter.status}</if>
+
         <if test="filter.comprehensive != null and filter.comprehensive != ''">
             and (su.phone like concat('%', #{filter.comprehensive}, '%') or su.username like concat('%', #{filter.comprehensive}, '%'))
         </if>
