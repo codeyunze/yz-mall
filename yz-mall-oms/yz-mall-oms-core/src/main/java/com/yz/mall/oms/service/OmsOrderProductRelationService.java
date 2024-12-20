@@ -3,10 +3,10 @@ package com.yz.mall.oms.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.oms.dto.OmsOrderItemDto;
-import com.yz.mall.oms.dto.OmsOrderProductRelationAddDto;
+import com.yz.mall.oms.dto.OmsOrderRelationProductAddDto;
 import com.yz.mall.oms.dto.OmsOrderProductRelationQueryDto;
-import com.yz.mall.oms.dto.OmsOrderProductRelationUpdateDto;
-import com.yz.mall.oms.entity.OmsOrderProductRelation;
+import com.yz.mall.oms.dto.OmsOrderRelationProductUpdateDto;
+import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import com.yz.tools.PageFilter;
 
 import javax.validation.Valid;
@@ -19,7 +19,7 @@ import java.util.List;
  * @author yunze
  * @since 2024-06-18 12:51:39
  */
-public interface OmsOrderProductRelationService extends IService<OmsOrderProductRelation> {
+public interface OmsOrderProductRelationService extends IService<OmsOrderRelationProduct> {
 
     /**
      * 新增数据
@@ -27,16 +27,16 @@ public interface OmsOrderProductRelationService extends IService<OmsOrderProduct
      * @param dto 新增基础数据
      * @return 主键Id
      */
-    String save(OmsOrderProductRelationAddDto dto);
+    Long save(OmsOrderRelationProductAddDto dto);
 
     /**
      * 批量新增数据
      *
      * @param orderId 订单Id
-     * @param dtos 新增基础数据
+     * @param array 新增基础数据
      * @return 是否新增成功
      */
-    boolean saveBatch(@NotBlank(message = "订单Id不能为空") String orderId, @Valid List<OmsOrderItemDto> dtos);
+    boolean saveBatch(@NotBlank(message = "订单Id不能为空") Long orderId, @Valid List<OmsOrderItemDto> array);
 
     /**
      * 更新数据
@@ -44,7 +44,7 @@ public interface OmsOrderProductRelationService extends IService<OmsOrderProduct
      * @param dto 更新基础数据
      * @return 是否操作成功
      */
-    boolean update(@Valid OmsOrderProductRelationUpdateDto dto);
+    boolean update(@Valid OmsOrderRelationProductUpdateDto dto);
 
     /**
      * 分页查询
@@ -52,7 +52,7 @@ public interface OmsOrderProductRelationService extends IService<OmsOrderProduct
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<OmsOrderProductRelation> page(PageFilter<OmsOrderProductRelationQueryDto> filter);
+    Page<OmsOrderRelationProduct> page(PageFilter<OmsOrderProductRelationQueryDto> filter);
 
 }
 

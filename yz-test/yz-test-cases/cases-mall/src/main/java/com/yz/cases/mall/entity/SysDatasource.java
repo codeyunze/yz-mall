@@ -31,20 +31,20 @@ public class SysDatasource extends Model<SysDatasource> {
      * 创建人
      */
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long createdId;
+    private Long createId;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long updatedId;
+    private Long updateId;
 
     /**
      * 更新时间

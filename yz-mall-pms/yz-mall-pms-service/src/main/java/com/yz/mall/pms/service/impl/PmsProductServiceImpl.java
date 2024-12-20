@@ -17,6 +17,7 @@ import com.yz.tools.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 商品表(PmsProduct)表服务实现类
@@ -55,7 +56,11 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     @Override
     public Page<PmsProduct> page(PageFilter<PmsProductQueryDto> filter) {
+        PmsProductQueryDto query = filter.getFilter();
         LambdaQueryWrapper<PmsProduct> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(CollectionUtils.isEmpty(query.getTitles()), PmsProduct::getTitle, query.getTitles());
+        queryWrapper.eq(query.getVerifyStatus() != null, PmsProduct::getVerifyStatus, query.getVerifyStatus());
+        queryWrapper.eq(query.getPublishStatus() != null, PmsProduct::getPublishStatus, query.getPublishStatus());
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 

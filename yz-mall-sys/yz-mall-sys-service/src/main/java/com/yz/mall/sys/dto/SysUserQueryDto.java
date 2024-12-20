@@ -23,7 +23,7 @@ public class SysUserQueryDto implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 手机号

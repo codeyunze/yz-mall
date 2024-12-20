@@ -23,7 +23,7 @@ public class OmsOrderAddDto implements Serializable {
      * 用户Id
      */
     @NotBlank(message = "用户Id不能为空")
-    private String userId;
+    private Long userId;
 
     /**
      * 订单编号;省市区年月日000001

@@ -20,8 +20,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-mall-starter-web</artifactId>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 

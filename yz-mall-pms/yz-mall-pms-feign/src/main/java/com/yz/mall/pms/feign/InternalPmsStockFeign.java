@@ -4,7 +4,10 @@ import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.tools.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -14,30 +17,30 @@ import java.util.List;
  * @date 2024/6/23 16:26
  */
 @Repository
-@FeignClient(name = "yz-mall-pms", contextId = "internalStock")
+@FeignClient(name = "yz-mall-pms", contextId = "internalPmsStock", path = "internal/pms/stock")
 public interface InternalPmsStockFeign {
 
     /**
      * 扣减商品库存
      */
-    @PostMapping("internal/pms/stock/deduct")
-    public Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto);
+    @PostMapping("deduct")
+    Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto);
 
     /**
      * 扣减商品库存
      */
-    @PostMapping("internal/pms/stock/deductBatch")
-    public Result<Boolean> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto);
+    @PostMapping("deductBatch")
+    Result<Boolean> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto);
 
     /**
      * 增加商品库存
      */
-    @PostMapping("internal/pms/stock/add")
-    public Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto);
+    @PostMapping("add")
+    Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto);
 
     /**
      * 获取指定商品的库存
      */
-    @GetMapping("internal/pms/stock/get/{productId}")
-    public Result<Integer> getStockByProductId(@PathVariable String productId);
+    @GetMapping("get/{productId}")
+    Result<Integer> getStockByProductId(@PathVariable Long productId);
 }

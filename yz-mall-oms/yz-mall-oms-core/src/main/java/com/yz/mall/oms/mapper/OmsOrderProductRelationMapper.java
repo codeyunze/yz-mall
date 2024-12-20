@@ -1,7 +1,7 @@
 package com.yz.mall.oms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yz.mall.oms.entity.OmsOrderProductRelation;
+import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-06-18 12:51:39
  */
 @Mapper
-public interface OmsOrderProductRelationMapper extends BaseMapper<OmsOrderProductRelation> {
+public interface OmsOrderProductRelationMapper extends BaseMapper<OmsOrderRelationProduct> {
 
 }
 

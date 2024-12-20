@@ -23,7 +23,7 @@ public class OmsOrderUpdateDto implements Serializable {
      * 主键标识
      */
     @NotBlank(message = "主键标识不能为空")
-    private String id;
+    private Long id;
 
     /**
      * 订单编号;省市区年月日000001
