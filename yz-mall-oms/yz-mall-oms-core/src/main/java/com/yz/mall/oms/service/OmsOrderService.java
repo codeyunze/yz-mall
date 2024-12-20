@@ -24,7 +24,7 @@ public interface OmsOrderService extends IService<OmsOrder> {
      * @param dto 订单与商品信息
      * @return 订单Id
      */
-    String generateOrder(OmsOrderGenerateDto dto);
+    Long generateOrder(OmsOrderGenerateDto dto);
 
     /**
      * 新增数据
@@ -32,7 +32,7 @@ public interface OmsOrderService extends IService<OmsOrder> {
      * @param dto 新增基础数据
      * @return 主键Id
      */
-    String save(OmsOrderAddDto dto);
+    Long save(OmsOrderAddDto dto);
 
     /**
      * 更新数据

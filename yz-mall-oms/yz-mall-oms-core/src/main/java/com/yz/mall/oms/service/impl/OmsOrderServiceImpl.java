@@ -52,10 +52,10 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String generateOrder(OmsOrderGenerateDto dto) {
+    public Long generateOrder(OmsOrderGenerateDto dto) {
         OmsOrder order = new OmsOrder();
         BeanUtils.copyProperties(dto, order);
-        order.setId(IdUtil.getSnowflakeNextIdStr());
+        order.setId(IdUtil.getSnowflakeNextId());
         // TODO: 2024/6/18 星期二 yunze 序号自动有序的生成
         // 省市区年月日000001
         String prefix = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
@@ -79,10 +79,10 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     }
 
     @Override
-    public String save(OmsOrderAddDto dto) {
+    public Long save(OmsOrderAddDto dto) {
         OmsOrder bo = new OmsOrder();
         BeanUtils.copyProperties(dto, bo);
-        bo.setId(IdUtil.getSnowflakeNextIdStr());
+        bo.setId(IdUtil.getSnowflakeNextId());
         baseMapper.insert(bo);
         return bo.getId();
     }

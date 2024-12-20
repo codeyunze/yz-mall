@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.oms.dto.OmsOrderItemDto;
-import com.yz.mall.oms.dto.OmsOrderProductRelationAddDto;
+import com.yz.mall.oms.dto.OmsOrderRelationProductAddDto;
 import com.yz.mall.oms.dto.OmsOrderProductRelationQueryDto;
-import com.yz.mall.oms.dto.OmsOrderProductRelationUpdateDto;
-import com.yz.mall.oms.entity.OmsOrderProductRelation;
+import com.yz.mall.oms.dto.OmsOrderRelationProductUpdateDto;
+import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import com.yz.mall.oms.mapper.OmsOrderProductRelationMapper;
 import com.yz.mall.oms.service.OmsOrderProductRelationService;
 import com.yz.tools.PageFilter;
@@ -25,23 +25,23 @@ import java.util.stream.Collectors;
  * @since 2024-06-18 12:51:39
  */
 @Service
-public class OmsOrderProductRelationServiceImpl extends ServiceImpl<OmsOrderProductRelationMapper, OmsOrderProductRelation> implements OmsOrderProductRelationService {
+public class OmsOrderProductRelationServiceImpl extends ServiceImpl<OmsOrderProductRelationMapper, OmsOrderRelationProduct> implements OmsOrderProductRelationService {
 
     @Override
-    public String save(OmsOrderProductRelationAddDto dto) {
-        OmsOrderProductRelation bo = new OmsOrderProductRelation();
+    public Long save(OmsOrderRelationProductAddDto dto) {
+        OmsOrderRelationProduct bo = new OmsOrderRelationProduct();
         BeanUtils.copyProperties(dto, bo);
-        bo.setId(IdUtil.getSnowflakeNextIdStr());
+        bo.setId(IdUtil.getSnowflakeNextId());
         baseMapper.insert(bo);
         return bo.getId();
     }
 
     @Override
-    public boolean saveBatch(String orderId, List<OmsOrderItemDto> dtos) {
-        List<OmsOrderProductRelation> bos = dtos.stream().map(t -> {
-            OmsOrderProductRelation bo = new OmsOrderProductRelation();
+    public boolean saveBatch(Long orderId, List<OmsOrderItemDto> array) {
+        List<OmsOrderRelationProduct> bos = array.stream().map(t -> {
+            OmsOrderRelationProduct bo = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(t, bo);
-            bo.setId(IdUtil.getSnowflakeNextIdStr());
+            bo.setId(IdUtil.getSnowflakeNextId());
             bo.setOrderId(orderId);
             return bo;
         }).collect(Collectors.toList());
@@ -49,15 +49,15 @@ public class OmsOrderProductRelationServiceImpl extends ServiceImpl<OmsOrderProd
     }
 
     @Override
-    public boolean update(OmsOrderProductRelationUpdateDto dto) {
-        OmsOrderProductRelation bo = new OmsOrderProductRelation();
+    public boolean update(OmsOrderRelationProductUpdateDto dto) {
+        OmsOrderRelationProduct bo = new OmsOrderRelationProduct();
         BeanUtils.copyProperties(dto, bo);
         return baseMapper.updateById(bo) > 0;
     }
 
     @Override
-    public Page<OmsOrderProductRelation> page(PageFilter<OmsOrderProductRelationQueryDto> filter) {
-        LambdaQueryWrapper<OmsOrderProductRelation> queryWrapper = new LambdaQueryWrapper<>();
+    public Page<OmsOrderRelationProduct> page(PageFilter<OmsOrderProductRelationQueryDto> filter) {
+        LambdaQueryWrapper<OmsOrderRelationProduct> queryWrapper = new LambdaQueryWrapper<>();
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 }

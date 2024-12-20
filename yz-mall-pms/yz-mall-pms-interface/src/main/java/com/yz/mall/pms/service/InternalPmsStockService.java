@@ -17,7 +17,7 @@ public interface InternalPmsStockService {
      * @param quantity  扣减数量
      * @return 是否扣减成功
      */
-    Boolean deduct(String productId, Integer quantity);
+    Boolean deduct(Long productId, Integer quantity);
 
     /**
      * 批量扣减指定商品库存
@@ -33,7 +33,7 @@ public interface InternalPmsStockService {
      * @param quantity  增加数量
      * @return 是否增加成功
      */
-    Boolean add(String productId, Integer quantity);
+    Boolean add(Long productId, Integer quantity);
 
     /**
      * 获取指定商品的库存
@@ -41,5 +41,5 @@ public interface InternalPmsStockService {
      * @param productId 商品id
      * @return 商品剩余库存
      */
-    Integer getStockByProductId(String productId);
+    Integer getStockByProductId(Long productId);
 }

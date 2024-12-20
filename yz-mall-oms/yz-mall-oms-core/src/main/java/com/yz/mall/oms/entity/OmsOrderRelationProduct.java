@@ -19,29 +19,29 @@ import java.io.Serializable;
  * @since 2024-06-18 12:51:38
  */
 @Data
-public class OmsOrderProductRelation extends Model<OmsOrderProductRelation> {
+public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
 
     /**
      * 主键标识
      */
-    private String id;
+    private Long id;
 
     /**
      * 创建人
      */
-    private String createdId;
+    private Long createdId;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
-    private String updatedId;
+    private Long updateId;
 
     /**
      * 更新时间
@@ -53,18 +53,18 @@ public class OmsOrderProductRelation extends Model<OmsOrderProductRelation> {
     /**
      * 数据是否有效：0数据有效
      */
-    @TableLogic
-    private Integer invalid;
+    @TableLogic(value = "0", delval = "current_timestamp")
+    private Long invalid;
 
     /**
      * 订单id
      */
-    private String orderId;
+    private Long orderId;
 
     /**
      * 商品id
      */
-    private String productId;
+    private Long productId;
 
     /**
      * 购买商品数量

@@ -2,9 +2,7 @@ package com.yz.mall.oms.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.oms.dto.OmsOrderAddDto;
 import com.yz.mall.oms.dto.OmsOrderGenerateDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderUpdateDto;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 订单信息表(OmsOrder)表控制层
@@ -70,18 +67,8 @@ public class OmsOrderController extends ApiController {
      * 生成订单
      */
     @PostMapping("generate")
-    public Result<String> generateOrder(@RequestBody @Valid OmsOrderGenerateDto dto) {
+    public Result<Long> generateOrder(@RequestBody @Valid OmsOrderGenerateDto dto) {
         return success(this.service.generateOrder(dto));
-    }
-
-
-    /**
-     * 新增
-     */
-    @Deprecated
-    @PostMapping("add")
-    public Result<String> insert(@RequestBody @Valid OmsOrderAddDto dto) {
-        return success(this.service.save(dto));
     }
 
     /**
@@ -100,7 +87,7 @@ public class OmsOrderController extends ApiController {
      */
     @Deprecated
     @DeleteMapping("delete/{id}")
-    public Result<Boolean> delete(@PathVariable String id) {
+    public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
     }
 
@@ -118,7 +105,7 @@ public class OmsOrderController extends ApiController {
      * 详情查询
      */
     @GetMapping("get/{id}")
-    public Result<OmsOrder> page(@PathVariable String id) {
+    public Result<OmsOrder> page(@PathVariable Long id) {
         return success(this.service.getById(id));
     }
 

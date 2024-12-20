@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @since 2024-06-18 12:51:39
  */
 @Data
-public class OmsOrderProductRelationAddDto implements Serializable {
+public class OmsOrderRelationProductAddDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 
@@ -23,13 +23,13 @@ public class OmsOrderProductRelationAddDto implements Serializable {
      * 订单id
      */
     @NotBlank(message = "订单id不能为空")
-    private String orderId;
+    private Long orderId;
 
     /**
      * 商品id
      */
     @NotBlank(message = "商品id不能为空")
-    private String productId;
+    private Long productId;
 
     /**
      * 购买商品数量

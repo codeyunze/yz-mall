@@ -42,8 +42,8 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     @Override
     public void deduct(List<InternalPmsStockDto> productStocks) {
         // 各商品需要扣除的库存数量
-        Map<String, Integer> productQuantityuMap = productStocks.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, InternalPmsStockDto::getQuantity));
-        List<String> productIds = productStocks.stream().map(InternalPmsStockDto::getProductId).collect(Collectors.toList());
+        Map<Long, Integer> productQuantityuMap = productStocks.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, InternalPmsStockDto::getQuantity));
+        List<Long> productIds = productStocks.stream().map(InternalPmsStockDto::getProductId).collect(Collectors.toList());
         // TODO: 2024/6/27 星期四 yunze 锁对应商品的库存
         LambdaQueryWrapper<PmsStock> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(PmsStock::getId, PmsStock::getProductId, PmsStock::getQuantity);

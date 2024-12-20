@@ -42,7 +42,7 @@ public class SysUnqidQueryDto implements Serializable {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public LocalDateTime getcreateTime() {
         return createTime;
     }
 

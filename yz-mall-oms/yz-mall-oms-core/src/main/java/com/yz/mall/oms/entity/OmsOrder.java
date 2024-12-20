@@ -24,24 +24,24 @@ public class OmsOrder extends Model<OmsOrder> {
     /**
      * 主键标识
      */
-    private String id;
+    private Long id;
 
     /**
      * 创建人
      */
-    private String createdId;
+    private Long createId;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
-    private String updatedId;
+    private Long updateId;
 
     /**
      * 更新时间
@@ -53,13 +53,13 @@ public class OmsOrder extends Model<OmsOrder> {
     /**
      * 数据是否有效：0数据有效
      */
-    @TableLogic
+    @TableLogic(value = "0", delval = "current_timestamp")
     private Integer invalid;
 
     /**
      * 用户Id
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 订单编号;省市区年月日000001

@@ -2,10 +2,10 @@ package com.yz.mall.oms.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.oms.dto.OmsOrderProductRelationAddDto;
+import com.yz.mall.oms.dto.OmsOrderRelationProductAddDto;
 import com.yz.mall.oms.dto.OmsOrderProductRelationQueryDto;
-import com.yz.mall.oms.dto.OmsOrderProductRelationUpdateDto;
-import com.yz.mall.oms.entity.OmsOrderProductRelation;
+import com.yz.mall.oms.dto.OmsOrderRelationProductUpdateDto;
+import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import com.yz.mall.oms.service.OmsOrderProductRelationService;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 订单商品关联表(OmsOrderProductRelation)表控制层
@@ -37,7 +36,7 @@ public class OmsOrderProductRelationController extends ApiController {
      * 新增
      */
     @PostMapping("add")
-    public Result<String> insert(@RequestBody @Valid OmsOrderProductRelationAddDto dto) {
+    public Result<Long> insert(@RequestBody @Valid OmsOrderRelationProductAddDto dto) {
         return success(this.service.save(dto));
     }
 
@@ -45,7 +44,7 @@ public class OmsOrderProductRelationController extends ApiController {
      * 更新
      */
     @PostMapping("update")
-    public Result<Boolean> update(@RequestBody @Valid OmsOrderProductRelationUpdateDto dto) {
+    public Result<Boolean> update(@RequestBody @Valid OmsOrderRelationProductUpdateDto dto) {
         return success(this.service.update(dto));
     }
 
@@ -63,8 +62,8 @@ public class OmsOrderProductRelationController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<ResultTable<OmsOrderProductRelation>> page(@RequestBody @Valid PageFilter<OmsOrderProductRelationQueryDto> filter) {
-        Page<OmsOrderProductRelation> page = this.service.page(filter);
+    public Result<ResultTable<OmsOrderRelationProduct>> page(@RequestBody @Valid PageFilter<OmsOrderProductRelationQueryDto> filter) {
+        Page<OmsOrderRelationProduct> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
@@ -72,7 +71,7 @@ public class OmsOrderProductRelationController extends ApiController {
      * 详情查询
      */
     @GetMapping("get/{id}")
-    public Result<OmsOrderProductRelation> page(@PathVariable String id) {
+    public Result<OmsOrderRelationProduct> page(@PathVariable String id) {
         return success(this.service.getById(id));
     }
 

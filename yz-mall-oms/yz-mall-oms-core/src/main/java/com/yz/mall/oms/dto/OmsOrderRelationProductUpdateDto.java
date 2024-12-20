@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
  * @since 2024-06-18 12:51:39
  */
 @Data
-public class OmsOrderProductRelationUpdateDto implements Serializable {
+public class OmsOrderRelationProductUpdateDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 
@@ -23,23 +23,23 @@ public class OmsOrderProductRelationUpdateDto implements Serializable {
      * 主键标识
      */
     @NotBlank(message = "主键标识不能为空")
-    private String id;
+    private Long id;
 
 
     /**
      * 创建人
      */
-    private String createdId;
+    private Long createId;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
-    private String updatedId;
+    private Long updateId;
 
     /**
      * 更新时间
@@ -54,12 +54,12 @@ public class OmsOrderProductRelationUpdateDto implements Serializable {
     /**
      * 订单id
      */
-    private String orderId;
+    private Long orderId;
 
     /**
      * 商品id
      */
-    private String productId;
+    private Long productId;
 
     /**
      * 购买商品数量

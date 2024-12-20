@@ -22,17 +22,17 @@ public class SysApplicationVo extends Model<SysApplicationVo> {
     /**
      * 创建人
      */
-    private String createdId;
+    private String createId;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
-    private String updatedId;
+    private String updateId;
 
     /**
      * 更新时间

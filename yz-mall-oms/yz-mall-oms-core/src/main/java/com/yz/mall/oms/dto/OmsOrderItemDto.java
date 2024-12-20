@@ -22,7 +22,7 @@ public class OmsOrderItemDto implements Serializable {
      * 商品id
      */
     @NotBlank(message = "商品id不能为空")
-    private String productId;
+    private Long productId;
 
     /**
      * 购买商品数量

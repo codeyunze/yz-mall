@@ -1,12 +1,13 @@
 package com.yz.mall.pms.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.pms.entity.PmsProduct;
-import com.yz.mall.pms.service.PmsProductService;
 import com.yz.mall.pms.dto.PmsProductAddDto;
 import com.yz.mall.pms.dto.PmsProductQueryDto;
 import com.yz.mall.pms.dto.PmsProductUpdateDto;
+import com.yz.mall.pms.entity.PmsProduct;
+import com.yz.mall.pms.service.PmsProductService;
 import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
@@ -35,6 +36,7 @@ public class PmsProductController extends ApiController {
     /**
      * 新增
      */
+    @SaCheckPermission("api:pms:product:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid PmsProductAddDto dto) {
         return success(this.service.save(dto));
@@ -43,6 +45,7 @@ public class PmsProductController extends ApiController {
     /**
      * 更新
      */
+    @SaCheckPermission("api:pms:product:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid PmsProductUpdateDto dto) {
         return success(this.service.update(dto));
@@ -53,6 +56,7 @@ public class PmsProductController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @SaCheckPermission("api:pms:product:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -61,6 +65,7 @@ public class PmsProductController extends ApiController {
     /**
      * 分页查询
      */
+    @SaCheckPermission("api:pms:product:page")
     @PostMapping("page")
     public Result<ResultTable<PmsProduct>> page(@RequestBody @Valid PageFilter<PmsProductQueryDto> filter) {
         Page<PmsProduct> page = this.service.page(filter);
@@ -70,6 +75,7 @@ public class PmsProductController extends ApiController {
     /**
      * 详情查询
      */
+    @SaCheckPermission("api:pms:product:page")
     @GetMapping("get/{id}")
     public Result<PmsProductVo> page(@PathVariable Long id) {
         return success(this.service.detail(id));
