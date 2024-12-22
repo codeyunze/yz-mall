@@ -47,11 +47,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-pms-interface</artifactId>
             <version>${revision}</version>

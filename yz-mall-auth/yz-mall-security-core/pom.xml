@@ -30,6 +30,12 @@
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-redis-jackson</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-redisson</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
 </project>

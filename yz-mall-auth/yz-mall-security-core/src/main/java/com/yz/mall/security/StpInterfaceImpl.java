@@ -27,8 +27,6 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的权限列表
         List<String> permissionList = new ArrayList<>();
-        permissionList.add("admin");
-        permissionList.add("oms");
 
         List<Object> roles = redisTemplate.boundListOps(RedisCacheKey.permissionRole(loginId.toString())).range(0, -1);
         if (CollectionUtils.isEmpty(roles)) {
