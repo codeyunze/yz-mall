@@ -170,20 +170,10 @@ Host: test.com
   "prefix": "ABC2412"
 }
 
-<> 2024-12-03T103131.403.html
-<> 2024-12-03T095025.403.html
-<> 2024-12-03T092817.200.json
-<> 2024-12-03T092801.403.html
-<> 2024-12-03T092732.403.html
-<> 2024-12-03T092724.200.json
-<> 2024-12-03T092718.200.json
-<> 2024-12-03T092710.200.json
-<> 2024-12-03T091104.200.json
-<> 2024-12-03T091058.403.html
-<> 2024-12-03T091044.200.json
-<> 2024-12-03T091043.200.json
-<> 2024-12-03T091032.200.json
-
+#{
+#  "username": "15316666668",
+#  "password": "a1234567"
+#}
 
 ### 登录系统
 POST http://localhost:30001/login
@@ -194,23 +184,31 @@ Content-Type: application/json
   "password": "a1234567"
 }
 
-<> 2024-12-05T203733.200.json
-<> 2024-12-05T174725.200.json
-<> 2024-12-04T101759.200.json
-<> 2024-11-30T224425.200.json
-<> 2024-11-30T213152.200.json
-<> 2024-11-30T213023.200.json
-<> 2024-11-30T204836.200.json
-<> 2024-11-30T203630.200.json
-<> 2024-11-19T230707.200.json
-<> 2024-11-19T211501.200.json
-<> 2024-11-19T211420.200.json
-<> 2024-11-19T211314.200.json
+<> 2024-12-20T163305.200.json
+<> 2024-12-20T163253.200.json
+<> 2024-12-20T142550.500.json
+<> 2024-12-17T142012.200.json
+<> 2024-12-17T141250.200.json
+<> 2024-12-17T141057.200.json
+<> 2024-12-17T140013.200.json
+<> 2024-12-17T135735.500.json
+<> 2024-12-17T135223.500.json
+<> 2024-12-17T130248.200.json
+<> 2024-12-17T130054.500.json
+<> 2024-12-13T093718.200.json
+<> 2024-12-12T173305.200.json
+<> 2024-12-12T173303.200.json
 
 
 ### 退出登录
 POST http://localhost:30001/logout
-Authorization: Bearer 8a9084d151934ee58b0efb151deb9141
+Authorization: Bearer 5a8928227aaf41178d42042d19a4938d
+
+<> 2024-12-17T142028.200.json
+<> 2024-12-17T141319.500.json
+<> 2024-12-17T141228.500.json
+<> 2024-12-17T141203.200.json
+<> 2024-12-17T141119.200.json
 
 
 ### 订单信息查询
@@ -230,10 +228,12 @@ POST http://localhost:30001/refreshToken
 Content-Type: application/json
 
 {
-  "refreshToken": "48f2f3648c4549aabbb3005cba610b04",
-  "userId": "root"
+  "refreshToken": "b36260b321e64a349e6b763ac3a6d983"
 }
 
+<> 2024-12-18T123421.200.json
+<> 2024-12-18T123008.200.json
+<> 2024-12-18T122956.200.json
 <> 2024-11-19T230758.200.json
 <> 2024-11-19T230754.200.json
 <> 2024-11-19T230744.200.json
@@ -460,11 +460,14 @@ Content-Type: application/json
 
 ### 系统-菜单-分页查询
 POST http://localhost:30001/sys/menu/list
+Authorization: Bearer a9fb959ac94744ceace1585b5f9dcdd2
 Content-Type: application/json
 
 {
 
 }
+
+<> 2024-12-12T174101.200.json
 
 ### 系统-菜单-新增
 POST http://localhost:30001/sys/menu/add
@@ -545,9 +548,6 @@ Content-Type: application/json
   "roleId": 1858098107289014272
 }
 
-<> 2024-12-04T201719.200.json
-<> 2024-12-04T195638.200.json
-
 ### 系统-角色&菜单-新增
 POST http://localhost:30001/sys/role/menu/add
 Authorization: Bearer 2e11ec4a80934a1e8bdd2d22c3f7a0e5
@@ -557,10 +557,6 @@ Content-Type: application/json
   "roleId": 1858098107289014272,
   "menuId": 1859885517716987904
 }
-
-<> 2024-12-04T200910.500.json
-<> 2024-12-04T200904.200.json
-<> 2024-12-04T200855.200.json
 
 ### 系统-用户&角色-分页查询
 POST http://localhost:30001/sys/user/role/page
@@ -575,10 +571,7 @@ Content-Type: application/json
 POST http://localhost:30001/sys/menu/listSlim
 Authorization: Bearer 2e11ec4a80934a1e8bdd2d22c3f7a0e5
 
-<> 2024-12-04T202853.200.json
-<> 2024-12-04T200247.200.json
 <> 2024-12-04T195920.200.json
-<> 2024-12-04T195832.200.json
 
 ### 系统-用户-用户所拥有的角色
 @userId = 1858113817985785856
@@ -605,28 +598,64 @@ GET http://localhost:30001/file/test
 GET http://localhost:30001/sys/role/menu/getRoleMenus/{{roleId}}
 Authorization: Bearer 372bc5f4ce84475b8643d5c763dd601d
 
-<> 2024-12-04T205536.200.json
-<> 2024-12-04T205453.200.json
-
 ### 系统-角色&菜单-删除指定角色菜单关联关系
 @id = 1862010588568940544
 DELETE http://localhost:30001/sys/role/menu/delete/{{id}}
 Authorization: Bearer 372bc5f4ce84475b8643d5c763dd601d
 
-<> 2024-12-04T211227.200.json
-<> 2024-12-04T205941.200.json
+<> 2024-12-13T170430.200.json
 
 ### 系统-用户-获取请求用户可访问的菜单信息
 GET http://localhost:30001/sys/user/getUserMenus
 Authorization: Bearer 0cfed1be33fb417a819b3f8bcbdcba83
 
-<> 2024-12-06T124853.200.json
-<> 2024-12-06T124507.200.json
-<> 2024-12-06T124404.200.json
-<> 2024-12-06T124308.200.json
-<> 2024-12-06T123850.200.json
-<> 2024-12-05T235657.200.json
-<> 2024-12-05T204338.200.json
-<> 2024-12-05T204119.200.json
-<> 2024-12-05T174905.500.json
-<> 2024-12-05T174739.500.json
+<> 2024-12-13T164346.200.json
+
+### 注册用户
+POST http://localhost:30001/register
+Content-Type: application/json
+
+{
+  "username": "小亮",
+  "password": "a1234567",
+  "phone": "15300000017"
+}
+
+<> 2024-12-13T170443.200.json
+<> 2024-12-13T170424.200.json
+<> 2024-12-13T170404.200.json
+<> 2024-12-13T170355.200.json
+<> 2024-12-13T170348.200.json
+<> 2024-12-13T170338.200.json
+<> 2024-12-13T170321.200.json
+<> 2024-12-13T170206.200.json
+<> 2024-12-13T170158.200.json
+<> 2024-12-13T170151.200.json
+<> 2024-12-13T170017.200.json
+<> 2024-12-13T164726.200.json
+<> 2024-12-13T164546.200.json
+<> 2024-12-13T164449.200.json
+<> 2024-12-13T164311.200.json
+<> 2024-12-13T164237.200.json
+<> 2024-12-13T163124.500.json
+<> 2024-12-13T163104.500.json
+<> 2024-12-13T162856.200.json
+<> 2024-12-13T162830.200.json
+<> 2024-12-13T162823.200.json
+<> 2024-12-13T162815.200.json
+
+### 商品管理-商品-新增
+POST http://localhost:30001/pms/product/add
+Authorization: Bearer 9b94ad4186bf4882b8d812ac55c72ede
+Content-Type: application/json
+
+{
+  "name": "小米SU7",
+  "title": "汽车,小米,轿跑",
+  "remark": "小米第一代新能源汽车",
+  "price": 219000
+}
+
+<> 2024-12-20T163325.200.json
+<> 2024-12-20T142536.200.json
+<> 2024-12-20T140152.200.json

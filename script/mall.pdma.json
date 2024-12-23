@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-12-20 13:42:15",
+  "updatedTime": "2024-12-23 23:19:45",
   "dbConns": [],
   "profile": {
     "default": {
@@ -1565,7 +1565,7 @@
           "id": "7820F44F-F924-485E-B11B-95DC1FCE21A4"
         },
         {
-          "defKey": "title",
+          "defKey": "titles",
           "defName": "商品标签",
           "comment": "",
           "type": "VARCHAR",

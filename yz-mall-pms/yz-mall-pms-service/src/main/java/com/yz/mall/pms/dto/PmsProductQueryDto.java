@@ -24,7 +24,7 @@ public class PmsProductQueryDto implements Serializable {
     /**
      * 商品标签
      */
-    private List<String> titles;
+    private String titles;
 
     /**
      * 商品上架状态：0：下架，1：上架

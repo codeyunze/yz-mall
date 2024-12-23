@@ -38,7 +38,7 @@ public class PmsProductUpdateDto implements Serializable {
     /**
      * 商品标签
      */
-    private String title;
+    private String titles;
 
     /**
      * 商品备注信息
