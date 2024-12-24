@@ -36,6 +36,20 @@ public interface PmsProductService extends IService<PmsProduct> {
     boolean update(@Valid PmsProductUpdateDto dto);
 
     /**
+     * 商品上架
+     * @param id 商品Id {@link PmsProduct#getId()}
+     * @return 是否上架成功
+     */
+    boolean publish(Long id);
+
+    /**
+     * 商品下架
+     * @param id 商品Id {@link PmsProduct#getId()}
+     * @return 是否下架成功
+     */
+    boolean delisting(Long id);
+
+    /**
      * 分页查询
      *
      * @param filter 过滤条件

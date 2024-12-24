@@ -5,6 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.advice.exception.DataNotExistException;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.mapper.PmsProductMapper;
 import com.yz.mall.pms.service.PmsProductService;
@@ -56,13 +57,36 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
     }
 
     @Override
+    public boolean publish(Long id) {
+        PmsProduct product = baseMapper.selectById(id);
+        if (product == null) {
+            throw new DataNotExistException("商品信息不存在，无法上架");
+        }
+        product.setPublishStatus(1);
+        return baseMapper.updateById(product) > 0;
+    }
+
+    @Override
+    public boolean delisting(Long id) {
+        PmsProduct product = baseMapper.selectById(id);
+        if (product == null) {
+            throw new DataNotExistException("商品信息不存在，无法下架");
+        }
+        product.setPublishStatus(0);
+        return baseMapper.updateById(product) > 0;
+    }
+
+    @Override
     public Page<PmsProduct> page(PageFilter<PmsProductQueryDto> filter) {
         PmsProductQueryDto query = filter.getFilter();
         LambdaQueryWrapper<PmsProduct> queryWrapper = new LambdaQueryWrapper<>();
+
         queryWrapper.like(StringUtils.hasText(query.getName()), PmsProduct::getName, query.getName());
         queryWrapper.like(StringUtils.hasText(query.getTitles()), PmsProduct::getTitles, query.getTitles());
         queryWrapper.eq(query.getVerifyStatus() != null, PmsProduct::getVerifyStatus, query.getVerifyStatus());
         queryWrapper.eq(query.getPublishStatus() != null, PmsProduct::getPublishStatus, query.getPublishStatus());
+
+        queryWrapper.orderByDesc(PmsProduct::getId);
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 

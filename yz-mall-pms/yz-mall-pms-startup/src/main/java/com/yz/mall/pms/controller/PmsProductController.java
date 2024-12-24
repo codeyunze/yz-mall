@@ -52,6 +52,24 @@ public class PmsProductController extends ApiController {
     }
 
     /**
+     * 商品上架
+     */
+    @SaCheckPermission("api:pms:product:edit")
+    @PostMapping("publish/{id}")
+    public Result<Boolean> publish(@PathVariable Long id) {
+        return success(this.service.publish(id));
+    }
+
+    /**
+     * 商品下架
+     */
+    @SaCheckPermission("api:pms:product:edit")
+    @PostMapping("delisting/{id}")
+    public Result<Boolean> delisting(@PathVariable Long id) {
+        return success(this.service.delisting(id));
+    }
+
+    /**
      * 删除
      *
      * @param id 删除数据主键ID
