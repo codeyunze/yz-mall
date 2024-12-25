@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
+import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.tools.PageFilter;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public interface PmsStockService extends IService<PmsStock> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<PmsStock> page(PageFilter<PmsStockQueryDto> filter);
+    Page<PmsProductStockVo> page(PageFilter<PmsStockQueryDto> filter);
 
     /**
      * 扣减库存

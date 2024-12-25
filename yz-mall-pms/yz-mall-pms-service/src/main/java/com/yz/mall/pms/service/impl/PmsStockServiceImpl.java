@@ -1,6 +1,7 @@
 package com.yz.mall.pms.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,8 +11,11 @@ import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.mapper.PmsStockMapper;
 import com.yz.mall.pms.service.PmsStockService;
+import com.yz.mall.pms.vo.PmsProductStockVo;
+import com.yz.mall.pms.vo.PmsStockVo;
 import com.yz.tools.PageFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -26,10 +30,27 @@ import java.util.stream.Collectors;
 @Service
 public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> implements PmsStockService {
 
+    @DS("slave")
     @Override
-    public Page<PmsStock> page(PageFilter<PmsStockQueryDto> filter) {
-        LambdaQueryWrapper<PmsStock> queryWrapper = new LambdaQueryWrapper<>();
-        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+    public Page<PmsProductStockVo> page(PageFilter<PmsStockQueryDto> filter) {
+        Page<PmsProductStockVo> page = baseMapper.selectPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
+        if (page.getTotal() == 0) {
+            return page;
+        }
+
+        List<Long> productIds = page.getRecords().stream().map(PmsProductStockVo::getProductId).collect(Collectors.toList());
+        List<PmsStockVo> stocks = baseMapper.selectStockByProductIds(productIds);
+        if (CollectionUtils.isEmpty(stocks)) {
+            return page;
+        }
+
+        Map<Long, Integer> productStockMap = stocks.stream().collect(Collectors.toMap(PmsStockVo::getProductId, PmsStockVo::getQuantity));
+        page.getRecords().forEach(product -> {
+            if (productStockMap.containsKey(product.getProductId())) {
+                product.setQuantity(productStockMap.get(product.getProductId()));
+            }
+        });
+        return page;
     }
 
     // TODO: 2024/6/16 星期日 yunze 加事务
@@ -66,7 +87,7 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     public Boolean add(Long productId, Integer quantity) {
         // TODO: 2024/6/16 星期日 yunze 加锁
         PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getQuantity).eq(PmsStock::getProductId, productId));
-        if (stock == null) {
+        if (stock == null || stock.getId() == null) {
             stock = new PmsStock();
             stock.setId(IdUtil.getSnowflakeNextId());
             stock.setProductId(productId);

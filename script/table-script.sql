@@ -238,3 +238,24 @@ CREATE TABLE sys_role_relation_menu
 ) COMMENT = '系统-角色关联菜单表';
 CREATE UNIQUE INDEX uk_sys_role_menu ON sys_role_relation_menu (role_id, menu_id, invalid);
 
+
+
+
+
+DROP TABLE IF EXISTS pms_stock_in_detail;
+CREATE TABLE pms_stock_in_detail
+(
+    `id`            BIGINT      NOT NULL COMMENT '主键标识',
+    `create_time`   DATETIME    NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
+    `update_time`   DATETIME    NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp COMMENT '更新时间',
+    `invalid`       BIGINT      NOT NULL DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `product_id`    BIGINT      NOT NULL COMMENT '关联商品Id',
+    `stock_in_code` VARCHAR(32) NOT NULL COMMENT '入库编号',
+    `quantity`      INT         NOT NULL DEFAULT 0 COMMENT '本次入库数量',
+    `supplier_id`   BIGINT COMMENT '关联供应商Id',
+    PRIMARY KEY (id)
+) COMMENT = '产品管理-商品入库日志表';
+
+
+CREATE UNIQUE INDEX uk_pms_stock_in_code ON pms_stock_in_detail (stock_in_code, invalid);
+CREATE INDEX ix_pms_stock_in_product_id ON pms_stock_in_detail (product_id, quantity);

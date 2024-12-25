@@ -1,18 +1,19 @@
 package com.yz.mall.pms.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.PmsStockService;
+import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
 import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -25,24 +26,26 @@ import javax.validation.Valid;
 @RequestMapping("pms/stock")
 public class PmsStockController extends ApiController {
 
-    /**
-     * 服务对象
-     */
-    @Resource
-    private PmsStockService service;
+    private final PmsStockService service;
+
+    public PmsStockController(PmsStockService service) {
+        this.service = service;
+    }
 
     /**
      * 分页查询
      */
+    @SaCheckPermission("api:pms:stock:page")
     @PostMapping("page")
-    public Result<ResultTable<PmsStock>> page(@RequestBody @Valid PageFilter<PmsStockQueryDto> filter) {
-        Page<PmsStock> page = this.service.page(filter);
+    public Result<ResultTable<PmsProductStockVo>> page(@RequestBody @Valid PageFilter<PmsStockQueryDto> filter) {
+        Page<PmsProductStockVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
     /**
      * 详情查询
      */
+    @SaCheckPermission("api:pms:stock:page")
     @GetMapping("get/{id}")
     public Result<PmsStock> page(@PathVariable String id) {
         return success(this.service.getById(id));
@@ -51,6 +54,7 @@ public class PmsStockController extends ApiController {
     /**
      * 扣减商品库存
      */
+    @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deduct")
     public Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto) {
         return success(this.service.deduct(dto.getProductId(), dto.getQuantity()));
@@ -59,6 +63,8 @@ public class PmsStockController extends ApiController {
     /**
      * 增加商品库存
      */
+    @Deprecated
+    @SaCheckPermission("api:pms:stock:add")
     @PostMapping("add")
     public Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto) {
         return success(this.service.add(dto.getProductId(), dto.getQuantity()));

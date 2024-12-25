@@ -76,6 +76,12 @@
             <artifactId>yz-mall-security-core</artifactId>
             <version>${revision}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-unqid-feign</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>

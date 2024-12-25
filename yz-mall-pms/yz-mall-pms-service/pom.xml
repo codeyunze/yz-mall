@@ -51,6 +51,12 @@
             <artifactId>yz-mall-pms-interface</artifactId>
             <version>${revision}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-unqid-interface</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
 </project>
