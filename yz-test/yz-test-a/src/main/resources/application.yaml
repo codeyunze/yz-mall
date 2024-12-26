@@ -1,7 +1,0 @@
-
-server:
-  port: 20001
-
-spring:
-  application:
-    name: yz-test-a

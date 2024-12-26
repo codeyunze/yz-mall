@@ -68,19 +68,24 @@
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-pms-service</artifactId>
-            <version>${revision}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-security-core</artifactId>
-            <version>${revision}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-unqid-feign</artifactId>
-            <version>${revision}</version>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
         </dependency>
     </dependencies>
 

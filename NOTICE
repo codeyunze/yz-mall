@@ -1,0 +1,47 @@
+Copyright (c) 2023-present, yunze.
+
+Dependencies:
+================================================================
+
+Spring:
+
+  * LICENSE:
+    * http://www.apache.org/licenses/LICENSE-2.0 (Apache License 2.0)
+  * HOMEPAGE:
+    * http://www.springsource.org
+
+Mybatis-Plus:
+
+  * VERSION:
+    3.5.4
+  * LICENSE:
+    * https://github.com/baomidou/mybatis-plus?tab=Apache-2.0-1-ov-file
+  * HOMEPAGE:
+    * https://baomidou.com/
+
+Hutool:
+
+  * VERSION:
+    5.8.26
+  * LICENSE:
+    * https://github.com/dromara/hutool/?tab=License-1-ov-file
+  * HOMEPAGE:
+    * https://www.hutool.cn/
+
+Sa-Token:
+
+  * VERSION:
+    1.39.0
+  * LICENSE:
+    * https://github.com/dromara/sa-token?tab=Apache-2.0-1-ov-file
+  * HOMEPAGE:
+    * https://sa-token.cc/
+
+xxl-job:
+
+  * VERSION:
+    * 2.4.2
+  * LICENSE:
+    * https://github.com/xuxueli/xxl-job?tab=GPL-3.0-1-ov-file
+  * HOMEPAGE:
+    * https://www.xuxueli.com/xxl-job/
