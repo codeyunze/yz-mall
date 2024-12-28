@@ -17,6 +17,7 @@
         <module>yz-mall-pms-interface</module>
         <module>yz-mall-pms-service</module>
         <module>yz-mall-pms-feign</module>
+        <module>yz-mall-pms-job</module>
         <module>yz-mall-pms-startup</module>
     </modules>
 

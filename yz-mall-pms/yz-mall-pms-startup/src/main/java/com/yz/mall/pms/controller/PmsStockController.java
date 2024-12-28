@@ -15,6 +15,7 @@ import com.yz.tools.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 商品库存表(PmsStock)表控制层
@@ -32,6 +33,7 @@ public class PmsStockController extends ApiController {
         this.service = service;
     }
 
+
     /**
      * 分页查询
      */
@@ -42,6 +44,7 @@ public class PmsStockController extends ApiController {
         return success(page.getRecords(), page.getTotal());
     }
 
+
     /**
      * 详情查询
      */
@@ -51,23 +54,34 @@ public class PmsStockController extends ApiController {
         return success(this.service.getById(id));
     }
 
+
     /**
      * 扣减商品库存
      */
     @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deduct")
     public Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto) {
-        return success(this.service.deduct(dto.getProductId(), dto.getQuantity()));
+        return success(this.service.deduct(dto));
     }
+
+
+    /**
+     * 扣减商品库存
+     */
+    @SaCheckPermission("api:pms:stock:deduct")
+    @PostMapping("deducts")
+    public Result<Boolean> deducts(@RequestBody @Valid List<InternalPmsStockDto> productStocks) {
+        return success(this.service.deduct(productStocks));
+    }
+
 
     /**
      * 增加商品库存
      */
-    @Deprecated
     @SaCheckPermission("api:pms:stock:add")
     @PostMapping("add")
     public Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto) {
-        return success(this.service.add(dto.getProductId(), dto.getQuantity()));
+        return success(this.service.add(dto));
     }
 }
 

@@ -1,6 +1,7 @@
 package com.yz.mall.pms.dto;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -26,6 +27,12 @@ public class InternalPmsStockDto implements Serializable {
         this.quantity = quantity;
     }
 
+    public InternalPmsStockDto(Long productId, Integer quantity, String remark) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.remark = remark;
+    }
+
     /**
      * 商品信息Id
      */
@@ -39,5 +46,11 @@ public class InternalPmsStockDto implements Serializable {
     @Min(value = 1, message = "商品数量不能少于1")
     private Integer quantity;
 
+
+    /**
+     * 商品入库备注信息
+     */
+    @Length(max = 255, message = "商品入库备注说明不能超过255个字符")
+    private String remark;
 }
 

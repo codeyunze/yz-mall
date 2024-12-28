@@ -27,8 +27,8 @@ public class InternalPmsStockController extends ApiController {
      * 扣减商品库存
      */
     @PostMapping("deduct")
-    public Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto) {
-        return success(this.service.deduct(dto.getProductId(), dto.getQuantity()));
+    public Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto deductStock) {
+        return success(this.service.deduct(deductStock));
     }
 
     /**
@@ -45,7 +45,7 @@ public class InternalPmsStockController extends ApiController {
      */
     @PostMapping("add")
     public Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto) {
-        return success(this.service.add(dto.getProductId(), dto.getQuantity()));
+        return success(this.service.add(dto));
     }
 
     /**

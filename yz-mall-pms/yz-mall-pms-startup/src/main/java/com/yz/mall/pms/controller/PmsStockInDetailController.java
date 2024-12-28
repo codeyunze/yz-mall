@@ -32,14 +32,6 @@ public class PmsStockInDetailController extends ApiController {
         this.service = service;
     }
 
-    /**
-     * 新增
-     */
-    @SaCheckPermission("api:pms:stock:detail:add")
-    @PostMapping("add")
-    public Result<Long> insert(@RequestBody @Valid PmsStockInDetailAddDto dto) {
-        return success(this.service.save(dto));
-    }
 
     /**
      * 更新
@@ -62,6 +54,7 @@ public class PmsStockInDetailController extends ApiController {
     /**
      * 分页查询
      */
+    @SaCheckPermission("pms:stock:in:detail:page")
     @PostMapping("page")
     public Result<ResultTable<PmsStockInDetail>> page(@RequestBody @Valid PageFilter<PmsStockInDetailQueryDto> filter) {
         Page<PmsStockInDetail> page = this.service.page(filter);

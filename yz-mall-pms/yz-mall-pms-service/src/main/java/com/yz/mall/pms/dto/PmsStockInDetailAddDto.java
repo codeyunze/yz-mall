@@ -38,5 +38,11 @@ public class PmsStockInDetailAddDto implements Serializable {
      */
     @Length(max = 255, message = "商品入库备注说明不能超过255个字符")
     private String remark;
+
+    public PmsStockInDetailAddDto(Long productId, Integer quantity, String remark) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.remark = remark;
+    }
 }
 
