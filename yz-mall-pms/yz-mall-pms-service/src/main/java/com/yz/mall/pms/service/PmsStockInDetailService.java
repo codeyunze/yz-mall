@@ -24,7 +24,7 @@ public interface PmsStockInDetailService extends IService<PmsStockInDetail> {
      * @param dto 新增基础数据
      * @return 主键Id
      */
-    Long save(PmsStockInDetailAddDto dto);
+    Long in(PmsStockInDetailAddDto dto);
 
     /**
      * 更新数据

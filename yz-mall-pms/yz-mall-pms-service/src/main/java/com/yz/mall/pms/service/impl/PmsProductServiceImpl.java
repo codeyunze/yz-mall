@@ -42,9 +42,6 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
         baseMapper.insert(bo);
-
-        // 添加商品库存信息
-        stockService.add(bo.getId(), 0);
         return bo.getId();
     }
 

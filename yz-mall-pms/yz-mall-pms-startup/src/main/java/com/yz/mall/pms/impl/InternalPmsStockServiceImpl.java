@@ -21,8 +21,8 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
-    public Boolean deduct(Long productId, Integer quantity) {
-        return service.deduct(productId, quantity);
+    public Boolean deduct(InternalPmsStockDto deductStock) {
+        return service.deduct(deductStock);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
-    public Boolean add(Long productId, Integer quantity) {
-        return service.add(productId, quantity);
+    public Boolean add(InternalPmsStockDto dto) {
+        return service.add(dto);
     }
 
     @Override

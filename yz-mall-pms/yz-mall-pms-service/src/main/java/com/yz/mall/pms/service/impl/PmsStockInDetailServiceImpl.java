@@ -9,15 +9,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockInDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockInDetailUpdateDto;
-import com.yz.mall.pms.mapper.PmsStockInDetailMapper;
 import com.yz.mall.pms.entity.PmsStockInDetail;
+import com.yz.mall.pms.mapper.PmsStockInDetailMapper;
 import com.yz.mall.pms.service.PmsStockInDetailService;
-import com.yz.mall.pms.service.PmsStockService;
 import com.yz.tools.PageFilter;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 
@@ -32,25 +32,21 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
 
     private final InternalUnqidService internalUnqidService;
 
-    private final PmsStockService pmsStockService;
-
-    public PmsStockInDetailServiceImpl(InternalUnqidService internalUnqidService
-            , PmsStockService pmsStockService) {
+    public PmsStockInDetailServiceImpl(InternalUnqidService internalUnqidService) {
         this.internalUnqidService = internalUnqidService;
-        this.pmsStockService = pmsStockService;
     }
 
     @Transactional
     @Override
-    public Long save(PmsStockInDetailAddDto dto) {
+    public Long in(PmsStockInDetailAddDto dto) {
         PmsStockInDetail bo = new PmsStockInDetail();
-        BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
         String prefix = "RK" + LocalDateTimeUtil.format(LocalDate.now(), DatePattern.PURE_DATE_PATTERN);
         bo.setStockInCode(internalUnqidService.generateSerialNumber(prefix, 6));
+        bo.setRemark(dto.getRemark());
+        bo.setProductId(dto.getProductId());
+        bo.setQuantity(dto.getQuantity());
         baseMapper.insert(bo);
-
-        pmsStockService.add(bo.getProductId(), bo.getQuantity());
         return bo.getId();
     }
 
@@ -63,7 +59,10 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
 
     @Override
     public Page<PmsStockInDetail> page(PageFilter<PmsStockInDetailQueryDto> filter) {
+        PmsStockInDetailQueryDto queryFilter = filter.getFilter();
         LambdaQueryWrapper<PmsStockInDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.hasText(queryFilter.getStockInCode()), PmsStockInDetail::getStockInCode, queryFilter.getStockInCode());
+        queryWrapper.eq(queryFilter.getProductId() != null, PmsStockInDetail::getProductId, queryFilter.getProductId());
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 }

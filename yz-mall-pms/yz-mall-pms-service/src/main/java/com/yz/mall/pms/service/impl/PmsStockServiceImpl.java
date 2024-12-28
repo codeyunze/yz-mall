@@ -7,14 +7,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.advice.exception.BusinessException;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
+import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.mapper.PmsStockMapper;
+import com.yz.mall.pms.service.PmsStockInDetailService;
+import com.yz.mall.pms.service.PmsStockOutDetailService;
 import com.yz.mall.pms.service.PmsStockService;
 import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.mall.pms.vo.PmsStockVo;
 import com.yz.tools.PageFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -29,6 +34,16 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> implements PmsStockService {
+
+    private final PmsStockOutDetailService pmsStockOutDetailService;
+
+    private final PmsStockInDetailService pmsStockInDetailService;
+
+    public PmsStockServiceImpl(PmsStockOutDetailService pmsStockOutDetailService
+            , PmsStockInDetailService pmsStockInDetailService) {
+        this.pmsStockOutDetailService = pmsStockOutDetailService;
+        this.pmsStockInDetailService = pmsStockInDetailService;
+    }
 
     @DS("slave")
     @Override
@@ -54,14 +69,24 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     }
 
     // TODO: 2024/6/16 星期日 yunze 加事务
+    @DS("master")
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean deduct(Long productId, Integer quantity) {
+    public Boolean deduct(InternalPmsStockDto deductStock) {
         // TODO: 2024/6/16 星期日 yunze 加锁
-        return baseMapper.deduct(productId, quantity);
+        boolean deducted = baseMapper.deduct(deductStock.getProductId(), deductStock.getQuantity());
+        if (!deducted) {
+            return false;
+        }
+
+        Long saved = pmsStockOutDetailService.out(new PmsStockOutDetailAddDto(deductStock.getProductId(), deductStock.getQuantity(), deductStock.getRemark()));
+        return saved != null;
     }
 
+    @DS("master")
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deduct(List<InternalPmsStockDto> productStocks) {
+    public Boolean deduct(List<InternalPmsStockDto> productStocks) {
         // 各商品需要扣除的库存数量
         Map<Long, Integer> productQuantityuMap = productStocks.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, InternalPmsStockDto::getQuantity));
         List<Long> productIds = productStocks.stream().map(InternalPmsStockDto::getProductId).collect(Collectors.toList());
@@ -71,31 +96,43 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
         queryWrapper.in(PmsStock::getProductId, productIds);
         // 查询指定商品的库存数量
         List<PmsStock> stocks = baseMapper.selectList(queryWrapper);
-        for (int i = 0; i < stocks.size(); i++) {
-            PmsStock stock = stocks.get(i);
+        for (PmsStock stock : stocks) {
             if (stock.getQuantity() < productQuantityuMap.get(stock.getProductId())) {
                 throw new BusinessException("商品" + stock.getProductId() + "库存不足");
             } else {
-                stocks.get(i).setQuantity(stock.getQuantity() - productQuantityuMap.get(stock.getProductId()));
+                stock.setQuantity(stock.getQuantity() - productQuantityuMap.get(stock.getProductId()));
             }
         }
-        super.updateBatchById(stocks);
+        if (!super.updateBatchById(stocks)) {
+            throw new BusinessException("商品库存扣除失败");
+        }
+
+        // 记录出库明细
+        if (!pmsStockOutDetailService.outBatch(productStocks)) {
+            throw new BusinessException("商品库存扣除失败");
+        }
+        return true;
     }
 
     // TODO: 2024/6/16 星期日 yunze 加事务
     @Override
-    public Boolean add(Long productId, Integer quantity) {
+    public Boolean add(InternalPmsStockDto addStock) {
         // TODO: 2024/6/16 星期日 yunze 加锁
-        PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getQuantity).eq(PmsStock::getProductId, productId));
+        PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getId, PmsStock::getQuantity).eq(PmsStock::getProductId, addStock.getProductId()));
         if (stock == null || stock.getId() == null) {
             stock = new PmsStock();
             stock.setId(IdUtil.getSnowflakeNextId());
-            stock.setProductId(productId);
-            stock.setQuantity(quantity);
+            stock.setProductId(addStock.getProductId());
+            stock.setQuantity(addStock.getQuantity());
         } else {
-            stock.setQuantity(stock.getQuantity() + quantity);
+            stock.setQuantity(stock.getQuantity() + addStock.getQuantity());
         }
-        return super.saveOrUpdate(stock);
+        if (!super.saveOrUpdate(stock)) {
+            return false;
+        }
+
+        Long saved = pmsStockInDetailService.in(new PmsStockInDetailAddDto(addStock.getProductId(), addStock.getQuantity(), addStock.getRemark()));
+        return saved != null;
     }
 
     @Override

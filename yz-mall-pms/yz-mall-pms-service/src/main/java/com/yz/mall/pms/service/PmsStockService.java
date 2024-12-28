@@ -29,27 +29,25 @@ public interface PmsStockService extends IService<PmsStock> {
     /**
      * 扣减库存
      *
-     * @param productId 商品信息
-     * @param quantity  扣减数量
+     * @param deductStock 指定的商品及其库存
      * @return 是否扣减成功
      */
-    Boolean deduct(Long productId, Integer quantity);
+    Boolean deduct(InternalPmsStockDto deductStock);
 
     /**
      * 批量扣减指定商品库存
      *
-     * @param productStocks 指定的商品及其库存
+     * @param deductStocks 指定的商品及其库存
      */
-    void deduct(List<InternalPmsStockDto> productStocks);
+    Boolean deduct(List<InternalPmsStockDto> deductStocks);
 
     /**
      * 增加库存
      *
-     * @param productId 商品信息
-     * @param quantity  增加数量
+     * @param addStock 增加商品库存
      * @return 是否增加成功
      */
-    Boolean add(Long productId, Integer quantity);
+    Boolean add(InternalPmsStockDto addStock);
 
     /**
      * 获取指定商品的库存
