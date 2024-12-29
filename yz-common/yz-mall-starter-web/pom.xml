@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>yz-mall-starter-web</artifactId>
-    <description>web公共配置管理</description>
+    <description>web公共配置、工具管理</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -28,6 +28,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
 

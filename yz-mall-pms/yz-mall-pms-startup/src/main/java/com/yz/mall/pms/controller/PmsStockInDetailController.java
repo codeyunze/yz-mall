@@ -23,7 +23,7 @@ import javax.validation.Valid;
  * @since 2024-12-25 19:53:27
  */
 @RestController
-@RequestMapping("pms/stock/detail")
+@RequestMapping("pms/stock/in/detail")
 public class PmsStockInDetailController extends ApiController {
 
     private final PmsStockInDetailService service;

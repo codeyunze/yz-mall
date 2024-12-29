@@ -1,10 +1,9 @@
 package com.yz.mall.pms.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailQueryDto;
-import com.yz.mall.pms.dto.PmsStockOutDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
 import com.yz.mall.pms.service.PmsStockOutDetailService;
 import com.yz.tools.ApiController;
@@ -22,7 +21,7 @@ import javax.validation.Valid;
  * @since 2024-12-27 12:50:27
  */
 @RestController
-@RequestMapping("pmsStockOutDetail")
+@RequestMapping("pms/stock/out/detail")
 public class PmsStockOutDetailController extends ApiController {
 
     /**
