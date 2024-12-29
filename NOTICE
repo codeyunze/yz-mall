@@ -27,6 +27,8 @@ Hutool:
     * https://github.com/dromara/hutool/?tab=License-1-ov-file
   * HOMEPAGE:
     * https://www.hutool.cn/
+  * REMARKS:
+    * 常用工具封装组件。
 
 Sa-Token:
 
@@ -36,6 +38,8 @@ Sa-Token:
     * https://github.com/dromara/sa-token?tab=Apache-2.0-1-ov-file
   * HOMEPAGE:
     * https://sa-token.cc/
+  * REMARKS:
+    * 轻量级 Java 权限认证框架。
 
 xxl-job:
 
@@ -45,3 +49,16 @@ xxl-job:
     * https://github.com/xuxueli/xxl-job?tab=GPL-3.0-1-ov-file
   * HOMEPAGE:
     * https://www.xuxueli.com/xxl-job/
+  * REMARKS:
+    * 分布式任务调度工具。
+
+Resilience4j:
+
+  * VERSION:
+    * 1.7.0
+  * LICENSE:
+    * https://github.com/resilience4j/resilience4j?tab=Apache-2.0-1-ov-file
+  * HOMEPAGE:
+    * https://resilience4j.readme.io/
+  * REMARKS:
+    * 用于系统的熔断、重试、限流、超时、隔离功能。

@@ -14,6 +14,7 @@ import java.util.List;
  * 消息类型转换
  *
  * @author yunze
+ * @apiNote 统一处理返回Long类型数据时，转换为String类型
  * @date 2024/11/17 星期日 18:21
  */
 @Configuration
