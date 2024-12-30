@@ -2,6 +2,7 @@ package com.yz.mall.sys.controller;
 
 
 import cn.dev33.satoken.annotation.SaIgnore;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.tools.ApiController;
 import com.yz.tools.Result;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ public class TestController extends ApiController {
     /**
      * 详情查询
      */
+    @RepeatSubmit
     @SaIgnore
     @RequestMapping("get")
     public Result<String> page() {

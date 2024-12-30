@@ -9,6 +9,7 @@ import com.yz.mall.pms.dto.PmsProductUpdateDto;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.service.PmsProductService;
 import com.yz.mall.pms.vo.PmsProductVo;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.tools.ApiController;
 import com.yz.tools.PageFilter;
 import com.yz.tools.Result;
