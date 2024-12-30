@@ -1,6 +1,7 @@
 package com.yz.mall.web.aspect;
 
 import com.yz.mall.web.annotation.RepeatSubmit;
+import com.yz.mall.web.exception.RepeatSubmitException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -43,7 +44,7 @@ public class RepeatSubmitAspect {
         String ipAddress = request.getRemoteAddr();
         log.warning("请求地址：" + ipAddress + "，请求接口" + url);
         if (url.contains("test")) {
-            return "不允许重复提交，请稍后再试";
+            throw new RepeatSubmitException();
         }
         joinPoint.proceed();
         return joinPoint;
