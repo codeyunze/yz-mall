@@ -6,7 +6,7 @@ import com.yz.mall.sys.dto.SysUserRelationOrgAddDto;
 import com.yz.mall.sys.dto.SysUserRelationOrgQueryDto;
 import com.yz.mall.sys.dto.SysUserRelationOrgUpdateDto;
 import com.yz.mall.sys.entity.SysUserRelationOrg;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 import java.util.List;

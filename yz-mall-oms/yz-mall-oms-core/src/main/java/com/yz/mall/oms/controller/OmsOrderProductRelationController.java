@@ -7,10 +7,10 @@ import com.yz.mall.oms.dto.OmsOrderProductRelationQueryDto;
 import com.yz.mall.oms.dto.OmsOrderRelationProductUpdateDto;
 import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import com.yz.mall.oms.service.OmsOrderProductRelationService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

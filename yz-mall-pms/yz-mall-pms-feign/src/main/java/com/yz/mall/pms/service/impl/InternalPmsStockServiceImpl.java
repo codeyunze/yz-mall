@@ -1,11 +1,11 @@
 package com.yz.mall.pms.service.impl;
 
-import com.yz.advice.exception.BusinessException;
+import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.feign.InternalPmsStockFeign;
 import com.yz.mall.pms.service.InternalPmsStockService;
-import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

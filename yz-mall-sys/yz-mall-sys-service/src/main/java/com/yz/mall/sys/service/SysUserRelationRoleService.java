@@ -4,14 +4,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.sys.dto.SysUserRelationRoleBindDto;
 import com.yz.mall.sys.dto.SysUserRelationRoleQueryDto;
-import com.yz.mall.sys.dto.SysUserRelationRoleUpdateDto;
 import com.yz.mall.sys.entity.SysOrg;
 import com.yz.mall.sys.entity.SysRole;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.entity.SysUserRelationRole;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**

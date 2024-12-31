@@ -1,8 +1,8 @@
 package com.yz.unqid.service.impl;
 
-import com.yz.advice.exception.BusinessException;
-import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.exception.BusinessException;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import com.yz.unqid.dto.InternalUnqidDto;
 import com.yz.unqid.feign.InternalUnqidFeign;
 import com.yz.unqid.service.InternalUnqidService;

@@ -6,7 +6,7 @@ import com.yz.mall.sys.dto.SysOrgAddDto;
 import com.yz.mall.sys.dto.SysOrgQueryDto;
 import com.yz.mall.sys.dto.SysOrgUpdateDto;
 import com.yz.mall.sys.entity.SysOrg;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 import java.util.List;

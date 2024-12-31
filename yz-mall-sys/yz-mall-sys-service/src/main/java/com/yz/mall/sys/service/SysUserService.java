@@ -7,7 +7,7 @@ import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;

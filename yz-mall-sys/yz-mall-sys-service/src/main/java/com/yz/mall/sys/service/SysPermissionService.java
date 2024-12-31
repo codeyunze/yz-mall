@@ -6,7 +6,7 @@ import com.yz.mall.sys.dto.SysPermissionAddDto;
 import com.yz.mall.sys.dto.SysPermissionQueryDto;
 import com.yz.mall.sys.dto.SysPermissionUpdateDto;
 import com.yz.mall.sys.entity.SysPermission;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 

@@ -6,8 +6,8 @@ import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

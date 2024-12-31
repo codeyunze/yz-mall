@@ -1,7 +1,7 @@
 package com.yz.dynamic.datasource.one.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.yz.tools.enums.DataSourceTypeEnum;
+import com.yz.mall.web.common.enums.DataSourceTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;

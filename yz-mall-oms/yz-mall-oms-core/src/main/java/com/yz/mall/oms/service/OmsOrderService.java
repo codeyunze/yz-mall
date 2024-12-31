@@ -7,7 +7,7 @@ import com.yz.mall.oms.dto.OmsOrderGenerateDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderUpdateDto;
 import com.yz.mall.oms.entity.OmsOrder;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 

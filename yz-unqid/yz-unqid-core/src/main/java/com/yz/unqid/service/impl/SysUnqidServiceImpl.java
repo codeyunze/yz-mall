@@ -4,10 +4,10 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.advice.exception.BusinessException;
-import com.yz.tools.PageFilter;
-import com.yz.tools.RedisCacheKey;
-import com.yz.tools.RedissonLockKey;
+import com.yz.mall.web.exception.BusinessException;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.RedisCacheKey;
+import com.yz.mall.web.common.RedissonLockKey;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;
@@ -39,7 +39,7 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
     protected Redisson redisson;
 
     @Resource
-    protected RedisTemplate<String, Object> redisTemplate;
+    protected RedisTemplate<String, Object> defaultRedisTemplate;
 
     @Override
     public String save(SysUnqidAddDto dto) {
@@ -65,7 +65,7 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
         try {
             SysUnqid bo = baseMapper.selectOne(new LambdaQueryWrapper<SysUnqid>().eq(SysUnqid::getPrefix, prefix));
 
-            BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+            BoundHashOperations<String, Object, Object> boundHashOps = defaultRedisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
             Integer serialNumber = (Integer) boundHashOps.get("serialNumber");
 
             if (bo == null) {
@@ -79,7 +79,7 @@ public class SysUnqidServiceImpl extends ServiceImpl<SysUnqidMapper, SysUnqid> i
                 bo.setSerialNumber(serialNumber);
                 baseMapper.updateById(bo);
             }
-            redisTemplate.delete(RedisCacheKey.objUnqid(prefix));
+            defaultRedisTemplate.delete(RedisCacheKey.objUnqid(prefix));
         } finally {
             redissonLock.unlock();
         }

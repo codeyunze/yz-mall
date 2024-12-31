@@ -2,9 +2,9 @@ package com.yz.unqid.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.yz.advice.exception.BusinessException;
-import com.yz.tools.RedisCacheKey;
-import com.yz.tools.RedissonLockKey;
+import com.yz.mall.web.exception.BusinessException;
+import com.yz.mall.web.common.RedisCacheKey;
+import com.yz.mall.web.common.RedissonLockKey;
 import com.yz.unqid.entity.SysUnqid;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -54,7 +54,7 @@ public class SysUnqidV2ServiceImpl extends SysUnqidServiceImpl {
      * @param bo     流水号对象信息
      */
     private Integer updateSysUnqidCache(String prefix, SysUnqid bo) {
-        BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+        BoundHashOperations<String, Object, Object> boundHashOps = defaultRedisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
         if (bo == null) {
             bo = new SysUnqid();
             bo.setId(IdUtil.getSnowflakeNextIdStr());
@@ -80,7 +80,7 @@ public class SysUnqidV2ServiceImpl extends SysUnqidServiceImpl {
      * @return 序列号前缀对应的序列号对象信息
      */
     private SysUnqid getSysUnqidPriorityCache(String prefix) {
-        BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+        BoundHashOperations<String, Object, Object> boundHashOps = defaultRedisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
         Object obj = boundHashOps.get("id");
         SysUnqid bo;
         if (obj == null) {

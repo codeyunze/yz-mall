@@ -34,8 +34,8 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-advice</artifactId>
-            <version>${revision}</version>
+            <artifactId>yz-mall-starter-core</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
     </dependencies>

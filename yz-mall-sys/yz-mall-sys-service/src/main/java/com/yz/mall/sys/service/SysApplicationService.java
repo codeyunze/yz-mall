@@ -7,7 +7,7 @@ import com.yz.mall.sys.dto.SysApplicationQueryDto;
 import com.yz.mall.sys.dto.SysApplicationUpdateDto;
 import com.yz.mall.sys.entity.SysApplication;
 import com.yz.mall.sys.vo.SysApplicationVo;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 

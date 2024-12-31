@@ -2,8 +2,8 @@ package com.yz.mall.pms.internal;
 
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsStockService;
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

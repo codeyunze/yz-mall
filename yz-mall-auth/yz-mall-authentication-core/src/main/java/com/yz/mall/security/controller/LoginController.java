@@ -17,10 +17,10 @@ import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.service.InternalSysRoleRelationMenuService;
 import com.yz.mall.sys.service.InternalSysUserService;
-import com.yz.tools.ApiController;
-import com.yz.tools.RedisCacheKey;
-import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.RedisCacheKey;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -58,12 +58,12 @@ public class LoginController extends ApiController {
 
     private final InternalSysRoleRelationMenuService internalSysRoleRelationMenuService;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> defaultRedisTemplate;
 
-    public LoginController(RedisTemplate<String, Object> redisTemplate
+    public LoginController(RedisTemplate<String, Object> defaultRedisTemplate
             , InternalSysUserService internalSysUserService
             , InternalSysRoleRelationMenuService internalSysRoleRelationMenuService) {
-        this.redisTemplate = redisTemplate;
+        this.defaultRedisTemplate = defaultRedisTemplate;
         this.internalSysUserService = internalSysUserService;
         this.internalSysRoleRelationMenuService = internalSysRoleRelationMenuService;
     }
@@ -95,7 +95,7 @@ public class LoginController extends ApiController {
         vo.setPermissions(getPermissionByRoleIds(roles));
         vo.setAvatar(loginInfo.getAvatar());
 
-        BoundHashOperations<String, Object, Object> operations = redisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
+        BoundHashOperations<String, Object, Object> operations = defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
         operations.put("refreshToken", vo.getRefreshToken());
         operations.expire(86400, TimeUnit.SECONDS);
         return success(vo);
@@ -184,7 +184,7 @@ public class LoginController extends ApiController {
         // 清理旧的临时token
         SaTempUtil.deleteToken(refreshTokenDto.getRefreshToken());
 
-        BoundHashOperations<String, Object, Object> operations = redisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
+        BoundHashOperations<String, Object, Object> operations = defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
         operations.put("refreshToken", vo.getRefreshToken());
         operations.expire(86400, TimeUnit.SECONDS);
         return new Result<>(CodeEnum.SUCCESS.get(), vo, "访问令牌更新成功");
@@ -206,12 +206,12 @@ public class LoginController extends ApiController {
             return new Result<>(CodeEnum.SUCCESS.get(), null, "系统登出成功");
         }
         // 清理角色缓存信息
-        redisTemplate.delete(RedisCacheKey.permissionRole(StpUtil.getTokenValue()));
+        defaultRedisTemplate.delete(RedisCacheKey.permissionRole(StpUtil.getTokenValue()));
 
         // 清理用户信息
-        Object refreshToken = redisTemplate.boundHashOps(RedisCacheKey.loginInfo(userId)).get("refreshToken");
+        Object refreshToken = defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(userId)).get("refreshToken");
         if (!ObjectUtils.isEmpty(refreshToken)) {
-            redisTemplate.delete(RedisCacheKey.loginInfo(userId));
+            defaultRedisTemplate.delete(RedisCacheKey.loginInfo(userId));
             // 清理刷新token
             SaTempUtil.deleteToken(refreshToken.toString());
         }

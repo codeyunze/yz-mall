@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-starter-web</artifactId>
-            <version>${revision}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
@@ -52,13 +52,8 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-advice</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>yz-mall-starter-core</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
@@ -80,12 +75,6 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-redisson</artifactId>
-            <version>${revision}</version>
         </dependency>
     </dependencies>
 

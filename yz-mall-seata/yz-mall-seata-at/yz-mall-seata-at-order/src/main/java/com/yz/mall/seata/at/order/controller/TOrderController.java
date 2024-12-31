@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.seata.at.order.entity.TOrder;
 import com.yz.mall.seata.at.order.service.TOrderService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.TableResult;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.TableResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

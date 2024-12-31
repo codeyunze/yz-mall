@@ -1,6 +1,6 @@
 package com.yz.mall.seata.tcc.order.feign;
 
-import com.yz.tools.Result;
+import com.yz.mall.web.common.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;

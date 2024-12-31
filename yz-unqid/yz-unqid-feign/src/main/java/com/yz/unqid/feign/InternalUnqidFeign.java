@@ -1,6 +1,6 @@
 package com.yz.unqid.feign;
 
-import com.yz.tools.Result;
+import com.yz.mall.web.common.Result;
 import com.yz.unqid.dto.InternalUnqidDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

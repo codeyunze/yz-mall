@@ -6,7 +6,7 @@ import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.vo.PmsProductStockVo;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 import java.util.List;

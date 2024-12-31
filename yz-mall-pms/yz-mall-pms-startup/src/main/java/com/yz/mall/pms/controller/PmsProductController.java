@@ -9,11 +9,10 @@ import com.yz.mall.pms.dto.PmsProductUpdateDto;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.service.PmsProductService;
 import com.yz.mall.pms.vo.PmsProductVo;
-import com.yz.mall.web.annotation.RepeatSubmit;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -7,10 +7,10 @@ import com.yz.mall.seata.tcc.order.dto.TccOrderDto;
 import com.yz.mall.seata.tcc.order.entity.TccOrder;
 import com.yz.mall.seata.tcc.order.service.BussinessService;
 import com.yz.mall.seata.tcc.order.service.TccOrderService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.TableResult;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.TableResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

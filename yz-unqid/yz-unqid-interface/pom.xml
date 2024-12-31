@@ -20,15 +20,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-advice</artifactId>
-            <version>${revision}</version>
+            <artifactId>yz-mall-starter-core</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

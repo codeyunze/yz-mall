@@ -54,7 +54,8 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-tools</artifactId>
+            <artifactId>yz-mall-starter-core</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

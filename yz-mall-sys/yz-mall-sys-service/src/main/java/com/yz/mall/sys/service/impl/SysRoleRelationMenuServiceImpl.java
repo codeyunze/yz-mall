@@ -5,7 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.advice.exception.BusinessException;
+import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.sys.dto.SysRolePermissionDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
@@ -14,7 +14,7 @@ import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.mapper.SysRoleRelationMenuMapper;
 import com.yz.mall.sys.service.RefreshPermission;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
-import com.yz.tools.RedisCacheKey;
+import com.yz.mall.web.common.RedisCacheKey;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -31,12 +31,12 @@ import java.util.stream.Collectors;
 @Service
 public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationMenuMapper, SysRoleRelationMenu> implements SysRoleRelationMenuService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> defaultRedisTemplate;
 
     private final RefreshPermission refreshPermission;
 
-    public SysRoleRelationMenuServiceImpl(RedisTemplate<String, Object> redisTemplate, RefreshPermission refreshPermission) {
-        this.redisTemplate = redisTemplate;
+    public SysRoleRelationMenuServiceImpl(RedisTemplate<String, Object> defaultRedisTemplate, RefreshPermission refreshPermission) {
+        this.defaultRedisTemplate = defaultRedisTemplate;
         this.refreshPermission = refreshPermission;
     }
 
@@ -91,14 +91,14 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
             // 先从缓存查询角色对应的按钮权限
             String cacheKey = RedisCacheKey.permission(menuType.name(), String.valueOf(roleId));
             // 判断缓存里是否存在该角色的权限
-            if (Boolean.FALSE.equals(redisTemplate.hasKey(cacheKey))) {
+            if (Boolean.FALSE.equals(defaultRedisTemplate.hasKey(cacheKey))) {
                 // 没有缓存权限信息的角色
                 needQueryRoleIds.add(roleId);
                 continue;
             }
 
             // 从缓存里获取到角色权限
-            List<Object> permissionsByRoleId = redisTemplate.boundListOps(cacheKey).range(0, -1);
+            List<Object> permissionsByRoleId = defaultRedisTemplate.boundListOps(cacheKey).range(0, -1);
             if (CollectionUtils.isEmpty(permissionsByRoleId)) {
                 // 缓存里存的按钮权限为空，是为了防止出现缓存穿透问题
                 continue;
@@ -123,7 +123,7 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
 
         if (CollectionUtils.isEmpty(list)) {
             // 需要查库获取权限的角色
-            needQueryRoleIds.forEach(roleId -> redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(roleId)), Collections.emptyList()));
+            needQueryRoleIds.forEach(roleId -> defaultRedisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(roleId)), Collections.emptyList()));
             return result;
         }
 
@@ -134,7 +134,7 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
                 ));
 
         // 权限信息存入缓存
-        collect.forEach((key, value) -> value.forEach(permission -> redisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(key)), permission)));
+        collect.forEach((key, value) -> value.forEach(permission -> defaultRedisTemplate.opsForList().rightPush(RedisCacheKey.permission(menuType.name(), String.valueOf(key)), permission)));
 
         result.putAll(collect);
         return result;

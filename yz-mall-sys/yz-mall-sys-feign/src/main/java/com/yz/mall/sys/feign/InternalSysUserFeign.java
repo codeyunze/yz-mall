@@ -4,7 +4,7 @@ import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

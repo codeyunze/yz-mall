@@ -1,7 +1,7 @@
 package com.yz.mall.pms.feign;
 
 import com.yz.mall.pms.dto.InternalPmsStockDto;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -6,10 +6,10 @@ import com.yz.dynamic.datasource.one.config.DynamicDataSource;
 import com.yz.dynamic.datasource.one.dto.ProductAddDto;
 import com.yz.dynamic.datasource.one.entity.TProduct;
 import com.yz.dynamic.datasource.one.service.TProductService;
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

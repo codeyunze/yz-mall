@@ -1,7 +1,7 @@
 package com.yz.mall.oms.config;
 
 import cn.dev33.satoken.exception.SaTokenException;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.Result;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;

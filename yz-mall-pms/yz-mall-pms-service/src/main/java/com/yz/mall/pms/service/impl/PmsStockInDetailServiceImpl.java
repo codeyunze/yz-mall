@@ -12,7 +12,7 @@ import com.yz.mall.pms.dto.PmsStockInDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockInDetail;
 import com.yz.mall.pms.mapper.PmsStockInDetailMapper;
 import com.yz.mall.pms.service.PmsStockInDetailService;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

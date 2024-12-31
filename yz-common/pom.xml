@@ -14,9 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>yz-tools</module>
-        <module>yz-advice</module>
-        <module>yz-redisson</module>
+<!--        <module>yz-tools</module>-->
+        <module>yz-mall-starter-core</module>
         <module>yz-mall-starter-web</module>
     </modules>
 

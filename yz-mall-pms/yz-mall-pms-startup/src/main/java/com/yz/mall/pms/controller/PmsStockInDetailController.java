@@ -3,15 +3,14 @@ package com.yz.mall.pms.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockInDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockInDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockInDetail;
 import com.yz.mall.pms.service.PmsStockInDetailService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
