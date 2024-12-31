@@ -11,13 +11,11 @@ import com.yz.mall.sys.dto.SysOrgUpdateDto;
 import com.yz.mall.sys.mapper.SysOrgMapper;
 import com.yz.mall.sys.entity.SysOrg;
 import com.yz.mall.sys.service.SysOrgService;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 
 /**

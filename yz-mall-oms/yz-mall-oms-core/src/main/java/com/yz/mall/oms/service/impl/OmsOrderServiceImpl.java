@@ -15,7 +15,7 @@ import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsStockService;
 import com.yz.mall.sys.service.InternalSysUserService;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

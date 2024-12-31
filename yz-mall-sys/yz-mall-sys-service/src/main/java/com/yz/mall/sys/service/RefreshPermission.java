@@ -1,8 +1,8 @@
 package com.yz.mall.sys.service;
 
 import com.yz.mall.sys.enums.MenuTypeEnum;
-import com.yz.redisson.RedisUtils;
-import com.yz.tools.RedisCacheKey;
+import com.yz.mall.web.RedisUtils;
+import com.yz.mall.web.common.RedisCacheKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,15 +28,15 @@ public class RefreshPermission {
 
     private final RedisUtils redisUtils;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> defaultRedisTemplate;
 
     private final PermissionService permissionService;
 
     public RefreshPermission(RedisUtils redisUtils
-            , RedisTemplate<String, Object> redisTemplate
+            , RedisTemplate<String, Object> defaultRedisTemplate
             , PermissionService permissionService) {
         this.redisUtils = redisUtils;
-        this.redisTemplate = redisTemplate;
+        this.defaultRedisTemplate = defaultRedisTemplate;
         this.permissionService = permissionService;
     }
 
@@ -79,7 +79,7 @@ public class RefreshPermission {
         roleIds.forEach(roleId -> {
             // 参数一：redisScript，参数二：key列表，参数三：arg（可多个）
             String[] array = permissions.get(roleId).toArray(new String[0]);
-            redisTemplate.execute(redisScript, Collections.singletonList(RedisCacheKey.permission(type.name(), roleId)), array);
+            defaultRedisTemplate.execute(redisScript, Collections.singletonList(RedisCacheKey.permission(type.name(), roleId)), array);
         });
     }
 }

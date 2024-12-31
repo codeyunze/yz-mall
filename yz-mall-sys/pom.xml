@@ -31,12 +31,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-advice</artifactId>
-            <version>${revision}</version>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>

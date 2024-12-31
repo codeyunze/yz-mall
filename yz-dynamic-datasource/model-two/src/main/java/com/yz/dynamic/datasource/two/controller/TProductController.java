@@ -6,14 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.dynamic.datasource.two.entity.TProduct;
 import com.yz.dynamic.datasource.two.service.TProductService;
-import com.yz.tools.*;
+import com.yz.mall.web.common.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 商品信息(TProduct)表控制层

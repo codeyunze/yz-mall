@@ -11,7 +11,7 @@ import com.yz.mall.sys.mapper.SysApplicationMapper;
 import com.yz.mall.sys.entity.SysApplication;
 import com.yz.mall.sys.service.SysApplicationService;
 import com.yz.mall.sys.vo.SysApplicationVo;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

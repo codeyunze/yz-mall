@@ -1,8 +1,8 @@
 package com.yz.unqid.controller;
 
 
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
 import com.yz.unqid.dto.InternalUnqidDto;
 import com.yz.unqid.service.SysUnqidService;
 import org.springframework.beans.factory.annotation.Value;

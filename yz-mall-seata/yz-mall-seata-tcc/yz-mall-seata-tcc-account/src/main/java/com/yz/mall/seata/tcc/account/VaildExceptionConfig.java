@@ -1,7 +1,7 @@
 package com.yz.mall.seata.tcc.account;
 
-import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

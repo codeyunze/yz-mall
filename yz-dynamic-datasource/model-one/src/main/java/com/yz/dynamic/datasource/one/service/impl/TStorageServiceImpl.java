@@ -7,7 +7,7 @@ import com.yz.dynamic.datasource.one.dto.TStorageAddDto;
 import com.yz.dynamic.datasource.one.entity.TStorage;
 import com.yz.dynamic.datasource.one.mapper.TStorageMapper;
 import com.yz.dynamic.datasource.one.service.TStorageService;
-import com.yz.tools.enums.DataSourceTypeEnum;
+import com.yz.mall.web.common.enums.DataSourceTypeEnum;
 import org.springframework.stereotype.Service;
 
 /**

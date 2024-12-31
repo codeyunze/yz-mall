@@ -7,7 +7,7 @@ import com.yz.mall.sys.dto.SysRoleQueryDto;
 import com.yz.mall.sys.dto.SysRoleUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysRole;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -7,11 +7,11 @@ import com.yz.mall.sys.dto.SysUserRelationOrgQueryDto;
 import com.yz.mall.sys.dto.SysUserRelationOrgUpdateDto;
 import com.yz.mall.sys.entity.SysUserRelationOrg;
 import com.yz.mall.sys.service.SysUserRelationOrgService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

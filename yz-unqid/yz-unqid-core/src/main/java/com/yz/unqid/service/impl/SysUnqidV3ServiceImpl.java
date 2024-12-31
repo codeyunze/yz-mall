@@ -2,8 +2,8 @@ package com.yz.unqid.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.yz.tools.RedisCacheKey;
-import com.yz.tools.RedissonLockKey;
+import com.yz.mall.web.common.RedisCacheKey;
+import com.yz.mall.web.common.RedissonLockKey;
 import com.yz.unqid.UnqidHolder;
 import com.yz.unqid.dto.SerialNumberDto;
 import com.yz.unqid.entity.SysUnqid;
@@ -74,7 +74,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
      * @return 本次初始序号（第一个流水号的序号）
      */
     private Integer updateSysUnqidCache(String prefix, SysUnqid bo) {
-        BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+        BoundHashOperations<String, Object, Object> boundHashOps = defaultRedisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
         int currentInitialNumber;
         if (bo == null) {
             currentInitialNumber = 1;
@@ -104,7 +104,7 @@ public class SysUnqidV3ServiceImpl extends SysUnqidServiceImpl {
      * @return 流水号前缀对应的对象信息
      */
     private SysUnqid getSysUnqidPriorityCache(String prefix) {
-        BoundHashOperations<String, Object, Object> boundHashOps = redisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
+        BoundHashOperations<String, Object, Object> boundHashOps = defaultRedisTemplate.boundHashOps(RedisCacheKey.objUnqid(prefix));
         Object obj = boundHashOps.get("id");
         SysUnqid bo;
         if (obj == null) {

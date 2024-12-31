@@ -7,7 +7,7 @@ import com.yz.mall.oms.dto.OmsOrderRelationProductAddDto;
 import com.yz.mall.oms.dto.OmsOrderProductRelationQueryDto;
 import com.yz.mall.oms.dto.OmsOrderRelationProductUpdateDto;
 import com.yz.mall.oms.entity.OmsOrderRelationProduct;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

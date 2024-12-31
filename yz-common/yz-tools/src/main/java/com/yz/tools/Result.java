@@ -1,6 +1,6 @@
 package com.yz.tools;
 
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.enums.CodeEnum;
 
 import java.io.Serializable;
 import java.util.List;

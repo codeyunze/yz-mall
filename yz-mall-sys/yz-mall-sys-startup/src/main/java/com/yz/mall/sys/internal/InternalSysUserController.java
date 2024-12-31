@@ -7,8 +7,8 @@ import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.service.InternalSysUserService;
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

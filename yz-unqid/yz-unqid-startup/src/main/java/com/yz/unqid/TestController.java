@@ -1,8 +1,8 @@
 package com.yz.unqid;
 
 
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;

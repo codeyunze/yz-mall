@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.pms.dto.PmsStockOutDetailQueryDto;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
 import com.yz.mall.pms.service.PmsStockOutDetailService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
-import com.yz.tools.ResultTable;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

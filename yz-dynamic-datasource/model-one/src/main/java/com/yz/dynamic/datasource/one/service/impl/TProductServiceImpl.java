@@ -13,7 +13,7 @@ import com.yz.dynamic.datasource.one.dto.ProductAddDto;
 import com.yz.dynamic.datasource.one.entity.TProduct;
 import com.yz.dynamic.datasource.one.mapper.TProductMapper;
 import com.yz.dynamic.datasource.one.service.TProductService;
-import com.yz.tools.enums.DataSourceTypeEnum;
+import com.yz.mall.web.common.enums.DataSourceTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

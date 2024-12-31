@@ -5,8 +5,8 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.advice.exception.BusinessException;
-import com.yz.advice.exception.DataNotExistException;
+import com.yz.mall.web.exception.BusinessException;
+import com.yz.mall.web.exception.DataNotExistException;
 import com.yz.mall.sys.config.SysProperties;
 import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysMenu;
@@ -17,14 +17,12 @@ import com.yz.mall.sys.service.*;
 import com.yz.mall.sys.vo.BaseUserVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
-import com.yz.tools.PageFilter;
-import com.yz.tools.RandomUtils;
-import com.yz.tools.RedisCacheKey;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -51,20 +49,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     private final SysMenuService sysMenuService;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> defaultRedisTemplate;
 
     public SysUserServiceImpl(SysProperties sysProperties
             , SysUserRelationOrgService sysUserRelationOrgService
             , SysUserRelationRoleService sysUserRelationRoleService
             , SysRoleRelationMenuService sysRoleRelationMenuService
             , SysMenuService sysMenuService
-            , RedisTemplate<String, Object> redisTemplate) {
+            , RedisTemplate<String, Object> defaultRedisTemplate) {
         this.sysProperties = sysProperties;
         this.sysUserRelationOrgService = sysUserRelationOrgService;
         this.sysUserRelationRoleService = sysUserRelationRoleService;
         this.sysRoleRelationMenuService = sysRoleRelationMenuService;
         this.sysMenuService = sysMenuService;
-        this.redisTemplate = redisTemplate;
+        this.defaultRedisTemplate = defaultRedisTemplate;
     }
 
     @Override
@@ -160,9 +158,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (!CollectionUtils.isEmpty(roleIds)) {
             // 缓存用户所拥有的角色信息
             String cacheKey = RedisCacheKey.permissionRole(String.valueOf(userId));
-            redisTemplate.delete(cacheKey);
-            roleIds.forEach(role -> redisTemplate.opsForList().rightPush(cacheKey, role));
-            redisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
+            defaultRedisTemplate.delete(cacheKey);
+            roleIds.forEach(role -> defaultRedisTemplate.opsForList().rightPush(cacheKey, role));
+            defaultRedisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
         }
         return roleIds;
     }

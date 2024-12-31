@@ -1,10 +1,9 @@
 package com.yz.unqid.controller;
 
 
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
 import com.yz.unqid.dto.InternalUnqidDto;
-import com.yz.unqid.service.InternalUnqidService;
 import com.yz.unqid.service.SysUnqidService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 系统-流水号表(SysUnqid)表控制层

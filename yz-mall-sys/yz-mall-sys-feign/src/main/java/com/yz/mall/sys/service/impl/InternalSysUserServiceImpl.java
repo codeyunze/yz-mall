@@ -1,15 +1,15 @@
 package com.yz.mall.sys.service.impl;
 
-import com.yz.advice.exception.BusinessException;
-import com.yz.advice.exception.FeignException;
+import com.yz.mall.web.exception.BusinessException;
+import com.yz.mall.web.exception.FeignException;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.feign.InternalSysUserFeign;
 import com.yz.mall.sys.service.InternalSysUserService;
-import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

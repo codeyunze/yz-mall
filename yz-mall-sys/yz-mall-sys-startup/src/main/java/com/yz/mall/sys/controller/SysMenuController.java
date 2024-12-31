@@ -8,9 +8,9 @@ import com.yz.mall.sys.dto.SysMenuUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.service.SysMenuService;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
-import com.yz.tools.ApiController;
-import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

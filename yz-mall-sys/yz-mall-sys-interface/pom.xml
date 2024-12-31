@@ -23,7 +23,7 @@
     <dependencies>
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-mall-starter-web</artifactId>
+            <artifactId>yz-mall-starter-core</artifactId>
             <version>${revision}</version>
         </dependency>
     </dependencies>

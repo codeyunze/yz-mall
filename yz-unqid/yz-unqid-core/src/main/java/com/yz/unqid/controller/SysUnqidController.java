@@ -2,22 +2,21 @@ package com.yz.unqid.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.tools.ResultTable;
+import com.yz.mall.web.common.ResultTable;
 import com.yz.unqid.dto.InternalUnqidDto;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;
 import com.yz.unqid.entity.SysUnqid;
 import com.yz.unqid.service.SysUnqidService;
-import com.yz.tools.ApiController;
-import com.yz.tools.PageFilter;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 系统-流水号表(SysUnqid)表控制层

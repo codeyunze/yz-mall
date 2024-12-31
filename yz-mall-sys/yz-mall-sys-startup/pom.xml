@@ -20,16 +20,12 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>-->
 
-        <!--<dependency>
+        <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-starter-web</artifactId>
-            <version>${revision}</version>
-        </dependency>-->
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -62,7 +58,6 @@
             <artifactId>yz-mall-security-core</artifactId>
             <version>${revision}</version>
         </dependency>
-
     </dependencies>
 
     <build>

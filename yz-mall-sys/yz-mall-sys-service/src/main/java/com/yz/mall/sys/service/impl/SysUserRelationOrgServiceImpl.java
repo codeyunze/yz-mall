@@ -11,7 +11,7 @@ import com.yz.mall.sys.dto.SysUserRelationOrgUpdateDto;
 import com.yz.mall.sys.entity.SysUserRelationOrg;
 import com.yz.mall.sys.mapper.SysUserRelationOrgMapper;
 import com.yz.mall.sys.service.SysUserRelationOrgService;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

@@ -1,7 +1,9 @@
 package com.yz.mall.web.exception;
 
 import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.core.annotation.Order;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -17,11 +19,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class WebOverallExceptionHandle {
 
     /**
-     * 业务异常问题处理
+     * 重复提交问题处理
      */
     @ExceptionHandler(RepeatSubmitException.class)
     Result<?> businessExceptionHandle(RepeatSubmitException e) {
-        return Result.error(e.getMessage());
+        return new Result<>(CodeEnum.REPEAT_SUBMIT.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.REPEAT_SUBMIT.getMsg());
     }
 
 }

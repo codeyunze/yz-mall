@@ -1,8 +1,8 @@
 package com.yz.mall.sys.feign;
 
 import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
-import com.yz.tools.IdsDto;
-import com.yz.tools.Result;
+import com.yz.mall.web.common.IdsDto;
+import com.yz.mall.web.common.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,6 +1,6 @@
 package com.yz.dynamic.datasource.one.annotation;
 
-import com.yz.tools.enums.DataSourceTypeEnum;
+import com.yz.mall.web.common.enums.DataSourceTypeEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,8 +1,8 @@
 package com.yz.mall.seata.at.order.config;
 
 import com.yz.mall.seata.at.order.feign.TStorageFeignService;
-import com.yz.tools.Result;
-import com.yz.tools.enums.CodeEnum;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;

@@ -2,7 +2,7 @@ package com.yz.unqid.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 import com.yz.unqid.dto.SysUnqidAddDto;
 import com.yz.unqid.dto.SysUnqidQueryDto;
 import com.yz.unqid.dto.SysUnqidUpdateDto;

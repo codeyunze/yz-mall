@@ -10,7 +10,7 @@ import com.yz.mall.sys.dto.SysPermissionUpdateDto;
 import com.yz.mall.sys.mapper.SysPermissionMapper;
 import com.yz.mall.sys.entity.SysPermission;
 import com.yz.mall.sys.service.SysPermissionService;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

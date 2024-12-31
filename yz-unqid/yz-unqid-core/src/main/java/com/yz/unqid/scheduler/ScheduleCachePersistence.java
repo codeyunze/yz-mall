@@ -1,6 +1,6 @@
 package com.yz.unqid.scheduler;
 
-import com.yz.tools.RedisCacheKey;
+import com.yz.mall.web.common.RedisCacheKey;
 import com.yz.unqid.service.SysUnqidService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class ScheduleCachePersistence {
     private static final Logger log = LoggerFactory.getLogger(ScheduleCachePersistence.class);
 
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> defaultRedisTemplate;
 
     @Resource(name = "sysUnqidServiceImpl")
     private SysUnqidService service;
@@ -34,7 +34,7 @@ public class ScheduleCachePersistence {
     @Scheduled(fixedDelay = 1000 * 30)
     public void scheduleCachePersistence() {
         log.info("缓存数据持久化");
-        Set<String> keys = redisTemplate.keys(RedisCacheKey.objUnqid("*"));
+        Set<String> keys = defaultRedisTemplate.keys(RedisCacheKey.objUnqid("*"));
         assert keys != null;
         for (String key : keys) {
             log.info(key);

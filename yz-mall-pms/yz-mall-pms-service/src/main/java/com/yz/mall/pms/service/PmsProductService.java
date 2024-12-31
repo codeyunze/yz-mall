@@ -7,7 +7,7 @@ import com.yz.mall.pms.dto.PmsProductQueryDto;
 import com.yz.mall.pms.dto.PmsProductUpdateDto;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.vo.PmsProductVo;
-import com.yz.tools.PageFilter;
+import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 
