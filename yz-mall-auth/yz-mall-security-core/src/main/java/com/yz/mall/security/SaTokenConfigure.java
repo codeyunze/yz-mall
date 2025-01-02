@@ -21,7 +21,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
             System.err.println("进入SaInterceptor拦截");
             SaRouter.match("/**")
                     // "/beat", "/idleBeat", "/kill", "/run", "/log"为xxljob所需接口
-                    .notMatch("/internal/**", "/beat", "/idleBeat", "/kill", "/run", "/log")
+                    .notMatch("/internal/**", "/sys/test/*", "/beat", "/idleBeat", "/kill", "/run", "/log")
                     .check(r -> StpUtil.checkLogin());
         })).addPathPatterns("/**");
     }
