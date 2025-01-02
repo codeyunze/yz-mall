@@ -51,6 +51,12 @@
             <artifactId>yz-unqid-interface</artifactId>
             <version>${revision}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-mall-starter-web</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

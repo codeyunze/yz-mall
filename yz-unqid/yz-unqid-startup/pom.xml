@@ -23,12 +23,6 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-mall-starter-web</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
             <artifactId>yz-unqid-core</artifactId>
             <version>${revision}</version>
         </dependency>
