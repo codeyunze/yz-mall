@@ -44,4 +44,12 @@ public class RedisCacheKey {
     public static String loginInfo(String userId) {
         return "Authorization:login:info:" + userId;
     }
+
+    /**
+     * 重复提交校验缓存
+     * @param key 校验key
+     */
+    public static String repeatSubmit(String key) {
+        return "system:repeat-submit:" + key;
+    }
 }

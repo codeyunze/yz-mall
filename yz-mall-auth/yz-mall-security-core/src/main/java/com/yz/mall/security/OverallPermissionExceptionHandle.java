@@ -26,6 +26,7 @@ public class OverallPermissionExceptionHandle {
      */
     @ExceptionHandler(NotLoginException.class)
     Result<?> notLoginExceptionHandle(NotLoginException e) {
+        log.warn(e.getMessage());
         return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.ERROR_TOKEN_ILLEGAL.getMsg());
     }
 
