@@ -8,6 +8,7 @@ import com.yz.mall.sys.dto.SysMenuUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.service.SysMenuService;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.Result;
 import com.yz.mall.web.enums.CodeEnum;
@@ -38,6 +39,7 @@ public class SysMenuController extends ApiController {
     /**
      * 新增
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:menu:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysMenuAddDto dto) {

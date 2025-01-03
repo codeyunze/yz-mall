@@ -7,6 +7,7 @@ import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
+import com.yz.mall.pms.vo.PmsStockOutDetailVo;
 import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
@@ -50,7 +51,7 @@ public interface PmsStockOutDetailService extends IService<PmsStockOutDetail> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<PmsStockOutDetail> page(PageFilter<PmsStockOutDetailQueryDto> filter);
+    Page<PmsStockOutDetailVo> page(PageFilter<PmsStockOutDetailQueryDto> filter);
 
 }
 

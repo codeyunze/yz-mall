@@ -7,6 +7,7 @@ import com.yz.mall.pms.dto.PmsStockInDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockInDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockInDetail;
 import com.yz.mall.pms.service.PmsStockInDetailService;
+import com.yz.mall.pms.vo.PmsStockInDetailVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -22,7 +23,7 @@ import javax.validation.Valid;
  * @since 2024-12-25 19:53:27
  */
 @RestController
-@RequestMapping("pms/stock/in/detail")
+@RequestMapping("pms/stock/in")
 public class PmsStockInDetailController extends ApiController {
 
     private final PmsStockInDetailService service;
@@ -53,10 +54,10 @@ public class PmsStockInDetailController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("pms:stock:in:detail:page")
+    @SaCheckPermission("api:pms:stock:in:page")
     @PostMapping("page")
-    public Result<ResultTable<PmsStockInDetail>> page(@RequestBody @Valid PageFilter<PmsStockInDetailQueryDto> filter) {
-        Page<PmsStockInDetail> page = this.service.page(filter);
+    public Result<ResultTable<PmsStockInDetailVo>> page(@RequestBody @Valid PageFilter<PmsStockInDetailQueryDto> filter) {
+        Page<PmsStockInDetailVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
