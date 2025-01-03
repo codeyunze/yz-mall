@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.pms.dto.PmsStockOutDetailQueryDto;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
 import com.yz.mall.pms.service.PmsStockOutDetailService;
+import com.yz.mall.pms.vo.PmsStockOutDetailVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
  * @since 2024-12-27 12:50:27
  */
 @RestController
-@RequestMapping("pms/stock/out/detail")
+@RequestMapping("pms/stock/out")
 public class PmsStockOutDetailController extends ApiController {
 
     /**
@@ -36,17 +37,17 @@ public class PmsStockOutDetailController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("pms:stock:out:detail:page")
+    @SaCheckPermission("api:pms:stock:out:page")
     @PostMapping("page")
-    public Result<ResultTable<PmsStockOutDetail>> page(@RequestBody @Valid PageFilter<PmsStockOutDetailQueryDto> filter) {
-        Page<PmsStockOutDetail> page = this.service.page(filter);
+    public Result<ResultTable<PmsStockOutDetailVo>> page(@RequestBody @Valid PageFilter<PmsStockOutDetailQueryDto> filter) {
+        Page<PmsStockOutDetailVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
     /**
      * 详情查询
      */
-    @SaCheckPermission("pms:stock:out:detail:get")
+    @SaCheckPermission("api:pms:stock:out:get")
     @GetMapping("get/{id}")
     public Result<PmsStockOutDetail> page(@PathVariable String id) {
         return success(this.service.getById(id));
