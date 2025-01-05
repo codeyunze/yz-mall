@@ -12,6 +12,7 @@ import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -45,6 +46,7 @@ public class SysUserController extends ApiController {
     /**
      * 新增
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:user:add")
     @PostMapping("add")
     public Result<String> insert(@RequestBody @Valid SysUserAddDto dto) {
@@ -54,6 +56,7 @@ public class SysUserController extends ApiController {
     /**
      * 更新
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:user:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysUserUpdateDto dto) {
@@ -66,6 +69,7 @@ public class SysUserController extends ApiController {
      * @param id 角色Id
      * @return 是否切换成功
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:user:switch")
     @PostMapping("switch/{id}")
     public Result<Boolean> switchRole(@PathVariable Long id) {
@@ -78,6 +82,7 @@ public class SysUserController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:user:delete")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable String id) {
@@ -131,6 +136,7 @@ public class SysUserController extends ApiController {
      * 重置用户密码
      * @param dto 用户Id和用户密码
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:user:resetPassword")
     @PostMapping("resetPassword")
     public Result<Boolean> resetPassword(@RequestBody @Valid SysUserResetPasswordDto dto) {

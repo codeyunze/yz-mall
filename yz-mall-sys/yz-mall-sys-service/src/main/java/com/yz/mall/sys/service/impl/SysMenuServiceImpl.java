@@ -114,7 +114,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             metaVo.setTitle(menu.getTitle());
             // metaVo.setFrameSrc(menu.getFrameSrc());
             // metaVo.setKeepAlive(EnableEnum.ENABLE.get().equals(menu.getKeepAlive()));
-            // metaVo.setShowLink(EnableEnum.ENABLE.get().equals(menu.getShowLink()));
+            metaVo.setShowLink(EnableEnum.ENABLE.get().equals(menu.getShowLink()));
             // metaVo.setActivePath(menu.getActivePath());
 
             if (!CollectionUtils.isEmpty(roleIds)) {

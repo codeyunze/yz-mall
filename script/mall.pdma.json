@@ -2,9 +2,9 @@
   "name": "mall",
   "describe": "mall",
   "avatar": "",
-  "version": "4.9.2",
+  "version": "4.9.4",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2024-12-27 12:49:11",
+  "updatedTime": "2025-1-5 16:13:12",
   "dbConns": [],
   "profile": {
     "default": {
@@ -6666,6 +6666,379 @@
             }
           ],
           "id": "B46A2111-7A9C-4B71-8A80-6F10336126C7"
+        }
+      ],
+      "type": "P"
+    },
+    {
+      "id": "B26B8B5F-4C13-4AEE-8AAE-624631FC32B0",
+      "env": {
+        "base": {
+          "nameSpace": "",
+          "codeRoot": ""
+        }
+      },
+      "defKey": "sys_account_au",
+      "defName": "个人黄金账户",
+      "comment": "",
+      "properties": {
+        "partitioned by": "(date string)",
+        "row format delimited": "",
+        "fields terminated by ','": "",
+        "collection items terminated by '-'": "",
+        "map keys terminated by ':'": "",
+        "store as textfile;": ""
+      },
+      "sysProps": {
+        "nameTemplate": "{defKey}[{defName}]"
+      },
+      "notes": {},
+      "headers": [
+        {
+          "refKey": "hideInGraph",
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "defName",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "primaryKey",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "notNull",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "autoIncrement",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "domain",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "type",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "len",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "scale",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "comment",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "refDict",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "defaultValue",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "isStandard",
+          "freeze": false,
+          "hideInGraph": false
+        },
+        {
+          "refKey": "uiHint",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "extProps",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr1",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr2",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr3",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr4",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr5",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr6",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr7",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr8",
+          "freeze": false,
+          "hideInGraph": true
+        },
+        {
+          "refKey": "attr9",
+          "freeze": false,
+          "hideInGraph": true
+        }
+      ],
+      "fields": [
+        {
+          "defKey": "id",
+          "defName": "主键标识",
+          "comment": "",
+          "type": "BIGINT",
+          "len": "",
+          "scale": "",
+          "primaryKey": true,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
+          "extProps": {},
+          "domain": "",
+          "id": "26102FD8-0367-4CA7-B6A3-5205CC567CF1"
+        },
+        {
+          "defKey": "create_time",
+          "defName": "创建时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "BA5672AD-3C4A-426B-B6DF-A8C8E3960741",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "update_time",
+          "defName": "更新时间",
+          "comment": "",
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "uiHint": "",
+          "id": "2D76333C-5414-46BE-A4BE-5A725A13A899",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098"
+        },
+        {
+          "defKey": "invalid",
+          "defName": "数据是否有效：0数据有效",
+          "comment": "",
+          "type": "BIGINT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
+          "extProps": {},
+          "domain": "",
+          "id": "62DC7C81-32A5-4C3A-ACF8-AB22B6C637DC"
+        },
+        {
+          "defKey": "user_id",
+          "defName": "用户Id",
+          "comment": "",
+          "type": "BIGINT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "-1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
+          "extProps": {},
+          "domain": "",
+          "id": "B9C4636A-033D-4194-9612-3921BC5DBA07"
+        },
+        {
+          "defKey": "transaction_type",
+          "defName": "交易类型：0买入，1卖出",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "37EFAC45-E04E-4DD9-873F-1BCC13717231"
+        },
+        {
+          "defKey": "price",
+          "defName": "交易价格(元/克)",
+          "comment": "",
+          "type": "DECIMAL",
+          "len": 15,
+          "scale": 2,
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1A0BDC09-0792-4174-9E8E-80BE8DF44B8E",
+          "extProps": {},
+          "domain": "",
+          "id": "3F8F8629-02D9-476D-A895-02A4AEFADD29"
+        },
+        {
+          "defKey": "quantity",
+          "defName": "交易数量(克)",
+          "comment": "",
+          "type": "INT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
+          "extProps": {},
+          "domain": "",
+          "id": "44B09DB0-6D70-4A0C-9388-43AADE89F307"
+        },
+        {
+          "defKey": "profit_amount",
+          "defName": "盈利金额(元)",
+          "comment": "",
+          "type": "DECIMAL",
+          "len": 15,
+          "scale": 2,
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "1A0BDC09-0792-4174-9E8E-80BE8DF44B8E",
+          "extProps": {},
+          "domain": "",
+          "id": "A45ABF33-F5AE-452C-8EE6-711482F157C7"
+        },
+        {
+          "defKey": "relation_id",
+          "defName": "关联交易Id",
+          "comment": "",
+          "type": "BIGINT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "-1",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
+          "extProps": {},
+          "domain": "",
+          "id": "26BAA7FD-68A2-4B9B-B695-7E78DC120D8D"
+        },
+        {
+          "defKey": "transaction_time",
+          "defName": "交易时间",
+          "comment": "",
+          "type": "",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "current_timestamp",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "89D69E81-EA34-42EE-9FA2-93B8BD27E098",
+          "extProps": {},
+          "domain": "7CFFA0D3-6A93-4DDC-BC10-DF21211064DC",
+          "id": "1ED96072-455E-4DA5-BE73-E9FF8D835705"
+        }
+      ],
+      "correlations": [],
+      "indexes": [
+        {
+          "defKey": "ix_sys_account_au_relation_id",
+          "defName": null,
+          "unique": false,
+          "comment": "",
+          "fields": [
+            {
+              "fieldDefKey": "26BAA7FD-68A2-4B9B-B695-7E78DC120D8D",
+              "ascOrDesc": "A",
+              "id": "7FFB10A8-3D5F-4A31-85D5-61C0BEABDFA2"
+            },
+            {
+              "fieldDefKey": "37EFAC45-E04E-4DD9-873F-1BCC13717231",
+              "ascOrDesc": "A",
+              "id": "63F6A14D-C033-4801-8A79-037214374543"
+            }
+          ],
+          "id": "D021526E-7E3C-4BFB-BA34-FC85E816A2DC"
         }
       ],
       "type": "P"

@@ -6,6 +6,7 @@ import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.Result;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +59,7 @@ public class SysRoleRelationMenuController extends ApiController {
      *
      * @apiNote 为指定的角色绑定菜单
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:roleRelationMenu:bind")
     @PostMapping("bind")
     public Result<Boolean> bind(@RequestBody @Valid SysRoleRelationMenuBindDto dto) {

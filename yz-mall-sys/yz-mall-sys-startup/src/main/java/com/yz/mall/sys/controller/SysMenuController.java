@@ -49,6 +49,7 @@ public class SysMenuController extends ApiController {
     /**
      * 更新
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:menu:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysMenuUpdateDto dto) {
@@ -70,6 +71,7 @@ public class SysMenuController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:menu:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {

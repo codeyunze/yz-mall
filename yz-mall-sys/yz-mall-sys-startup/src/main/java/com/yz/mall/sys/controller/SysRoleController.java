@@ -8,6 +8,7 @@ import com.yz.mall.sys.dto.SysRoleQueryDto;
 import com.yz.mall.sys.dto.SysRoleUpdateDto;
 import com.yz.mall.sys.entity.SysRole;
 import com.yz.mall.sys.service.SysRoleService;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -38,6 +39,7 @@ public class SysRoleController extends ApiController {
     /**
      * 新增
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:role:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysRoleAddDto dto) {
@@ -47,6 +49,7 @@ public class SysRoleController extends ApiController {
     /**
      * 更新
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:role:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysRoleUpdateDto dto) {
@@ -59,6 +62,7 @@ public class SysRoleController extends ApiController {
      * @param id 角色Id
      * @return 是否切换成功
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:role:edit")
     @PostMapping("switch/{id}")
     public Result<Boolean> switchRole(@PathVariable Long id) {
@@ -71,6 +75,7 @@ public class SysRoleController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:role:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {

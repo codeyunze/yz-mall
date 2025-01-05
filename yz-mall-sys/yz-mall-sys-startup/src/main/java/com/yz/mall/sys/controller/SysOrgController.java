@@ -8,6 +8,7 @@ import com.yz.mall.sys.dto.SysOrgQueryDto;
 import com.yz.mall.sys.dto.SysOrgUpdateDto;
 import com.yz.mall.sys.entity.SysOrg;
 import com.yz.mall.sys.service.SysOrgService;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -37,6 +38,7 @@ public class SysOrgController extends ApiController {
     /**
      * 新增
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:org:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysOrgAddDto dto) {
@@ -46,6 +48,7 @@ public class SysOrgController extends ApiController {
     /**
      * 更新
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:org:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysOrgUpdateDto dto) {
@@ -57,6 +60,7 @@ public class SysOrgController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:org:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
