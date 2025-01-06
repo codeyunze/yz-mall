@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.web.exception.DataNotExistException;
-import com.yz.mall.sys.config.SysProperties;
+import com.yz.mall.sys.SysProperties;
 import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysUser;

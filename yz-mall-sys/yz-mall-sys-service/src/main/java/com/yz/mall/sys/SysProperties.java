@@ -1,4 +1,4 @@
-package com.yz.mall.sys.config;
+package com.yz.mall.sys;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

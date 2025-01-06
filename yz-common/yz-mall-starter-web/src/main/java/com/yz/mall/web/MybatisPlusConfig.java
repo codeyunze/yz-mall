@@ -1,4 +1,4 @@
-package com.yz.mall.sys.config;
+package com.yz.mall.web;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;

@@ -8,6 +8,7 @@ import com.yz.mall.au.dto.SysAccountAuQueryDto;
 import com.yz.mall.au.dto.SysAccountAuUpdateDto;
 import com.yz.mall.au.entity.SysAccountAu;
 import com.yz.mall.au.service.SysAccountAuService;
+import com.yz.mall.au.vo.SysAccountAuVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -69,8 +70,8 @@ public class SysAccountAuController extends ApiController {
      */
     @SaCheckPermission("api:sys:account:au:edit")
     @PostMapping("page")
-    public Result<ResultTable<SysAccountAu>> page(@RequestBody @Valid PageFilter<SysAccountAuQueryDto> filter) {
-        Page<SysAccountAu> page = this.service.page(filter);
+    public Result<ResultTable<SysAccountAuVo>> page(@RequestBody @Valid PageFilter<SysAccountAuQueryDto> filter) {
+        Page<SysAccountAuVo> page = this.service.getPageByFilter(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
