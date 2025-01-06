@@ -15,8 +15,6 @@
 
     <modules>
         <module>yz-mall-security-core</module>
-        <module>yz-mall-authentication-core</module>
-<!--        <module>yz-mall-authorization-core</module>-->
         <module>yz-mall-auth-startup</module>
     </modules>
 

@@ -6,6 +6,7 @@ import com.yz.mall.au.dto.SysAccountAuAddDto;
 import com.yz.mall.au.dto.SysAccountAuQueryDto;
 import com.yz.mall.au.dto.SysAccountAuUpdateDto;
 import com.yz.mall.au.entity.SysAccountAu;
+import com.yz.mall.au.vo.SysAccountAuVo;
 import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
@@ -40,7 +41,14 @@ public interface SysAccountAuService extends IService<SysAccountAu> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<SysAccountAu> page(PageFilter<SysAccountAuQueryDto> filter);
+    Page<SysAccountAuVo> getPageByFilter(PageFilter<SysAccountAuQueryDto> filter);
+
+    /**
+     * 删除交易记录
+     * @param id 交易记录Id
+     * @return 是否操作成功
+     */
+    boolean removeById(Long id);
 
 }
 

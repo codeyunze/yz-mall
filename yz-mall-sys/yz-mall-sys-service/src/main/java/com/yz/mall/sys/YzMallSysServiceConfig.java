@@ -1,6 +1,5 @@
 package com.yz.mall.sys;
 
-import com.yz.mall.sys.config.SysProperties;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;

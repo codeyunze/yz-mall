@@ -17,9 +17,14 @@ public class SysAccountAuQueryDto implements Serializable {
     private static final long serialVesionUID = 1L;
 
     /**
-     * 创建时间
+     * 交易开始时间
      */
-    private LocalDateTime createTime;
+    private LocalDateTime startTimeFilter;
+
+    /**
+     * 交易结束时间
+     */
+    private LocalDateTime endTimeFilter;
 
     /**
      * 用户Id
@@ -36,6 +41,9 @@ public class SysAccountAuQueryDto implements Serializable {
      */
     private Long relationId;
 
-
+    /**
+     * 盈利情况：0盈利，1亏损
+     */
+    private Integer profit;
 }
 

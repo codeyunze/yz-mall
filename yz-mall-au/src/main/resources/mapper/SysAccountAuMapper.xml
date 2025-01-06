@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.au.mapper.SysAccountAuMapper">
+
+    <select id="selectPageByFilter" resultType="com.yz.mall.au.vo.SysAccountAuVo">
+        select saa.id, saa.transaction_type, saa.price, saa.quantity, saa.profit_amount, saa.transaction_time
+             , saa.relation_id
+        from sys_account_au saa
+        where saa.invalid = 0
+        <if test="filter.transactionType != null">and saa.transaction_type = #{filter.transactionType}</if>
+        <if test="filter.startTimeFilter != null">and saa.transaction_time &gt;= #{filter.startTimeFilter}</if>
+        <if test="filter.endTimeFilter != null">and saa.transaction_time &lt;= #{filter.endTimeFilter}</if>
+    </select>
+
+</mapper>

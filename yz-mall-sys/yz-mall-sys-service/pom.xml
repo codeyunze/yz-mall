@@ -50,7 +50,7 @@
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-sys-interface</artifactId>
-            <version>${revision}</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

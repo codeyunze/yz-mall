@@ -11,9 +11,14 @@ import com.yz.mall.au.dto.SysAccountAuUpdateDto;
 import com.yz.mall.au.mapper.SysAccountAuMapper;
 import com.yz.mall.au.entity.SysAccountAu;
 import com.yz.mall.au.service.SysAccountAuService;
+import com.yz.mall.au.vo.SysAccountAuVo;
 import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 个人黄金账户(SysAccountAu)表服务实现类
@@ -30,6 +35,12 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
         bo.setUserId(Long.parseLong(StpUtil.getLoginId().toString()));
+        if (1 == dto.getTransactionType()) {
+            // 计算盈利金额
+            SysAccountAu purchase = baseMapper.selectById(dto.getRelationId());
+            // 卖出价格 - 买入价格 - 2.5元手续费
+            bo.setProfitAmount(bo.getPrice().subtract(purchase.getPrice()).subtract(BigDecimal.valueOf(2.5)));
+        }
         baseMapper.insert(bo);
         return bo.getId();
     }
@@ -42,10 +53,30 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
     }
 
     @Override
-    public Page<SysAccountAu> page(PageFilter<SysAccountAuQueryDto> filter) {
+    public Page<SysAccountAuVo> getPageByFilter(PageFilter<SysAccountAuQueryDto> filter) {
+        return baseMapper.selectPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean removeById(Long id) {
+        SysAccountAu record = baseMapper.selectById(id);
+        if (1 == record.getTransactionType()) {
+            // 清理卖出记录
+            return baseMapper.deleteById(id) > 0;
+        }
+
+        // 调整关联这一条买入记录的卖出记录
         LambdaQueryWrapper<SysAccountAu> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(filter.getFilter().getTransactionType() != null, SysAccountAu::getTransactionType, filter.getFilter().getTransactionType());
-        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        queryWrapper.eq(SysAccountAu::getRelationId, id);
+        // 卖出记录
+        List<SysAccountAu> list = baseMapper.selectList(queryWrapper);
+        list.forEach(item -> {
+            item.setProfitAmount(BigDecimal.ZERO);
+            item.setRelationId(-1L);
+        });
+        super.updateBatchById(list);
+        return baseMapper.deleteById(id) > 0;
     }
 }
 

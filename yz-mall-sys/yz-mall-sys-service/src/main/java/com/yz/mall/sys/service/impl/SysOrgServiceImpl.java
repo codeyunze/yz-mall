@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.mall.sys.config.SysProperties;
+import com.yz.mall.sys.SysProperties;
 import com.yz.mall.sys.dto.SysOrgAddDto;
 import com.yz.mall.sys.dto.SysOrgQueryDto;
 import com.yz.mall.sys.dto.SysOrgUpdateDto;
