@@ -1,6 +1,9 @@
 package com.yz.mall.au.dto;
 
+import cn.hutool.core.date.DatePattern;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,13 +20,22 @@ public class SysAccountAuQueryDto implements Serializable {
     private static final long serialVesionUID = 1L;
 
     /**
+     * 主键Id
+     */
+    private Long id;
+
+    /**
      * 交易开始时间
      */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime startTimeFilter;
 
     /**
      * 交易结束时间
      */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime endTimeFilter;
 
     /**

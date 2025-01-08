@@ -45,7 +45,6 @@ public class SysAccountAuAddDto implements Serializable {
     /**
      * 关联交易Id
      */
-    @NotNull(message = "关联交易Id不能为空")
     private Long relationId;
 
     /**
