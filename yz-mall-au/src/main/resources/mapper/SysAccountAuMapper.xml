@@ -7,6 +7,7 @@
              , saa.relation_id
         from sys_account_au saa
         where saa.invalid = 0
+        <if test="filter.id != null">and saa.id = #{filter.id}</if>
         <if test="filter.transactionType != null">and saa.transaction_type = #{filter.transactionType}</if>
         <if test="filter.startTimeFilter != null">and saa.transaction_time &gt;= #{filter.startTimeFilter}</if>
         <if test="filter.endTimeFilter != null">and saa.transaction_time &lt;= #{filter.endTimeFilter}</if>

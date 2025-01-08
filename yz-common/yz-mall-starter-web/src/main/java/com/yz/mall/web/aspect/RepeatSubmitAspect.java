@@ -61,8 +61,7 @@ public class RepeatSubmitAspect {
 
         Object[] args = joinPoint.getArgs();
         if (args != null && args.length > 0) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String paramsStr = objectMapper.writeValueAsString(args);
+            String paramsStr = args[0].toString();
             information = information + "&" + paramsStr;
         }
 

@@ -9,6 +9,7 @@ import com.yz.mall.au.dto.SysAccountAuUpdateDto;
 import com.yz.mall.au.entity.SysAccountAu;
 import com.yz.mall.au.service.SysAccountAuService;
 import com.yz.mall.au.vo.SysAccountAuVo;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -39,6 +40,7 @@ public class SysAccountAuController extends ApiController {
     /**
      * 新增
      */
+    @RepeatSubmit
     @SaCheckPermission("api:sys:account:au:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysAccountAuAddDto dto) {

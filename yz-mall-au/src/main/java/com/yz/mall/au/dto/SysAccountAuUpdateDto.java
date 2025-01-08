@@ -25,11 +25,6 @@ public class SysAccountAuUpdateDto implements Serializable {
     private Long id;
 
     /**
-     * 用户Id
-     */
-    private Long userId;
-
-    /**
      * 交易类型：0买入，1卖出
      */
     private Integer transactionType;
