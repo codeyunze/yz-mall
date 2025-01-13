@@ -78,6 +78,16 @@ public class SysAccountAuController extends ApiController {
     }
 
     /**
+     * 分页查询交易汇总信息
+     */
+    @SaCheckPermission("api:sys:account:au:edit")
+    @PostMapping("pageSummary")
+    public Result<ResultTable<SysAccountAuVo>> pageSummary(@RequestBody @Valid PageFilter<SysAccountAuQueryDto> filter) {
+        Page<SysAccountAuVo> page = this.service.getPageSummaryByFilter(filter);
+        return success(page.getRecords(), page.getTotal());
+    }
+
+    /**
      * 详情查询
      */
     @SaCheckPermission("api:sys:account:au:edit")

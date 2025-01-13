@@ -43,6 +43,8 @@ public interface SysAccountAuService extends IService<SysAccountAu> {
      */
     Page<SysAccountAuVo> getPageByFilter(PageFilter<SysAccountAuQueryDto> filter);
 
+    Page<SysAccountAuVo> getPageSummaryByFilter(PageFilter<SysAccountAuQueryDto> filter);
+
     /**
      * 删除交易记录
      * @param id 交易记录Id

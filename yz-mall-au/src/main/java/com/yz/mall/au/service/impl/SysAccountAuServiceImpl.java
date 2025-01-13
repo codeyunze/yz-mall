@@ -2,6 +2,7 @@ package com.yz.mall.au.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,9 +17,12 @@ import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 个人黄金账户(SysAccountAu)表服务实现类
@@ -100,9 +104,55 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
         return baseMapper.updateById(au) > 0;
     }
 
+    @DS("slave")
     @Override
     public Page<SysAccountAuVo> getPageByFilter(PageFilter<SysAccountAuQueryDto> filter) {
         return baseMapper.selectPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
+    }
+
+    @DS("slave")
+    @Override
+    public Page<SysAccountAuVo> getPageSummaryByFilter(PageFilter<SysAccountAuQueryDto> filter) {
+        // 查询出买入记录信息
+        filter.getFilter().setTransactionType(0);
+        Page<SysAccountAuVo> voPage = baseMapper.selectPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
+        if (voPage.getTotal() == 0) {
+            return voPage;
+        }
+
+        // 查询出这几页买入记录信息的所有卖出记录信息
+        List<Long> purchaseIds = voPage.getRecords().stream().map(SysAccountAuVo::getId).collect(Collectors.toList());
+        LambdaQueryWrapper<SysAccountAu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(SysAccountAu::getRelationId, purchaseIds);
+        queryWrapper.eq(SysAccountAu::getTransactionType, 1);
+        queryWrapper.orderByDesc(SysAccountAu::getId);
+        List<SysAccountAu> sellOutRecords = baseMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(sellOutRecords)) {
+            return voPage;
+        }
+
+        // 统计这些买入记录的收益信息
+        Map<Long, List<SysAccountAuVo>> sellOutByPurchaseMap = sellOutRecords.stream().map(t -> {
+            SysAccountAuVo vo = new SysAccountAuVo();
+            BeanUtils.copyProperties(t, vo);
+            return vo;
+        }).collect(Collectors.groupingBy(SysAccountAuVo::getRelationId));
+        voPage.getRecords().forEach(purchase -> {
+            purchase.setSellOutRecords(sellOutByPurchaseMap.get(purchase.getId()));
+            purchase.setProposalPrice(purchase.getPrice().add(BigDecimal.valueOf(2.5)));
+            purchase.setSurplusQuantity(purchase.getQuantity());
+            if (!CollectionUtils.isEmpty(purchase.getSellOutRecords())) {
+                purchase.getSellOutRecords().forEach(sellOut -> {
+                    // 计算剩余克数
+                    purchase.setSurplusQuantity(purchase.getSurplusQuantity() - sellOut.getQuantity());
+                    // 计算盈利金额 [(卖出单价-买入单价-2.5) * 卖出数量]
+                    BigDecimal profitAmount = sellOut.getPrice().subtract(purchase.getPrice()).subtract(BigDecimal.valueOf(2.5)).multiply(BigDecimal.valueOf(sellOut.getQuantity()));
+                    purchase.setProfitAmount(purchase.getProfitAmount().add(profitAmount));
+                });
+            }
+        });
+
+        return voPage;
     }
 
     @Transactional(rollbackFor = Exception.class)

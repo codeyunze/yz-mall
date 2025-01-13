@@ -25,6 +25,5 @@ public interface SysAccountAuMapper extends BaseMapper<SysAccountAu> {
      * @return 分页列表数据
      */
     Page<SysAccountAuVo> selectPageByFilter(Page<Object> page, @Param("filter") SysAccountAuQueryDto filter);
-
 }
 
