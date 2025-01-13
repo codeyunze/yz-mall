@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 个人黄金账户(SysAccountAu)表实体类
@@ -63,5 +64,20 @@ public class SysAccountAuVo implements Serializable {
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime transactionTime;
+
+    /**
+     * 关联买出记录的卖出记录
+     */
+    private List<SysAccountAuVo> sellOutRecords;
+
+    /**
+     * 剩余数量(克)
+     */
+    private Integer surplusQuantity;
+
+    /**
+     * 建议卖出价格(元/克)
+     */
+    private BigDecimal proposalPrice;
 }
 
