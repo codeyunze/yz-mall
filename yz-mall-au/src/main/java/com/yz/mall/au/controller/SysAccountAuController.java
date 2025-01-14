@@ -4,10 +4,12 @@ package com.yz.mall.au.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.au.dto.SysAccountAuAddDto;
+import com.yz.mall.au.dto.SysAccountAuChooseQueryDto;
 import com.yz.mall.au.dto.SysAccountAuQueryDto;
 import com.yz.mall.au.dto.SysAccountAuUpdateDto;
 import com.yz.mall.au.entity.SysAccountAu;
 import com.yz.mall.au.service.SysAccountAuService;
+import com.yz.mall.au.vo.SysAccountAuChooseVo;
 import com.yz.mall.au.vo.SysAccountAuVo;
 import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
@@ -84,6 +86,16 @@ public class SysAccountAuController extends ApiController {
     @PostMapping("pageSummary")
     public Result<ResultTable<SysAccountAuVo>> pageSummary(@RequestBody @Valid PageFilter<SysAccountAuQueryDto> filter) {
         Page<SysAccountAuVo> page = this.service.getPageSummaryByFilter(filter);
+        return success(page.getRecords(), page.getTotal());
+    }
+
+    /**
+     * 分页查询还有剩余的买入记录
+     */
+    @SaCheckPermission("api:sys:account:au:edit")
+    @PostMapping("choose")
+    public Result<ResultTable<SysAccountAuChooseVo>> choose(@RequestBody @Valid PageFilter<SysAccountAuChooseQueryDto> filter) {
+        Page<SysAccountAuChooseVo> page = this.service.getChooseByFilter(filter);
         return success(page.getRecords(), page.getTotal());
     }
 

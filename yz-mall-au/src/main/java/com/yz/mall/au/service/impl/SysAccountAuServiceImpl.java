@@ -7,13 +7,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.au.dto.SysAccountAuAddDto;
+import com.yz.mall.au.dto.SysAccountAuChooseQueryDto;
 import com.yz.mall.au.dto.SysAccountAuQueryDto;
 import com.yz.mall.au.dto.SysAccountAuUpdateDto;
 import com.yz.mall.au.mapper.SysAccountAuMapper;
 import com.yz.mall.au.entity.SysAccountAu;
 import com.yz.mall.au.service.SysAccountAuService;
+import com.yz.mall.au.vo.SysAccountAuChooseVo;
 import com.yz.mall.au.vo.SysAccountAuVo;
 import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,6 +156,20 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
             }
         });
 
+        return voPage;
+    }
+
+    @Override
+    public Page<SysAccountAuChooseVo> getChooseByFilter(PageFilter<SysAccountAuChooseQueryDto> filter) {
+        filter.getFilter().setPrice(filter.getFilter().getPrice().subtract(BigDecimal.valueOf(2.5)));
+        // 查询出买入记录信息
+        Page<SysAccountAuChooseVo> voPage = baseMapper.selectChoosePageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
+        if (voPage.getTotal() == 0) {
+            return voPage;
+        }
+        voPage.getRecords().forEach(purchase -> {
+           purchase.setProposalPrice(purchase.getPrice().add(BigDecimal.valueOf(2.5)));
+        });
         return voPage;
     }
 

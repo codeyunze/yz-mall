@@ -3,11 +3,16 @@ package com.yz.mall.au.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.au.dto.SysAccountAuAddDto;
+import com.yz.mall.au.dto.SysAccountAuChooseQueryDto;
 import com.yz.mall.au.dto.SysAccountAuQueryDto;
 import com.yz.mall.au.dto.SysAccountAuUpdateDto;
 import com.yz.mall.au.entity.SysAccountAu;
+import com.yz.mall.au.vo.SysAccountAuChooseVo;
 import com.yz.mall.au.vo.SysAccountAuVo;
 import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
@@ -43,7 +48,19 @@ public interface SysAccountAuService extends IService<SysAccountAu> {
      */
     Page<SysAccountAuVo> getPageByFilter(PageFilter<SysAccountAuQueryDto> filter);
 
+    /**
+     * 分页查询汇总信息
+     * @param filter 过滤条件
+     * @return 分页列表数据
+     */
     Page<SysAccountAuVo> getPageSummaryByFilter(PageFilter<SysAccountAuQueryDto> filter);
+
+    /**
+     * 分页查询还有剩余的买入单
+     * @param filter 过滤条件
+     * @return 分页列表数据
+     */
+    Page<SysAccountAuChooseVo> getChooseByFilter(PageFilter<SysAccountAuChooseQueryDto> filter);
 
     /**
      * 删除交易记录

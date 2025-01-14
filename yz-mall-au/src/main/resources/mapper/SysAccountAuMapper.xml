@@ -11,6 +11,22 @@
         <if test="filter.transactionType != null">and saa.transaction_type = #{filter.transactionType}</if>
         <if test="filter.startTimeFilter != null">and saa.transaction_time &gt;= #{filter.startTimeFilter}</if>
         <if test="filter.endTimeFilter != null">and saa.transaction_time &lt;= #{filter.endTimeFilter}</if>
+        order by saa.id desc
+    </select>
+
+    <select id="selectChoosePageByFilter" resultType="com.yz.mall.au.vo.SysAccountAuChooseVo">
+        select saa.id, saa.price, saa.quantity, saa.transaction_time, ifnull(sell.sell_quantity, 0) as sell_quantity
+        from sys_account_au saa
+        left join (
+            select relation_id, sum(quantity) as sell_quantity
+            from sys_account_au
+            where invalid = 0 and transaction_type = 1
+            group by relation_id
+        ) sell on sell.relation_id = saa.id
+        where saa.invalid = 0 and saa.transaction_type = 0
+          and saa.quantity > ifnull(sell.sell_quantity, 0)
+          and saa.price > #{filter.price}
+        order by saa.id desc
     </select>
 
 </mapper>

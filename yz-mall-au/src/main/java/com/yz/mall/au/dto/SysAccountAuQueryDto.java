@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -57,5 +58,10 @@ public class SysAccountAuQueryDto implements Serializable {
      * 盈利情况：0盈利，1亏损
      */
     private Integer profit;
+
+    /**
+     * 最低价格
+     */
+    private BigDecimal price;
 }
 
