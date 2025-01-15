@@ -63,5 +63,10 @@ public class SysAccountAuQueryDto implements Serializable {
      * 最低价格
      */
     private BigDecimal price;
+
+    /**
+     * 库存状态：0还有剩余，1全部卖出
+     */
+    private Integer stockStatus;
 }
 
