@@ -118,8 +118,7 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
     @Override
     public Page<SysAccountAuVo> getPageSummaryByFilter(PageFilter<SysAccountAuQueryDto> filter) {
         // 查询出买入记录信息
-        filter.getFilter().setTransactionType(0);
-        Page<SysAccountAuVo> voPage = baseMapper.selectPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
+        Page<SysAccountAuVo> voPage = baseMapper.selectSummaryPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
         if (voPage.getTotal() == 0) {
             return voPage;
         }
@@ -132,6 +131,11 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
         queryWrapper.orderByDesc(SysAccountAu::getId);
         List<SysAccountAu> sellOutRecords = baseMapper.selectList(queryWrapper);
         if (CollectionUtils.isEmpty(sellOutRecords)) {
+            voPage.getRecords().forEach(purchase -> {
+                purchase.setProfitAmount(BigDecimal.ZERO);
+                purchase.setSurplusQuantity(purchase.getQuantity());
+                purchase.setProposalPrice(purchase.getPrice().add(BigDecimal.valueOf(2.5)));
+            });
             return voPage;
         }
 
@@ -141,6 +145,7 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
             BeanUtils.copyProperties(t, vo);
             return vo;
         }).collect(Collectors.groupingBy(SysAccountAuVo::getRelationId));
+
         voPage.getRecords().forEach(purchase -> {
             purchase.setSellOutRecords(sellOutByPurchaseMap.get(purchase.getId()));
             purchase.setProposalPrice(purchase.getPrice().add(BigDecimal.valueOf(2.5)));
@@ -151,7 +156,7 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
                     purchase.setSurplusQuantity(purchase.getSurplusQuantity() - sellOut.getQuantity());
                     // 计算盈利金额 [(卖出单价-买入单价-2.5) * 卖出数量]
                     BigDecimal profitAmount = sellOut.getPrice().subtract(purchase.getPrice()).subtract(BigDecimal.valueOf(2.5)).multiply(BigDecimal.valueOf(sellOut.getQuantity()));
-                    purchase.setProfitAmount(purchase.getProfitAmount().add(profitAmount));
+                    purchase.setProfitAmount(purchase.getProfitAmount() == null ? BigDecimal.ZERO.add(profitAmount) : purchase.getProfitAmount().add(profitAmount));
                 });
             }
         });
