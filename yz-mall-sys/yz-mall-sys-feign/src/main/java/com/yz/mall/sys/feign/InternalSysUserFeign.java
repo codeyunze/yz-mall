@@ -4,6 +4,7 @@ import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 import com.yz.mall.web.common.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,4 +59,13 @@ public interface InternalSysUserFeign {
      */
     @PostMapping("add")
     Result<String> add(@Valid @RequestBody InternalSysUserAddDto dto);
+
+    /**
+     * 获取用户信息
+     *
+     * @param id 用户Id
+     * @return 用户信息
+     */
+    @GetMapping("getUserInfo/{id}")
+    Result<InternalLoginInfoVo> getUserInfo(@PathVariable Long id);
 }

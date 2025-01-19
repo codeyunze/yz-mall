@@ -43,7 +43,7 @@ public class SysAccountAuController extends ApiController {
      * 新增
      */
     @RepeatSubmit
-    @SaCheckPermission("api:sys:account:au:edit")
+    @SaCheckPermission("api:system:account:au:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysAccountAuAddDto dto) {
         return success(this.service.save(dto));
@@ -52,7 +52,7 @@ public class SysAccountAuController extends ApiController {
     /**
      * 更新
      */
-    @SaCheckPermission("api:sys:account:au:edit")
+    @SaCheckPermission("api:system:account:au:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysAccountAuUpdateDto dto) {
         return success(this.service.update(dto));
@@ -63,7 +63,7 @@ public class SysAccountAuController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
-    @SaCheckPermission("api:sys:account:au:edit")
+    @SaCheckPermission("api:system:account:au:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -72,7 +72,7 @@ public class SysAccountAuController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:sys:account:au:edit")
+    @SaCheckPermission("api:system:account:au:edit")
     @PostMapping("page")
     public Result<ResultTable<SysAccountAuVo>> page(@RequestBody @Valid PageFilter<SysAccountAuQueryDto> filter) {
         Page<SysAccountAuVo> page = this.service.getPageByFilter(filter);
@@ -82,7 +82,7 @@ public class SysAccountAuController extends ApiController {
     /**
      * 分页查询交易汇总信息
      */
-    @SaCheckPermission("api:sys:account:au:edit")
+    @SaCheckPermission("api:system:account:au:edit")
     @PostMapping("pageSummary")
     public Result<ResultTable<SysAccountAuVo>> pageSummary(@RequestBody @Valid PageFilter<SysAccountAuQueryDto> filter) {
         Page<SysAccountAuVo> page = this.service.getPageSummaryByFilter(filter);
@@ -92,7 +92,7 @@ public class SysAccountAuController extends ApiController {
     /**
      * 分页查询还有剩余的买入记录
      */
-    @SaCheckPermission("api:sys:account:au:edit")
+    @SaCheckPermission("api:system:account:au:edit")
     @PostMapping("choose")
     public Result<ResultTable<SysAccountAuChooseVo>> choose(@RequestBody @Valid PageFilter<SysAccountAuChooseQueryDto> filter) {
         Page<SysAccountAuChooseVo> page = this.service.getChooseByFilter(filter);
@@ -102,7 +102,7 @@ public class SysAccountAuController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:sys:account:au:edit")
+    @SaCheckPermission("api:system:account:au:edit")
     @GetMapping("get/{id}")
     public Result<SysAccountAu> page(@PathVariable String id) {
         return success(this.service.getById(id));

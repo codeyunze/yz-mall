@@ -20,6 +20,10 @@ public enum CodeEnum {
      */
     BUSINESS_ERROR(1, "业务操作异常"),
     /**
+     * 请求没有携带token
+     */
+    ERROR_TOKEN_NULL(50000, "请登录系统操作"),
+    /**
      * 非法token
      */
     ERROR_TOKEN_ILLEGAL(50001, "无效令牌"),
