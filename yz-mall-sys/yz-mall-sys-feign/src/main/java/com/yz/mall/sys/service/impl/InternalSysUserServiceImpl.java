@@ -1,15 +1,15 @@
 package com.yz.mall.sys.service.impl;
 
-import com.yz.mall.web.exception.BusinessException;
-import com.yz.mall.web.exception.FeignException;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.feign.InternalSysUserFeign;
 import com.yz.mall.sys.service.InternalSysUserService;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 import com.yz.mall.web.common.Result;
 import com.yz.mall.web.enums.CodeEnum;
+import com.yz.mall.web.exception.FeignException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -58,6 +58,15 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     @Override
     public List<Long> getUserRoles(Long userId) {
         Result<List<Long>> result = feign.getUserRoles(userId);
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new FeignException(result.getCode(), result.getMsg());
+        }
+        return result.getData();
+    }
+
+    @Override
+    public InternalLoginInfoVo getUserInfoById(Long userId) {
+        Result<InternalLoginInfoVo> result = feign.getUserInfo(userId);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
         }

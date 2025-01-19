@@ -7,6 +7,7 @@ import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.service.InternalSysUserService;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.Result;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +80,17 @@ public class InternalSysUserController extends ApiController {
     @PostMapping("add")
     public Result<String> add(@Valid @RequestBody InternalSysUserAddDto dto) {
         return success(service.add(dto));
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @param id 用户Id
+     * @return 用户信息
+     */
+    @GetMapping("getUserInfo/{id}")
+    public Result<InternalLoginInfoVo> getUserInfo(@PathVariable Long id) {
+        return success(this.service.getUserInfoById(id));
     }
 }
 

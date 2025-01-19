@@ -134,6 +134,7 @@ public class SysUserController extends ApiController {
 
     /**
      * 重置用户密码
+     *
      * @param dto 用户Id和用户密码
      */
     @RepeatSubmit

@@ -3,6 +3,7 @@ package com.yz.mall.sys.service;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalSysUserAddDto;
 import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -44,6 +45,14 @@ public interface InternalSysUserService {
      * @return 用户所拥有的角色
      */
     List<Long> getUserRoles(Long userId);
+
+    /**
+     * 获取用户信息
+     *
+     * @param userId 用户Id
+     * @return 用户信息
+     */
+    InternalLoginInfoVo getUserInfoById(Long userId);
 
     /**
      * 新增用户

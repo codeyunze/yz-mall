@@ -5,6 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.web.exception.DataNotExistException;
 import com.yz.mall.sys.SysProperties;
@@ -163,6 +164,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             defaultRedisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
         }
         return roleIds;
+    }
+
+    @Override
+    public InternalLoginInfoVo getUserInfoById(Long userId) {
+        SysUser user = baseMapper.selectById(userId);
+        InternalLoginInfoVo vo = new InternalLoginInfoVo();
+        BeanUtils.copyProperties(user, vo);
+        return vo;
     }
 
     @DS("slave")

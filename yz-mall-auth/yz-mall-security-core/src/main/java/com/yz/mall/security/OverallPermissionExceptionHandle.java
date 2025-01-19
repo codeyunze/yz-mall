@@ -27,6 +27,9 @@ public class OverallPermissionExceptionHandle {
     @ExceptionHandler(NotLoginException.class)
     Result<?> notLoginExceptionHandle(NotLoginException e) {
         log.warn(e.getMessage());
+        if (e.getMessage().contains("未能读取到有效")) {
+            return new Result<>(CodeEnum.ERROR_TOKEN_NULL.get(), null, CodeEnum.ERROR_TOKEN_NULL.getMsg());
+        }
         return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.ERROR_TOKEN_ILLEGAL.getMsg());
     }
 

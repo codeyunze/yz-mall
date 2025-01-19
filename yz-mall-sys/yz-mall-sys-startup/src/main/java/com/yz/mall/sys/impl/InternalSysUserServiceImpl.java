@@ -8,6 +8,7 @@ import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.enums.SexEnum;
 import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.mall.sys.service.SysUserService;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,11 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     @Override
     public List<Long> getUserRoles(Long userId) {
         return service.getUserRoles(userId);
+    }
+
+    @Override
+    public InternalLoginInfoVo getUserInfoById(Long userId) {
+        return service.getUserInfoById(userId);
     }
 
     @Override

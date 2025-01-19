@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.vo.BaseUserVo;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
 import com.yz.mall.web.common.PageFilter;
@@ -89,6 +90,14 @@ public interface SysUserService extends IService<SysUser> {
      * @return 用户所拥有的角色
      */
     List<Long> getUserRoles(Long userId);
+
+    /**
+     * 获取用户信息
+     *
+     * @param userId 用户Id
+     * @return 用户信息
+     */
+    InternalLoginInfoVo getUserInfoById(Long userId);
 
     /**
      * 获取请求用户可访问的菜单信息

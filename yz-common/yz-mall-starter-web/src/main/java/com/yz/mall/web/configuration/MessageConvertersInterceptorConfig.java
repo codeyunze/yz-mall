@@ -1,4 +1,4 @@
-package com.yz.mall.web;
+package com.yz.mall.web.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

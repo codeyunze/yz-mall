@@ -20,6 +20,7 @@ import com.yz.mall.web.RedisUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -137,10 +138,34 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
             vo.setChildren(this.menusInfoProcessor(menus, menu.getId(), roleIds));
 
+            // 如果一级菜单没有子菜单，则需要做如下特殊处理
+            if (CollectionUtils.isEmpty(vo.getChildren()) && 0L == parentId) {
+                vo.setChildren(Collections.singletonList(firstLevelMenuProcessor(menu)));
+            }
+
             vo.setMeta(metaVo);
             treeMenuVos.add(vo);
         }
         return treeMenuVos;
+    }
+
+    /**
+     * 一级菜单处理
+     * @param menu 菜单信息
+     * @return 处理后的菜单路由信息
+     */
+    private static SysTreeMenuVo firstLevelMenuProcessor(SysMenu menu) {
+        SysTreeMenuVo children = new SysTreeMenuVo();
+        SysTreeMenuMetaVo childrenMetaVo = new SysTreeMenuMetaVo();
+
+        children.setPath(menu.getPath());
+        children.setName(menu.getName());
+        children.setComponent(menu.getComponent());
+        childrenMetaVo.setTitle(menu.getTitle());
+        childrenMetaVo.setIcon(menu.getIcon());
+        childrenMetaVo.setExtraIcon(menu.getExtraIcon());
+        children.setMeta(childrenMetaVo);
+        return children;
     }
 }
 

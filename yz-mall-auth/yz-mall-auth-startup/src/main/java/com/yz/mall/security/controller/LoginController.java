@@ -1,5 +1,7 @@
 package com.yz.mall.security.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
@@ -17,6 +19,7 @@ import com.yz.mall.sys.dto.InternalSysUserCheckLoginDto;
 import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.service.InternalSysRoleRelationMenuService;
 import com.yz.mall.sys.service.InternalSysUserService;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.RedisCacheKey;
 import com.yz.mall.web.common.Result;
@@ -28,10 +31,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -281,6 +281,36 @@ public class LoginController extends ApiController {
         InternalSysUserAddDto userAddDto = new InternalSysUserAddDto();
         BeanUtils.copyProperties(registerDto, userAddDto);
         return success(internalSysUserService.add(userAddDto));
+    }
+
+    /**
+     * 获取请求者的登录信息
+     */
+    @SaCheckLogin
+    @SaIgnore
+    @GetMapping("getUserInfo")
+    public Result<UserLoginInfoVo> getUserInfo() {
+        InternalLoginInfoVo loginInfo = internalSysUserService.getUserInfoById(StpUtil.getLoginIdAsLong());
+        if (loginInfo == null) {
+            // 数据库里不存在该用户信息，清理该token的信息
+            StpUtil.logout();
+            return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, CodeEnum.ERROR_TOKEN_ILLEGAL.getMsg());
+        }
+
+        List<String> roles = getRoleByUserId(StpUtil.getLoginIdAsString());
+        UserLoginInfoVo vo = new UserLoginInfoVo();
+        BeanUtils.copyProperties(loginInfo, vo);
+        vo.setUserId(loginInfo.getId());
+
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        vo.setAccessToken(tokenInfo.tokenValue);
+        vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
+        // 获取刷新令牌
+        vo.setRefreshToken((String) defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId())).get("refreshToken"));
+        vo.setRoles(roles);
+        vo.setPermissions(getPermissionByRoleIds(roles));
+        vo.setAvatar(loginInfo.getAvatar());
+        return success(vo);
     }
 
 }

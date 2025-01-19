@@ -1,4 +1,4 @@
-package com.yz.common.file.controller;
+package com.yz.mall.file.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

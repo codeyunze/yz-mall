@@ -19,7 +19,7 @@ import org.springframework.util.StringUtils;
  * @author yunze
  * @date 2024/11/15 16:11
  */
-@Configuration
+// @Configuration
 public class SaTokenConfigure {
     // 注册 Sa-Token全局过滤器
     @Bean
