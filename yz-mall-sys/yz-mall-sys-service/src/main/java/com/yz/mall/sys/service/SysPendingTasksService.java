@@ -2,7 +2,7 @@ package com.yz.mall.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.sys.dto.SysPendingTasksAddDto;
+import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
 import com.yz.mall.sys.dto.SysPendingTasksQueryDto;
 import com.yz.mall.sys.dto.SysPendingTasksUpdateDto;
 import com.yz.mall.sys.entity.SysPendingTasks;
@@ -25,7 +25,7 @@ public interface SysPendingTasksService extends IService<SysPendingTasks> {
      * @param dto 新增基础数据
      * @return 主键Id
      */
-    Long save(SysPendingTasksAddDto dto);
+    Long save(InternalSysPendingTasksAddDto dto);
 
     /**
      * 更新数据
