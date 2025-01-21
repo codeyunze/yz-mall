@@ -16,6 +16,12 @@ public class IdDto implements Serializable {
     @NotNull(message = "id不能为空")
     private Long id;
 
+    public IdDto(Long taskId) {
+        this.id = taskId;
+    }
+
+    public IdDto(){}
+
     public Long getId() {
         return id;
     }

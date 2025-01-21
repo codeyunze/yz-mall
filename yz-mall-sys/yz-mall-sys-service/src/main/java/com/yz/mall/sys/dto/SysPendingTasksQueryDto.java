@@ -17,9 +17,14 @@ public class SysPendingTasksQueryDto implements Serializable {
     private static final long serialVesionUID = 1L;
 
     /**
-     * 创建时间
+     * 待办创建开始时间
      */
-    private LocalDateTime createTime;
+    private LocalDateTime startTimeFilter;
+
+    /**
+     * 待办创建结束时间
+     */
+    private LocalDateTime endTimeFilter;
 
     /**
      * 任务标题

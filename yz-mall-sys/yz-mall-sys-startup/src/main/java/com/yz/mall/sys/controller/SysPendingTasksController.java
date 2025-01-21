@@ -4,7 +4,7 @@ package com.yz.mall.sys.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.sys.dto.SysPendingTasksAddDto;
+import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
 import com.yz.mall.sys.dto.SysPendingTasksQueryDto;
 import com.yz.mall.sys.dto.SysPendingTasksUpdateDto;
 import com.yz.mall.sys.entity.SysPendingTasks;
@@ -38,7 +38,7 @@ public class SysPendingTasksController extends ApiController {
      */
     @SaCheckPermission("api:system:task:edit")
     @PostMapping("add")
-    public Result<Long> insert(@RequestBody @Valid SysPendingTasksAddDto dto) {
+    public Result<Long> insert(@RequestBody @Valid InternalSysPendingTasksAddDto dto) {
         dto.setCreateId(StpUtil.getLoginIdAsLong());
         return success(this.service.save(dto));
     }
