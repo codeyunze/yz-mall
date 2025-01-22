@@ -22,6 +22,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-starter-core</artifactId>
             <version>${revision}</version>

@@ -4,13 +4,11 @@ import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yz.mall.web.common.JacksonUtil;
 import com.yz.mall.web.common.Result;
 import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
 /**
@@ -55,9 +53,8 @@ public class SaTokenConfigure {
                     // 设置响应头
                     SaHolder.getResponse().setHeader("Content-Type", "application/json;charset=UTF-8");
                     // 使用封装的 JSON 工具类转换数据格式
-                    ObjectMapper objectMapper = new ObjectMapper();
                     try {
-                        return objectMapper.writeValueAsString(new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : "无效访问令牌"));
+                        return JacksonUtil.getObjectMapper().writeValueAsString(new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : "无效访问令牌"));
                     } catch (JsonProcessingException ex) {
                         throw new RuntimeException(ex);
                     }

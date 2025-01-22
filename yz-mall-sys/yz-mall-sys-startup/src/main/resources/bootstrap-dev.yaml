@@ -14,11 +14,3 @@ spring:
         namespace: mall
       username: nacos
       password: nacos
-
-# rabbitmq配置信息
-  rabbitmq:
-    host: yunze.com
-    port: 5672
-    username: admin
-    password: admin
-    virtual-host: yz-mall

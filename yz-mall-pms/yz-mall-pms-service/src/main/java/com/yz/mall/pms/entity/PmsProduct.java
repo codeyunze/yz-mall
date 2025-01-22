@@ -84,7 +84,7 @@ public class PmsProduct extends Model<PmsProduct> {
     private Integer publishStatus;
 
     /**
-     * 商品审核状态：0：未审核，1：审核通过
+     * 商品审核状态：0：未审核，1：审核通过，9：待审核
      */
     private Integer verifyStatus;
 

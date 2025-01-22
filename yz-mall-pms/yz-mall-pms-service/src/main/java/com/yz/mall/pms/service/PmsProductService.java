@@ -37,6 +37,7 @@ public interface PmsProductService extends IService<PmsProduct> {
 
     /**
      * 商品上架
+     *
      * @param id 商品Id {@link PmsProduct#getId()}
      * @return 是否上架成功
      */
@@ -44,6 +45,7 @@ public interface PmsProductService extends IService<PmsProduct> {
 
     /**
      * 商品下架
+     *
      * @param id 商品Id {@link PmsProduct#getId()}
      * @return 是否下架成功
      */
@@ -65,5 +67,18 @@ public interface PmsProductService extends IService<PmsProduct> {
      */
     PmsProductVo detail(Long id);
 
+    /**
+     * 商品上架状态待审核
+     *
+     * @param id 商品id
+     */
+    void pendingReview(Long id);
+
+    /**
+     * 商品上架审核通过
+     *
+     * @param id 商品id
+     */
+    void approvedReview(Long id);
 }
 

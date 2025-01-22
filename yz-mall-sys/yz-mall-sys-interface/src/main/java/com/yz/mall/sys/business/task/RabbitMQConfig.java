@@ -1,4 +1,4 @@
-package com.yz.mall.sys.demo;
+package com.yz.mall.sys.business.task;
 
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 /**
+ * 消息队列配置信息
  * @author yunze
  * @date 2025/1/21 17:29
  */
@@ -28,7 +29,7 @@ public class RabbitMQConfig implements RabbitListenerConfigurer {
 
     @Override
     public void configureRabbitListeners(RabbitListenerEndpointRegistrar rabbitListenerEndpointRegistrar) {
-        Map<String, BaseService> baseServices = applicationContext.getBeansOfType(BaseService.class);
+        Map<String, AbstractTaskService> baseServices = applicationContext.getBeansOfType(AbstractTaskService.class);
         baseServices.forEach((beanName, service) -> {
             SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
             container.setQueues(new Queue(service.setMessageQueue() + "_start", true));

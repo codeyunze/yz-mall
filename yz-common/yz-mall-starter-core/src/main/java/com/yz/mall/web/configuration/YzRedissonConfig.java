@@ -1,4 +1,4 @@
-package com.yz.mall.web;
+package com.yz.mall.web.configuration;
 
 import org.redisson.Redisson;
 import org.redisson.config.Config;

@@ -33,7 +33,7 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-mall-starter-core</artifactId>
+            <artifactId>yz-mall-starter-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

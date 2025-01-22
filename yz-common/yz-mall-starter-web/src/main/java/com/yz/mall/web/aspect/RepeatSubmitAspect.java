@@ -1,7 +1,6 @@
 package com.yz.mall.web.aspect;
 
 import cn.hutool.crypto.SecureUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.RedisCacheKey;
 import com.yz.mall.web.common.Result;
