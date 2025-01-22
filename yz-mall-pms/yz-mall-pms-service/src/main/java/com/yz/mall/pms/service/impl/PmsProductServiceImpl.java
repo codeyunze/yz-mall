@@ -5,6 +5,9 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.pms.enums.ProductVerifyStatusEnum;
+import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.service.InternalSysPendingTasksService;
 import com.yz.mall.web.exception.DataNotExistException;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.mapper.PmsProductMapper;
@@ -31,8 +34,12 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     private final PmsStockService stockService;
 
-    public PmsProductServiceImpl(PmsStockService stockService) {
+    private final InternalSysPendingTasksService internalSysPendingTasksService;
+
+    public PmsProductServiceImpl(PmsStockService stockService
+            , InternalSysPendingTasksService internalSysPendingTasksService) {
         this.stockService = stockService;
+        this.internalSysPendingTasksService = internalSysPendingTasksService;
     }
 
     @Transactional
@@ -59,7 +66,15 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
             throw new DataNotExistException("商品信息不存在，无法上架");
         }
         product.setPublishStatus(1);
-        return baseMapper.updateById(product) > 0;
+
+        int updated = baseMapper.updateById(product);
+        InternalSysPendingTasksAddDto tasksAddDto = new InternalSysPendingTasksAddDto();
+        tasksAddDto.setTaskCode("PMS:PRODUCT:PUBLISH");
+        tasksAddDto.setTaskNode("待审核");
+        tasksAddDto.setTaskTitle(product.getTitles() + "上架审核");
+        tasksAddDto.setBusinessId(String.valueOf(id));
+        Long taskId = internalSysPendingTasksService.startTask(tasksAddDto);
+        return updated > 0;
     }
 
     @Override
@@ -95,5 +110,19 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
         product.setQuantity(stockService.getStockByProductId(id));
         return product;
+    }
+
+    @Override
+    public void pendingReview(Long id) {
+        PmsProduct product = baseMapper.selectById(id);
+        product.setVerifyStatus(ProductVerifyStatusEnum.PENDING_REVIEW.get());
+        baseMapper.updateById(product);
+    }
+
+    @Override
+    public void approvedReview(Long id) {
+        PmsProduct product = baseMapper.selectById(id);
+        product.setVerifyStatus(ProductVerifyStatusEnum.APPROVED_REVIEW.get());
+        baseMapper.updateById(product);
     }
 }

@@ -1,6 +1,5 @@
-package com.yz.mall.sys.impl;
+package com.yz.mall.sys.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
 import com.yz.mall.sys.service.InternalSysPendingTasksService;
 import com.yz.mall.sys.service.SysPendingTasksService;
@@ -21,10 +20,8 @@ public class InternalSysPendingTasksServiceImpl implements InternalSysPendingTas
     }
 
     @Override
-    public String startTask(InternalSysPendingTasksAddDto taskInfo) {
-        taskInfo.setCreateId(StpUtil.getLoginIdAsLong());
-        Long id = sysPendingTasksService.save(taskInfo);
-        return String.valueOf(id);
+    public Long startTask(InternalSysPendingTasksAddDto taskInfo) {
+        return sysPendingTasksService.save(taskInfo);
     }
 
     @Override

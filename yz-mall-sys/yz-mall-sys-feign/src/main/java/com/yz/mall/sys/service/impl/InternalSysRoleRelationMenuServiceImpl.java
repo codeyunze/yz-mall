@@ -1,14 +1,11 @@
 package com.yz.mall.sys.service.impl;
 
-import com.yz.mall.web.exception.BusinessException;
-import com.yz.mall.web.exception.FeignException;
 import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
-import com.yz.mall.sys.enums.MenuTypeEnum;
 import com.yz.mall.sys.feign.InternalSysRoleRelationMenuFeign;
 import com.yz.mall.sys.service.InternalSysRoleRelationMenuService;
-import com.yz.mall.web.common.IdsDto;
 import com.yz.mall.web.common.Result;
 import com.yz.mall.web.enums.CodeEnum;
+import com.yz.mall.web.exception.FeignException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

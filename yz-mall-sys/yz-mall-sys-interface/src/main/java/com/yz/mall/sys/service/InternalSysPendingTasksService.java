@@ -17,7 +17,7 @@ public interface InternalSysPendingTasksService {
      * @param taskInfo 任务信息
      * @return 任务Id
      */
-    String startTask(@Valid InternalSysPendingTasksAddDto taskInfo);
+    Long startTask(@Valid InternalSysPendingTasksAddDto taskInfo);
 
     /**
      * 结束任务
