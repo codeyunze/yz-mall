@@ -5,7 +5,9 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.pms.dto.PmsProductSlimQueryDto;
 import com.yz.mall.pms.enums.ProductVerifyStatusEnum;
+import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
 import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
 import com.yz.mall.sys.service.InternalSysPendingTasksService;
 import com.yz.mall.web.exception.DataNotExistException;
@@ -22,6 +24,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 商品表(PmsProduct)表服务实现类
@@ -124,5 +129,10 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         PmsProduct product = baseMapper.selectById(id);
         product.setVerifyStatus(ProductVerifyStatusEnum.APPROVED_REVIEW.get());
         baseMapper.updateById(product);
+    }
+
+    @Override
+    public List<PmsProductDisplayInfoVo> getProductDisplayInfoList(PmsProductSlimQueryDto filter) {
+        return baseMapper.selectProductDisplayInfoList(filter);
     }
 }

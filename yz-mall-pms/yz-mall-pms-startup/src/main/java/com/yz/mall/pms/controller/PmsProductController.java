@@ -2,12 +2,15 @@ package com.yz.mall.pms.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.pms.dto.PmsProductAddDto;
 import com.yz.mall.pms.dto.PmsProductQueryDto;
+import com.yz.mall.pms.dto.PmsProductSlimQueryDto;
 import com.yz.mall.pms.dto.PmsProductUpdateDto;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.service.PmsProductService;
+import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
 import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
@@ -16,6 +19,7 @@ import com.yz.mall.web.common.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 商品表(PmsProduct)表控制层
@@ -99,5 +103,13 @@ public class PmsProductController extends ApiController {
         return success(this.service.detail(id));
     }
 
+    /**
+     * 查询商品展示信息
+     */
+    @SaIgnore
+    @PostMapping("/info")
+    public Result<List<PmsProductDisplayInfoVo>> getProductDisplayInfoList(@RequestBody PmsProductSlimQueryDto filter) {
+        return success(this.service.getProductDisplayInfoList(filter));
+    }
 }
 

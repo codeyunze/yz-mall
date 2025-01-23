@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.pms.dto.PmsProductAddDto;
 import com.yz.mall.pms.dto.PmsProductQueryDto;
+import com.yz.mall.pms.dto.PmsProductSlimQueryDto;
 import com.yz.mall.pms.dto.PmsProductUpdateDto;
 import com.yz.mall.pms.entity.PmsProduct;
+import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
 import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 商品表(PmsProduct)表服务接口
@@ -80,5 +83,13 @@ public interface PmsProductService extends IService<PmsProduct> {
      * @param id 商品id
      */
     void approvedReview(Long id);
+
+    /**
+     * 查询商品展示信息
+     *
+     * @param filter 数据过滤条件
+     * @return 商品展示信息
+     */
+    List<PmsProductDisplayInfoVo> getProductDisplayInfoList(PmsProductSlimQueryDto filter);
 }
 
