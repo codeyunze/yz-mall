@@ -1,23 +1,20 @@
-package com.yz.mall.au.service.impl;
+package com.yz.mall.sys.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.mall.au.dto.SysAccountAuAddDto;
-import com.yz.mall.au.dto.SysAccountAuChooseQueryDto;
-import com.yz.mall.au.dto.SysAccountAuQueryDto;
-import com.yz.mall.au.dto.SysAccountAuUpdateDto;
-import com.yz.mall.au.mapper.SysAccountAuMapper;
-import com.yz.mall.au.entity.SysAccountAu;
-import com.yz.mall.au.service.SysAccountAuService;
-import com.yz.mall.au.vo.SysAccountAuChooseVo;
-import com.yz.mall.au.vo.SysAccountAuVo;
+import com.yz.mall.sys.dto.SysAccountAuAddDto;
+import com.yz.mall.sys.dto.SysAccountAuChooseQueryDto;
+import com.yz.mall.sys.dto.SysAccountAuQueryDto;
+import com.yz.mall.sys.dto.SysAccountAuUpdateDto;
+import com.yz.mall.sys.mapper.SysAccountAuMapper;
+import com.yz.mall.sys.entity.SysAccountAu;
+import com.yz.mall.sys.service.SysAccountAuService;
+import com.yz.mall.sys.vo.SysAccountAuChooseVo;
+import com.yz.mall.sys.vo.SysAccountAuVo;
 import com.yz.mall.web.common.PageFilter;
-import com.yz.mall.web.common.Result;
-import com.yz.mall.web.common.ResultTable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +39,6 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
         SysAccountAu bo = new SysAccountAu();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
-        bo.setUserId(Long.parseLong(StpUtil.getLoginId().toString()));
         if (1 == dto.getTransactionType()) {
             // 计算盈利金额
             SysAccountAu purchase = baseMapper.selectById(dto.getRelationId());

@@ -1,4 +1,4 @@
-package com.yz.mall.au.dto;
+package com.yz.mall.sys.dto;
 
 import java.math.BigDecimal;
 
@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -53,5 +52,11 @@ public class SysAccountAuAddDto implements Serializable {
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime transactionTime;
+
+    /**
+     * 用户Id
+     * @ignore
+     */
+    private Long userId;
 }
 

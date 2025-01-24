@@ -1,7 +1,0 @@
-
-server:
-  port: 30010
-
-spring:
-  application:
-    name: yz-mall-au

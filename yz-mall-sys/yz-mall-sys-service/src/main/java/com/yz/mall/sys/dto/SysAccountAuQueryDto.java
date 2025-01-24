@@ -1,4 +1,4 @@
-package com.yz.mall.au.dto;
+package com.yz.mall.sys.dto;
 
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;

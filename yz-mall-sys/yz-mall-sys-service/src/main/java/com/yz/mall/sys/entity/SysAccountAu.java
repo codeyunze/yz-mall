@@ -1,4 +1,4 @@
-package com.yz.mall.au.entity;
+package com.yz.mall.sys.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -7,8 +7,6 @@ import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 

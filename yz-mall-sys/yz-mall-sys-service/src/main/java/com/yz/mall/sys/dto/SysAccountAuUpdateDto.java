@@ -1,4 +1,4 @@
-package com.yz.mall.au.dto;
+package com.yz.mall.sys.dto;
 
 import java.math.BigDecimal;
 import java.io.Serializable;

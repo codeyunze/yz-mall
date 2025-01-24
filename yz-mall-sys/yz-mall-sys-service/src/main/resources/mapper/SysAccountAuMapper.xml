@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yz.mall.au.mapper.SysAccountAuMapper">
+<mapper namespace="com.yz.mall.sys.mapper.SysAccountAuMapper">
 
-    <select id="selectPageByFilter" resultType="com.yz.mall.au.vo.SysAccountAuVo">
+    <select id="selectPageByFilter" resultType="com.yz.mall.sys.vo.SysAccountAuVo">
         select saa.id, saa.transaction_type, saa.price, saa.quantity, saa.profit_amount, saa.transaction_time
              , saa.relation_id
         from sys_account_au saa
@@ -14,7 +14,7 @@
         order by saa.id desc
     </select>
 
-    <select id="selectChoosePageByFilter" resultType="com.yz.mall.au.vo.SysAccountAuChooseVo">
+    <select id="selectChoosePageByFilter" resultType="com.yz.mall.sys.vo.SysAccountAuChooseVo">
         select saa.id, saa.price, saa.quantity, saa.transaction_time, ifnull(sell.sell_quantity, 0) as sell_quantity
         from sys_account_au saa
         left join (
@@ -29,7 +29,7 @@
         order by saa.id desc
     </select>
 
-    <select id="selectSummaryPageByFilter" resultType="com.yz.mall.au.vo.SysAccountAuVo">
+    <select id="selectSummaryPageByFilter" resultType="com.yz.mall.sys.vo.SysAccountAuVo">
         select saa.id, saa.transaction_type, saa.price, saa.quantity, saa.transaction_time, ifnull(sell.sell_quantity, 0) as sell_quantity
         from sys_account_au saa
         left join (

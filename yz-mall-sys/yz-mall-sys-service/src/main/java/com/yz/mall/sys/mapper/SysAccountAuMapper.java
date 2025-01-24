@@ -1,12 +1,12 @@
-package com.yz.mall.au.mapper;
+package com.yz.mall.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.au.dto.SysAccountAuChooseQueryDto;
-import com.yz.mall.au.dto.SysAccountAuQueryDto;
-import com.yz.mall.au.entity.SysAccountAu;
-import com.yz.mall.au.vo.SysAccountAuChooseVo;
-import com.yz.mall.au.vo.SysAccountAuVo;
+import com.yz.mall.sys.dto.SysAccountAuChooseQueryDto;
+import com.yz.mall.sys.dto.SysAccountAuQueryDto;
+import com.yz.mall.sys.entity.SysAccountAu;
+import com.yz.mall.sys.vo.SysAccountAuChooseVo;
+import com.yz.mall.sys.vo.SysAccountAuVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
