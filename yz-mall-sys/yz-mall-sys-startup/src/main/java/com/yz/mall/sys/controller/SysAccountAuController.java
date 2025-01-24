@@ -1,16 +1,17 @@
-package com.yz.mall.au.controller;
+package com.yz.mall.sys.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.au.dto.SysAccountAuAddDto;
-import com.yz.mall.au.dto.SysAccountAuChooseQueryDto;
-import com.yz.mall.au.dto.SysAccountAuQueryDto;
-import com.yz.mall.au.dto.SysAccountAuUpdateDto;
-import com.yz.mall.au.entity.SysAccountAu;
-import com.yz.mall.au.service.SysAccountAuService;
-import com.yz.mall.au.vo.SysAccountAuChooseVo;
-import com.yz.mall.au.vo.SysAccountAuVo;
+import com.yz.mall.sys.dto.SysAccountAuAddDto;
+import com.yz.mall.sys.dto.SysAccountAuChooseQueryDto;
+import com.yz.mall.sys.dto.SysAccountAuQueryDto;
+import com.yz.mall.sys.dto.SysAccountAuUpdateDto;
+import com.yz.mall.sys.entity.SysAccountAu;
+import com.yz.mall.sys.service.SysAccountAuService;
+import com.yz.mall.sys.vo.SysAccountAuChooseVo;
+import com.yz.mall.sys.vo.SysAccountAuVo;
 import com.yz.mall.web.annotation.RepeatSubmit;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
@@ -46,6 +47,7 @@ public class SysAccountAuController extends ApiController {
     @SaCheckPermission("api:system:account:au:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysAccountAuAddDto dto) {
+        dto.setUserId(Long.parseLong(StpUtil.getLoginId().toString()));
         return success(this.service.save(dto));
     }
 

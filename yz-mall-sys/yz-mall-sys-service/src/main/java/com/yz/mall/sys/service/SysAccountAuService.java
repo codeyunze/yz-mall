@@ -1,18 +1,15 @@
-package com.yz.mall.au.service;
+package com.yz.mall.sys.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.au.dto.SysAccountAuAddDto;
-import com.yz.mall.au.dto.SysAccountAuChooseQueryDto;
-import com.yz.mall.au.dto.SysAccountAuQueryDto;
-import com.yz.mall.au.dto.SysAccountAuUpdateDto;
-import com.yz.mall.au.entity.SysAccountAu;
-import com.yz.mall.au.vo.SysAccountAuChooseVo;
-import com.yz.mall.au.vo.SysAccountAuVo;
+import com.yz.mall.sys.dto.SysAccountAuAddDto;
+import com.yz.mall.sys.dto.SysAccountAuChooseQueryDto;
+import com.yz.mall.sys.dto.SysAccountAuQueryDto;
+import com.yz.mall.sys.dto.SysAccountAuUpdateDto;
+import com.yz.mall.sys.entity.SysAccountAu;
+import com.yz.mall.sys.vo.SysAccountAuChooseVo;
+import com.yz.mall.sys.vo.SysAccountAuVo;
 import com.yz.mall.web.common.PageFilter;
-import com.yz.mall.web.common.Result;
-import com.yz.mall.web.common.ResultTable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
