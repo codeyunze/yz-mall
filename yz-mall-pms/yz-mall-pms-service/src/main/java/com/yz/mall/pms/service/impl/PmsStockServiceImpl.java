@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -138,6 +140,23 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     @Override
     public Integer getStockByProductId(Long productId) {
         return baseMapper.getStockByProductId(productId);
+    }
+
+    @DS("slave")
+    @Override
+    public Map<Long, Integer> getStockByProductIds(List<Long> productIds) {
+        LambdaQueryWrapper<PmsStock> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(PmsStock::getProductId, PmsStock::getQuantity);
+        queryWrapper.in(PmsStock::getProductId, productIds);
+        List<PmsStock> stocks = baseMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(stocks)) {
+            Map<Long, Integer> map = new HashMap<>();
+            productIds.forEach(productId -> {
+                map.put(productId, 0);
+            });
+            return map;
+        }
+        return stocks.stream().collect(Collectors.toMap(PmsStock::getProductId, t -> t.getQuantity() == null ? 0 : t.getQuantity()));
     }
 }
 

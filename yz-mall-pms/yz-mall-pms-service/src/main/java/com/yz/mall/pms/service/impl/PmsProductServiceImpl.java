@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.pms.dto.PmsProductSlimQueryDto;
+import com.yz.mall.pms.enums.ProductPublishStatusEnum;
 import com.yz.mall.pms.enums.ProductVerifyStatusEnum;
 import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
 import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
@@ -23,10 +24,13 @@ import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品表(PmsProduct)表服务实现类
@@ -131,8 +135,34 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         baseMapper.updateById(product);
     }
 
+    @DS("slave")
     @Override
     public List<PmsProductDisplayInfoVo> getProductDisplayInfoList(PmsProductSlimQueryDto filter) {
         return baseMapper.selectProductDisplayInfoList(filter);
+    }
+
+    @DS("slave")
+    @Override
+    public Map<Long, PmsProductDisplayInfoVo> getProductDisplayInfoMap(List<Long> ids) {
+        LambdaQueryWrapper<PmsProduct> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(PmsProduct::getId, PmsProduct::getName, PmsProduct::getPrice, PmsProduct::getTitles
+                , PmsProduct::getRemark, PmsProduct::getAlbumPics, PmsProduct::getPublishStatus);
+        // queryWrapper.eq(PmsProduct::getPublishStatus, ProductPublishStatusEnum.PUBLISH.get());
+        queryWrapper.eq(PmsProduct::getVerifyStatus, ProductVerifyStatusEnum.APPROVED_REVIEW.get());
+        queryWrapper.in(PmsProduct::getId, ids);
+        List<PmsProduct> products = baseMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(products)) {
+            return Collections.emptyMap();
+        }
+        // 获取指定商品的库存数量
+        Map<Long, Integer> stockByProductId = stockService.getStockByProductIds(ids);
+        Map<Long, PmsProductDisplayInfoVo> map = new HashMap<>();
+        products.forEach(product -> {
+            PmsProductDisplayInfoVo vo = new PmsProductDisplayInfoVo();
+            BeanUtils.copyProperties(product, vo);
+            vo.setQuantity(stockByProductId.get(product.getId()) != null ? stockByProductId.get(product.getId()) : 0);
+            map.put(product.getId(), vo);
+        });
+        return map;
     }
 }

@@ -1,27 +1,26 @@
 package com.yz.mall.pms.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 
 /**
- * 商品表(PmsProduct)表实体类
+ * 购物车数据表(PmsShopCart)表实体类
  *
  * @author yunze
- * @since 2024-12-20 13:08:05
+ * @since 2025-01-24 10:08:17
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class PmsProduct extends Model<PmsProduct> {
+public class PmsShopCart extends Model<PmsShopCart> {
 
     /**
      * 主键标识
@@ -29,21 +28,11 @@ public class PmsProduct extends Model<PmsProduct> {
     private Long id;
 
     /**
-     * 创建人
-     */
-    private Long createId;
-
-    /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime createTime;
-
-    /**
-     * 更新人
-     */
-    private Long updateId;
 
     /**
      * 更新时间
@@ -56,42 +45,22 @@ public class PmsProduct extends Model<PmsProduct> {
      * 数据是否有效：0数据有效
      */
     @TableLogic(value = "0", delval = "current_timestamp")
-    private Integer invalid;
+    private Long invalid;
 
     /**
-     * 商品名称
+     * 商品信息Id
      */
-    private String name;
+    private Long productId;
 
     /**
-     * 商品价格
+     * 数量
      */
-    private BigDecimal price;
+    private Integer quantity;
 
     /**
-     * 商品标签
+     * 用户Id
      */
-    private String titles;
-
-    /**
-     * 商品备注信息
-     */
-    private String remark;
-
-    /**
-     * 商品上架状态：0：下架，1：上架 {@link com.yz.mall.pms.enums.ProductPublishStatusEnum}
-     */
-    private Integer publishStatus;
-
-    /**
-     * 商品审核状态：0：未审核，1：审核通过，9：待审核 {@link com.yz.mall.pms.enums.ProductVerifyStatusEnum}
-     */
-    private Integer verifyStatus;
-
-    /**
-     * 商品图片id，限制为5张，以逗号分割
-     */
-    private String albumPics;
+    private Long userId;
 
     /**
      * 获取主键值

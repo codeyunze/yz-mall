@@ -13,6 +13,7 @@ import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品表(PmsProduct)表服务接口
@@ -91,5 +92,13 @@ public interface PmsProductService extends IService<PmsProduct> {
      * @return 商品展示信息
      */
     List<PmsProductDisplayInfoVo> getProductDisplayInfoList(PmsProductSlimQueryDto filter);
+
+    /**
+     * 查询指定商品的信息
+     *
+     * @param ids 指定的商品Id
+     * @return 指定商品的信息
+     */
+    Map<Long, PmsProductDisplayInfoVo> getProductDisplayInfoMap(List<Long> ids);
 }
 

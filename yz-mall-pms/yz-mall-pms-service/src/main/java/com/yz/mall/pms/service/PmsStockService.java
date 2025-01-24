@@ -9,6 +9,7 @@ import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.mall.web.common.PageFilter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品库存表(PmsStock)表服务接口
@@ -56,6 +57,14 @@ public interface PmsStockService extends IService<PmsStock> {
      * @return 商品剩余库存
      */
     Integer getStockByProductId(Long productId);
+
+    /**
+     * 获取指定商品的库存
+     *
+     * @param productIds 商品id
+     * @return 商品剩余库存
+     */
+    Map<Long, Integer> getStockByProductIds(List<Long> productIds);
 
 }
 
