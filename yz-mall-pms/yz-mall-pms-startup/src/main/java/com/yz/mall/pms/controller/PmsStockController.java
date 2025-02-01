@@ -7,6 +7,7 @@ import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.PmsStockService;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
@@ -70,7 +71,7 @@ public class PmsStockController extends ApiController {
      */
     @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deducts")
-    public Result<Boolean> deducts(@RequestBody @Valid List<InternalPmsStockDto> productStocks) {
+    public Result<List<InternalPmsStockDeductVo>> deducts(@RequestBody @Valid List<InternalPmsStockDto> productStocks) {
         return success(this.service.deduct(productStocks));
     }
 

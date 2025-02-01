@@ -70,6 +70,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
             bo.setStockOutCode(stockOutCode);
             bo.setProductId(out.getProductId());
             bo.setQuantity(out.getQuantity());
+            bo.setOrderId(out.getOrderId());
             outDetailList.add(bo);
         });
         return super.saveBatch(outDetailList);

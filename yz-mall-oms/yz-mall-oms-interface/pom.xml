@@ -11,7 +11,7 @@
 
 
     <artifactId>yz-mall-oms-interface</artifactId>
-    <description>用户服务</description>
+    <description>订单开放接口服务</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

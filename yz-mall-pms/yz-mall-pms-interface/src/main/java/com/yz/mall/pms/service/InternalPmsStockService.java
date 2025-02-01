@@ -1,6 +1,7 @@
 package com.yz.mall.pms.service;
 
 import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface InternalPmsStockService {
      *
      * @param productStocks 指定的商品及其库存
      */
-    void deductBatch(List<InternalPmsStockDto> productStocks);
+    List<InternalPmsStockDeductVo> deductBatch(List<InternalPmsStockDto> productStocks);
 
     /**
      * 增加库存

@@ -11,7 +11,7 @@
 
 
     <artifactId>yz-mall-oms-startup</artifactId>
-    <description>用户服务</description>
+    <description>订单服务</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -37,10 +37,21 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>yz-mall-security-core</artifactId>
-            <version>${revision}</version>
+            <artifactId>yz-mall-oms-service</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-unqid-feign</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-mall-pms-feign</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

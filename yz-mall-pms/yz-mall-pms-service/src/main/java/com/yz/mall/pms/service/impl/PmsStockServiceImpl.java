@@ -5,6 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
@@ -18,14 +19,12 @@ import com.yz.mall.pms.service.PmsStockService;
 import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.mall.pms.vo.PmsStockVo;
 import com.yz.mall.web.common.PageFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
  * @author yunze
  * @since 2024-06-16 16:14:09
  */
+@Slf4j
 @Service
 public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> implements PmsStockService {
 
@@ -88,23 +88,32 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     @DS("master")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean deduct(List<InternalPmsStockDto> productStocks) {
+    public List<InternalPmsStockDeductVo> deduct(List<InternalPmsStockDto> productStocks) {
         // 各商品需要扣除的库存数量
         Map<Long, Integer> productQuantityuMap = productStocks.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, InternalPmsStockDto::getQuantity));
         List<Long> productIds = productStocks.stream().map(InternalPmsStockDto::getProductId).collect(Collectors.toList());
         // TODO: 2024/6/27 星期四 yunze 锁对应商品的库存
-        LambdaQueryWrapper<PmsStock> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(PmsStock::getId, PmsStock::getProductId, PmsStock::getQuantity);
-        queryWrapper.in(PmsStock::getProductId, productIds);
-        // 查询指定商品的库存数量
-        List<PmsStock> stocks = baseMapper.selectList(queryWrapper);
-        for (PmsStock stock : stocks) {
-            if (stock.getQuantity() < productQuantityuMap.get(stock.getProductId())) {
-                throw new BusinessException("商品" + stock.getProductId() + "库存不足");
+        List<PmsStock> stocks = getPmsStocksByProductIds(productIds);
+        Map<Long, PmsStock> stockByProductIdMap = stocks.stream().collect(Collectors.toMap(PmsStock::getProductId, t -> t));
+
+        // 扣减库存结果
+        List<InternalPmsStockDeductVo> deductStocks = new ArrayList<>();
+        for (Long productId : productIds) {
+            InternalPmsStockDeductVo deductVo = new InternalPmsStockDeductVo();
+            deductVo.setProductId(productId);
+            // 指定商品的库存信息
+            PmsStock stock = stockByProductIdMap.get(productId);
+            if (stock == null || stock.getQuantity() < productQuantityuMap.get(productId)) {
+                log.info("商品{}库存不足", productId);
+                deductVo.setDeductStatus(false);
             } else {
-                stock.setQuantity(stock.getQuantity() - productQuantityuMap.get(stock.getProductId()));
+                stock.setQuantity(stock.getQuantity() - productQuantityuMap.get(productId));
+                deductVo.setDeductStatus(true);
             }
+            deductStocks.add(deductVo);
         }
+
+        // TODO: 2025/2/1 yunze 库存扣减方式需要优化
         if (!super.updateBatchById(stocks)) {
             throw new BusinessException("商品库存扣除失败");
         }
@@ -113,7 +122,15 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
         if (!pmsStockOutDetailService.outBatch(productStocks)) {
             throw new BusinessException("商品库存扣除失败");
         }
-        return true;
+        return deductStocks;
+    }
+
+    private List<PmsStock> getPmsStocksByProductIds(List<Long> productIds) {
+        LambdaQueryWrapper<PmsStock> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(PmsStock::getId, PmsStock::getProductId, PmsStock::getQuantity);
+        queryWrapper.in(PmsStock::getProductId, productIds);
+        // 查询指定商品的库存数量
+        return baseMapper.selectList(queryWrapper);
     }
 
     // TODO: 2024/6/16 星期日 yunze 加事务

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.mall.web.common.PageFilter;
 
@@ -40,7 +41,7 @@ public interface PmsStockService extends IService<PmsStock> {
      *
      * @param deductStocks 指定的商品及其库存
      */
-    Boolean deduct(List<InternalPmsStockDto> deductStocks);
+    List<InternalPmsStockDeductVo> deduct(List<InternalPmsStockDto> deductStocks);
 
     /**
      * 增加库存

@@ -2,6 +2,7 @@ package com.yz.mall.pms.internal;
 
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.Result;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +36,9 @@ public class InternalPmsStockController extends ApiController {
      * 扣减商品库存
      */
     @PostMapping("deductBatch")
-    public Result<Boolean> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto) {
-        this.service.deductBatch(dto);
-        return success(true);
+    public Result<List<InternalPmsStockDeductVo>> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto) {
+        List<InternalPmsStockDeductVo> list = this.service.deductBatch(dto);
+        return success(list);
     }
 
     /**

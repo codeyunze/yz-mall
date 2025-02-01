@@ -9,6 +9,8 @@ spring:
             refresh: true
           - data-id: yz-mall-security.yaml
             refresh: true
+          - data-id: resilience4j.yaml
+            refresh: true
         file-extension: yaml
       discovery:
         namespace: mall
