@@ -4,7 +4,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -19,19 +18,11 @@ public class InternalPmsStockDto implements Serializable {
 
     private static final long serialVesionUID = 1L;
 
-    public InternalPmsStockDto() {
-    }
-
-    public InternalPmsStockDto(Long productId, Integer quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-
-    public InternalPmsStockDto(Long productId, Integer quantity, String remark) {
-        this.productId = productId;
-        this.quantity = quantity;
-        this.remark = remark;
-    }
+    /**
+     * 订单Id
+     */
+    @NotNull(message = "订单Id不能为空")
+    private Long orderId;
 
     /**
      * 商品信息Id

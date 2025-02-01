@@ -1,0 +1,103 @@
+package com.yz.mall.oms.service.impl;
+
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.oms.dto.InternalOmsOrderDto;
+import com.yz.mall.oms.dto.InternalOmsOrderProductDto;
+import com.yz.mall.oms.entity.OmsOrder;
+import com.yz.mall.oms.entity.OmsOrderRelationProduct;
+import com.yz.mall.oms.enums.OmsOrderStatusEnum;
+import com.yz.mall.oms.enums.OmsPayTypeEnum;
+import com.yz.mall.oms.mapper.OmsOrderMapper;
+import com.yz.mall.oms.service.OmsOrderRelationProductService;
+import com.yz.mall.oms.service.OmsOrderService;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
+import com.yz.unqid.service.InternalUnqidService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * 订单信息表(OmsOrder)表服务实现类
+ *
+ * @author yunze
+ * @since 2025-01-30 19:12:59
+ */
+@Service
+public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> implements OmsOrderService {
+
+    private final InternalUnqidService internalUnqidService;
+
+    private final OmsOrderRelationProductService omsOrderRelationProductService;
+
+    private final InternalPmsStockService internalPmsStockService;
+
+    public OmsOrderServiceImpl(InternalUnqidService internalUnqidService
+            , OmsOrderRelationProductService omsOrderRelationProductService
+            , InternalPmsStockService internalPmsStockService) {
+        this.internalUnqidService = internalUnqidService;
+        this.omsOrderRelationProductService = omsOrderRelationProductService;
+        this.internalPmsStockService = internalPmsStockService;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Long add(InternalOmsOrderDto dto) {
+        OmsOrder bo = new OmsOrder();
+        BeanUtils.copyProperties(dto, bo);
+        bo.setId(IdUtil.getSnowflakeNextId());
+        bo.setCreatedId(dto.getUserId());
+
+        // 省市区年月日000001
+        String prefix = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
+        String orderCode = internalUnqidService.generateSerialNumber(prefix, 6);
+        bo.setOrderCode(orderCode);
+        // 订单状态为待付款
+        bo.setOrderStatus(OmsOrderStatusEnum.PENDING_PAYMENT.getStatus());
+        bo.setPayType(OmsPayTypeEnum.PENDING_PAY.getType());
+        baseMapper.insert(bo);
+
+        // TODO 2025/1/31 yunze 暂时先直接扣除商品库存，应该是锁定商品库存的
+        // 扣减库存信息
+        List<InternalPmsStockDto> deductStocks = new ArrayList<>();
+
+        // 订单商品信息入库
+        List<OmsOrderRelationProduct> products = new ArrayList<>();
+        for (InternalOmsOrderProductDto product : dto.getProducts()) {
+            OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
+            BeanUtils.copyProperties(product, relationProduct);
+            relationProduct.setOrderId(bo.getId());
+            products.add(relationProduct);
+
+            InternalPmsStockDto stock = new InternalPmsStockDto();
+            stock.setProductId(product.getProductId());
+            stock.setQuantity(product.getProductQuantity());
+            stock.setRemark("订单扣减库存");
+            stock.setOrderId(bo.getId());
+            deductStocks.add(stock);
+        }
+
+        // 扣除商品库存
+        List<InternalPmsStockDeductVo> stockDeductVos = internalPmsStockService.deductBatch(deductStocks);
+        Map<Long, Boolean> stockDeductMap = stockDeductVos.stream().collect(Collectors.toMap(InternalPmsStockDeductVo::getProductId, InternalPmsStockDeductVo::isDeductStatus));
+
+        for (OmsOrderRelationProduct product : products) {
+            product.setProductStatus(stockDeductMap.get(product.getProductId()) ? 0 : 1);
+        }
+
+        omsOrderRelationProductService.saveBatch(products);
+        return bo.getId();
+    }
+
+}
+

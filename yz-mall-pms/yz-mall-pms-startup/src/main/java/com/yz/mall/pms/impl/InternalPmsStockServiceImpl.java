@@ -3,6 +3,7 @@ package com.yz.mall.pms.impl;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsStockService;
 import com.yz.mall.pms.service.PmsStockService;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
-    public void deductBatch(List<InternalPmsStockDto> productStocks) {
-        service.deduct(productStocks);
+    public List<InternalPmsStockDeductVo> deductBatch(List<InternalPmsStockDto> productStocks) {
+        return service.deduct(productStocks);
     }
 
     @Override

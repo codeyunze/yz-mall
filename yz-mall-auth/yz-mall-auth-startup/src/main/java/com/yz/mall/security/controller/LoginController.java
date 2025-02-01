@@ -166,7 +166,7 @@ public class LoginController extends ApiController {
         // 1、验证
         Object userId = SaTempUtil.parseToken(refreshTokenDto.getRefreshToken());
         if (userId == null) {
-            return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "无效的刷新令牌");
+            return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, "无效的刷新令牌");
         }
 
         // 2、为其生成新的短 token

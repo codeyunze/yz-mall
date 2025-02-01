@@ -1,5 +1,6 @@
 package com.yz.mall.pms.service.impl;
 
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.feign.InternalPmsStockFeign;
@@ -35,11 +36,12 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
-    public void deductBatch(List<InternalPmsStockDto> productStocks) {
-        Result<Boolean> result = feign.deductBatch(productStocks);
+    public List<InternalPmsStockDeductVo> deductBatch(List<InternalPmsStockDto> productStocks) {
+        Result<List<InternalPmsStockDeductVo>> result = feign.deductBatch(productStocks);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }
+        return result.getData();
     }
 
     @Override

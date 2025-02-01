@@ -15,7 +15,7 @@
 
     <modules>
         <module>yz-mall-oms-interface</module>
-        <module>yz-mall-oms-core</module>
+        <module>yz-mall-oms-service</module>
         <module>yz-mall-oms-startup</module>
     </modules>
 

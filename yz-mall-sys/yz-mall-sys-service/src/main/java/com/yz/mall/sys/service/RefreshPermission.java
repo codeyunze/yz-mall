@@ -76,7 +76,9 @@ public class RefreshPermission {
         redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/RefreshPermission.lua")));
         // 指定返回类型
         redisScript.setResultType(Boolean.class);
+        log.info("roleId信息：{}", roleIds);
         roleIds.forEach(roleId -> {
+            log.info("roleId permissions:{}", permissions.get(roleId));
             // 参数一：redisScript，参数二：key列表，参数三：arg（可多个）
             String[] array = permissions.get(roleId).toArray(new String[0]);
             defaultRedisTemplate.execute(redisScript, Collections.singletonList(RedisCacheKey.permission(type.name(), roleId)), array);

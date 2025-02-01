@@ -1,6 +1,7 @@
 package com.yz.mall.pms.feign;
 
 import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
 import com.yz.mall.web.common.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
@@ -30,7 +31,7 @@ public interface InternalPmsStockFeign {
      * 扣减商品库存
      */
     @PostMapping("deductBatch")
-    Result<Boolean> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto);
+    Result<List<InternalPmsStockDeductVo>> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto);
 
     /**
      * 增加商品库存
