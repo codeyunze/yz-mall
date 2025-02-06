@@ -27,8 +27,8 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
-    public List<InternalPmsStockDeductVo> deductBatch(List<InternalPmsStockDto> productStocks) {
-        return service.deduct(productStocks);
+    public void deductBatch(List<InternalPmsStockDto> productStocks) {
+        service.deduct(productStocks);
     }
 
     @Override

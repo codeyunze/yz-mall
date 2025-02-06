@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2025-2-1 18:54:43",
+  "updatedTime": "2025-2-6 10:02:09",
   "dbConns": [],
   "profile": {
     "default": {
@@ -2243,24 +2243,6 @@
           "extProps": {},
           "domain": "9092C4E0-1A54-4859-ABBB-5B62DBC27573",
           "id": "0EE34A31-909A-4577-9B7E-254B6E99C543"
-        },
-        {
-          "defKey": "product_status",
-          "defName": "商品状态：0正常，1库存不足",
-          "comment": "",
-          "type": "INT",
-          "len": "",
-          "scale": "",
-          "primaryKey": false,
-          "notNull": true,
-          "autoIncrement": false,
-          "defaultValue": "0",
-          "hideInGraph": false,
-          "refDict": "",
-          "baseType": "1D764C4A-6F9F-421E-B11A-6F3E23B51811",
-          "extProps": {},
-          "domain": "",
-          "id": "474EB496-D6DB-407E-A6B0-B286B776C934"
         }
       ],
       "correlations": [],

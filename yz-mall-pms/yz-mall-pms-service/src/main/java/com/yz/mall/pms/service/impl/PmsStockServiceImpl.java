@@ -5,7 +5,9 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
+import com.yz.mall.web.common.JacksonUtil;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
@@ -88,7 +90,7 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     @DS("master")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<InternalPmsStockDeductVo> deduct(List<InternalPmsStockDto> productStocks) {
+    public void deduct(List<InternalPmsStockDto> productStocks) {
         // 各商品需要扣除的库存数量
         Map<Long, Integer> productQuantityuMap = productStocks.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, InternalPmsStockDto::getQuantity));
         List<Long> productIds = productStocks.stream().map(InternalPmsStockDto::getProductId).collect(Collectors.toList());
@@ -105,12 +107,19 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
             PmsStock stock = stockByProductIdMap.get(productId);
             if (stock == null || stock.getQuantity() < productQuantityuMap.get(productId)) {
                 log.info("商品{}库存不足", productId);
-                deductVo.setDeductStatus(false);
+                throw new BusinessException("商品" + productId + "库存不足");
             } else {
                 stock.setQuantity(stock.getQuantity() - productQuantityuMap.get(productId));
-                deductVo.setDeductStatus(true);
             }
-            deductStocks.add(deductVo);
+        }
+
+        if (CollectionUtils.isEmpty(stocks)) {
+            // 表示没有选择的商品的库存信息
+            try {
+                throw new BusinessException("商品" + JacksonUtil.getObjectMapper().writeValueAsString(productIds) + "库存不足");
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // TODO: 2025/2/1 yunze 库存扣减方式需要优化
@@ -122,7 +131,6 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
         if (!pmsStockOutDetailService.outBatch(productStocks)) {
             throw new BusinessException("商品库存扣除失败");
         }
-        return deductStocks;
     }
 
     private List<PmsStock> getPmsStocksByProductIds(List<Long> productIds) {

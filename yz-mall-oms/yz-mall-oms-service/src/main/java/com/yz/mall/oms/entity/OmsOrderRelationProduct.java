@@ -84,6 +84,7 @@ public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
     /**
      * 商品状态：0正常，1库存不足
      */
+    @Deprecated
     private Integer productStatus;
 
     /**
