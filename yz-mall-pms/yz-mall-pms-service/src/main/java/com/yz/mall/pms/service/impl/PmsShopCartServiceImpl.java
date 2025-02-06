@@ -16,11 +16,15 @@ import com.yz.mall.pms.mapper.PmsShopCartMapper;
 import com.yz.mall.pms.service.PmsProductService;
 import com.yz.mall.pms.service.PmsShopCartService;
 import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
+import com.yz.mall.pms.vo.PmsShopCartSlimVo;
 import com.yz.mall.pms.vo.PmsShopCartVo;
 import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,10 +38,10 @@ import java.util.stream.Collectors;
 @Service
 public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsShopCart> implements PmsShopCartService {
 
-    private final PmsProductService productService;
+    private final PmsProductService pmsProductService;
 
     public PmsShopCartServiceImpl(PmsProductService productService) {
-        this.productService = productService;
+        this.pmsProductService = productService;
     }
 
     @Override
@@ -67,6 +71,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         return baseMapper.updateById(bo) > 0;
     }
 
+    @Transactional
     @Override
     public boolean removeByIds(List<Long> ids, Long userId) {
         LambdaUpdateWrapper<PmsShopCart> updateWrapper = new LambdaUpdateWrapper<>();
@@ -83,7 +88,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
             return page;
         }
         List<Long> productIds = page.getRecords().stream().map(PmsShopCartVo::getProductId).collect(Collectors.toList());
-        Map<Long, PmsProductDisplayInfoVo> productMap = productService.getProductDisplayInfoMap(productIds);
+        Map<Long, PmsProductDisplayInfoVo> productMap = pmsProductService.getProductDisplayInfoMap(productIds);
         page.getRecords().forEach(cart -> {
             PmsProductDisplayInfoVo productInfo = productMap.get(cart.getProductId());
             // 商品情况正常
@@ -102,6 +107,25 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         });
 
         return page;
+    }
+
+    @Override
+    public List<PmsShopCartSlimVo> getCartByIds(Long userId, List<Long> ids) {
+        List<PmsShopCartSlimVo> carts = baseMapper.selectCartByIds(userId, ids);
+        if (CollectionUtils.isEmpty(carts)) {
+            return null;
+        }
+
+        // 查询商品的价格
+        // TODO: 2025/2/5 yunze 可以将商品信息调整到缓存里面去查询
+        List<Long> productIds = carts.stream().map(PmsShopCartSlimVo::getProductId).collect(Collectors.toList());
+        Map<Long, PmsProductDisplayInfoVo> productDisplayInfoMap = pmsProductService.getProductDisplayInfoMap(productIds);
+        carts.forEach(item -> {
+            item.setDiscountAmount(BigDecimal.ZERO);
+            PmsProductDisplayInfoVo vo = productDisplayInfoMap.get(item.getProductId());
+            item.setRealAmount(vo.getPrice().subtract(item.getDiscountAmount()));
+        });
+        return carts;
     }
 }
 

@@ -24,7 +24,7 @@ public interface InternalPmsStockService {
      *
      * @param productStocks 指定的商品及其库存
      */
-    List<InternalPmsStockDeductVo> deductBatch(List<InternalPmsStockDto> productStocks);
+    void deductBatch(List<InternalPmsStockDto> productStocks);
 
     /**
      * 增加库存

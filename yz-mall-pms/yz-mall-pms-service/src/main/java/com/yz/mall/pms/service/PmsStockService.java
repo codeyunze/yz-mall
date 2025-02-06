@@ -41,7 +41,7 @@ public interface PmsStockService extends IService<PmsStock> {
      *
      * @param deductStocks 指定的商品及其库存
      */
-    List<InternalPmsStockDeductVo> deduct(List<InternalPmsStockDto> deductStocks);
+    void deduct(List<InternalPmsStockDto> deductStocks);
 
     /**
      * 增加库存

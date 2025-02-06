@@ -36,12 +36,11 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
-    public List<InternalPmsStockDeductVo> deductBatch(List<InternalPmsStockDto> productStocks) {
-        Result<List<InternalPmsStockDeductVo>> result = feign.deductBatch(productStocks);
+    public void deductBatch(List<InternalPmsStockDto> productStocks) {
+        Result<Object> result = feign.deductBatch(productStocks);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }
-        return result.getData();
     }
 
     @Override

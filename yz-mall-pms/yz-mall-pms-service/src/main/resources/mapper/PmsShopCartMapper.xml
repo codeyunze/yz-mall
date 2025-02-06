@@ -3,8 +3,20 @@
 <mapper namespace="com.yz.mall.pms.mapper.PmsShopCartMapper">
 
     <select id="selectPageByFilter" resultType="com.yz.mall.pms.vo.PmsShopCartVo">
+        <include refid="query" />
+        and psc.user_id = #{filter.userId}
+    </select>
+
+    <select id="selectCartByIds" resultType="com.yz.mall.pms.vo.PmsShopCartSlimVo">
+        <include refid="query" />
+        and psc.user_id = #{userId}
+        and psc.id in <foreach collection="ids" item="id" open="(" close=")" separator=",">#{id}</foreach>
+    </select>
+
+    <!-- 购物车基础查询语句 -->
+    <sql id="query">
         select psc.id, psc.product_id, psc.quantity
         from pms_shop_cart psc
-        where psc.invalid = 0 and psc.user_id = #{filter.userId}
-    </select>
+        where psc.invalid = 0
+    </sql>
 </mapper>

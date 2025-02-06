@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
+ * 内部暴露接口: 商品库存
  * @author yunze
  * @date 2024/6/23 16:21
  */
@@ -36,9 +37,9 @@ public class InternalPmsStockController extends ApiController {
      * 扣减商品库存
      */
     @PostMapping("deductBatch")
-    public Result<List<InternalPmsStockDeductVo>> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto) {
-        List<InternalPmsStockDeductVo> list = this.service.deductBatch(dto);
-        return success(list);
+    public Result<Object> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto) {
+        this.service.deductBatch(dto);
+        return success("");
     }
 
     /**

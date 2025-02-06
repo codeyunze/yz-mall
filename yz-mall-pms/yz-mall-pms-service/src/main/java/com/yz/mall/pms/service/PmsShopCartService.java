@@ -6,6 +6,7 @@ import com.yz.mall.pms.dto.PmsShopCartAddDto;
 import com.yz.mall.pms.dto.PmsShopCartQueryDto;
 import com.yz.mall.pms.dto.PmsShopCartUpdateDto;
 import com.yz.mall.pms.entity.PmsShopCart;
+import com.yz.mall.pms.vo.PmsShopCartSlimVo;
 import com.yz.mall.pms.vo.PmsShopCartVo;
 import com.yz.mall.web.common.PageFilter;
 
@@ -39,7 +40,7 @@ public interface PmsShopCartService extends IService<PmsShopCart> {
     /**
      * 删除购物车商品
      *
-     * @param ids     购物车信息Id
+     * @param ids    购物车信息Id
      * @param userId 用户Id
      * @return 是否操作成功
      */
@@ -53,5 +54,13 @@ public interface PmsShopCartService extends IService<PmsShopCart> {
      */
     Page<PmsShopCartVo> page(PageFilter<PmsShopCartQueryDto> filter);
 
+    /**
+     * 根据购物车id获取商品信息
+     *
+     * @param userId 用户Id
+     * @param ids    购物车id列表
+     * @return 商品信息
+     */
+    List<PmsShopCartSlimVo> getCartByIds(Long userId, List<Long> ids);
 }
 

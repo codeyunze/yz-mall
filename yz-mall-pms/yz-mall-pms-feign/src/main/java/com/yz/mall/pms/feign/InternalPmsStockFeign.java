@@ -31,7 +31,7 @@ public interface InternalPmsStockFeign {
      * 扣减商品库存
      */
     @PostMapping("deductBatch")
-    Result<List<InternalPmsStockDeductVo>> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto);
+    Result<Object> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto);
 
     /**
      * 增加商品库存

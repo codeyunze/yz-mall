@@ -13,6 +13,7 @@ import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
 import com.yz.mall.web.common.ResultTable;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -71,8 +72,9 @@ public class PmsStockController extends ApiController {
      */
     @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deducts")
-    public Result<List<InternalPmsStockDeductVo>> deducts(@RequestBody @Valid List<InternalPmsStockDto> productStocks) {
-        return success(this.service.deduct(productStocks));
+    public Result<Object> deducts(@RequestBody @Valid List<InternalPmsStockDto> productStocks) {
+        this.service.deduct(productStocks);
+        return success("");
     }
 
 
