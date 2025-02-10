@@ -3,11 +3,16 @@ package com.yz.mall.oms.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
 import com.yz.mall.oms.dto.InternalOmsOrderDto;
+import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.service.OmsOrderService;
+import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.web.common.ApiController;
+import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
+import com.yz.mall.web.common.ResultTable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -49,6 +54,17 @@ public class OmsOrderController extends ApiController {
     public Result<Long> add(@RequestBody @Valid InternalOmsOrderDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
         return success(this.service.add(dto));
+    }
+
+    /**
+     *  用户分页查询自己的订单信息
+     */
+    @SaCheckPermission("api:oms:order:add")
+    @PostMapping("page")
+    public Result<ResultTable<OmsOrderVo>> page(@RequestBody PageFilter<OmsOrderQueryDto> filter) {
+        filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());
+        Page<OmsOrderVo> page = this.service.page(filter);
+        return success(page.getRecords(), page.getTotal());
     }
 }
 

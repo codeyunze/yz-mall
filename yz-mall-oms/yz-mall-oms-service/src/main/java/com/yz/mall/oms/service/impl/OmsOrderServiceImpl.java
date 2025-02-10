@@ -3,10 +3,12 @@ package com.yz.mall.oms.service.impl;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
 import com.yz.mall.oms.dto.InternalOmsOrderDto;
 import com.yz.mall.oms.dto.InternalOmsOrderProductDto;
+import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import com.yz.mall.oms.enums.OmsOrderStatusEnum;
@@ -14,19 +16,24 @@ import com.yz.mall.oms.enums.OmsPayTypeEnum;
 import com.yz.mall.oms.mapper.OmsOrderMapper;
 import com.yz.mall.oms.service.OmsOrderRelationProductService;
 import com.yz.mall.oms.service.OmsOrderService;
+import com.yz.mall.oms.vo.OmsOrderProductVo;
+import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.pms.dto.InternalPmsCartDto;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.web.common.PageFilter;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 订单信息表(OmsOrder)表服务实现类
@@ -152,6 +159,29 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         // 订单详情信息入库
         omsOrderRelationProductService.saveBatch(products);
         return bo.getId();
+    }
+
+    @Override
+    public Page<OmsOrderVo> page(PageFilter<OmsOrderQueryDto> filter) {
+        // 查询订单信息
+        Page<OmsOrderVo> page = baseMapper.selectPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
+        if (page.getTotal() == 0) {
+            return page;
+        }
+
+        // 查询订单信息里的商品信息
+        List<Long> orderIds = page.getRecords().stream().map(OmsOrderVo::getId).collect(Collectors.toList());
+        Map<Long, List<OmsOrderProductVo>> orderProductByOrderIdsMap = omsOrderRelationProductService.getOrderProductByOrderIds(orderIds);
+
+        // 数据组装
+        page.getRecords().forEach(item -> {
+            if (!CollectionUtils.isEmpty(orderProductByOrderIdsMap.get(item.getId()))) {
+                List<OmsOrderProductVo> productVos = orderProductByOrderIdsMap.get(item.getId());
+                item.setProducts(productVos);
+            }
+        });
+
+        return page;
     }
 
 }
