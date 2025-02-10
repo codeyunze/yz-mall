@@ -18,32 +18,8 @@ public class OmsOrderQueryDto implements Serializable {
     private static final long serialVesionUID = 1L;
 
     /**
-     * 主键标识
-     */
-    private Long id;
-
-    /**
-     * 创建人
-     */
-    private Long createdId;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createdTime;
-
-    /**
-     * 更新人
-     */
-    private Long updatedId;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updatedTime;
-
-    /**
      * 用户Id
+     * @ignore
      */
     private Long userId;
 
@@ -63,19 +39,9 @@ public class OmsOrderQueryDto implements Serializable {
     private Integer orderType;
 
     /**
-     * 发货时间
-     */
-    private LocalDateTime deliveryTime;
-
-    /**
      * 收货状态：0未确认收货；1已确认收货
      */
     private Integer confirmStatus;
-
-    /**
-     * 确认收货时间
-     */
-    private LocalDateTime receiveTime;
 
     /**
      * 支付方式：0未支付/待支付；1支付宝；2微信
@@ -83,29 +49,9 @@ public class OmsOrderQueryDto implements Serializable {
     private Integer payType;
 
     /**
-     * 订单总金额
-     */
-    private BigDecimal totalAmount;
-
-    /**
-     * 优惠金额
-     */
-    private BigDecimal discountAmount;
-
-    /**
      * 订单实际应付金额
      */
     private BigDecimal payAmount;
-
-    /**
-     * 订单备注
-     */
-    private String note;
-
-    /**
-     * 收货人姓名
-     */
-    private String receiverName;
 
     /**
      * 收货人手机号
@@ -128,15 +74,8 @@ public class OmsOrderQueryDto implements Serializable {
     private String receiverRegion;
 
     /**
-     * 收货详细地址
-     */
-    private String receiverAddress;
-
-    /**
      * 订单消息接收邮箱
      */
     private String email;
-
-
 }
 

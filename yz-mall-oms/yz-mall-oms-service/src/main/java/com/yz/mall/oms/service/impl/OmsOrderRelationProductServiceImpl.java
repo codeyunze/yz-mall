@@ -4,7 +4,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import com.yz.mall.oms.mapper.OmsOrderRelationProductMapper;
 import com.yz.mall.oms.service.OmsOrderRelationProductService;
+import com.yz.mall.oms.vo.OmsOrderProductVo;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 订单商品关联表(OmsOrderRelationProduct)表服务实现类
@@ -15,5 +21,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class OmsOrderRelationProductServiceImpl extends ServiceImpl<OmsOrderRelationProductMapper, OmsOrderRelationProduct> implements OmsOrderRelationProductService {
 
+    @Override
+    public Map<Long, List<OmsOrderProductVo>> getOrderProductByOrderIds(List<Long> orderIds) {
+        List<OmsOrderProductVo> productVos = baseMapper.selectOrderProductByOrderIds(orderIds);
+        if (CollectionUtils.isEmpty(productVos)) {
+            return null;
+        }
+        return productVos.stream().collect(Collectors.groupingBy(OmsOrderProductVo::getOrderId));
+    }
 }
 

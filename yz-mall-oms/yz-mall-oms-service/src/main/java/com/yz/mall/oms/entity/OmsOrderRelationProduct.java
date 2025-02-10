@@ -82,10 +82,19 @@ public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
     private String productAttributes;
 
     /**
-     * 商品状态：0正常，1库存不足
+     * 商品名称
      */
-    @Deprecated
-    private Integer productStatus;
+    private String name;
+
+    /**
+     * 商品价格(下单时商品的价格)
+     */
+    private BigDecimal price;
+
+    /**
+     * 商品备注信息
+     */
+    private String remark;
 
     /**
      * 获取主键值

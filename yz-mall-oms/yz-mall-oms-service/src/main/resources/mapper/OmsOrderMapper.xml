@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.oms.mapper.OmsOrderMapper">
+
+    <select id="selectPageByFilter" resultType="com.yz.mall.oms.vo.OmsOrderVo">
+        select oo.id, oo.order_code, oo.order_status, oo.order_type, oo.delivery_time
+             , oo.confirm_status, oo.receive_time, oo.pay_type, oo.total_amount
+             , oo.discount_amount, oo.pay_amount, oo.note, oo.receiver_name, oo.receiver_phone
+             , oo.receiver_province, oo.receiver_city, oo.receiver_region, oo.receiver_address
+             , oo.email
+        from oms_order oo
+        where invalid = 0
+        <if test="filter.userId != null">and oo.user_id = #{filter.userId}</if>
+        <if test="filter.orderCode != null and filter.orderCode != ''">and oo.order_code = #{filter.orderCode}</if>
+        <if test="filter.orderType != null">and oo.order_type = #{filter.orderType}</if>
+        <if test="filter.orderStatus != null">and oo.order_status = #{filter.orderStatus}</if>
+        <if test="filter.confirmStatus != null">and oo.confirm_status = #{filter.confirmStatus}</if>
+        <if test="filter.payType != null">and oo.pay_type = #{filter.payType}</if>
+        <if test="filter.receiverPhone != null">and oo.receiver_phone = #{filter.receiverPhone}</if>
+        <if test="filter.receiverProvince != null and filter.receiverProvince != ''">and oo.receiver_province = #{filter.receiverProvince}</if>
+        <if test="filter.receiverCity != null and filter.receiverCity != ''">and oo.receiver_city = #{filter.receiverCity}</if>
+        <if test="filter.receiverRegion != null and filter.receiverRegion != ''">and oo.receiver_region = #{filter.receiverRegion}</if>
+        order by oo.id desc
+    </select>
+</mapper>
