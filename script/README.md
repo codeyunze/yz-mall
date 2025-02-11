@@ -8,5 +8,5 @@
 | startup.sh               | linux系统服务启动脚本     |
 | shutdown.sh              | linux系统服务停止脚本     |
 | mall.pdma.json           | PDManer元数建模脚本       |
-| mysql-cluster-script.sql | mysql主从同步配置命令     |
+| mysql-cluster-script数据库mysql集群脚本.sql | mysql主从同步配置命令     |
 
