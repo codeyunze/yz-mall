@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2025-2-6 16:14:50",
+  "updatedTime": "2025-2-13 15:29:34",
   "dbConns": [],
   "profile": {
     "default": {
@@ -1566,7 +1566,7 @@
         },
         {
           "defKey": "order_status",
-          "defName": "订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭；6无效订单",
+          "defName": "订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单",
           "comment": "",
           "type": "INT",
           "len": "",
