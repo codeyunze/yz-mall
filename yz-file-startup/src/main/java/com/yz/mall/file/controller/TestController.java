@@ -1,5 +1,6 @@
 package com.yz.mall.file.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/file")
 public class TestController {
 
+    @Value("${version}")
+    private String version;
+
     @RequestMapping("test")
     public String test(){
-        return "file test!!!";
+        return version + " file test!!!";
     }
 }
