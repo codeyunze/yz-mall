@@ -17,6 +17,7 @@
 <!--        <module>yz-tools</module>-->
         <module>yz-mall-starter-core</module>
         <module>yz-mall-starter-web</module>
+        <module>yz-file-core</module>
     </modules>
 
     <properties>

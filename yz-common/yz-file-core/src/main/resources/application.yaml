@@ -1,0 +1,13 @@
+
+server:
+  port: 30003
+
+spring:
+  application:
+    name: yz-file
+  servlet:
+    multipart:
+      # 设置单个文件大小(默认为1MB)
+      max-file-size: 50MB
+      # 设置单次请求文件的总大小
+      max-request-size: 50MB
