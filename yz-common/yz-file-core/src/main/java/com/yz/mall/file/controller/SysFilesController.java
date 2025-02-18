@@ -2,7 +2,7 @@ package com.yz.mall.file.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.file.dto.SysFilesAddDto;
+import com.yz.mall.file.dto.QofFileInfoDto;
 import com.yz.mall.file.dto.SysFilesQueryDto;
 import com.yz.mall.file.dto.SysFilesUpdateDto;
 import com.yz.mall.file.entity.SysFiles;
@@ -38,7 +38,7 @@ public class SysFilesController extends ApiController {
      * 新增
      */
     @PostMapping("add")
-    public Result<Long> insert(@RequestBody @Valid SysFilesAddDto dto) {
+    public Result<Long> insert(@RequestBody @Valid QofFileInfoDto dto) {
         return success(this.service.save(dto));
     }
 

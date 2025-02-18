@@ -2,7 +2,7 @@ package com.yz.mall.file.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.file.dto.SysFilesAddDto;
+import com.yz.mall.file.dto.QofFileInfoDto;
 import com.yz.mall.file.dto.SysFilesQueryDto;
 import com.yz.mall.file.dto.SysFilesUpdateDto;
 import com.yz.mall.file.entity.SysFiles;
@@ -24,7 +24,7 @@ public interface SysFilesService extends IService<SysFiles> {
      * @param dto 新增基础数据
      * @return 主键Id
      */
-    Long save(SysFilesAddDto dto);
+    Long save(QofFileInfoDto dto);
 
     /**
      * 更新数据

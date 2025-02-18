@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.mall.file.dto.SysFilesAddDto;
+import com.yz.mall.file.dto.QofFileInfoDto;
 import com.yz.mall.file.dto.SysFilesQueryDto;
 import com.yz.mall.file.dto.SysFilesUpdateDto;
 import com.yz.mall.file.mapper.SysFilesMapper;
@@ -24,10 +24,14 @@ import org.springframework.stereotype.Service;
 public class SysFilesServiceImpl extends ServiceImpl<SysFilesMapper, SysFiles> implements SysFilesService {
 
     @Override
-    public Long save(SysFilesAddDto dto) {
+    public Long save(QofFileInfoDto dto) {
         SysFiles bo = new SysFiles();
         BeanUtils.copyProperties(dto, bo);
-        bo.setId(IdUtil.getSnowflakeNextId());
+        if (null == dto.getFileId()) {
+            bo.setId(IdUtil.getSnowflakeNextId());
+        } else {
+            bo.setId(dto.getFileId());
+        }
         baseMapper.insert(bo);
         return bo.getId();
     }

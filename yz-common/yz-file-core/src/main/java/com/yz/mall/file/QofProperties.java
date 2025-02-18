@@ -17,7 +17,8 @@ import org.springframework.context.annotation.Configuration;
 public class QofProperties {
 
     /**
-     * 文件存储地址
+     * 是否开始文件信息数据持久化
      */
-    private String filePath = "/files";
+    boolean persistentEnable;
+
 }
