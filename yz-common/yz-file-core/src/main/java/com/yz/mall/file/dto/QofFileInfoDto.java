@@ -46,6 +46,7 @@ public class QofFileInfoDto implements Serializable {
      * '/business/20250201'为使用者传入的{@link QofFileInfoDto#getDirectoryAddress()},
      * '靓图.png'为文件名称{@link QofFileInfoDto#getFileName()}
      *
+     * @ignore
      * @mock /business/20250201
      */
     @Length(max = 255, message = "文件路径超过最大长度限制")
@@ -91,5 +92,17 @@ public class QofFileInfoDto implements Serializable {
      * @ignore
      */
     private String filePath;
+
+    /**
+     * 文件存储模式(local、cos、oss)
+     * <br>
+     * 对应{@link com.yz.mall.file.enums.QofStorageModeEnum}
+     */
+    private String fileStorageMode;
+
+    /**
+     * 文件存储桶
+     */
+    private String fileStorageBucket;
 }
 

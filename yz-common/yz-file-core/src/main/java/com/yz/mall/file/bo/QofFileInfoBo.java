@@ -68,5 +68,7 @@ public class QofFileInfoBo {
      * @mock 1024
      */
     private Long fileSize = 0L;
+
+    
 }
 

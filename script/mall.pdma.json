@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2025-2-19 10:02:53",
+  "updatedTime": "2025-2-19 11:13:30",
   "dbConns": [],
   "profile": {
     "default": {
@@ -7983,6 +7983,42 @@
           "extProps": {},
           "domain": "",
           "id": "55649D61-CDFA-4CD3-A6ED-C67DAAD8F065"
+        },
+        {
+          "defKey": "file_storage_mode",
+          "defName": "文件存储模式(local、cos、oss)",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 10,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "local",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "A3EAFF4C-6245-42CC-8C17-B32A2AD17C54"
+        },
+        {
+          "defKey": "file_storage_bucket",
+          "defName": "文件存储桶",
+          "comment": "",
+          "type": "VARCHAR",
+          "len": 36,
+          "scale": "",
+          "primaryKey": false,
+          "notNull": false,
+          "autoIncrement": false,
+          "defaultValue": "",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "FC9790A7-36B8-4A48-8F9A-BC1042BCFE64",
+          "extProps": {},
+          "domain": "",
+          "id": "83EC5D5B-A7A1-4124-A8F5-359726836F3D"
         }
       ],
       "correlations": [],

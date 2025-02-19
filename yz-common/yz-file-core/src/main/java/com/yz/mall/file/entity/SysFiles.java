@@ -73,6 +73,18 @@ public class SysFiles extends Model<SysFiles> {
     private Long fileSize;
 
     /**
+     * 文件存储模式(local、cos、oss)
+     * <br>
+     * 对应{@link com.yz.mall.file.enums.QofStorageModeEnum}
+     */
+    private String fileStorageMode;
+
+    /**
+     * 文件存储桶
+     */
+    private String fileStorageBucket;
+
+    /**
      * 获取主键值
      *
      * @return 主键值

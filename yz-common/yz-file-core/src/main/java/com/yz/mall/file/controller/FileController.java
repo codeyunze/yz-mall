@@ -1,19 +1,29 @@
 package com.yz.mall.file.controller;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.yz.mall.file.bo.QofFileDownloadBo;
 import com.yz.mall.file.core.QofClient;
+import com.yz.mall.file.dto.QofFileDownloadDto;
 import com.yz.mall.file.dto.QofFileInfoDto;
+import com.yz.mall.file.dto.QofFileUploadDto;
+import com.yz.mall.file.enums.QofStorageModeEnum;
+import jodd.util.StringUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author yunze
@@ -21,7 +31,7 @@ import java.io.InputStream;
  */
 @RestController
 @RequestMapping("/file")
-public class TestController {
+public class FileController {
 
     @RequestMapping("test")
     public String test() {
@@ -32,7 +42,7 @@ public class TestController {
     private final QofClient qofCosClient;
 
     @Autowired
-    public TestController(@Qualifier("qofLocalClient") QofClient qofLocalClient
+    public FileController(@Qualifier("qofLocalClient") QofClient qofLocalClient
             , @Qualifier("qofCosClient") QofClient qofCosClient) {
         this.qofLocalClient = qofLocalClient;
         this.qofCosClient = qofCosClient;
@@ -42,25 +52,27 @@ public class TestController {
      * 文件上传接口
      *
      * @param file      文件
-     * @param fileLabel 标签
+     * @param fileUploadDto 文件信息
      */
     @PutMapping("upload")
     public String upload(@RequestParam("uploadfile") MultipartFile file
-            , @RequestParam("fileLabel") String fileLabel) {
-        String fileName = file.getOriginalFilename();    // 得到文件名
+            , QofFileUploadDto fileUploadDto) {
+        QofFileInfoDto fileInfoDto = new QofFileInfoDto();
+        BeanUtils.copyProperties(fileUploadDto, fileInfoDto);
 
-        QofFileInfoDto fileInfo = new QofFileInfoDto();
-        fileInfo.setFileName(fileName);
-        fileInfo.setFileLabel(fileLabel);
-        fileInfo.setFileType(file.getContentType());
-        fileInfo.setDirectoryAddress("/test/202502");
-        fileInfo.setFileSize(file.getSize());
+        if (!StringUtils.hasText(fileUploadDto.getFileName())) {
+            String fileName = file.getOriginalFilename();    // 得到文件名
+            fileInfoDto.setFileName(fileName);
+        }
+        fileInfoDto.setFileType(file.getContentType());
+        fileInfoDto.setDirectoryAddress("/default/" + LocalDateTimeUtil.format(LocalDateTime.now(), DatePattern.SIMPLE_MONTH_PATTERN));
+        fileInfoDto.setFileSize(file.getSize());
 
         try {
-            if ("本地".equals(fileLabel)) {
-                return String.valueOf(qofLocalClient.upload(file.getInputStream(), fileInfo));
+            if (QofStorageModeEnum.COS.getMode().equals(fileUploadDto.getFileStorageMode())) {
+                return String.valueOf(qofCosClient.upload(file.getInputStream(), fileInfoDto));
             } else {
-                return String.valueOf(qofCosClient.upload(file.getInputStream(), fileInfo));
+                return String.valueOf(qofLocalClient.upload(file.getInputStream(), fileInfoDto));
             }
         } catch (IOException e) {
             throw new RuntimeException("文件上传失败，异常信息", e);
@@ -70,11 +82,16 @@ public class TestController {
     /**
      * 文件下载接口
      *
-     * @param fileId 文件Id
+     * @param fileInfo 下载文件信息
      */
-    @RequestMapping("download/{fileId}")
-    public ResponseEntity<StreamingResponseBody> download(@PathVariable Long fileId) {
-        QofFileDownloadBo fileDownloadBo = qofCosClient.download(fileId);
+    @GetMapping("download")
+    public ResponseEntity<StreamingResponseBody> download(@RequestBody QofFileDownloadDto fileInfo) {
+        QofFileDownloadBo fileDownloadBo;
+        if (QofStorageModeEnum.COS.getMode().equals(fileInfo.getFileStorageMode())) {
+            fileDownloadBo = qofCosClient.download(fileInfo.getFileId());
+        } else {
+            fileDownloadBo = qofLocalClient.download(fileInfo.getFileId());
+        }
 
         StreamingResponseBody streamingResponseBody = outputStream -> {
             try (InputStream inputStream = fileDownloadBo.getInputStream()) {
@@ -92,5 +109,10 @@ public class TestController {
                 // 告诉浏览器文件的大小，以显示文件的下载进度
                 .contentLength(fileDownloadBo.getFileSize())
                 .body(streamingResponseBody);
+    }
+
+    @RequestMapping("preview")
+    public void preview() {
+
     }
 }
