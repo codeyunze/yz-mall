@@ -39,5 +39,10 @@ public class SysFilesServiceImpl extends ServiceImpl<SysFilesMapper, SysFiles> i
     public QofFileInfoBo getByFileId(Long fileId) {
         return baseMapper.selectByFileId(fileId);
     }
+
+    @Override
+    public boolean deleteByFileId(Long fileId) {
+        return baseMapper.deleteById(fileId) > 0;
+    }
 }
 

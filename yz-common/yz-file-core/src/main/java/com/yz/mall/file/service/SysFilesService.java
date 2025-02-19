@@ -29,5 +29,13 @@ public interface SysFilesService extends IService<SysFiles> {
      */
     QofFileInfoBo getByFileId(Long fileId);
 
+    /**
+     * 根据文件Id删除文件信息
+     *
+     * @param fileId 文件Id
+     * @return true：删除成功; false: 删除失败;
+     */
+    boolean deleteByFileId(Long fileId);
+
 }
 

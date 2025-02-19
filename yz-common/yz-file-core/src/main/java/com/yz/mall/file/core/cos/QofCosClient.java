@@ -4,10 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
-import com.qcloud.cos.model.COSObject;
-import com.qcloud.cos.model.GetObjectRequest;
-import com.qcloud.cos.model.ObjectMetadata;
-import com.qcloud.cos.model.PutObjectRequest;
+import com.qcloud.cos.model.*;
 import com.qcloud.cos.utils.IOUtils;
 import com.yz.mall.file.bo.QofFileDownloadBo;
 import com.yz.mall.file.bo.QofFileInfoBo;
@@ -86,7 +83,8 @@ public class QofCosClient implements QofClient {
 
     @Override
     public QofFileDownloadBo download(Long fileId) {
-        QofFileInfoBo fileBo = qofService.beforeDownload(fileId);
+        QofFileInfoBo fileBo = qofService.getFileInfoByFileId(fileId);
+        qofService.beforeDownload(fileId);
 
         GetObjectRequest getObjectRequest = new GetObjectRequest(fileProperties.getBucketName(), fileProperties.getFilepath() + fileBo.getFilePath());
         COSObject cosObject = cosClient.getObject(getObjectRequest);
@@ -97,5 +95,21 @@ public class QofCosClient implements QofClient {
 
         qofService.afterDownload(fileId);
         return fileDownloadBo;
+    }
+
+    @Override
+    public boolean delete(Long fileId) {
+        QofFileInfoBo fileBo = qofService.getFileInfoByFileId(fileId);
+        if (fileBo == null) {
+            return true;
+        }
+        // 有文件信息，但是没有删除成功
+        if (!qofService.beforeDelete(fileId)) {
+            return false;
+        }
+
+        String filePath = fileProperties.getFilepath() + fileBo.getFilePath();
+        cosClient.deleteObject(fileProperties.getBucketName(), filePath);
+        return true;
     }
 }

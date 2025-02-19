@@ -31,6 +31,15 @@ public abstract class AbstractQofServiceImpl implements QofService {
     private QofProperties qofProperties;
 
     @Override
+    public QofFileInfoBo getFileInfoByFileId(Long fileId) {
+        QofFileInfoBo fileBo = filesService.getByFileId(fileId);
+        if (fileBo == null) {
+            throw new DataNotExistException("文件信息不存在");
+        }
+        return fileBo;
+    }
+
+    @Override
     public Long beforeUpload(QofFileInfoDto fileDto) {
         log.info("文件上传前执行");
         return fileDto.getFileId();
@@ -48,17 +57,18 @@ public abstract class AbstractQofServiceImpl implements QofService {
     }
 
     @Override
-    public QofFileInfoBo beforeDownload(Long fileId) {
+    public void beforeDownload(Long fileId) {
         log.info("文件下载前执行");
-        QofFileInfoBo fileBo = filesService.getByFileId(fileId);
-        if (fileBo == null) {
-            throw new DataNotExistException("文件信息不存在");
-        }
-        return fileBo;
     }
 
     @Override
     public void afterDownload(Long fileId) {
         log.info("文件下载后执行");
+    }
+
+    @Override
+    public boolean beforeDelete(Long fileId) {
+        log.info("文件删除前执行");
+        return filesService.deleteByFileId(fileId);
     }
 }

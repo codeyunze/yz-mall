@@ -12,6 +12,13 @@ import com.yz.mall.file.dto.QofFileInfoDto;
 public interface QofService {
 
     /**
+     * 根据文件Id查询文件信息
+     *
+     * @param fileId 文件Id
+     */
+    QofFileInfoBo getFileInfoByFileId(Long fileId);
+
+    /**
      * 文件上传之前
      *
      * @param fileDto 新增文件基础数据
@@ -32,7 +39,7 @@ public interface QofService {
      *
      * @param fileId 文件Id
      */
-    QofFileInfoBo beforeDownload(Long fileId);
+    void beforeDownload(Long fileId);
 
     /**
      * 下载后执行操作
@@ -40,4 +47,10 @@ public interface QofService {
      * @param fileId 文件Id
      */
     void afterDownload(Long fileId);
+
+    /**
+     * 文件删除前执行操作
+     * @param fileId 删除
+     */
+    boolean beforeDelete(Long fileId);
 }

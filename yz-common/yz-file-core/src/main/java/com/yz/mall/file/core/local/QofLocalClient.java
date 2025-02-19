@@ -42,7 +42,7 @@ public class QofLocalClient implements QofClient {
         if (info.getFileId() == null) {
             info.setFileId(IdUtil.getSnowflakeNextId());
         }
-        qofService.afterUpload(info);
+        qofService.beforeUpload(info);
 
         String suffix = info.getFileName().substring(info.getFileName().lastIndexOf(".")).toLowerCase();
         String key = fileProperties.getFilepath() + info.getDirectoryAddress();
@@ -59,6 +59,8 @@ public class QofLocalClient implements QofClient {
         }
 
         String fileName = info.getFileId() + suffix;
+        info.setFilePath(info.getDirectoryAddress() + "/" + fileName);
+
         // 定义目标文件路径
         Path filePath = uploadPath.resolve(fileName);
         try {
@@ -80,7 +82,8 @@ public class QofLocalClient implements QofClient {
 
     @Override
     public QofFileDownloadBo download(Long fileId) {
-        QofFileInfoBo fileBo = qofService.beforeDownload(fileId);
+        QofFileInfoBo fileBo = qofService.getFileInfoByFileId(fileId);
+        qofService.beforeDownload(fileId);
         // 确保文件路径正确构建
         String filePath = fileProperties.getFilepath() + fileBo.getFilePath();
         File file = new File(filePath);
@@ -99,5 +102,24 @@ public class QofLocalClient implements QofClient {
 
         qofService.afterDownload(fileId);
         return fileDownloadBo;
+    }
+
+    @Override
+    public boolean delete(Long fileId) {
+        QofFileInfoBo fileBo = qofService.getFileInfoByFileId(fileId);
+        if (fileBo == null) {
+            return true;
+        }
+        if (!qofService.beforeDelete(fileId)) {
+            return false;
+        }
+        // 确保文件路径正确构建
+        String filePath = fileProperties.getFilepath() + fileBo.getFilePath();
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            return true;
+        }
+        return file.delete();
     }
 }

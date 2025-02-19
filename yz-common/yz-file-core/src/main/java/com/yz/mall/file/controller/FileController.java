@@ -4,11 +4,12 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.yz.mall.file.bo.QofFileDownloadBo;
 import com.yz.mall.file.core.QofClient;
+import com.yz.mall.file.dto.QofFileDeleteDto;
 import com.yz.mall.file.dto.QofFileDownloadDto;
 import com.yz.mall.file.dto.QofFileInfoDto;
 import com.yz.mall.file.dto.QofFileUploadDto;
 import com.yz.mall.file.enums.QofStorageModeEnum;
-import jodd.util.StringUtil;
+import com.yz.mall.web.common.Result;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,10 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @author yunze
@@ -51,12 +52,12 @@ public class FileController {
     /**
      * 文件上传接口
      *
-     * @param file      文件
+     * @param file          文件
      * @param fileUploadDto 文件信息
      */
     @PutMapping("upload")
     public String upload(@RequestParam("uploadfile") MultipartFile file
-            , QofFileUploadDto fileUploadDto) {
+            , @Valid QofFileUploadDto fileUploadDto) {
         QofFileInfoDto fileInfoDto = new QofFileInfoDto();
         BeanUtils.copyProperties(fileUploadDto, fileInfoDto);
 
@@ -82,15 +83,15 @@ public class FileController {
     /**
      * 文件下载接口
      *
-     * @param fileInfo 下载文件信息
+     * @param fileDownloadDto 下载文件信息
      */
     @GetMapping("download")
-    public ResponseEntity<StreamingResponseBody> download(@RequestBody QofFileDownloadDto fileInfo) {
+    public ResponseEntity<StreamingResponseBody> download(@RequestBody @Valid QofFileDownloadDto fileDownloadDto) {
         QofFileDownloadBo fileDownloadBo;
-        if (QofStorageModeEnum.COS.getMode().equals(fileInfo.getFileStorageMode())) {
-            fileDownloadBo = qofCosClient.download(fileInfo.getFileId());
+        if (QofStorageModeEnum.COS.getMode().equals(fileDownloadDto.getFileStorageMode())) {
+            fileDownloadBo = qofCosClient.download(fileDownloadDto.getFileId());
         } else {
-            fileDownloadBo = qofLocalClient.download(fileInfo.getFileId());
+            fileDownloadBo = qofLocalClient.download(fileDownloadDto.getFileId());
         }
 
         StreamingResponseBody streamingResponseBody = outputStream -> {
@@ -111,8 +112,26 @@ public class FileController {
                 .body(streamingResponseBody);
     }
 
+
     @RequestMapping("preview")
     public void preview() {
 
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param fileDeleteDto 删除信息
+     * @return 是否删除成功   true: 文件删除成功;   false: 文件删除失败;
+     */
+    @DeleteMapping("delete")
+    public Result<Boolean> delete(@RequestBody @Valid QofFileDeleteDto fileDeleteDto) {
+        boolean deleted;
+        if (QofStorageModeEnum.COS.getMode().equals(fileDeleteDto.getFileStorageMode())) {
+            deleted = qofCosClient.delete(fileDeleteDto.getFileId());
+        } else {
+            deleted = qofLocalClient.delete(fileDeleteDto.getFileId());
+        }
+        return Result.success(deleted);
     }
 }
