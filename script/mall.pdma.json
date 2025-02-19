@@ -4,7 +4,7 @@
   "avatar": "",
   "version": "4.9.2",
   "createdTime": "2024-6-11 22:04:03",
-  "updatedTime": "2025-2-16 15:37:21",
+  "updatedTime": "2025-2-19 10:02:53",
   "dbConns": [],
   "profile": {
     "default": {
@@ -7965,6 +7965,24 @@
           "extProps": {},
           "domain": "",
           "id": "2A41284C-4287-4460-93ED-E8124166EBEC"
+        },
+        {
+          "defKey": "file_size",
+          "defName": "文件大小(单位byte字节)",
+          "comment": "",
+          "type": "BIGINT",
+          "len": "",
+          "scale": "",
+          "primaryKey": false,
+          "notNull": true,
+          "autoIncrement": false,
+          "defaultValue": "0",
+          "hideInGraph": false,
+          "refDict": "",
+          "baseType": "CEF7D408-D936-418A-A280-99A96017CA11",
+          "extProps": {},
+          "domain": "",
+          "id": "55649D61-CDFA-4CD3-A6ED-C67DAAD8F065"
         }
       ],
       "correlations": [],

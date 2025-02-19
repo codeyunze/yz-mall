@@ -1,11 +1,17 @@
 package com.yz.mall.file.core.local;
 
 import cn.hutool.core.util.IdUtil;
+import com.yz.mall.file.bo.QofFileDownloadBo;
+import com.yz.mall.file.bo.QofFileInfoBo;
 import com.yz.mall.file.core.QofClient;
 import com.yz.mall.file.dto.QofFileInfoDto;
+import com.yz.mall.file.service.QofService;
+import com.yz.mall.web.exception.DataNotExistException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -25,14 +31,21 @@ public class QofLocalClient implements QofClient {
     @Resource
     private QofLocalProperties fileProperties;
 
+    private final QofService qofService;
+
+    public QofLocalClient(QofService qofService) {
+        this.qofService = qofService;
+    }
+
     @Override
-    public Long uploadFile(InputStream fis, QofFileInfoDto info) {
+    public Long upload(InputStream fis, QofFileInfoDto info) {
         if (info.getFileId() == null) {
             info.setFileId(IdUtil.getSnowflakeNextId());
         }
+        qofService.afterUpload(info);
 
         String suffix = info.getFileName().substring(info.getFileName().lastIndexOf(".")).toLowerCase();
-        String key = fileProperties.getFilepath() + info.getFilePath();
+        String key = fileProperties.getFilepath() + info.getDirectoryAddress();
 
         // 确保上传目录存在
         Path uploadPath = Paths.get(key);
@@ -61,6 +74,30 @@ public class QofLocalClient implements QofClient {
             }
         }
 
+        qofService.afterUpload(info);
         return info.getFileId();
+    }
+
+    @Override
+    public QofFileDownloadBo download(Long fileId) {
+        QofFileInfoBo fileBo = qofService.beforeDownload(fileId);
+        // 确保文件路径正确构建
+        String filePath = fileProperties.getFilepath() + fileBo.getFilePath();
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            throw new DataNotExistException("文件不存在");
+        }
+
+        QofFileDownloadBo fileDownloadBo = new QofFileDownloadBo();
+        BeanUtils.copyProperties(fileBo, fileDownloadBo);
+        try {
+            fileDownloadBo.setInputStream(Files.newInputStream(Paths.get(file.getPath())));
+        } catch (IOException e) {
+            throw new RuntimeException("下载文件时发生错误", e);
+        }
+
+        qofService.afterDownload(fileId);
+        return fileDownloadBo;
     }
 }

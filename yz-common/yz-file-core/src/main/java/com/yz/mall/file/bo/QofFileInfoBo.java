@@ -1,12 +1,8 @@
 package com.yz.mall.file.bo;
 
-import cn.hutool.core.date.DatePattern;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yz.mall.file.core.cos.QofCosProperties;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -19,48 +15,58 @@ import java.time.LocalDateTime;
 public class QofFileInfoBo {
 
     /**
-     * 主键标识
+     * 文件唯一id
      */
     private Long id;
 
     /**
      * 创建时间
      */
-    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime createTime;
 
     /**
-     * 更新时间
-     */
-    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime updateTime;
-
-    /**
-     * 数据是否有效：0数据有效
-     */
-    @TableLogic(value = "0", delval = "current_timestamp")
-    private Long invalid;
-
-    /**
      * 文件名称
+     *
+     * @mock 靓图.png
      */
     private String fileName;
 
     /**
-     * 文件路径
+     * 文件存储路径
+     * <br>
+     * 文件存储路径组成为{@link QofCosProperties#getFilepath()}
+     * + {@link com.yz.mall.file.dto.QofFileInfoDto#getDirectoryAddress()}
+     * + '/'
+     * + {@link QofFileInfoBo#getId()}
+     * + ( {@link QofFileInfoBo#getFileName()}的后缀 )
+     *
+     * @mock /files/business/20250201/1891054775523446784.png
      */
     private String filePath;
 
     /**
-     * 文件类型(image/png、image/jpeg)
+     * 文件类型
+     * <br>
+     * 例如image/png、image/jpeg、application/pdf、video/mp4等
+     *
+     * @mock image/png
      */
     private String fileType;
 
     /**
      * 文件标签
+     * <br>
+     * 给文件添加标签（如：证件照、报告、审核表、图标等）
+     *
+     * @mock 人像
      */
     private String fileLabel;
+
+    /**
+     * 文件大小(单位byte字节)
+     *
+     * @mock 1024
+     */
+    private Long fileSize = 0L;
 }
 

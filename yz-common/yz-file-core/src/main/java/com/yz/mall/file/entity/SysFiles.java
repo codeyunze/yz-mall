@@ -63,9 +63,14 @@ public class SysFiles extends Model<SysFiles> {
     private String fileType;
 
     /**
-     * 文件标签
+     * 文件标签（如：证件照、报告、审核表、图标等标识）
      */
     private String fileLabel;
+
+    /**
+     * 文件大小(单位byte字节)
+     */
+    private Long fileSize;
 
     /**
      * 获取主键值

@@ -22,6 +22,7 @@ public class QofFileInfoDto implements Serializable {
      * 文件唯一Id
      * <br>
      * 如果不传fileId，则会自动生成一个id
+     *
      * @ignore
      */
     private Long fileId;
@@ -36,15 +37,20 @@ public class QofFileInfoDto implements Serializable {
     private String fileName;
 
     /**
-     * 文件路径（相对路径）
+     * 文件存储目录地址
      * <br>
-     * 真实存储路径地址为 {@link QofCosProperties#getFilepath()} + {@link QofFileInfoDto#getFilePath()}
+     * 真实存储路径地址为 {@link QofCosProperties#getFilepath()} + {@link QofFileInfoDto#getDirectoryAddress()}
+     * <br>
+     * 例如：文件完整的存储路径为 '/files/business/20250201/靓图.png', 则
+     * '/files'为{@link QofCosProperties#getFilepath()},
+     * '/business/20250201'为使用者传入的{@link QofFileInfoDto#getDirectoryAddress()},
+     * '靓图.png'为文件名称{@link QofFileInfoDto#getFileName()}
      *
-     * @mock /business/靓图.png
+     * @mock /business/20250201
      */
     @Length(max = 255, message = "文件路径超过最大长度限制")
     @NotBlank(message = "文件路径不能为空")
-    private String filePath;
+    private String directoryAddress;
 
     /**
      * 文件类型
@@ -66,6 +72,24 @@ public class QofFileInfoDto implements Serializable {
     @Length(max = 36, message = "文件标签超过最大长度限制")
     private String fileLabel;
 
+    /**
+     * 文件大小(单位byte字节)
+     * @ignore
+     */
+    private Long fileSize = 0L;
 
+    /**
+     * 文件存储路径
+     * <br>
+     * 文件存储路径组成为{@link QofCosProperties#getFilepath()}
+     * + {@link QofFileInfoDto#getDirectoryAddress()}
+     * + '/'
+     * + {@link QofFileInfoDto#getFileId()}
+     * + ( {@link QofFileInfoDto#getFileName()}的后缀 )
+     *
+     * @mock /files/business/20250201/1891054775523446784.png
+     * @ignore
+     */
+    private String filePath;
 }
 
