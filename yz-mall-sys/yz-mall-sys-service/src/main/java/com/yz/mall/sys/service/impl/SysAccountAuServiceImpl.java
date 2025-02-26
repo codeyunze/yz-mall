@@ -34,6 +34,9 @@ import java.util.stream.Collectors;
 @Service
 public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, SysAccountAu> implements SysAccountAuService {
 
+    // 手续费
+    private final BigDecimal commission = new BigDecimal("3.00");
+    
     @Override
     public Long save(SysAccountAuAddDto dto) {
         SysAccountAu bo = new SysAccountAu();
@@ -42,8 +45,8 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
         if (1 == dto.getTransactionType()) {
             // 计算盈利金额
             SysAccountAu purchase = baseMapper.selectById(dto.getRelationId());
-            // 卖出价格 - 买入价格 - 2.5元手续费
-            bo.setProfitAmount(bo.getPrice().subtract(purchase.getPrice()).subtract(BigDecimal.valueOf(2.5)).multiply(BigDecimal.valueOf(bo.getQuantity())));
+            // 卖出价格 - 买入价格 - 手续费
+            bo.setProfitAmount(bo.getPrice().subtract(purchase.getPrice()).subtract(commission).multiply(BigDecimal.valueOf(bo.getQuantity())));
         }
         baseMapper.insert(bo);
         return bo.getId();
@@ -74,8 +77,8 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
 
                 // 计算盈利金额
                 SysAccountAu purchase = baseMapper.selectById(dto.getRelationId());
-                // 卖出价格 - 买入价格 - 2.5元手续费
-                au.setProfitAmount(dto.getPrice().subtract(purchase.getPrice()).subtract(BigDecimal.valueOf(2.5)).multiply(BigDecimal.valueOf(au.getQuantity())));
+                // 卖出价格 - 买入价格 - 手续费
+                au.setProfitAmount(dto.getPrice().subtract(purchase.getPrice()).subtract(commission).multiply(BigDecimal.valueOf(au.getQuantity())));
             } else {
                 // 更新前是卖出记录，更新后是买入记录
                 au.setProfitAmount(BigDecimal.ZERO);
@@ -90,15 +93,15 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
                 // 卖出记录
                 List<SysAccountAu> list = baseMapper.selectList(queryWrapper);
                 list.forEach(item -> {
-                    item.setProfitAmount(item.getPrice().subtract(au.getPrice()).subtract(BigDecimal.valueOf(2.5)).multiply(BigDecimal.valueOf(item.getQuantity())));
+                    item.setProfitAmount(item.getPrice().subtract(au.getPrice()).subtract(commission).multiply(BigDecimal.valueOf(item.getQuantity())));
                 });
                 super.updateBatchById(list);
             } else {
                 // 更新前是卖出记录，需要调整本记录的"盈利金额"
                 // 计算盈利金额
                 SysAccountAu purchase = baseMapper.selectById(dto.getRelationId());
-                // 卖出价格 - 买入价格 - 2.5元手续费
-                au.setProfitAmount(dto.getPrice().subtract(purchase.getPrice()).subtract(BigDecimal.valueOf(2.5)).multiply(BigDecimal.valueOf(au.getQuantity())));
+                // 卖出价格 - 买入价格 - 手续费
+                au.setProfitAmount(dto.getPrice().subtract(purchase.getPrice()).subtract(commission).multiply(BigDecimal.valueOf(au.getQuantity())));
             }
         }
         return baseMapper.updateById(au) > 0;
@@ -130,7 +133,7 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
             voPage.getRecords().forEach(purchase -> {
                 purchase.setProfitAmount(BigDecimal.ZERO);
                 purchase.setSurplusQuantity(purchase.getQuantity());
-                purchase.setProposalPrice(purchase.getPrice().add(BigDecimal.valueOf(2.5)));
+                purchase.setProposalPrice(purchase.getPrice().add(commission));
             });
             return voPage;
         }
@@ -144,14 +147,14 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
 
         voPage.getRecords().forEach(purchase -> {
             purchase.setSellOutRecords(sellOutByPurchaseMap.get(purchase.getId()));
-            purchase.setProposalPrice(purchase.getPrice().add(BigDecimal.valueOf(2.5)));
+            purchase.setProposalPrice(purchase.getPrice().add(commission));
             purchase.setSurplusQuantity(purchase.getQuantity());
             if (!CollectionUtils.isEmpty(purchase.getSellOutRecords())) {
                 purchase.getSellOutRecords().forEach(sellOut -> {
                     // 计算剩余克数
                     purchase.setSurplusQuantity(purchase.getSurplusQuantity() - sellOut.getQuantity());
-                    // 计算盈利金额 [(卖出单价-买入单价-2.5) * 卖出数量]
-                    BigDecimal profitAmount = sellOut.getPrice().subtract(purchase.getPrice()).subtract(BigDecimal.valueOf(2.5)).multiply(BigDecimal.valueOf(sellOut.getQuantity()));
+                    // 计算盈利金额 [(卖出单价-买入单价-手续费) * 卖出数量]
+                    BigDecimal profitAmount = sellOut.getPrice().subtract(purchase.getPrice()).subtract(commission).multiply(BigDecimal.valueOf(sellOut.getQuantity()));
                     purchase.setProfitAmount(purchase.getProfitAmount() == null ? BigDecimal.ZERO.add(profitAmount) : purchase.getProfitAmount().add(profitAmount));
                 });
             }
@@ -162,14 +165,14 @@ public class SysAccountAuServiceImpl extends ServiceImpl<SysAccountAuMapper, Sys
 
     @Override
     public Page<SysAccountAuChooseVo> getChooseByFilter(PageFilter<SysAccountAuChooseQueryDto> filter) {
-        filter.getFilter().setPrice(filter.getFilter().getPrice().subtract(BigDecimal.valueOf(2.5)));
+        filter.getFilter().setPrice(filter.getFilter().getPrice().subtract(commission));
         // 查询出买入记录信息
         Page<SysAccountAuChooseVo> voPage = baseMapper.selectChoosePageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
         if (voPage.getTotal() == 0) {
             return voPage;
         }
         voPage.getRecords().forEach(purchase -> {
-           purchase.setProposalPrice(purchase.getPrice().add(BigDecimal.valueOf(2.5)));
+           purchase.setProposalPrice(purchase.getPrice().add(commission));
         });
         return voPage;
     }

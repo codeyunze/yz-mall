@@ -50,6 +50,7 @@
         <xxl-job.version>2.4.2</xxl-job.version>
         <jackson.version>2.14.2</jackson.version>
         <qcloud.version>5.6.242</qcloud.version>
+        <qof.version>0.0.6</qof.version>
     </properties>
 
     <dependencies>
@@ -189,9 +190,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.qcloud</groupId>
-                <artifactId>cos_api</artifactId>
-                <version>${qcloud.version}</version>
+                <groupId>io.github.codeyunze</groupId>
+                <artifactId>qof-core-slim</artifactId>
+                <version>${qof.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
