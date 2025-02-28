@@ -1,6 +1,7 @@
 package com.yz.mall.file.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
@@ -117,6 +118,38 @@ public class FileController {
     @SaCheckPermission("api:system:file:preview")
     @GetMapping("preview")
     public ResponseEntity<StreamingResponseBody> preview(@RequestParam("fileId") Long fileId, @RequestParam("fileStorageMode") String fileStorageMode) {
+        QofFileDownloadBo fileDownloadBo = qofClientFactory.buildClient(fileStorageMode).preview(fileId);
+
+        StreamingResponseBody streamingResponseBody = outputStream -> {
+            try (InputStream inputStream = fileDownloadBo.getInputStream()) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+            }
+        };
+
+        ContentDisposition contentDisposition = ContentDisposition.builder("inline")
+                .filename(fileDownloadBo.getFileName(), StandardCharsets.UTF_8)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+                .contentType(MediaType.parseMediaType(fileDownloadBo.getFileType()))
+                .body(streamingResponseBody);
+    }
+
+    /**
+     * 预览文件
+     *
+     * @param fileId          文件唯一Id
+     * @param fileStorageMode 文件存储的策略 {@link SysFiles#getFileStorageMode()}
+     * @return 文件流信息
+     */
+    @SaIgnore
+    @GetMapping("/public/preview")
+    public ResponseEntity<StreamingResponseBody> publicPreview(@RequestParam("fileId") Long fileId, @RequestParam("fileStorageMode") String fileStorageMode) {
         QofFileDownloadBo fileDownloadBo = qofClientFactory.buildClient(fileStorageMode).preview(fileId);
 
         StreamingResponseBody streamingResponseBody = outputStream -> {
