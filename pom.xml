@@ -21,7 +21,6 @@
         <module>yz-common</module>
         <module>yz-gateway</module>
         <module>yz-unqid</module>
-        <module>yz-file-startup</module>
         <module>yz-mall-sys</module>
         <module>yz-mall-auth</module>
         <module>yz-mall-pms</module>
@@ -50,6 +49,8 @@
         <sa-token.version>1.39.0</sa-token.version>
         <xxl-job.version>2.4.2</xxl-job.version>
         <jackson.version>2.14.2</jackson.version>
+        <qcloud.version>5.6.242</qcloud.version>
+        <qof.version>0.0.6</qof.version>
     </properties>
 
     <dependencies>
@@ -186,6 +187,12 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>1.2.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.codeyunze</groupId>
+                <artifactId>qof-core-slim</artifactId>
+                <version>${qof.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

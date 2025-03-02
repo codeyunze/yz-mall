@@ -64,4 +64,12 @@ public class OverallExceptionHandle {
         e.printStackTrace();
         return new Result<>(e.getCode(), null, e.getMessage());
     }
+
+    /**
+     * 无访问业务权限问题处理
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    Result<?> authenticationExceptionHandle(AuthenticationException e) {
+        return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, e.getMessage());
+    }
 }

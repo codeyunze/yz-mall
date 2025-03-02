@@ -82,7 +82,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public List<SysMenu> list(SysMenuQueryDto filter) {
         LambdaQueryWrapper<SysMenu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(!CollectionUtils.isEmpty(filter.getMenuIds()), SysMenu::getId, filter.getMenuIds());
-        queryWrapper.orderByAsc(SysMenu::getParentId).orderByAsc(SysMenu::getSort);
+        queryWrapper.orderByAsc(SysMenu::getParentId).orderByAsc(SysMenu::getMenuType).orderByAsc(SysMenu::getSort);
         return baseMapper.selectList(queryWrapper);
     }
 

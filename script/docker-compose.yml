@@ -1,0 +1,29 @@
+services:
+  redis:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis:6.2.16
+    container_name: 'redis'
+    command: --requirepass "foobared"
+    ports:
+      - '6379:6379'
+  
+  nacos:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/linux_amd64_nacos-server:v2.3.2
+    container_name: 'nacos-2.3.2'
+    volumes:
+      - /opt/docker-dev-environment/nacos/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - '8848:8848'
+      - '9848:9848'
+      - '9849:9849'
+    env_file:
+      - ./nacos/config.env
+  
+  rabbitmq:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rabbitmq:3.13.7
+    container_name: 'rabbitmq-dev-3.13.7'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin

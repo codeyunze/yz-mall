@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 商品展示信息
@@ -21,7 +23,7 @@ public class PmsProductDisplayInfoVo implements Serializable {
     /**
      * 主键标识 {@link PmsProduct#getId()}
      */
-    private String id;
+    private Long id;
 
     /**
      * 商品名称
@@ -47,6 +49,11 @@ public class PmsProductDisplayInfoVo implements Serializable {
      * 商品图片id，限制为5张，以逗号分割
      */
     private String albumPics;
+
+    /**
+     * 商品图片预览地址
+     */
+    private List<String> productImages;
 
     /**
      * 库存数量 {@link PmsStock#getQuantity()}
