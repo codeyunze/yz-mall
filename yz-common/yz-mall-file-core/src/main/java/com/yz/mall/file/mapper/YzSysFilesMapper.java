@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * 系统-文件表(SysFiles)表数据库访问层
  *
@@ -34,5 +36,13 @@ public interface YzSysFilesMapper extends BaseMapper<YzSysFiles> {
      */
     @Select("select id as file_id, create_id, public_access from sys_files where invalid = 0 and id = #{fileId}")
     YzFileInterviewDto selectFileOwnerByFileId(@Param("fileId") Long fileId);
+
+    /**
+     * 根据文件Id列表获取公开的文件信息
+     *
+     * @param fileIds 文件Id
+     * @return 文件基础信息
+     */
+    List<QofFileInfoBo<String>> selectByFileIdsAndPublic(@Param("fileIds") List<Long> fileIds);
 }
 

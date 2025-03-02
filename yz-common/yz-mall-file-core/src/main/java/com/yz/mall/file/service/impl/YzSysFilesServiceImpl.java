@@ -10,7 +10,12 @@ import io.github.codeyunze.bo.QofFileInfoBo;
 import io.github.codeyunze.dto.QofFileInfoDto;
 import io.github.codeyunze.exception.DataNotExistException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 系统-文件表(SysFiles)表服务实现类
@@ -20,6 +25,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class YzSysFilesServiceImpl extends ServiceImpl<YzSysFilesMapper, YzSysFiles> implements YzSysFilesService {
+
+    @Value("${qof.cos.multiple.mall.previewAddress}")
+    private String previewAddress;
+
+    @Value("${qof.cos.multiple.mall.filepath}")
+    private String filepath;
 
     @Override
     public QofFileInfoBo<YzFileInterviewDto> save(QofFileInfoDto<YzFileInterviewDto> fileDto) {
@@ -47,6 +58,18 @@ public class YzSysFilesServiceImpl extends ServiceImpl<YzSysFilesMapper, YzSysFi
         YzFileInterviewDto interviewDto = baseMapper.selectFileOwnerByFileId(fileId);
         fileBo.setExtendObject(interviewDto);
         return fileBo;
+    }
+
+    @Override
+    public List<QofFileInfoBo<String>> getFileInfoByFileIdsAndPublic(List<Long> fileIds) {
+        if (CollectionUtils.isEmpty(fileIds)) {
+            return Collections.emptyList();
+        }
+        List<QofFileInfoBo<String>> qofFileInfoBos = baseMapper.selectByFileIdsAndPublic(fileIds);
+        for (QofFileInfoBo<String> qofFileInfoBo : qofFileInfoBos) {
+            qofFileInfoBo.setExtendObject(previewAddress + filepath + qofFileInfoBo.getFilePath());
+        }
+        return qofFileInfoBos;
     }
 }
 

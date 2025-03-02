@@ -184,5 +184,4 @@ public class FileController {
         boolean deleted = qofClientFactory.buildClient(fileUniversalDto.getFileStorageMode()).delete(fileUniversalDto.getFileId());
         return new Result<>(HttpStatus.OK.value(), deleted, deleted ? "文件删除成功!" : "文件删除失败");
     }
-
 }
