@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.file.mapper.YzSysFilesMapper">
+
+    <select id="selectByFileIdsAndPublic" resultType="io.github.codeyunze.bo.QofFileInfoBo">
+        select id as file_id, create_time, file_name, file_path, file_type, file_size, file_storage_station
+        from sys_files
+        where invalid = 0 and public_access = 1
+          and id in
+            <foreach collection="fileIds" item="fileId" open="(" close=")" separator=",">
+                #{fileId}
+            </foreach>
+        order by id desc
+    </select>
+</mapper>

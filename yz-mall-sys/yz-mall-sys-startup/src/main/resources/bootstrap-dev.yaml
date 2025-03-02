@@ -10,6 +10,7 @@ spring:
           - data-id: yz-mall-security.yaml
             refresh: true
           - data-id: rabbitmq.properties
+          - data-id: file.yaml
       discovery:
         namespace: mall
       username: nacos

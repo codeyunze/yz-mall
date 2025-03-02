@@ -1,7 +1,0 @@
-
-server:
-  port: 30003
-
-spring:
-  application:
-    name: yz-file

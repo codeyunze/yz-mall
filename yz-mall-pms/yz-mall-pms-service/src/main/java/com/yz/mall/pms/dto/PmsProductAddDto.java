@@ -41,16 +41,6 @@ public class PmsProductAddDto implements Serializable {
     private String remark;
 
     /**
-     * 商品上架状态：0：下架，1：上架
-     */
-    private Integer publishStatus;
-
-    /**
-     * 商品审核状态：0：未审核，1：审核通过
-     */
-    private Integer verifyStatus;
-
-    /**
      * 商品图片id，限制为5张，以逗号分割
      */
     private String albumPics;

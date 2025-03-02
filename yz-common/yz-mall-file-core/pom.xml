@@ -5,13 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>yz-mall-sys</artifactId>
+        <artifactId>yz-common</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
-    <artifactId>yz-mall-sys-startup</artifactId>
-    <description>用户服务</description>
+    <artifactId>yz-mall-file-core</artifactId>
+    <description>文件服务</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,32 +19,10 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-starter-web</artifactId>
             <version>${project.parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-mall-sys-service</artifactId>
-            <version>${revision}</version>
         </dependency>
 
         <dependency>
@@ -55,18 +32,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>yz-mall-file-core</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>io.github.codeyunze</groupId>
+            <artifactId>qof-core-slim</artifactId>
         </dependency>
     </dependencies>
 
-    <build>
+    <!--<build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
 </project>

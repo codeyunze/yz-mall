@@ -10,7 +10,9 @@ import com.yz.mall.pms.enums.ProductPublishStatusEnum;
 import com.yz.mall.pms.enums.ProductVerifyStatusEnum;
 import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
 import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.service.InternalSysFilesService;
 import com.yz.mall.sys.service.InternalSysPendingTasksService;
+import com.yz.mall.sys.vo.InternalQofFileInfoVo;
 import com.yz.mall.web.exception.DataNotExistException;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.mapper.PmsProductMapper;
@@ -27,10 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 商品表(PmsProduct)表服务实现类
@@ -45,10 +45,14 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     private final InternalSysPendingTasksService internalSysPendingTasksService;
 
+    private final InternalSysFilesService internalSysFilesService;
+
     public PmsProductServiceImpl(PmsStockService stockService
-            , InternalSysPendingTasksService internalSysPendingTasksService) {
+            , InternalSysPendingTasksService internalSysPendingTasksService
+            , InternalSysFilesService internalSysFilesService) {
         this.stockService = stockService;
         this.internalSysPendingTasksService = internalSysPendingTasksService;
+        this.internalSysFilesService = internalSysFilesService;
     }
 
     @Transactional
@@ -138,7 +142,39 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
     @DS("slave")
     @Override
     public List<PmsProductDisplayInfoVo> getProductDisplayInfoList(PmsProductSlimQueryDto filter) {
-        return baseMapper.selectProductDisplayInfoList(filter);
+        List<PmsProductDisplayInfoVo> displayInfoVos = baseMapper.selectProductDisplayInfoList(filter);
+        // 取出所有商品的图片Id Map<图片Id, 产品Id>
+        Map<Long, Long> imageIdToProductIdMap = new HashMap<>();
+        List<Long> imageIds = new ArrayList<>();
+        for (PmsProductDisplayInfoVo displayInfoVo : displayInfoVos) {
+            String albumPics = displayInfoVo.getAlbumPics();
+            if (!StringUtils.hasText(albumPics)) {
+                continue;
+            }
+            for (String imageId : albumPics.split(",")) {
+                imageIdToProductIdMap.put(Long.parseLong(imageId), displayInfoVo.getId());
+                imageIds.add(Long.parseLong(imageId));
+            }
+        }
+        // 查询图片的访问信息
+        List<InternalQofFileInfoVo> qofFileInfoVos = internalSysFilesService.getFileInfoByFileIdsAndPublic(imageIds);
+
+        // 组装数据，循环遍历产品
+        for (PmsProductDisplayInfoVo infoVo : displayInfoVos) {
+            if (CollectionUtils.isEmpty(infoVo.getProductImages())) {
+                infoVo.setProductImages(new ArrayList<>());
+            }
+            for (InternalQofFileInfoVo fileInfoVo : qofFileInfoVos) {
+                if (!imageIdToProductIdMap.containsKey(fileInfoVo.getFileId())) {
+                    continue;
+                }
+                Long productId = imageIdToProductIdMap.get(fileInfoVo.getFileId());
+                if (productId.equals(infoVo.getId())) {
+                    infoVo.getProductImages().add(fileInfoVo.getPreviewAddress());
+                }
+            }
+        }
+        return displayInfoVos;
     }
 
     @DS("slave")
