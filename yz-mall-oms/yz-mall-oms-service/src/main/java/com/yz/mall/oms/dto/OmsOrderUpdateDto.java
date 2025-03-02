@@ -56,7 +56,7 @@ public class OmsOrderUpdateDto implements Serializable {
     private String orderCode;
 
     /**
-     * 订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭；6无效订单
+     * 订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单
      */
     private Integer orderStatus;
 

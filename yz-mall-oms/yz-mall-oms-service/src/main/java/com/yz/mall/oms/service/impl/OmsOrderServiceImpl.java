@@ -1,8 +1,10 @@
 package com.yz.mall.oms.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
@@ -23,12 +25,14 @@ import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.pms.service.InternalPmsStockService;
 import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.exception.DataNotExistException;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -182,6 +186,22 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         });
 
         return page;
+    }
+
+    @Override
+    public boolean cancelById(Long id) {
+        long userId = StpUtil.getLoginIdAsLong();
+        LambdaQueryWrapper<OmsOrder> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OmsOrder::getId, id);
+        queryWrapper.eq(OmsOrder::getUserId, userId);
+        OmsOrder order = baseMapper.selectOne(queryWrapper);
+        if (order == null) {
+            throw new DataNotExistException("订单信息不存在，无法操作取消订单");
+        }
+        order.setOrderStatus(OmsOrderStatusEnum.ORDER_CLOSED.getStatus());
+        order.setUpdatedId(userId);
+        order.setUpdatedTime(LocalDateTime.now());
+        return baseMapper.updateById(order) > 0;
     }
 
 }

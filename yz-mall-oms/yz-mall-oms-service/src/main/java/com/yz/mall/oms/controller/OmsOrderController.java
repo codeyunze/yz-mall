@@ -7,12 +7,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
 import com.yz.mall.oms.dto.InternalOmsOrderDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
+import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
 import com.yz.mall.web.common.ResultTable;
+import com.yz.mall.web.enums.CodeEnum;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -57,7 +59,7 @@ public class OmsOrderController extends ApiController {
     }
 
     /**
-     *  用户分页查询自己的订单信息
+     * 用户分页查询自己的订单信息
      */
     @SaCheckPermission("api:oms:order:add")
     @PostMapping("page")
@@ -65,6 +67,18 @@ public class OmsOrderController extends ApiController {
         filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());
         Page<OmsOrderVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param id 订单Id {@link OmsOrder#getId()}
+     */
+    @SaCheckPermission("api:oms:order:add")
+    @PostMapping("cancel/{id}")
+    public Result<Boolean> cancel(@PathVariable Long id) {
+        boolean cancelled = this.service.cancelById(id);
+        return cancelled ? success(true) : new Result<>(CodeEnum.BUSINESS_ERROR.get(), false, "订单取消失败");
     }
 }
 

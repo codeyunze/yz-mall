@@ -40,5 +40,13 @@ public interface OmsOrderService extends IService<OmsOrder> {
      * @return 订单信息
      */
     Page<OmsOrderVo> page(PageFilter<OmsOrderQueryDto> filter);
+
+    /**
+     * 取消订单
+     *
+     * @param id     订单Id {@link OmsOrder#getId()}
+     * @return true: 操作成功   false: 操作失败
+     */
+    boolean cancelById(Long id);
 }
 
