@@ -5,24 +5,23 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.pms.dto.PmsProductAddDto;
+import com.yz.mall.pms.dto.PmsProductQueryDto;
 import com.yz.mall.pms.dto.PmsProductSlimQueryDto;
-import com.yz.mall.pms.enums.ProductPublishStatusEnum;
+import com.yz.mall.pms.dto.PmsProductUpdateDto;
+import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.enums.ProductVerifyStatusEnum;
+import com.yz.mall.pms.mapper.PmsProductMapper;
+import com.yz.mall.pms.service.PmsProductService;
+import com.yz.mall.pms.service.PmsStockService;
 import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
+import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
 import com.yz.mall.sys.service.InternalSysFilesService;
 import com.yz.mall.sys.service.InternalSysPendingTasksService;
 import com.yz.mall.sys.vo.InternalQofFileInfoVo;
-import com.yz.mall.web.exception.DataNotExistException;
-import com.yz.mall.pms.entity.PmsProduct;
-import com.yz.mall.pms.mapper.PmsProductMapper;
-import com.yz.mall.pms.service.PmsProductService;
-import com.yz.mall.pms.dto.PmsProductAddDto;
-import com.yz.mall.pms.dto.PmsProductQueryDto;
-import com.yz.mall.pms.dto.PmsProductUpdateDto;
-import com.yz.mall.pms.service.PmsStockService;
-import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.exception.DataNotExistException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 商品表(PmsProduct)表服务实现类
@@ -161,18 +159,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
         // 组装数据，循环遍历产品
         for (PmsProductDisplayInfoVo infoVo : displayInfoVos) {
-            if (CollectionUtils.isEmpty(infoVo.getProductImages())) {
-                infoVo.setProductImages(new ArrayList<>());
-            }
-            for (InternalQofFileInfoVo fileInfoVo : qofFileInfoVos) {
-                if (!imageIdToProductIdMap.containsKey(fileInfoVo.getFileId())) {
-                    continue;
-                }
-                Long productId = imageIdToProductIdMap.get(fileInfoVo.getFileId());
-                if (productId.equals(infoVo.getId())) {
-                    infoVo.getProductImages().add(fileInfoVo.getPreviewAddress());
-                }
-            }
+            assembleProductImage(infoVo, qofFileInfoVos, imageIdToProductIdMap, infoVo.getId());
         }
         return displayInfoVos;
     }
@@ -190,6 +177,23 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         if (CollectionUtils.isEmpty(products)) {
             return Collections.emptyMap();
         }
+
+        // 取出所有商品的图片Id Map<图片Id, 产品Id>
+        Map<Long, Long> imageIdToProductIdMap = new HashMap<>();
+        List<Long> imageIds = new ArrayList<>();
+        for (PmsProduct product : products) {
+            String albumPics = product.getAlbumPics();
+            if (!StringUtils.hasText(albumPics)) {
+                continue;
+            }
+            for (String imageId : albumPics.split(",")) {
+                imageIdToProductIdMap.put(Long.parseLong(imageId), product.getId());
+                imageIds.add(Long.parseLong(imageId));
+            }
+        }
+        // 查询图片的访问信息
+        List<InternalQofFileInfoVo> qofFileInfoVos = internalSysFilesService.getFileInfoByFileIdsAndPublic(imageIds);
+
         // 获取指定商品的库存数量
         Map<Long, Integer> stockByProductId = stockService.getStockByProductIds(ids);
         Map<Long, PmsProductDisplayInfoVo> map = new HashMap<>();
@@ -197,8 +201,37 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
             PmsProductDisplayInfoVo vo = new PmsProductDisplayInfoVo();
             BeanUtils.copyProperties(product, vo);
             vo.setQuantity(stockByProductId.get(product.getId()) != null ? stockByProductId.get(product.getId()) : 0);
+
+            // 组装产品的图片预览地址
+            assembleProductImage(vo, qofFileInfoVos, imageIdToProductIdMap, product.getId());
+
             map.put(product.getId(), vo);
         });
         return map;
+    }
+
+    /**
+     * 组装产品的图片预览地址
+     *
+     * @param vo                    产品信息
+     * @param qofFileInfoVos        所有图片预览数据
+     * @param imageIdToProductIdMap 图片与产品的对应关系Map<图片Id，产品Id>
+     * @param productId             本次组装的产品Id
+     */
+    private static void assembleProductImage(PmsProductDisplayInfoVo vo
+            , List<InternalQofFileInfoVo> qofFileInfoVos
+            , Map<Long, Long> imageIdToProductIdMap
+            , Long productId) {
+        if (CollectionUtils.isEmpty(vo.getProductImages())) {
+            vo.setProductImages(new ArrayList<>());
+        }
+        for (InternalQofFileInfoVo fileInfoVo : qofFileInfoVos) {
+            if (!imageIdToProductIdMap.containsKey(fileInfoVo.getFileId())) {
+                continue;
+            }
+            if (imageIdToProductIdMap.get(fileInfoVo.getFileId()).equals(productId)) {
+                vo.getProductImages().add(fileInfoVo.getPreviewAddress());
+            }
+        }
     }
 }

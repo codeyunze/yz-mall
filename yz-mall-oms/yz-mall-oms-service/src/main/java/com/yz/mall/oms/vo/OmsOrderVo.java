@@ -124,6 +124,13 @@ public class OmsOrderVo extends Model<OmsOrderVo> {
     private String email;
 
     /**
+     * 订单创建时间
+     */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime createdTime;
+
+    /**
      * 订单下的商品信息
      */
     private List<OmsOrderProductVo> products;

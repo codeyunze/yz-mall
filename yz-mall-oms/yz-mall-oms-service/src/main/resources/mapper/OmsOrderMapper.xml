@@ -7,7 +7,7 @@
              , oo.confirm_status, oo.receive_time, oo.pay_type, oo.total_amount
              , oo.discount_amount, oo.pay_amount, oo.note, oo.receiver_name, oo.receiver_phone
              , oo.receiver_province, oo.receiver_city, oo.receiver_region, oo.receiver_address
-             , oo.email
+             , oo.email, oo.created_time
         from oms_order oo
         where invalid = 0
         <if test="filter.userId != null">and oo.user_id = #{filter.userId}</if>

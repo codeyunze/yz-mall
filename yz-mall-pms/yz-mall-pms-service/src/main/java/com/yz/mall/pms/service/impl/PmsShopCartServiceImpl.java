@@ -104,6 +104,10 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
             cart.setPrice(productInfo.getPrice());
             cart.setRemark(productInfo.getRemark());
             cart.setAlbumPics(productInfo.getAlbumPics());
+
+            if (!CollectionUtils.isEmpty(productInfo.getProductImages())) {
+                cart.setPreviewAddress(productInfo.getProductImages().get(0));
+            }
         });
 
         return page;
