@@ -41,7 +41,7 @@ Content-Type: application/json
   "receiverPhone": "15346646668",
   "receiverProvince": "440000000000",
   "receiverCity": "440100000000",
-  "receiverRegion": "440106000000",
+  "receiverDistrict": "440106000000",
   "receiverAddress": "天河公园",
   "email": "834363368@qq.com"
 }
@@ -74,7 +74,7 @@ Content-Type: application/json
   "receiverPhone": "15346646668",
   "receiverProvince": "440000000000",
   "receiverCity": "440100000000",
-  "receiverRegion": "440106000000",
+  "receiverDistrict": "440106000000",
   "receiverAddress": "五山地铁口",
   "email": "834363368@qq.com",
   "omsOrderItems": [

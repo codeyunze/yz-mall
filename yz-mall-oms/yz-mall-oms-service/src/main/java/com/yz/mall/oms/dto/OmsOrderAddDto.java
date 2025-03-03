@@ -133,7 +133,7 @@ public class OmsOrderAddDto implements Serializable {
      * 收货区
      */
     @NotBlank(message = "收货区不能为空")
-    private String receiverRegion;
+    private String receiverDistrict;
 
     /**
      * 收货详细地址

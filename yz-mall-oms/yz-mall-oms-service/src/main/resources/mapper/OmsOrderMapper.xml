@@ -19,7 +19,7 @@
         <if test="filter.receiverPhone != null">and oo.receiver_phone = #{filter.receiverPhone}</if>
         <if test="filter.receiverProvince != null and filter.receiverProvince != ''">and oo.receiver_province = #{filter.receiverProvince}</if>
         <if test="filter.receiverCity != null and filter.receiverCity != ''">and oo.receiver_city = #{filter.receiverCity}</if>
-        <if test="filter.receiverRegion != null and filter.receiverRegion != ''">and oo.receiver_region = #{filter.receiverRegion}</if>
+        <if test="filter.receiverDistrict != null and filter.receiverDistrict != ''">and oo.receiver_region = #{filter.receiverDistrict}</if>
         order by oo.id desc
     </select>
 </mapper>

@@ -111,7 +111,7 @@ public class OmsOrderVo extends Model<OmsOrderVo> {
     /**
      * 收货区
      */
-    private String receiverRegion;
+    private String receiverDistrict;
 
     /**
      * 收货详细地址

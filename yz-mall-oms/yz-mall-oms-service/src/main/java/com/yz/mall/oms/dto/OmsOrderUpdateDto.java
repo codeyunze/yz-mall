@@ -128,7 +128,7 @@ public class OmsOrderUpdateDto implements Serializable {
     /**
      * 收货区
      */
-    private String receiverRegion;
+    private String receiverDistrict;
 
     /**
      * 收货详细地址

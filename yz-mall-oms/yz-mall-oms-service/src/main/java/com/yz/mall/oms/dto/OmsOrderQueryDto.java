@@ -71,7 +71,7 @@ public class OmsOrderQueryDto implements Serializable {
     /**
      * 收货区
      */
-    private String receiverRegion;
+    private String receiverDistrict;
 
     /**
      * 订单消息接收邮箱
