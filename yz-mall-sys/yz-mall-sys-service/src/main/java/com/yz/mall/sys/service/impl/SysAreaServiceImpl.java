@@ -1,5 +1,6 @@
 package com.yz.mall.sys.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -51,10 +52,12 @@ public class SysAreaServiceImpl extends ServiceImpl<SysAreaMapper, SysArea> impl
         LambdaQueryWrapper<SysArea> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysArea::getStatus, EnableEnum.ENABLE.get());
         queryWrapper.eq(StringUtils.hasText(filter.getFilter().getParentId()), SysArea::getParentId, filter.getFilter().getParentId());
+        queryWrapper.orderByAsc(SysArea::getId);
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 
     @Cacheable(value = "system:area", key = "#parentId")
+    @DS("slave")
     @Override
     public List<AreaVo> getByParentId(String parentId) {
         LambdaQueryWrapper<SysArea> queryWrapper = new LambdaQueryWrapper<>();
