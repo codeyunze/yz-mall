@@ -14,6 +14,7 @@ import com.yz.mall.sys.service.SysAreaService;
 import com.yz.mall.sys.vo.AreaVo;
 import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -40,6 +41,8 @@ public class SysAreaServiceImpl extends ServiceImpl<SysAreaMapper, SysArea> impl
         return bo.getId();
     }
 
+    // 清理缓存
+    @CacheEvict(value = "system:area", key = "#dto.id")
     @Override
     public boolean update(SysAreaUpdateDto dto) {
         SysArea bo = new SysArea();
@@ -56,6 +59,7 @@ public class SysAreaServiceImpl extends ServiceImpl<SysAreaMapper, SysArea> impl
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 
+    // 添加缓存
     @Cacheable(value = "system:area", key = "#parentId")
     @DS("slave")
     @Override
