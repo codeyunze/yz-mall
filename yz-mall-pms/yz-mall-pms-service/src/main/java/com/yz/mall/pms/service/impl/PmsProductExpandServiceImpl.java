@@ -25,7 +25,7 @@ public class PmsProductExpandServiceImpl extends ServiceImpl<PmsProductMapper, P
     @Override
     public List<PmsProductSlimVo> getProductByProductIds(List<Long> productIds) {
         LambdaQueryWrapper<PmsProduct> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(PmsProduct::getId, PmsProduct::getName, PmsProduct::getTitles, PmsProduct::getAlbumPics);
+        queryWrapper.select(PmsProduct::getId, PmsProduct::getProductName, PmsProduct::getTitles, PmsProduct::getAlbumPics);
         queryWrapper.in(PmsProduct::getId, productIds);
         List<PmsProduct> products = baseMapper.selectList(queryWrapper);
         if (CollectionUtils.isEmpty(products)) {

@@ -20,7 +20,7 @@ public class PmsProductSlimVo {
     /**
      * 商品名称
      */
-    private String name;
+    private String productName;
 
     /**
      * 商品标签
@@ -34,7 +34,7 @@ public class PmsProductSlimVo {
 
     public PmsProductSlimVo(PmsProduct bo) {
         this.id = bo.getId();
-        this.name = bo.getName();
+        this.productName = bo.getProductName();
         this.titles = bo.getTitles();
         this.albumPics = bo.getAlbumPics();
     }

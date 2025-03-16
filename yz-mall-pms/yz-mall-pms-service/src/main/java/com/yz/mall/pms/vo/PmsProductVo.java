@@ -40,12 +40,12 @@ public class PmsProductVo implements Serializable {
     /**
      * 商品名称
      */
-    private String name;
+    private String productName;
 
     /**
      * 商品价格
      */
-    private BigDecimal price;
+    private BigDecimal productPrice;
 
     /**
      * 商品标签

@@ -103,7 +103,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         PmsProductQueryDto query = filter.getFilter();
         LambdaQueryWrapper<PmsProduct> queryWrapper = new LambdaQueryWrapper<>();
 
-        queryWrapper.like(StringUtils.hasText(query.getName()), PmsProduct::getName, query.getName());
+        queryWrapper.like(StringUtils.hasText(query.getProductName()), PmsProduct::getProductName, query.getProductName());
         queryWrapper.like(StringUtils.hasText(query.getTitles()), PmsProduct::getTitles, query.getTitles());
         queryWrapper.eq(query.getVerifyStatus() != null, PmsProduct::getVerifyStatus, query.getVerifyStatus());
         queryWrapper.eq(query.getPublishStatus() != null, PmsProduct::getPublishStatus, query.getPublishStatus());
@@ -168,7 +168,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
     @Override
     public Map<Long, PmsProductDisplayInfoVo> getProductDisplayInfoMap(List<Long> ids) {
         LambdaQueryWrapper<PmsProduct> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(PmsProduct::getId, PmsProduct::getName, PmsProduct::getPrice, PmsProduct::getTitles
+        queryWrapper.select(PmsProduct::getId, PmsProduct::getProductName, PmsProduct::getProductPrice, PmsProduct::getTitles
                 , PmsProduct::getRemark, PmsProduct::getAlbumPics, PmsProduct::getPublishStatus);
         // queryWrapper.eq(PmsProduct::getPublishStatus, ProductPublishStatusEnum.PUBLISH.get());
         queryWrapper.eq(PmsProduct::getVerifyStatus, ProductVerifyStatusEnum.APPROVED_REVIEW.get());

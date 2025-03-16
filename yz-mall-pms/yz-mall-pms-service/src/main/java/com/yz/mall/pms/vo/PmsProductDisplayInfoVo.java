@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,12 +27,12 @@ public class PmsProductDisplayInfoVo implements Serializable {
     /**
      * 商品名称
      */
-    private String name;
+    private String productName;
 
     /**
      * 商品价格
      */
-    private BigDecimal price;
+    private BigDecimal productPrice;
 
     /**
      * 商品标签

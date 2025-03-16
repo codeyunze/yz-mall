@@ -41,7 +41,7 @@ Content-Type: application/json
   "receiverPhone": "15346646668",
   "receiverProvince": "440000000000",
   "receiverCity": "440100000000",
-  "receiverDistrict": "440106000000",
+  "receiverRegion": "440106000000",
   "receiverAddress": "天河公园",
   "email": "834363368@qq.com"
 }
@@ -60,7 +60,7 @@ Content-Type: application/json
 }
 
 ### 生成订单
-POST http://localhost:30006/omsOrder/generateOrder
+POST http://localhost:30006/oms/order/generateOrder
 Content-Type: application/json
 
 {
@@ -74,7 +74,7 @@ Content-Type: application/json
   "receiverPhone": "15346646668",
   "receiverProvince": "440000000000",
   "receiverCity": "440100000000",
-  "receiverDistrict": "440106000000",
+  "receiverRegion": "440106000000",
   "receiverAddress": "五山地铁口",
   "email": "834363368@qq.com",
   "omsOrderItems": [
@@ -184,31 +184,13 @@ Content-Type: application/json
   "password": "a1234567"
 }
 
-<> 2024-12-20T163305.200.json
-<> 2024-12-20T163253.200.json
-<> 2024-12-20T142550.500.json
-<> 2024-12-17T142012.200.json
-<> 2024-12-17T141250.200.json
-<> 2024-12-17T141057.200.json
-<> 2024-12-17T140013.200.json
-<> 2024-12-17T135735.500.json
-<> 2024-12-17T135223.500.json
-<> 2024-12-17T130248.200.json
-<> 2024-12-17T130054.500.json
-<> 2024-12-13T093718.200.json
-<> 2024-12-12T173305.200.json
-<> 2024-12-12T173303.200.json
+<> 2025-01-19T145744.200.json
+<> 2025-01-19T145102.200.json
 
 
 ### 退出登录
 POST http://localhost:30001/logout
 Authorization: Bearer 5a8928227aaf41178d42042d19a4938d
-
-<> 2024-12-17T142028.200.json
-<> 2024-12-17T141319.500.json
-<> 2024-12-17T141228.500.json
-<> 2024-12-17T141203.200.json
-<> 2024-12-17T141119.200.json
 
 
 ### 订单信息查询
@@ -228,11 +210,9 @@ POST http://localhost:30001/refreshToken
 Content-Type: application/json
 
 {
-  "refreshToken": "b36260b321e64a349e6b763ac3a6d983"
+  "refreshToken": "ee369953a4014cc59a389f0b45879af7"
 }
 
-<> 2024-12-18T123421.200.json
-<> 2024-12-18T123008.200.json
 <> 2024-12-18T122956.200.json
 <> 2024-11-19T230758.200.json
 <> 2024-11-19T230754.200.json
@@ -467,8 +447,6 @@ Content-Type: application/json
 
 }
 
-<> 2024-12-12T174101.200.json
-
 ### 系统-菜单-新增
 POST http://localhost:30001/sys/menu/add
 Content-Type: application/json
@@ -603,13 +581,9 @@ Authorization: Bearer 372bc5f4ce84475b8643d5c763dd601d
 DELETE http://localhost:30001/sys/role/menu/delete/{{id}}
 Authorization: Bearer 372bc5f4ce84475b8643d5c763dd601d
 
-<> 2024-12-13T170430.200.json
-
 ### 系统-用户-获取请求用户可访问的菜单信息
 GET http://localhost:30001/sys/user/getUserMenus
 Authorization: Bearer 0cfed1be33fb417a819b3f8bcbdcba83
-
-<> 2024-12-13T164346.200.json
 
 ### 注册用户
 POST http://localhost:30001/register
@@ -621,30 +595,7 @@ Content-Type: application/json
   "phone": "15300000017"
 }
 
-<> 2024-12-13T170443.200.json
-<> 2024-12-13T170424.200.json
-<> 2024-12-13T170404.200.json
-<> 2024-12-13T170355.200.json
-<> 2024-12-13T170348.200.json
-<> 2024-12-13T170338.200.json
-<> 2024-12-13T170321.200.json
-<> 2024-12-13T170206.200.json
-<> 2024-12-13T170158.200.json
-<> 2024-12-13T170151.200.json
-<> 2024-12-13T170017.200.json
-<> 2024-12-13T164726.200.json
-<> 2024-12-13T164546.200.json
-<> 2024-12-13T164449.200.json
-<> 2024-12-13T164311.200.json
-<> 2024-12-13T164237.200.json
-<> 2024-12-13T163124.500.json
-<> 2024-12-13T163104.500.json
-<> 2024-12-13T162856.200.json
-<> 2024-12-13T162830.200.json
-<> 2024-12-13T162823.200.json
-<> 2024-12-13T162815.200.json
-
-### 商品管理-商品-新增
+### 产品管理-商品-新增
 POST http://localhost:30001/pms/product/add
 Authorization: Bearer 9b94ad4186bf4882b8d812ac55c72ede
 Content-Type: application/json
@@ -656,6 +607,198 @@ Content-Type: application/json
   "price": 219000
 }
 
-<> 2024-12-20T163325.200.json
-<> 2024-12-20T142536.200.json
-<> 2024-12-20T140152.200.json
+### 产品管理-商品-分页查询
+POST http://localhost:30001/pms/product/page
+Authorization: Bearer 02e99b02e4884fcf93a977901c523ad5
+Content-Type: application/json
+
+{
+  "filter": {}
+}
+
+### 产品管理-库存-分页查询
+POST http://localhost:30001/pms/stock/page
+Authorization: Bearer b41da9babbd44448bf4f06fdbf9deaec
+Content-Type: application/json
+
+{
+  "filter": {
+    "productId": ""
+  }
+}
+
+### 测试
+GET http://localhost:30001/sys/test/get
+Content-Type: application/json
+
+{
+  "id": 1234567
+}
+
+
+###
+POST http://localhost:30001/pms/stock/in/page
+Content-Type: application/json
+
+{
+  "filter": {
+    "productId": 0,
+    "stockInCode": "",
+    "supplierId": 0
+  }
+}
+
+### 黄金-交易汇总
+POST http://localhost:30001/sys/account/au/pageSummary
+Content-Type: application/json
+Authorization: Bearer 92c6bbc5653f49e490055075a282ffa5
+
+{
+  "filter": {
+
+  }
+}
+
+### 系统-待办-任务列表
+POST http://localhost:30001/sys/tasks/page
+Content-Type: application/json
+Authorization: Bearer 85b727b1e7454656b309a58489cc7ced
+
+{
+  "filter": {}
+}
+
+### 系统-待办-任务新增
+POST http://localhost:30001/sys/tasks/add
+Content-Type: application/json
+Authorization: Bearer 78c62625b82b4b5bb7344288a1ddd0b5
+
+{
+  "taskTitle": "小米SU7上架审核",
+  "businessId": "1871721694237495296",
+  "taskNode": "待审核",
+  "taskCode": "PMS:PRODUCT:PUBLISH",
+  "createId": 1858113817985785856
+}
+
+<> 2025-01-22T100659.200.json
+
+### 系统-待办-任务更新
+POST http://localhost:30001/sys/tasks/update
+Authorization: Bearer 85b727b1e7454656b309a58489cc7ced
+Content-Type: application/json
+
+{
+  "id": 1879463351104028672,
+  "taskTitle": "iPhone16 Pro上架审核"
+}
+
+### 系统-用户-用户信息
+GET http://localhost:30001/getUserInfo
+Authorization: Bearer 495439275a774675a24478f1643879eb
+
+
+###
+@taskCode = SCM:PURCHASE
+GET http://localhost:30004/sys/task/start/{{taskCode}}
+
+<> 2025-01-21T230502.200.json
+<> 2025-01-21T230333.200.json
+
+
+###
+GET http://localhost:30004/sys/task/end/{{taskCode}}
+
+### 产品管理-商品信息查询
+POST http://localhost:30001/pms/product/info
+Content-Type: application/json
+
+{
+  "queryInfo": "",
+  "lastProductId": 0
+}
+
+<> 2025-01-23T153916.200.json
+<> 2025-01-23T152029.200.json
+<> 2025-01-23T151944.200.json
+<> 2025-01-23T151718.200.json
+
+### 商城-添加购物车
+POST http://localhost:30001/pms/cart/add
+Content-Type: application/json
+
+{
+  "productId": 0,
+  "quantity": 0,
+  "userId": 0
+}
+
+### 商城-购物车查询
+POST http://localhost:30001/pms/cart/page
+Content-Type: application/json
+Authorization: Bearer 4bd54ef3ed80473e8c62ae65bfcc6ee1
+
+{
+  "filter": {
+  }
+}
+
+<> 2025-01-24T141749.200.json
+
+### 新增订单
+POST http://localhost:30001/oms/order/add
+Authorization: Bearer da81e40a573b477a95adcd3822bdceb0
+Content-Type: application/json
+
+{
+  "orderType": 0,
+  "receiverName": "收货人张三",
+  "receiverPhone": "15316666668",
+  "receiverProvince": "440000000000",
+  "receiverCity": "440100000000",
+  "receiverRegion": "440106000000",
+  "receiverAddress": "广州天河区一号",
+  "products": [{
+    "productId": 1802252777921855488,
+    "productQuantity": 1,
+    "discountAmount": 0,
+    "realAmount": 6500.50
+  }],
+  "note": "买华为手机"
+}
+
+<> 2025-02-06T110242.200.json
+<> 2025-02-06T105929.200.json
+<> 2025-02-06T100952.200.json
+
+
+### 根据购物车生成订单
+POST http://localhost:30001/oms/order/generate
+Authorization: Bearer da81e40a573b477a95adcd3822bdceb0
+Content-Type: application/json
+
+{
+  "orderType": 0,
+  "receiverName": "收货人李四",
+  "receiverPhone": "15316666668",
+  "receiverProvince": "440000000000",
+  "receiverCity": "440100000000",
+  "receiverRegion": "440106000000",
+  "receiverAddress": "广州市天河区一号",
+  "products": [
+    1887312650819072000,
+    1882700691779846144
+  ],
+  "note": "从购物车选择两个商品下单"
+}
+
+<> 2025-02-06T103620.200.json
+
+### 用户分页查询订单信息
+POST http://localhost:30001/oms/order/page
+Authorization: Bearer a238e8a7b8f542af8b5a667d24d376c3
+Content-Type: application/json
+
+{
+  "filter": {}
+}

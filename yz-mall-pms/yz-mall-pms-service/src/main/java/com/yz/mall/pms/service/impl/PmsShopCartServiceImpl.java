@@ -100,8 +100,8 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
                 // 商品无货
                 cart.setProductStatus(ProductStatusEnum.SELL_OUT.get());
             }
-            cart.setProductName(productInfo.getName());
-            cart.setPrice(productInfo.getPrice());
+            cart.setProductName(productInfo.getProductName());
+            cart.setPrice(productInfo.getProductPrice());
             cart.setRemark(productInfo.getRemark());
             cart.setAlbumPics(productInfo.getAlbumPics());
 
@@ -127,7 +127,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         carts.forEach(item -> {
             item.setDiscountAmount(BigDecimal.ZERO);
             PmsProductDisplayInfoVo vo = productDisplayInfoMap.get(item.getProductId());
-            item.setRealAmount(vo.getPrice().subtract(item.getDiscountAmount()));
+            item.setRealAmount(vo.getProductPrice().subtract(item.getDiscountAmount()));
         });
         return carts;
     }

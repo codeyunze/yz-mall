@@ -3,7 +3,7 @@
 <mapper namespace="com.yz.mall.pms.mapper.PmsProductMapper">
 
     <select id="selectProductDisplayInfoList" resultType="com.yz.mall.pms.vo.PmsProductDisplayInfoVo">
-        select pp.id, pp.name, pp.price, pp.titles, pp.remark, pp.album_pics
+        select pp.id, pp.product_name, pp.product_price, pp.titles, pp.remark, pp.album_pics
         from pms_product pp
         where pp.invalid = 0 and pp.publish_status = 1 and pp.verify_status = 1
         <if test="filter.lastProductId != null and filter.lastProductId != ''">and pp.id &lt; #{filter.lastProductId}</if>
