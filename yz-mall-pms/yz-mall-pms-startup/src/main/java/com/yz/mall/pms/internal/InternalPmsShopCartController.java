@@ -2,6 +2,7 @@ package com.yz.mall.pms.internal;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.pms.dto.InternalPmsCartDto;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.Result;
@@ -48,6 +49,18 @@ public class InternalPmsShopCartController extends ApiController {
     @DeleteMapping("removeCartByIds")
     public Result<Boolean> removeCartByIds(@RequestBody List<Long> cartIds) {
         boolean removed = internalPmsShopCartService.removeCartByIds(StpUtil.getLoginIdAsLong(), cartIds);
+        return removed ? success(true) : new Result<>(CodeEnum.BUSINESS_ERROR.get(), null, "购物车商品移除失败");
+    }
+
+    /**
+     * 根据指定商品信息，扣除用户购物车信息
+     *
+     * @param products 指定的商品Id和数量
+     * @return 是否操作成功 true: 成功，false：失败
+     */
+    @DeleteMapping("removeCartByProductIds")
+    public Result<Boolean> removeCartByProductIds(@RequestBody List<InternalPmsStockDto> products) {
+        boolean removed = internalPmsShopCartService.removeCartByProductIds(StpUtil.getLoginIdAsLong(), products);
         return removed ? success(true) : new Result<>(CodeEnum.BUSINESS_ERROR.get(), null, "购物车商品移除失败");
     }
 

@@ -5,7 +5,8 @@
 
     <select id="selectOrderProductByOrderIds" resultType="com.yz.mall.oms.vo.OmsOrderProductVo">
         select oorp.id, oorp.order_id, oorp.product_id, oorp.product_quantity, oorp.discount_amount
-             , oorp.real_amount, oorp.product_attributes, oorp.name, oorp.price, oorp.remark
+             , oorp.real_amount, oorp.product_attributes, oorp.product_name, oorp.product_price
+             , oorp.remark
         from oms_order_relation_product oorp
         where invalid = 0
         and oorp.order_id in

@@ -2,11 +2,14 @@ package com.yz.mall.web.exception;
 
 import com.yz.mall.web.common.Result;
 import com.yz.mall.web.enums.CodeEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.net.UnknownHostException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Objects;
 
@@ -19,6 +22,8 @@ import java.util.Objects;
 @Order(0)
 @RestControllerAdvice
 public class OverallExceptionHandle {
+
+    private static final Logger log = LoggerFactory.getLogger(OverallExceptionHandle.class);
 
     /**
      * 业务异常问题处理
@@ -71,5 +76,14 @@ public class OverallExceptionHandle {
     @ExceptionHandler(AuthenticationException.class)
     Result<?> authenticationExceptionHandle(AuthenticationException e) {
         return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, e.getMessage());
+    }
+
+    /**
+     * 服务掉线问题处理
+     */
+    @ExceptionHandler(UnknownHostException.class)
+    Result<?> authenticationExceptionHandle(UnknownHostException e) {
+        log.error(e.getMessage(), e);
+        return new Result<>(CodeEnum.SYSTEM_ERROR.get(), null, "服务异常，请稍后再试");
     }
 }

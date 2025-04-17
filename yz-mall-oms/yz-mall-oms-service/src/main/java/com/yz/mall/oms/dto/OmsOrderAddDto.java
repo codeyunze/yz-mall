@@ -24,23 +24,23 @@ public class OmsOrderAddDto implements Serializable {
      * 创建人
      */
     @NotNull(message = "创建人不能为空")
-    private Long createdId;
+    private Long createId;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
     @NotNull(message = "更新人不能为空")
-    private Long updatedId;
+    private Long updateId;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     /**
      * 用户Id

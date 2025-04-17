@@ -12,9 +12,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 // @MapperScan(value = {"com.yz.cases.mall.mapper"})
 // @EnableAspectJAutoProxy(exposeProxy = true)
 @EnableScheduling
-public class YzPmsApplication {
+public class YzMallPmsApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(YzPmsApplication.class, args);
+        SpringApplication.run(YzMallPmsApplication.class, args);
     }
 }

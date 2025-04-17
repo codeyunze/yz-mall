@@ -78,6 +78,14 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     @Override
     public Boolean deduct(InternalPmsStockDto deductStock) {
         // TODO: 2024/6/16 星期日 yunze 加锁
+        LambdaQueryWrapper<PmsStock> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PmsStock::getProductId, deductStock.getProductId());
+        queryWrapper.ge(PmsStock::getQuantity, deductStock.getQuantity());
+        PmsStock stock = baseMapper.selectOne(queryWrapper);
+        if (stock == null) {
+            throw new BusinessException("商品库存不足");
+        }
+
         boolean deducted = baseMapper.deduct(deductStock.getProductId(), deductStock.getQuantity());
         if (!deducted) {
             return false;
@@ -141,7 +149,7 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
         return baseMapper.selectList(queryWrapper);
     }
 
-    // TODO: 2024/6/16 星期日 yunze 加事务
+    @Transactional
     @Override
     public Boolean add(InternalPmsStockDto addStock) {
         // TODO: 2024/6/16 星期日 yunze 加锁

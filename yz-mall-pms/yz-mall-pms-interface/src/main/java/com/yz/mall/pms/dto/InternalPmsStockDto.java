@@ -21,7 +21,7 @@ public class InternalPmsStockDto implements Serializable {
     /**
      * 订单Id
      */
-    @NotNull(message = "订单Id不能为空")
+    // @NotNull(message = "订单Id不能为空")
     private Long orderId;
 
     /**

@@ -1,8 +1,8 @@
-package com.yz.mall.pms.vo;
+package com.yz.mall.pms.dto;
 
-import com.yz.mall.pms.entity.PmsProduct;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -12,7 +12,9 @@ import java.math.BigDecimal;
  * @since 2024-12-20 13:08:05
  */
 @Data
-public class PmsProductSlimVo {
+public class InternalPmsProductSlimVo implements Serializable {
+
+    private static final long serialVersionUID = 43L;
 
     /**
      * 主键标识
@@ -39,14 +41,5 @@ public class PmsProductSlimVo {
      */
     private String albumPics;
 
-    public PmsProductSlimVo(PmsProduct bo) {
-        this.id = bo.getId();
-        this.productName = bo.getProductName();
-        this.productPrice = bo.getProductPrice();
-        this.titles = bo.getTitles();
-        this.albumPics = bo.getAlbumPics();
-    }
-
-    public PmsProductSlimVo() {}
 }
 

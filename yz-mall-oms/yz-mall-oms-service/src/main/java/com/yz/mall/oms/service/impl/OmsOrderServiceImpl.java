@@ -7,10 +7,7 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
-import com.yz.mall.oms.dto.InternalOmsOrderDto;
-import com.yz.mall.oms.dto.InternalOmsOrderProductDto;
-import com.yz.mall.oms.dto.OmsOrderQueryDto;
+import com.yz.mall.oms.dto.*;
 import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import com.yz.mall.oms.enums.OmsOrderStatusEnum;
@@ -18,19 +15,23 @@ import com.yz.mall.oms.enums.OmsPayTypeEnum;
 import com.yz.mall.oms.mapper.OmsOrderMapper;
 import com.yz.mall.oms.service.OmsOrderRelationProductService;
 import com.yz.mall.oms.service.OmsOrderService;
+import com.yz.mall.oms.vo.OmsOrderDetailVo;
 import com.yz.mall.oms.vo.OmsOrderProductVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
-import com.yz.mall.pms.dto.InternalPmsCartDto;
+import com.yz.mall.pms.dto.InternalPmsProductSlimVo;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.service.InternalPmsProductService;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.pms.service.InternalPmsStockService;
 import com.yz.mall.web.common.PageFilter;
+import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.web.exception.DataNotExistException;
 import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,14 +57,18 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final InternalPmsShopCartService internalPmsShopCartService;
 
+    private final InternalPmsProductService internalPmsProductService;
+
     public OmsOrderServiceImpl(InternalUnqidService internalUnqidService
             , OmsOrderRelationProductService omsOrderRelationProductService
             , InternalPmsStockService internalPmsStockService
-            , InternalPmsShopCartService internalPmsShopCartService) {
+            , InternalPmsShopCartService internalPmsShopCartService
+            , InternalPmsProductService internalPmsProductService) {
         this.internalUnqidService = internalUnqidService;
         this.omsOrderRelationProductService = omsOrderRelationProductService;
         this.internalPmsStockService = internalPmsStockService;
         this.internalPmsShopCartService = internalPmsShopCartService;
+        this.internalPmsProductService = internalPmsProductService;
     }
 
     @Transactional
@@ -72,7 +77,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         OmsOrder bo = new OmsOrder();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
-        bo.setCreatedId(dto.getUserId());
+        bo.setCreateId(dto.getUserId());
 
         // 省市区年月日000001
         String prefix = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
@@ -83,31 +88,35 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         bo.setPayType(OmsPayTypeEnum.PENDING_PAY.getType());
 
         // 去查询购物车里的商品信息（商品Id、商品数量、商品优惠金额、商品优惠后的实际价格）
-        Map<Long, InternalPmsCartDto> cartProductMap = internalPmsShopCartService.getCartByIds(bo.getUserId(), dto.getProducts());
+        // Map<Long, InternalPmsCartDto> cartProductMap = internalPmsShopCartService.getCartByIds(bo.getUserId(), dto.getProducts());
 
         // TODO 2025/1/31 yunze 暂时先直接扣除商品库存，应该是锁定商品库存的，等支付订单之后再扣减库存
         // 扣减库存信息
         List<InternalPmsStockDto> deductStocks = new ArrayList<>();
 
         // 订单商品信息入库
+        List<Long> productIds = dto.getProducts().stream().map(InternalOmsOrderProductDto::getProductId).collect(Collectors.toList());
+        List<InternalPmsProductSlimVo> productsInfo = internalPmsProductService.getProductByProductIds(productIds);
+        Map<Long, InternalPmsProductSlimVo> productMap = productsInfo.stream().collect(Collectors.toMap(InternalPmsProductSlimVo::getId, t -> t));
+
         List<OmsOrderRelationProduct> products = new ArrayList<>();
-        for (Long cartId : dto.getProducts()) {
+        dto.getProducts().forEach(product -> {
             // 购物车里商品信息
-            InternalPmsCartDto product = cartProductMap.get(cartId);
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(product, relationProduct);
-            relationProduct.setProductQuantity(product.getQuantity());
+            relationProduct.setProductQuantity(product.getProductQuantity());
             relationProduct.setOrderId(bo.getId());
-
+            relationProduct.setProductName(productMap.get(product.getProductId()).getProductName());
+            relationProduct.setProductPrice(productMap.get(product.getProductId()).getProductPrice());
             products.add(relationProduct);
 
             InternalPmsStockDto stock = new InternalPmsStockDto();
             stock.setProductId(product.getProductId());
-            stock.setQuantity(product.getQuantity());
+            stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());
             deductStocks.add(stock);
-        }
+        });
 
         // 扣除商品库存
         internalPmsStockService.deductBatch(deductStocks);
@@ -116,7 +125,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         // 订单详情信息入库
         omsOrderRelationProductService.saveBatch(products);
         // 清理购物车中下单的商品
-        internalPmsShopCartService.removeCartByIds(bo.getUserId(), dto.getProducts());
+        internalPmsShopCartService.removeCartByProductIds(bo.getUserId(), deductStocks);
         return bo.getId();
     }
 
@@ -126,7 +135,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         OmsOrder bo = new OmsOrder();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
-        bo.setCreatedId(dto.getUserId());
+        bo.setCreateId(dto.getUserId());
 
         // 省市区年月日000001
         String prefix = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
@@ -169,7 +178,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     public Page<OmsOrderVo> page(PageFilter<OmsOrderQueryDto> filter) {
         // 查询订单信息
         Page<OmsOrderVo> page = baseMapper.selectPageByFilter(new Page<>(filter.getCurrent(), filter.getSize()), filter.getFilter());
-        if (page.getTotal() == 0) {
+        /*if (page.getTotal() == 0) {
             return page;
         }
 
@@ -183,9 +192,28 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
                 List<OmsOrderProductVo> productVos = orderProductByOrderIdsMap.get(item.getId());
                 item.setProducts(productVos);
             }
-        });
+        });*/
 
         return page;
+    }
+
+    @Override
+    public OmsOrderDetailVo get(Long userId, OmsOrderQuerySlimDto query) {
+        LambdaQueryWrapper<OmsOrder> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OmsOrder::getUserId, userId);
+        queryWrapper.eq(StringUtils.hasText(query.getOrderId()), OmsOrder::getId, query.getOrderId());
+        queryWrapper.eq(StringUtils.hasText(query.getOrderCode()), OmsOrder::getOrderCode, query.getOrderCode());
+        OmsOrder omsOrder = baseMapper.selectOne(queryWrapper);
+        if (omsOrder == null) {
+            throw new DataNotExistException("订单信息不存在");
+        }
+        OmsOrderDetailVo detailVo = new OmsOrderDetailVo();
+        BeanUtils.copyProperties(omsOrder, detailVo);
+
+        // 查询订单商品信息
+        List<OmsOrderProductVo> products = omsOrderRelationProductService.getOrderProductsByOrderId(omsOrder.getId());
+        detailVo.setProducts(products);
+        return detailVo;
     }
 
     @Override
@@ -199,8 +227,8 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             throw new DataNotExistException("订单信息不存在，无法操作取消订单");
         }
         order.setOrderStatus(OmsOrderStatusEnum.ORDER_CLOSED.getStatus());
-        order.setUpdatedId(userId);
-        order.setUpdatedTime(LocalDateTime.now());
+        order.setUpdateId(userId);
+        order.setUpdateTime(LocalDateTime.now());
         return baseMapper.updateById(order) > 0;
     }
 

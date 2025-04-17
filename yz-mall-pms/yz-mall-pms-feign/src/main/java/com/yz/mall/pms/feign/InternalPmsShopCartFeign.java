@@ -1,6 +1,7 @@
 package com.yz.mall.pms.feign;
 
 import com.yz.mall.pms.dto.InternalPmsCartDto;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.web.common.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
@@ -38,4 +39,13 @@ public interface InternalPmsShopCartFeign {
      */
     @DeleteMapping("removeCartByIds")
     Result<Boolean> removeCartByIds(@RequestBody List<Long> cartIds);
+
+    /**
+     * 根据指定商品信息，扣除用户购物车信息
+     *
+     * @param products 指定的商品Id和数量
+     * @return 是否操作成功 true: 成功，false：失败
+     */
+    @DeleteMapping("removeCartByProductIds")
+    Result<Boolean> removeCartByProductIds(@RequestBody List<InternalPmsStockDto> products);
 }

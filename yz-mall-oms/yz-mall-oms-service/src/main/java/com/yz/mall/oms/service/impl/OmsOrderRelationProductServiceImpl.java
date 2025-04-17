@@ -8,6 +8,7 @@ import com.yz.mall.oms.vo.OmsOrderProductVo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,12 +23,17 @@ import java.util.stream.Collectors;
 public class OmsOrderRelationProductServiceImpl extends ServiceImpl<OmsOrderRelationProductMapper, OmsOrderRelationProduct> implements OmsOrderRelationProductService {
 
     @Override
-    public Map<Long, List<OmsOrderProductVo>> getOrderProductByOrderIds(List<Long> orderIds) {
+    public Map<Long, List<OmsOrderProductVo>> getOrderProductsByOrderIds(List<Long> orderIds) {
         List<OmsOrderProductVo> productVos = baseMapper.selectOrderProductByOrderIds(orderIds);
         if (CollectionUtils.isEmpty(productVos)) {
             return null;
         }
         return productVos.stream().collect(Collectors.groupingBy(OmsOrderProductVo::getOrderId));
+    }
+
+    @Override
+    public List<OmsOrderProductVo> getOrderProductsByOrderId(Long orderId) {
+        return baseMapper.selectOrderProductByOrderIds(Collections.singletonList(orderId));
     }
 }
 
