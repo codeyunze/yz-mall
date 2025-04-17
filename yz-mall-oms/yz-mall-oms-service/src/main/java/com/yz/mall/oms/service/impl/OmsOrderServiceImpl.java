@@ -232,5 +232,25 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         return baseMapper.updateById(order) > 0;
     }
 
+    @Override
+    public boolean payOrderById(Long id, Integer payType) {
+        long userId = StpUtil.getLoginIdAsLong();
+        LambdaQueryWrapper<OmsOrder> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OmsOrder::getId, id);
+        queryWrapper.eq(OmsOrder::getUserId, userId);
+        OmsOrder order = baseMapper.selectOne(queryWrapper);
+        if (order == null) {
+            throw new DataNotExistException("订单信息不存在，无法支付订单");
+        }
+        if (0 != order.getPayType()) {
+            throw new BusinessException("订单" + order.getOrderCode() +"已支付，无需重复支付");
+        }
+        order.setPayType(payType);
+        order.setOrderStatus(OmsOrderStatusEnum.PENDING_SHIPMENT.getStatus());
+        order.setUpdateId(userId);
+        order.setUpdateTime(LocalDateTime.now());
+        return baseMapper.updateById(order) > 0;
+    }
+
 }
 

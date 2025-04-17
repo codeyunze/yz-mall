@@ -1,6 +1,5 @@
 package com.yz.mall.oms.service;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
@@ -11,9 +10,6 @@ import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.vo.OmsOrderDetailVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.web.common.PageFilter;
-import com.yz.mall.web.common.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 订单信息表(OmsOrder)表服务接口
@@ -49,6 +45,7 @@ public interface OmsOrderService extends IService<OmsOrder> {
 
     /**
      * 订单详细信息查询
+     *
      * @return 订单详细信息
      */
     OmsOrderDetailVo get(Long userId, OmsOrderQuerySlimDto query);
@@ -56,9 +53,18 @@ public interface OmsOrderService extends IService<OmsOrder> {
     /**
      * 取消订单
      *
-     * @param id     订单Id {@link OmsOrder#getId()}
+     * @param id 订单Id {@link OmsOrder#getId()}
      * @return true: 操作成功   false: 操作失败
      */
     boolean cancelById(Long id);
+
+    /**
+     * 更新订单支付状态
+     *
+     * @param id      订单Id {@link OmsOrder#getId()}
+     * @param payType 支付方式：1支付宝；2微信
+     * @return true: 更新成功   false: 更新失败
+     */
+    boolean payOrderById(Long id, Integer payType);
 }
 
