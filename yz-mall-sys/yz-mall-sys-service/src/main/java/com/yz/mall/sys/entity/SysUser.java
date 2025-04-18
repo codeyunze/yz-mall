@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * 基础-用户(BaseUser)表实体类
+ * 系统-用户(SysUser)表实体类
  *
  * @author yunze
  * @since 2024-06-16 23:25:55

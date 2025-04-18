@@ -52,6 +52,12 @@
             <artifactId>yz-mall-pms-feign</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>yz-mall-sys-feign</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

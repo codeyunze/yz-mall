@@ -23,6 +23,7 @@ import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsProductService;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.web.exception.DataNotExistException;
@@ -30,9 +31,9 @@ import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,16 +60,20 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final InternalPmsProductService internalPmsProductService;
 
+    private final InternalSysUserService internalSysUserService;
+
     public OmsOrderServiceImpl(InternalUnqidService internalUnqidService
             , OmsOrderRelationProductService omsOrderRelationProductService
             , InternalPmsStockService internalPmsStockService
             , InternalPmsShopCartService internalPmsShopCartService
-            , InternalPmsProductService internalPmsProductService) {
+            , InternalPmsProductService internalPmsProductService
+            , InternalSysUserService internalSysUserService) {
         this.internalUnqidService = internalUnqidService;
         this.omsOrderRelationProductService = omsOrderRelationProductService;
         this.internalPmsStockService = internalPmsStockService;
         this.internalPmsShopCartService = internalPmsShopCartService;
         this.internalPmsProductService = internalPmsProductService;
+        this.internalSysUserService = internalSysUserService;
     }
 
     @Transactional
@@ -100,7 +105,11 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         Map<Long, InternalPmsProductSlimVo> productMap = productsInfo.stream().collect(Collectors.toMap(InternalPmsProductSlimVo::getId, t -> t));
 
         List<OmsOrderRelationProduct> products = new ArrayList<>();
-        dto.getProducts().forEach(product -> {
+
+        // 订单总金额
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (InternalOmsOrderProductDto product : dto.getProducts()) {
             // 购物车里商品信息
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(product, relationProduct);
@@ -116,7 +125,12 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());
             deductStocks.add(stock);
-        });
+
+            totalAmount = totalAmount.add(relationProduct.getProductPrice().multiply(BigDecimal.valueOf(product.getProductQuantity())));
+        }
+
+        bo.setTotalAmount(totalAmount);
+        bo.setPayAmount(totalAmount);
 
         // 扣除商品库存
         internalPmsStockService.deductBatch(deductStocks);
@@ -232,6 +246,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         return baseMapper.updateById(order) > 0;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean payOrderById(Long id, Integer payType) {
         long userId = StpUtil.getLoginIdAsLong();
@@ -243,12 +258,17 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             throw new DataNotExistException("订单信息不存在，无法支付订单");
         }
         if (0 != order.getPayType()) {
-            throw new BusinessException("订单" + order.getOrderCode() +"已支付，无需重复支付");
+            throw new BusinessException("订单" + order.getOrderCode() + "已支付，无需重复支付");
         }
+
+        // 修改订单状态
         order.setPayType(payType);
         order.setOrderStatus(OmsOrderStatusEnum.PENDING_SHIPMENT.getStatus());
         order.setUpdateId(userId);
         order.setUpdateTime(LocalDateTime.now());
+
+        // 扣减用户余额
+        internalSysUserService.deduct(userId, order.getPayAmount());
         return baseMapper.updateById(order) > 0;
     }
 

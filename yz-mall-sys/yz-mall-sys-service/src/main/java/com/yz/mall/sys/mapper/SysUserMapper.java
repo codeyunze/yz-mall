@@ -28,7 +28,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @param account 登录账号（手机号|邮箱）
      * @return 用户信息
      */
-    @Select("select id, phone, email, password, balance from base_user where phone = #{account} or email = #{account}")
+    @Select("select id, phone, email, password, balance from sys_user where phone = #{account} or email = #{account}")
     BaseUserVo get(@Param("account") String account);
 
     /**
@@ -37,8 +37,8 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @param userId 扣减用户
      * @param amount 扣减金额
      */
-    @Update("update base_user set balance = balance - #{amount} where invalid = 0 and id = #{userId} and balance >= #{amount}")
-    Integer deduct(@Param("userId") String userId, @Param("amount") BigDecimal amount);
+    @Update("update sys_user set balance = balance - #{amount} where invalid = 0 and id = #{userId} and balance >= #{amount}")
+    Integer deduct(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
 
     /**
      * 账户充值
@@ -46,8 +46,8 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @param userId 充值用户
      * @param amount 充值金额
      */
-    @Update("update base_user set balance = balance + #{amount} where invalid = 0 and id = #{userId}")
-    Integer recharge(@Param("userId") String userId, @Param("amount") BigDecimal amount);
+    @Update("update sys_user set balance = balance + #{amount} where invalid = 0 and id = #{userId}")
+    Integer recharge(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
 
     /**
      * 分页查询

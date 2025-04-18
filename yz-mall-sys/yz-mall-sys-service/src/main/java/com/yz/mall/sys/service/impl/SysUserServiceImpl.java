@@ -23,6 +23,7 @@ import com.yz.mall.web.common.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -117,8 +118,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return baseMapper.get(account);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deduct(String userId, BigDecimal amount) {
+    public void deduct(Long userId, BigDecimal amount) {
         // TODO: 2024/6/27 星期四 yunze 加锁
         SysUser user = baseMapper.selectById(userId);
         if (user.getBalance().compareTo(amount) < 0) {
@@ -132,7 +134,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public void recharge(String userId, BigDecimal amount) {
+    public void recharge(Long userId, BigDecimal amount) {
         Integer recharged = baseMapper.recharge(userId, amount);
         if (recharged == 0) {
             throw new BusinessException("账户充值失败");

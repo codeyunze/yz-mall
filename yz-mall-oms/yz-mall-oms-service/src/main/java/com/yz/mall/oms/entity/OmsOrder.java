@@ -4,10 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import cn.hutool.core.date.DatePattern;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -18,6 +21,7 @@ import java.io.Serializable;
  * @author yunze
  * @since 2025-01-30 19:12:58
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class OmsOrder extends Model<OmsOrder> {
 
@@ -118,6 +122,7 @@ public class OmsOrder extends Model<OmsOrder> {
     /**
      * 订单备注
      */
+    @TableField(updateStrategy = FieldStrategy.NOT_EMPTY)
     private String note;
 
     /**
@@ -153,6 +158,7 @@ public class OmsOrder extends Model<OmsOrder> {
     /**
      * 订单消息接收邮箱
      */
+    @TableField(updateStrategy = FieldStrategy.NOT_EMPTY)
     private String email;
 
     /**

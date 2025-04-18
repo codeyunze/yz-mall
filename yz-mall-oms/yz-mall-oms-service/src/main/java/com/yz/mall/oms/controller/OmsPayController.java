@@ -14,6 +14,7 @@ import javax.validation.Valid;
 
 /**
  * 支付接口
+ *
  * @author yunze
  * @since 2025/4/17 19:30
  */
@@ -29,14 +30,16 @@ public class OmsPayController {
 
     /**
      * 支付
+     *
      * @param dto 支付参数
      * @return 支付回执
      */
     @SaCheckLogin
     @PostMapping("pay")
     public Result<Long> pay(@RequestBody @Valid OmsPayDto dto) {
-        orderService.payOrderById(dto.getBusinessId(), dto.getPayType());
-        return Result.success(IdUtil.getSnowflakeNextId());
+        boolean flag = orderService.payOrderById(dto.getBusinessId(), dto.getPayType());
+        long receiptId = IdUtil.getSnowflakeNextId();
+        return flag ? Result.success(receiptId) : Result.error(receiptId, "支付失败");
     }
 
 }

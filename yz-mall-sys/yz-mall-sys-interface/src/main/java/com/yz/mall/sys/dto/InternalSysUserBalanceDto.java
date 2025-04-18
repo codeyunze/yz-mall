@@ -22,7 +22,7 @@ public class InternalSysUserBalanceDto implements Serializable {
      * 用户主键标识
      */
     @NotNull(message = "用户标识不能为空")
-    private String userId;
+    private Long userId;
 
     @NotNull(message = "金额不能为空")
     private BigDecimal amount;
@@ -30,7 +30,7 @@ public class InternalSysUserBalanceDto implements Serializable {
     public InternalSysUserBalanceDto() {
     }
 
-    public InternalSysUserBalanceDto(String userId, BigDecimal amount) {
+    public InternalSysUserBalanceDto(Long userId, BigDecimal amount) {
         this.userId = userId;
         this.amount = amount;
     }
