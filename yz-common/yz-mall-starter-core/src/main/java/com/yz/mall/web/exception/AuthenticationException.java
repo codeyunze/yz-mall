@@ -9,7 +9,9 @@ public class AuthenticationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public AuthenticationException() {}
+    public AuthenticationException() {
+        super("无访问业务权限");
+    }
 
     public AuthenticationException(String message) {
         super(message);

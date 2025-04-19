@@ -37,7 +37,7 @@ public class SysApplicationVo extends Model<SysApplicationVo> {
     /**
      * 更新时间
      */
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     /**
      * 应用id

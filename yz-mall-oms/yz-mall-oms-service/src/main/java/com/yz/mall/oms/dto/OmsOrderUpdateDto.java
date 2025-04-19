@@ -28,22 +28,22 @@ public class OmsOrderUpdateDto implements Serializable {
     /**
      * 创建人
      */
-    private Long createdId;
+    private Long createId;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
-    private Long updatedId;
+    private Long updateId;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     /**
      * 用户Id
@@ -128,7 +128,7 @@ public class OmsOrderUpdateDto implements Serializable {
     /**
      * 收货区
      */
-    private String receiverRegion;
+    private String receiverDistrict;
 
     /**
      * 收货详细地址

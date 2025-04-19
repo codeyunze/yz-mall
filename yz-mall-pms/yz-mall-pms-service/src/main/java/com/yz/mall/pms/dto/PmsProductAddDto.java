@@ -22,13 +22,13 @@ public class PmsProductAddDto implements Serializable {
      * 商品名称
      */
     @NotBlank(message = "商品名称不能为空")
-    private String name;
+    private String productName;
 
     /**
      * 商品价格
      */
     @NotNull(message = "商品价格不能为空")
-    private BigDecimal price;
+    private BigDecimal productPrice;
 
     /**
      * 商品标签

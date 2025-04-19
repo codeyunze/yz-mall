@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  * @author yunze
  * @since 2024-08-11 20:10:14
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class SysApplication extends Model<SysApplication> {
 
@@ -46,7 +48,7 @@ public class SysApplication extends Model<SysApplication> {
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     /**
      * 数据是否有效：0数据有效

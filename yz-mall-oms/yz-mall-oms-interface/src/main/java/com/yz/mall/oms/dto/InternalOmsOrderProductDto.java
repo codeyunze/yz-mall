@@ -28,14 +28,4 @@ public class InternalOmsOrderProductDto implements Serializable {
     @NotNull(message = "商品数量不能为空")
     @Min(value = 1, message = "商品数量不能小于1")
     private Integer productQuantity;
-
-    /**
-     * 商品优惠金额
-     */
-    private BigDecimal discountAmount;
-
-    /**
-     * 商品优惠后的实际价格
-     */
-    private BigDecimal realAmount;
 }

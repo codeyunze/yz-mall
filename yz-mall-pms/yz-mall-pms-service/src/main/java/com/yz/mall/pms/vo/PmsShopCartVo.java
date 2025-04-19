@@ -56,5 +56,10 @@ public class PmsShopCartVo implements Serializable {
      * 商品状态 {@link com.yz.mall.pms.enums.ProductStatusEnum}
      */
     private Integer productStatus;
+
+    /**
+     * 图片预览地址
+     */
+    private String previewAddress;
 }
 

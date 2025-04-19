@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.dto.PmsShopCartAddDto;
 import com.yz.mall.pms.dto.PmsShopCartQueryDto;
 import com.yz.mall.pms.dto.PmsShopCartUpdateDto;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,6 +82,36 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         return baseMapper.delete(updateWrapper) > 0;
     }
 
+    @Transactional
+    @Override
+    public boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products) {
+        Map<Long, InternalPmsStockDto> productMap = products.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, item -> item));
+
+        LambdaQueryWrapper<PmsShopCart> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PmsShopCart::getUserId, userId);
+        queryWrapper.in(PmsShopCart::getProductId, productMap.keySet());
+        List<PmsShopCart> carts = baseMapper.selectList(queryWrapper);
+
+        List<Long> delCartIds = new ArrayList<>();
+        List<PmsShopCart> updateCarts = new ArrayList<>();
+        for (PmsShopCart cart : carts) {
+            // 需要扣除的数量比购物车多，就直接删除
+            if (productMap.get(cart.getProductId()).getQuantity() >= cart.getQuantity()) {
+                delCartIds.add(cart.getId());
+            } else {
+                cart.setQuantity(cart.getQuantity() - productMap.get(cart.getProductId()).getQuantity());
+                updateCarts.add(cart);
+            }
+        }
+        if (!CollectionUtils.isEmpty(delCartIds)) {
+            super.removeByIds(delCartIds);
+        }
+        if (!CollectionUtils.isEmpty(updateCarts)) {
+            super.updateBatchById(updateCarts);
+        }
+        return true;
+    }
+
     @DS("slave")
     @Override
     public Page<PmsShopCartVo> page(PageFilter<PmsShopCartQueryDto> filter) {
@@ -100,10 +132,14 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
                 // 商品无货
                 cart.setProductStatus(ProductStatusEnum.SELL_OUT.get());
             }
-            cart.setProductName(productInfo.getName());
-            cart.setPrice(productInfo.getPrice());
+            cart.setProductName(productInfo.getProductName());
+            cart.setPrice(productInfo.getProductPrice());
             cart.setRemark(productInfo.getRemark());
             cart.setAlbumPics(productInfo.getAlbumPics());
+
+            if (!CollectionUtils.isEmpty(productInfo.getProductImages())) {
+                cart.setPreviewAddress(productInfo.getProductImages().get(0));
+            }
         });
 
         return page;
@@ -123,7 +159,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         carts.forEach(item -> {
             item.setDiscountAmount(BigDecimal.ZERO);
             PmsProductDisplayInfoVo vo = productDisplayInfoMap.get(item.getProductId());
-            item.setRealAmount(vo.getPrice().subtract(item.getDiscountAmount()));
+            item.setRealAmount(vo.getProductPrice().subtract(item.getDiscountAmount()));
         });
         return carts;
     }

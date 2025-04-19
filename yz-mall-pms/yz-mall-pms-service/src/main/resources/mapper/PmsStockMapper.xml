@@ -3,7 +3,7 @@
 <mapper namespace="com.yz.mall.pms.mapper.PmsStockMapper">
 
     <select id="selectPageByFilter" resultType="com.yz.mall.pms.vo.PmsProductStockVo">
-        select pp.id as product_id, pp.name, pp.titles, pp.price, 0 as quantity
+        select pp.id as product_id, pp.product_name, pp.titles, pp.product_price, 0 as quantity
         from pms_product pp
         where pp.invalid = 0 and pp.publish_status = 1 and pp.verify_status = 1
         order by pp.id desc

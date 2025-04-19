@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
 import com.yz.mall.oms.dto.InternalOmsOrderDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
+import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
 import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.service.OmsOrderService;
+import com.yz.mall.oms.vo.OmsOrderDetailVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
@@ -67,6 +69,16 @@ public class OmsOrderController extends ApiController {
         filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());
         Page<OmsOrderVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
+    }
+
+    /**
+     * 订单详细信息查询
+     * @return 订单详细信息
+     */
+    @SaCheckPermission("api:oms:order:add")
+    @PostMapping("get")
+    public Result<OmsOrderDetailVo> get(@RequestBody OmsOrderQuerySlimDto query) {
+        return success(this.service.get(StpUtil.getLoginIdAsLong(), query));
     }
 
     /**

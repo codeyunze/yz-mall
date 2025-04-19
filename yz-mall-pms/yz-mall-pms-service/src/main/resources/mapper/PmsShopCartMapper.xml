@@ -5,6 +5,7 @@
     <select id="selectPageByFilter" resultType="com.yz.mall.pms.vo.PmsShopCartVo">
         <include refid="query" />
         and psc.user_id = #{filter.userId}
+        order by id desc
     </select>
 
     <select id="selectCartByIds" resultType="com.yz.mall.pms.vo.PmsShopCartSlimVo">

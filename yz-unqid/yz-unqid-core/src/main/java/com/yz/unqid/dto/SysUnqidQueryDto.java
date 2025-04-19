@@ -33,7 +33,6 @@ public class SysUnqidQueryDto implements Serializable {
      */
     private Integer serialNumber;
 
-
     public String getId() {
         return id;
     }
@@ -42,11 +41,11 @@ public class SysUnqidQueryDto implements Serializable {
         this.id = id;
     }
 
-    public LocalDateTime getcreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreatedTime(LocalDateTime createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 

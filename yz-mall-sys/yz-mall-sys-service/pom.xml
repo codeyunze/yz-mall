@@ -48,6 +48,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.yz</groupId>
             <artifactId>yz-mall-sys-interface</artifactId>
             <version>${project.parent.version}</version>

@@ -1,6 +1,7 @@
 package com.yz.mall.pms.service;
 
 import com.yz.mall.pms.dto.InternalPmsCartDto;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 
 import java.util.List;
 import java.util.Map;
@@ -30,4 +31,13 @@ public interface InternalPmsShopCartService {
      * @return 是否操作成功 true: 成功，false：失败
      */
     boolean removeCartByIds(Long userId, List<Long> cartIds);
+
+    /**
+     * 根据指定商品信息，扣除用户购物车信息
+     *
+     * @param userId   指定的用户Id
+     * @param products 指定的商品Id和数量
+     * @return 是否操作成功 true: 成功，false：失败
+     */
+    boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products);
 }

@@ -1,6 +1,7 @@
-package com.yz.mall.pms.service.impl;
+package com.yz.mall.pms.impl;
 
 import com.yz.mall.pms.dto.InternalPmsCartDto;
+import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.pms.service.PmsShopCartService;
 import com.yz.mall.pms.vo.PmsShopCartSlimVo;
@@ -43,5 +44,10 @@ public class InternalPmsShopCartServiceImpl implements InternalPmsShopCartServic
     @Override
     public boolean removeCartByIds(Long userId, List<Long> cartIds) {
         return pmsShopCartService.removeByIds(cartIds, userId);
+    }
+
+    @Override
+    public boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products) {
+        return pmsShopCartService.removeCartByProductIds(userId, products);
     }
 }

@@ -31,12 +31,12 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     }
 
     @Override
-    public void deduct(String userId, BigDecimal amount) {
+    public void deduct(Long userId, BigDecimal amount) {
         this.service.deduct(userId, amount);
     }
 
     @Override
-    public void recharge(String userId, BigDecimal amount) {
+    public void recharge(Long userId, BigDecimal amount) {
         this.service.recharge(userId, amount);
     }
 

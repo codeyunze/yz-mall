@@ -95,7 +95,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
             PmsStockInDetailVo vo = new PmsStockInDetailVo();
             BeanUtils.copyProperties(t, vo);
             PmsProductSlimVo productSlimVo = productMap.get(t.getProductId());
-            vo.setProductName(productSlimVo.getName());
+            vo.setProductName(productSlimVo.getProductName());
             vo.setTitles(productSlimVo.getTitles());
             vo.setAlbumPics(productSlimVo.getAlbumPics());
             array.add(vo);

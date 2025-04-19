@@ -3,7 +3,6 @@ package com.yz.mall.pms.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 商品表(PmsProduct)表查询过滤条件数据模型类
@@ -19,7 +18,7 @@ public class PmsProductQueryDto implements Serializable {
     /**
      * 商品名称
      */
-    private String name;
+    private String productName;
 
     /**
      * 商品标签

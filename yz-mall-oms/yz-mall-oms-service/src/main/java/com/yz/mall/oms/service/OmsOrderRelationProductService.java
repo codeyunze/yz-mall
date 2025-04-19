@@ -21,6 +21,14 @@ public interface OmsOrderRelationProductService extends IService<OmsOrderRelatio
      * @param orderIds 订单Id列表
      * @return 订单商品信息 Map<订单Id, 订单的商品信息>
      */
-    Map<Long, List<OmsOrderProductVo>> getOrderProductByOrderIds(List<Long> orderIds);
+    Map<Long, List<OmsOrderProductVo>> getOrderProductsByOrderIds(List<Long> orderIds);
+
+    /**
+     * 根据订单Id查询订单商品信息
+     *
+     * @param orderId 订单Id列表
+     * @return 订单关联的商品信息
+     */
+    List<OmsOrderProductVo> getOrderProductsByOrderId(Long orderId);
 }
 

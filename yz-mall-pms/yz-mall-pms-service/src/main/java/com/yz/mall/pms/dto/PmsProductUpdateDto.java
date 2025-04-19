@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -28,7 +27,7 @@ public class PmsProductUpdateDto implements Serializable {
     /**
      * 商品名称
      */
-    private String name;
+    private String productName;
 
     /**
      * 商品价格

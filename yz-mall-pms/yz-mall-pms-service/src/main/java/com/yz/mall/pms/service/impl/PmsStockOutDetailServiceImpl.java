@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.pms.dto.*;
-import com.yz.mall.pms.entity.PmsStockInDetail;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
 import com.yz.mall.pms.mapper.PmsStockOutDetailMapper;
 import com.yz.mall.pms.service.PmsProductExpandService;
@@ -110,7 +109,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
             PmsStockOutDetailVo vo = new PmsStockOutDetailVo();
             BeanUtils.copyProperties(t, vo);
             PmsProductSlimVo productSlimVo = productMap.get(t.getProductId());
-            vo.setProductName(productSlimVo.getName());
+            vo.setProductName(productSlimVo.getProductName());
             vo.setTitles(productSlimVo.getTitles());
             vo.setAlbumPics(productSlimVo.getAlbumPics());
             array.add(vo);

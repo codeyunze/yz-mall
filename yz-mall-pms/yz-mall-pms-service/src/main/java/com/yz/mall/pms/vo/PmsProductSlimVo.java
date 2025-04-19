@@ -3,6 +3,8 @@ package com.yz.mall.pms.vo;
 import com.yz.mall.pms.entity.PmsProduct;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 商品信息
  *
@@ -20,7 +22,12 @@ public class PmsProductSlimVo {
     /**
      * 商品名称
      */
-    private String name;
+    private String productName;
+
+    /**
+     * 商品价格
+     */
+    private BigDecimal productPrice;
 
     /**
      * 商品标签
@@ -34,7 +41,8 @@ public class PmsProductSlimVo {
 
     public PmsProductSlimVo(PmsProduct bo) {
         this.id = bo.getId();
-        this.name = bo.getName();
+        this.productName = bo.getProductName();
+        this.productPrice = bo.getProductPrice();
         this.titles = bo.getTitles();
         this.albumPics = bo.getAlbumPics();
     }

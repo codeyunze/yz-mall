@@ -31,7 +31,7 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     }
 
     @Override
-    public void deduct(String userId, BigDecimal amount) {
+    public void deduct(Long userId, BigDecimal amount) {
         Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
@@ -39,7 +39,7 @@ public class InternalSysUserServiceImpl implements InternalSysUserService {
     }
 
     @Override
-    public void recharge(String userId, BigDecimal amount) {
+    public void recharge(Long userId, BigDecimal amount) {
         Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());

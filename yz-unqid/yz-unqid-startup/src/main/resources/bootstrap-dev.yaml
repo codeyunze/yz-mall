@@ -12,4 +12,4 @@ spring:
       discovery:
         namespace: mall
       username: nacos
-      password: nacos
+      password: ${NACOS_PASSWORD}

@@ -9,8 +9,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -36,14 +34,14 @@ public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     /**
      * 数据是否有效：0数据有效
@@ -84,12 +82,12 @@ public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
     /**
      * 商品名称
      */
-    private String name;
+    private String productName;
 
     /**
      * 商品价格(下单时商品的价格)
      */
-    private BigDecimal price;
+    private BigDecimal productPrice;
 
     /**
      * 商品备注信息

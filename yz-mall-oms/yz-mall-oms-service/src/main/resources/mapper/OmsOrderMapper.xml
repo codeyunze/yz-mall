@@ -3,11 +3,10 @@
 <mapper namespace="com.yz.mall.oms.mapper.OmsOrderMapper">
 
     <select id="selectPageByFilter" resultType="com.yz.mall.oms.vo.OmsOrderVo">
-        select oo.id, oo.order_code, oo.order_status, oo.order_type, oo.delivery_time
-             , oo.confirm_status, oo.receive_time, oo.pay_type, oo.total_amount
-             , oo.discount_amount, oo.pay_amount, oo.note, oo.receiver_name, oo.receiver_phone
-             , oo.receiver_province, oo.receiver_city, oo.receiver_region, oo.receiver_address
-             , oo.email
+        select oo.id, oo.order_code, oo.order_status, oo.order_type
+             , oo.total_amount, oo.discount_amount, oo.pay_amount, oo.receiver_name, oo.receiver_phone
+             , oo.receiver_province, oo.receiver_city, oo.receiver_district, oo.receiver_address
+             , oo.email, oo.create_time
         from oms_order oo
         where invalid = 0
         <if test="filter.userId != null">and oo.user_id = #{filter.userId}</if>
@@ -19,7 +18,7 @@
         <if test="filter.receiverPhone != null">and oo.receiver_phone = #{filter.receiverPhone}</if>
         <if test="filter.receiverProvince != null and filter.receiverProvince != ''">and oo.receiver_province = #{filter.receiverProvince}</if>
         <if test="filter.receiverCity != null and filter.receiverCity != ''">and oo.receiver_city = #{filter.receiverCity}</if>
-        <if test="filter.receiverRegion != null and filter.receiverRegion != ''">and oo.receiver_region = #{filter.receiverRegion}</if>
+        <if test="filter.receiverDistrict != null and filter.receiverDistrict != ''">and oo.receiver_district = #{filter.receiverDistrict}</if>
         order by oo.id desc
     </select>
 </mapper>
