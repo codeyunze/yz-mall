@@ -82,7 +82,8 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         return baseMapper.delete(updateWrapper) > 0;
     }
 
-    @Transactional
+    @DS("master")
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products) {
         Map<Long, InternalPmsStockDto> productMap = products.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, item -> item));
@@ -107,7 +108,8 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
             super.removeByIds(delCartIds);
         }
         if (!CollectionUtils.isEmpty(updateCarts)) {
-            super.updateBatchById(updateCarts);
+            // super.updateBatchById(updateCarts);
+            baseMapper.updateBatchByIds(updateCarts);
         }
         return true;
     }

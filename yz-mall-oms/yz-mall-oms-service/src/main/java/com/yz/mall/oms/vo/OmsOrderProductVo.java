@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 订单商品详情信息
@@ -67,5 +68,14 @@ public class OmsOrderProductVo implements Serializable {
      */
     private String remark;
 
+    /**
+     * 商品图片id，限制为5张，以逗号分割
+     */
+    private String albumPics;
+
+    /**
+     * 商品预览地址
+     */
+    private String previewAddress;
 }
 

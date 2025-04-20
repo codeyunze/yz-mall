@@ -95,6 +95,11 @@ public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
     private String remark;
 
     /**
+     * 商品图片id，限制为5张，以逗号分割
+     */
+    private String albumPics;
+
+    /**
      * 获取主键值
      *
      * @return 主键值

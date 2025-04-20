@@ -156,7 +156,6 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
         PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getId, PmsStock::getQuantity).eq(PmsStock::getProductId, addStock.getProductId()));
         if (stock == null || stock.getId() == null) {
             stock = new PmsStock();
-            stock.setId(IdUtil.getSnowflakeNextId());
             stock.setProductId(addStock.getProductId());
             stock.setQuantity(addStock.getQuantity());
         } else {

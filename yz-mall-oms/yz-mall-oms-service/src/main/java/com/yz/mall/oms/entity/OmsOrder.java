@@ -120,6 +120,11 @@ public class OmsOrder extends Model<OmsOrder> {
     private BigDecimal payAmount;
 
     /**
+     * 支付时间
+     */
+    private LocalDateTime payTime;
+
+    /**
      * 订单备注
      */
     @TableField(updateStrategy = FieldStrategy.NOT_EMPTY)
