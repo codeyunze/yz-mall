@@ -34,6 +34,20 @@ public class OmsOrderDetailVo extends OmsOrderVo {
     private Integer payType;
 
     /**
+     * 支付时间
+     */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime payTime;
+
+    /**
+     * 发货时间
+     */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime deliveryTime;
+
+    /**
      * 收货状态：0未确认收货；1已确认收货
      */
     private Integer confirmStatus;

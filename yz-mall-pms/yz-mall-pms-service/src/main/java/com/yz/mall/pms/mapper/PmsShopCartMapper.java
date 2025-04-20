@@ -10,6 +10,7 @@ import com.yz.mall.pms.vo.PmsShopCartVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -39,5 +40,13 @@ public interface PmsShopCartMapper extends BaseMapper<PmsShopCart> {
      */
     @DS("slave")
     List<PmsShopCartSlimVo> selectCartByIds(@Param("userId") Long userId, @Param("ids") List<Long> ids);
+
+    /**
+     * 批量更新购物车数据
+     * @param carts 购物车信息
+     * @return 操作影响数据行
+     */
+    @DS("master")
+    Integer updateBatchByIds(@Param("carts") @Size(max = 1000) List<PmsShopCart> carts);
 }
 

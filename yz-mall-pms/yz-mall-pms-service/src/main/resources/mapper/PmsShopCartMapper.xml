@@ -20,4 +20,15 @@
         from pms_shop_cart psc
         where psc.invalid = 0
     </sql>
+
+    <update id="updateBatchByIds">
+        <foreach collection="carts" item="cart" separator=";" index="index">
+            update pms_shop_cart
+            <set>
+                update_time = #{cart.updateTime}, quantity = #{cart.quantity}
+            </set>
+            where id = #{cart.id} and user_id = #{cart.userId}
+        </foreach>
+    </update>
+
 </mapper>

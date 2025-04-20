@@ -23,7 +23,9 @@ import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsProductService;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.sys.service.InternalSysFilesService;
 import com.yz.mall.sys.service.InternalSysUserService;
+import com.yz.mall.sys.vo.InternalQofFileInfoVo;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.web.exception.DataNotExistException;
@@ -31,14 +33,12 @@ import com.yz.unqid.service.InternalUnqidService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -62,18 +62,22 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final InternalSysUserService internalSysUserService;
 
+    private final InternalSysFilesService internalSysFilesService;
+
     public OmsOrderServiceImpl(InternalUnqidService internalUnqidService
             , OmsOrderRelationProductService omsOrderRelationProductService
             , InternalPmsStockService internalPmsStockService
             , InternalPmsShopCartService internalPmsShopCartService
             , InternalPmsProductService internalPmsProductService
-            , InternalSysUserService internalSysUserService) {
+            , InternalSysUserService internalSysUserService
+            , InternalSysFilesService internalSysFilesService) {
         this.internalUnqidService = internalUnqidService;
         this.omsOrderRelationProductService = omsOrderRelationProductService;
         this.internalPmsStockService = internalPmsStockService;
         this.internalPmsShopCartService = internalPmsShopCartService;
         this.internalPmsProductService = internalPmsProductService;
         this.internalSysUserService = internalSysUserService;
+        this.internalSysFilesService = internalSysFilesService;
     }
 
     @Transactional
@@ -85,7 +89,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         bo.setCreateId(dto.getUserId());
 
         // 省市区年月日000001
-        String prefix = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
+        String prefix = dto.getReceiverProvince().substring(0, 6) + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN).substring(2);
         String orderCode = internalUnqidService.generateSerialNumber(prefix, 6);
         bo.setOrderCode(orderCode);
         // 订单状态为待付款
@@ -117,6 +121,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             relationProduct.setOrderId(bo.getId());
             relationProduct.setProductName(productMap.get(product.getProductId()).getProductName());
             relationProduct.setProductPrice(productMap.get(product.getProductId()).getProductPrice());
+            relationProduct.setAlbumPics(productMap.get(product.getProductId()).getAlbumPics());
             products.add(relationProduct);
 
             InternalPmsStockDto stock = new InternalPmsStockDto();
@@ -227,7 +232,45 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         // 查询订单商品信息
         List<OmsOrderProductVo> products = omsOrderRelationProductService.getOrderProductsByOrderId(omsOrder.getId());
         detailVo.setProducts(products);
+
+        List<Long> fileIds = new ArrayList<>();
+        for (OmsOrderProductVo product : products) {
+            if (!StringUtils.hasText(product.getAlbumPics())) {
+                continue;
+            }
+            fileIds.addAll(Arrays.stream(product.getAlbumPics().split(",")).map(Long::parseLong).collect(Collectors.toList()));
+        }
+
+        // 获取商品文件信息
+        List<InternalQofFileInfoVo> filesInfo = internalSysFilesService.getFileInfoByFileIdsAndPublic(fileIds);
+        if (CollectionUtils.isEmpty(filesInfo)) {
+            return detailVo;
+        }
+
+        for (OmsOrderProductVo product : detailVo.getProducts()) {
+            assembleProductImage(product, filesInfo);
+        }
         return detailVo;
+    }
+
+    /**
+     * 组装订单关联的产品的图片预览地址
+     *
+     * @param vo                    订单里产品信息
+     * @param qofFileInfoVos        所有图片预览数据
+     */
+    private void assembleProductImage(OmsOrderProductVo vo
+            , List<InternalQofFileInfoVo> qofFileInfoVos) {
+        if (!StringUtils.hasText(vo.getAlbumPics())) {
+            return;
+        }
+        for (InternalQofFileInfoVo fileInfoVo : qofFileInfoVos) {
+            if (StringUtils.hasText(vo.getPreviewAddress())
+                    || !fileInfoVo.getFileId().equals(Long.parseLong(vo.getAlbumPics().split(",")[0]))) {
+                continue;
+            }
+            vo.setPreviewAddress(fileInfoVo.getPreviewAddress());
+        }
     }
 
     @Override
