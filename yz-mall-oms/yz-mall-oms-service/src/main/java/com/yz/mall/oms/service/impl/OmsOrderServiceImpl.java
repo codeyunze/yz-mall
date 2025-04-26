@@ -17,12 +17,14 @@ import com.yz.mall.oms.service.OmsOrderRelationProductService;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.oms.vo.OmsOrderDetailVo;
 import com.yz.mall.oms.vo.OmsOrderProductVo;
+import com.yz.mall.oms.vo.OmsOrderSlimVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.pms.dto.InternalPmsProductSlimVo;
 import com.yz.mall.pms.dto.InternalPmsStockDto;
 import com.yz.mall.pms.service.InternalPmsProductService;
 import com.yz.mall.pms.service.InternalPmsShopCartService;
 import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.sys.service.InternalSysAreaService;
 import com.yz.mall.sys.service.InternalSysFilesService;
 import com.yz.mall.sys.service.InternalSysUserService;
 import com.yz.mall.sys.vo.InternalQofFileInfoVo;
@@ -64,13 +66,16 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final InternalSysFilesService internalSysFilesService;
 
+    private final InternalSysAreaService internalSysAreaService;
+
     public OmsOrderServiceImpl(InternalUnqidService internalUnqidService
             , OmsOrderRelationProductService omsOrderRelationProductService
             , InternalPmsStockService internalPmsStockService
             , InternalPmsShopCartService internalPmsShopCartService
             , InternalPmsProductService internalPmsProductService
             , InternalSysUserService internalSysUserService
-            , InternalSysFilesService internalSysFilesService) {
+            , InternalSysFilesService internalSysFilesService
+            , InternalSysAreaService internalSysAreaService) {
         this.internalUnqidService = internalUnqidService;
         this.omsOrderRelationProductService = omsOrderRelationProductService;
         this.internalPmsStockService = internalPmsStockService;
@@ -78,11 +83,12 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         this.internalPmsProductService = internalPmsProductService;
         this.internalSysUserService = internalSysUserService;
         this.internalSysFilesService = internalSysFilesService;
+        this.internalSysAreaService = internalSysAreaService;
     }
 
     @Transactional
     @Override
-    public Long generateOrder(InternalOmsOrderByCartDto dto) {
+    public OmsOrderSlimVo generateOrder(InternalOmsOrderByCartDto dto) {
         OmsOrder bo = new OmsOrder();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
@@ -114,7 +120,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (InternalOmsOrderProductDto product : dto.getProducts()) {
-            // 购物车里商品信息
+            // 订单下的商品信息
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(product, relationProduct);
             relationProduct.setProductQuantity(product.getProductQuantity());
@@ -145,7 +151,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         omsOrderRelationProductService.saveBatch(products);
         // 清理购物车中下单的商品
         internalPmsShopCartService.removeCartByProductIds(bo.getUserId(), deductStocks);
-        return bo.getId();
+        return new OmsOrderSlimVo(bo.getId(), bo.getOrderCode());
     }
 
     @Transactional
@@ -228,6 +234,9 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         }
         OmsOrderDetailVo detailVo = new OmsOrderDetailVo();
         BeanUtils.copyProperties(omsOrder, detailVo);
+        detailVo.setReceiverProvinceName(internalSysAreaService.getById(detailVo.getReceiverProvince()).getName());
+        detailVo.setReceiverCityName(internalSysAreaService.getById(detailVo.getReceiverCity()).getName());
+        detailVo.setReceiverDistrictName(internalSysAreaService.getById(detailVo.getReceiverDistrict()).getName());
 
         // 查询订单商品信息
         List<OmsOrderProductVo> products = omsOrderRelationProductService.getOrderProductsByOrderId(omsOrder.getId());

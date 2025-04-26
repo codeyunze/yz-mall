@@ -1,13 +1,9 @@
 package com.yz.mall.sys.entity;
 
-import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -17,6 +13,7 @@ import java.io.Serializable;
  * @author yunze
  * @since 2025-03-03 22:38:55
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class SysArea extends Model<SysArea> {
 

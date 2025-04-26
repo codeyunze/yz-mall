@@ -1,22 +1,18 @@
 package com.yz.mall.sys.internal;
 
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.file.service.YzSysFilesService;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
 import com.yz.mall.sys.vo.InternalQofFileInfoVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.Result;
 import io.github.codeyunze.bo.QofFileInfoBo;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

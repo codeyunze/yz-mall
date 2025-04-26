@@ -83,6 +83,21 @@ public class OmsOrderVo extends Model<OmsOrderVo> {
     private String receiverDistrict;
 
     /**
+     * 收货省
+     */
+    private String receiverProvinceName;
+
+    /**
+     * 收货市
+     */
+    private String receiverCityName;
+
+    /**
+     * 收货区
+     */
+    private String receiverDistrictName;
+
+    /**
      * 收货详细地址
      */
     private String receiverAddress;

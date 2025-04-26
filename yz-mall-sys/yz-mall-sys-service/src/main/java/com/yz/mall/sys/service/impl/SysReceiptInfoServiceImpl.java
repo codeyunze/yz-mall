@@ -11,7 +11,9 @@ import com.yz.mall.sys.dto.SysReceiptInfoQueryDto;
 import com.yz.mall.sys.dto.SysReceiptInfoUpdateDto;
 import com.yz.mall.sys.entity.SysReceiptInfo;
 import com.yz.mall.sys.mapper.SysReceiptInfoMapper;
+import com.yz.mall.sys.service.InternalSysAreaService;
 import com.yz.mall.sys.service.SysReceiptInfoService;
+import com.yz.mall.sys.vo.SysReceiptInfoVo;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.exception.AuthenticationException;
 import com.yz.mall.web.exception.DataNotExistException;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 /**
  * 系统-用户收货信息(SysReceiptInfo)表服务实现类
@@ -29,6 +32,12 @@ import java.time.LocalDateTime;
  */
 @Service
 public class SysReceiptInfoServiceImpl extends ServiceImpl<SysReceiptInfoMapper, SysReceiptInfo> implements SysReceiptInfoService {
+
+    private final InternalSysAreaService sysAreaService;
+
+    public SysReceiptInfoServiceImpl(InternalSysAreaService sysAreaService) {
+        this.sysAreaService = sysAreaService;
+    }
 
     @Override
     public Long save(SysReceiptInfoAddDto dto) {
@@ -68,13 +77,27 @@ public class SysReceiptInfoServiceImpl extends ServiceImpl<SysReceiptInfoMapper,
 
     @DS("slave")
     @Override
-    public Page<SysReceiptInfo> page(PageFilter<SysReceiptInfoQueryDto> filter) {
+    public Page<SysReceiptInfoVo> page(PageFilter<SysReceiptInfoQueryDto> filter) {
         LambdaQueryWrapper<SysReceiptInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysReceiptInfo::getCreateId, filter.getFilter().getCreateId());
         queryWrapper.like(StringUtils.hasText(filter.getFilter().getReceiverName()), SysReceiptInfo::getReceiverName, filter.getFilter().getReceiverName());
         queryWrapper.eq(StringUtils.hasText(filter.getFilter().getReceiverPhone()), SysReceiptInfo::getReceiverPhone, filter.getFilter().getReceiverPhone());
         queryWrapper.orderByDesc(SysReceiptInfo::getUpdateTime);
-        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        Page<SysReceiptInfo> infoPage = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        if (infoPage.getTotal() == 0) {
+            return new Page<>();
+        }
+        Page<SysReceiptInfoVo> resultPage = new Page<>();
+        resultPage.setTotal(infoPage.getTotal());
+        resultPage.setRecords(infoPage.getRecords().stream().map(t -> {
+            SysReceiptInfoVo vo = new SysReceiptInfoVo();
+            BeanUtils.copyProperties(t, vo);
+            vo.setReceiverProvinceName(sysAreaService.getById(vo.getReceiverProvince()).getName());
+            vo.setReceiverCityName(sysAreaService.getById(vo.getReceiverCity()).getName());
+            vo.setReceiverDistrictName(sysAreaService.getById(vo.getReceiverDistrict()).getName());
+            return vo;
+        }).collect(Collectors.toList()));
+        return resultPage;
     }
 }
 

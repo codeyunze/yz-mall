@@ -9,6 +9,7 @@ import com.yz.mall.sys.dto.SysReceiptInfoQueryDto;
 import com.yz.mall.sys.dto.SysReceiptInfoUpdateDto;
 import com.yz.mall.sys.entity.SysReceiptInfo;
 import com.yz.mall.sys.service.SysReceiptInfoService;
+import com.yz.mall.sys.vo.SysReceiptInfoVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.Result;
@@ -72,9 +73,9 @@ public class SysReceiptInfoController extends ApiController {
      */
     @SaCheckPermission("api:system:receipt:edit")
     @PostMapping("page")
-    public Result<ResultTable<SysReceiptInfo>> page(@RequestBody @Valid PageFilter<SysReceiptInfoQueryDto> filter) {
+    public Result<ResultTable<SysReceiptInfoVo>> page(@RequestBody @Valid PageFilter<SysReceiptInfoQueryDto> filter) {
         filter.getFilter().setCreateId(StpUtil.getLoginIdAsLong());
-        Page<SysReceiptInfo> page = this.service.page(filter);
+        Page<SysReceiptInfoVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 }

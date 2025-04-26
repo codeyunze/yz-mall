@@ -11,6 +11,7 @@ import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
 import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.oms.vo.OmsOrderDetailVo;
+import com.yz.mall.oms.vo.OmsOrderSlimVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
@@ -45,7 +46,7 @@ public class OmsOrderController extends ApiController {
      */
     @SaCheckPermission("api:oms:order:add")
     @PostMapping("generate")
-    public Result<Long> generateOrder(@RequestBody @Valid InternalOmsOrderByCartDto dto) {
+    public Result<OmsOrderSlimVo> generateOrder(@RequestBody @Valid InternalOmsOrderByCartDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
         return success(this.service.generateOrder(dto));
     }
