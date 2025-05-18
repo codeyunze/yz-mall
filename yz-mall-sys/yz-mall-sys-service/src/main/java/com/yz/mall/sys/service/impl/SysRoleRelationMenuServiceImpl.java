@@ -2,9 +2,11 @@ package com.yz.mall.sys.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.dynamic.datasource.annotation.Slave;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.sys.vo.MenuByRoleVo;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.sys.dto.SysRolePermissionDto;
 import com.yz.mall.sys.dto.SysRoleRelationMenuBindDto;
@@ -138,6 +140,29 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
 
         result.putAll(collect);
         return result;
+    }
+
+    @DS("slave")
+    @Override
+    public List<MenuByRoleVo> getRoleIdByMenuIds(List<Long> menuIds) {
+        LambdaQueryWrapper<SysRoleRelationMenu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(SysRoleRelationMenu::getMenuId, SysRoleRelationMenu::getRoleId);
+        queryWrapper.in(SysRoleRelationMenu::getMenuId, menuIds);
+        List<SysRoleRelationMenu> list = baseMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        
+        // 转换为MenuByRoleVo并去重
+        return list.stream()
+            .map(item -> {
+                MenuByRoleVo vo = new MenuByRoleVo();
+                vo.setMenuId(item.getMenuId());
+                vo.setRoleId(item.getRoleId());
+                return vo;
+            })
+            .distinct()
+            .collect(Collectors.toList());
     }
 
 
