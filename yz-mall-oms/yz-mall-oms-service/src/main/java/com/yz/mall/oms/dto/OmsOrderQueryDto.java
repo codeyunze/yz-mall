@@ -3,6 +3,7 @@ package com.yz.mall.oms.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 
@@ -32,6 +33,12 @@ public class OmsOrderQueryDto implements Serializable {
      * 订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单
      */
     private Integer orderStatus;
+
+    /**
+     * 排除订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单
+     * @ignore
+     */
+    private List<Integer> excludeOrderStatuses;
 
     /**
      * 订单类型：0正常订单；1秒杀订单
