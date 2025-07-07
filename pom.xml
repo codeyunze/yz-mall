@@ -30,6 +30,13 @@
         <!-- <module>yz-dynamic-datasource</module> -->
 
         <!-- <module>yz-test-cases</module> -->
+
+        <module>mall-utils</module>
+        <module>mall-auth</module>
+        <module>mall-admin</module>
+        <module>mall-gateway</module>
+        <module>mall-pms</module>
+        <module>mall-oms</module>
     </modules>
 
     <properties>
