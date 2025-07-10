@@ -14,7 +14,10 @@
     <description>工具服务</description>
 
     <modules>
+        <module>mall-json</module>
+        <module>mall-mybatis</module>
         <module>mall-serial</module>
+        <module>mall-base</module>
     </modules>
 
     <properties>
