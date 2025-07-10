@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * @since 2025/7/9 23:38
  */
 @Slf4j
-@ActiveProfiles("test")
+// @ActiveProfiles("test")
 class SysUserMapperTest extends BaseMapperTest {
 
     @Resource

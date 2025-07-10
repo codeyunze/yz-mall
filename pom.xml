@@ -202,6 +202,20 @@
                 <artifactId>qof-core-slim</artifactId>
                 <version>${qof.version}</version>
             </dependency>
+
+
+            <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>5.7.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-launcher</artifactId>
+                <version>1.9.3</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
