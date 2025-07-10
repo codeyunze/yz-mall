@@ -1,16 +1,15 @@
 package com.yz.mall.sys.mapper;
 
+import com.yz.mall.sys.BaseMapperTest;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.vo.BaseUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,15 +18,14 @@ import java.time.LocalDateTime;
  * @since 2025/7/9 23:38
  */
 @Slf4j
-@SpringBootTest
-@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-class SysUserMapperTest {
+class SysUserMapperTest extends BaseMapperTest {
 
-    @Autowired
+    @Resource
     private SysUserMapper userMapper;
 
     @Test
+    @DisplayName("插入一条测试数据并读取")
     void get() {
         // 准备测试数据
         SysUser testUser = new SysUser();
@@ -57,7 +55,21 @@ class SysUserMapperTest {
     }
 
     @Test
+    @DisplayName("扣减余额测试")
     void deduct() {
+        String phone = "15300000017";
+        BaseUserVo userVo = userMapper.get(phone);
+        assert userVo != null;
+
+        Long userId = userVo.getId();
+        BigDecimal balance = userVo.getBalance();
+
+        userMapper.deduct(userId, new BigDecimal("10.00"));
+        BaseUserVo after = userMapper.get(phone);
+        Assertions.assertNotNull(after);
+        Assertions.assertEquals(balance.subtract(new BigDecimal("10.00")), after.getBalance());
+
+        log.info("用户余额应该为：{}，实际为：{}", balance.subtract(new BigDecimal("10.00")), after.getBalance());
     }
 
     @Test

@@ -17,7 +17,7 @@ public class BaseUserVo extends Model<BaseUserVo> {
     /**
      * 主键标识
      */
-    private String id;
+    private Long id;
 
     /**
      * 手机号
