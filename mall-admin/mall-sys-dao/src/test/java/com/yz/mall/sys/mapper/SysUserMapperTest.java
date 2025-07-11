@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author yunze
  * @since 2025/7/9 23:38
@@ -38,7 +40,9 @@ class SysUserMapperTest extends BaseMapperTest {
         testUser.setSex(1);
         testUser.setInvalid(0L);
         testUser.setCreateTime(LocalDateTime.now().plusDays(-2));
-        userMapper.insert(testUser);
+        int inserted = userMapper.insert(testUser);
+        assertThat(inserted).isEqualTo(1);
+        assertThat(testUser.getId()).isNotNull();
 
         // 测试手机号查询
         BaseUserVo userVoByPhone = userMapper.get("13800138000");

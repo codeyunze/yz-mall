@@ -14,6 +14,12 @@ import com.yz.mall.sys.vo.SysUserVo;
  */
 public interface SysUserService extends IService<SysUser> {
 
+    /**
+     * 分页查询
+     *
+     * @param filter 过滤条件
+     * @return 分页列表数据
+     */
     Page<SysUserVo> page(long current, long size, SysUserQueryDto filter);
 
 }

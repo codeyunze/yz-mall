@@ -24,7 +24,7 @@ public class SysUserVo extends Model<SysUserVo> {
     /**
      * 主键标识
      */
-    private String id;
+    private Long id;
 
     /**
      * 创建时间
