@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -92,7 +93,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, List<Long> roleIds) {
+    public List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, Map<Long, List<Long>> roleByMenuMap) {
         List<SysMenu> localMenus = menus.stream().filter(menu -> menu.getParentId().equals(parentId)).collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(localMenus)) {
@@ -119,8 +120,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             // metaVo.setActivePath(menu.getActivePath());
             metaVo.setShowParent(EnableEnum.ENABLE.get().equals(menu.getShowParent()));
 
-            if (!CollectionUtils.isEmpty(roleIds)) {
-                metaVo.setRoles(roleIds.stream().map(roleId -> roleId + "").collect(Collectors.toList()));
+            if (roleByMenuMap.containsKey(menu.getId()) && !CollectionUtils.isEmpty(roleByMenuMap.get(menu.getId()))) {
+                metaVo.setRoles(roleByMenuMap.get(menu.getId()));
             }
 
             if (0L != parentId) {
@@ -137,7 +138,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 vo.setName(menu.getName());
             }
 
-            vo.setChildren(this.menusInfoProcessor(menus, menu.getId(), roleIds));
+            vo.setChildren(this.menusInfoProcessor(menus, menu.getId(), roleByMenuMap));
 
             // 如果一级菜单没有子菜单，则需要做如下特殊处理
             if (CollectionUtils.isEmpty(vo.getChildren()) && 0L == parentId) {

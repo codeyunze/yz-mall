@@ -8,6 +8,7 @@ import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
 import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.vo.OmsOrderDetailVo;
+import com.yz.mall.oms.vo.OmsOrderSlimVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.web.common.PageFilter;
 
@@ -25,7 +26,7 @@ public interface OmsOrderService extends IService<OmsOrder> {
      * @param dto 新增基础数据
      * @return 订单主键Id {@link OmsOrder#getId()}
      */
-    Long generateOrder(InternalOmsOrderByCartDto dto);
+    OmsOrderSlimVo generateOrder(InternalOmsOrderByCartDto dto);
 
     /**
      * 新增数据

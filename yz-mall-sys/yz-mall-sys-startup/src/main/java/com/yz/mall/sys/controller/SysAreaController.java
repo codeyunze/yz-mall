@@ -73,12 +73,23 @@ public class SysAreaController extends ApiController {
     }
 
     /**
-     * 查询
+     * 查询指定行政地区所下辖的行政区域
+     *
+     * @param parentId 指定要查询的行政地区编码
      */
     @SaIgnore
-    @GetMapping("get/{parentId}")
-    public Result<List<AreaVo>> get(@PathVariable String parentId) {
+    @GetMapping("getRegionByParent/{parentId}")
+    public Result<List<AreaVo>> getRegionByParent(@PathVariable String parentId) {
         return success(this.service.getByParentId(parentId));
+    }
+
+    /**
+     * 查询指定行政区域的信息
+     */
+    @SaIgnore
+    @GetMapping("get/{id}")
+    public Result<SysArea> get(@PathVariable String id) {
+        return success(this.service.getById(id));
     }
 
 }

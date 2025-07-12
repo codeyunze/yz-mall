@@ -5,7 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import com.yz.mall.sys.vo.*;
 import com.yz.mall.web.exception.BusinessException;
 import com.yz.mall.web.exception.DataNotExistException;
 import com.yz.mall.sys.SysProperties;
@@ -15,9 +15,6 @@ import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.enums.EnableEnum;
 import com.yz.mall.sys.mapper.SysUserMapper;
 import com.yz.mall.sys.service.*;
-import com.yz.mall.sys.vo.BaseUserVo;
-import com.yz.mall.sys.vo.SysTreeMenuVo;
-import com.yz.mall.sys.vo.SysUserVo;
 import com.yz.mall.web.common.PageFilter;
 import com.yz.mall.web.common.RedisCacheKey;
 import org.springframework.beans.BeanUtils;
@@ -27,10 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 基础-用户(BaseUser)表服务实现类
@@ -189,8 +185,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysMenuQueryDto menuQueryDto = new SysMenuQueryDto();
         menuQueryDto.setMenuIds(menuIds);
         List<SysMenu> menus = sysMenuService.list(menuQueryDto);
+
+        // 获取各菜单所对应可以访问的角色Id
+        List<MenuByRoleVo> roleByMenuList = sysRoleRelationMenuService.getRoleIdByMenuIds(menuIds);
+        // Map<menuId, List<roleId>>
+        Map<Long, List<Long>> roleByMenuMap = roleByMenuList.stream()
+            .collect(Collectors.groupingBy(
+                MenuByRoleVo::getMenuId,
+                Collectors.mapping(MenuByRoleVo::getRoleId, Collectors.toList())
+            ));
+
         // 解析菜单信息
-        return sysMenuService.menusInfoProcessor(menus, 0L, roleIds);
+        return sysMenuService.menusInfoProcessor(menus, 0L, roleByMenuMap);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.yz.mall.security.vo;
+package com.yz.mall.security;
 
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,21 +15,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 登录返回基础信息
+ * 用户基础信息
  *
  * @author yunze
  * @date 2024/8/3 09:30
  */
 @Data
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-public class UserLoginInfoVo implements Serializable {
+public class UserInfo implements Serializable {
 
     private final static long serialVersionUID = 1L;
 
     /**
      * 登录用户Id
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 登录用户
@@ -74,4 +74,9 @@ public class UserLoginInfoVo implements Serializable {
      * 头像
      */
     private String avatar;
+
+    /**
+     * 用户加入的组织
+     */
+    private List<OrgInfo> organizations;
 }

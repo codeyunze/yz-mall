@@ -6,6 +6,7 @@ import com.yz.mall.sys.dto.SysReceiptInfoAddDto;
 import com.yz.mall.sys.dto.SysReceiptInfoQueryDto;
 import com.yz.mall.sys.dto.SysReceiptInfoUpdateDto;
 import com.yz.mall.sys.entity.SysReceiptInfo;
+import com.yz.mall.sys.vo.SysReceiptInfoVo;
 import com.yz.mall.web.common.PageFilter;
 
 import javax.validation.Valid;
@@ -49,7 +50,7 @@ public interface SysReceiptInfoService extends IService<SysReceiptInfo> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<SysReceiptInfo> page(PageFilter<SysReceiptInfoQueryDto> filter);
+    Page<SysReceiptInfoVo> page(PageFilter<SysReceiptInfoQueryDto> filter);
 
 }
 

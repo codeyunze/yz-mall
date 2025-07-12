@@ -10,6 +10,7 @@ import com.yz.mall.sys.vo.SysTreeMenuVo;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统-菜单资源表(SysMenu)表服务接口
@@ -51,11 +52,11 @@ public interface SysMenuService extends IService<SysMenu> {
     /**
      * 将菜单列表信息加工处理为树形结构
      *
-     * @param menus    菜单列表信息
-     * @param parentId 父级菜单Id (默认传0L，标识从第一级菜单开始往下处理)
-     * @param roleIds  用户所拥有的角色
+     * @param menus         菜单列表信息
+     * @param parentId      父级菜单Id (默认传0L，标识从第一级菜单开始往下处理)
+     * @param roleByMenuMap 菜单所关联的角色
      * @return 树形结构菜单信息
      */
-    List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, List<Long> roleIds);
+    List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, Map<Long, List<Long>> roleByMenuMap);
 }
 

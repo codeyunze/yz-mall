@@ -13,6 +13,12 @@
         <if test="filter.orderCode != null and filter.orderCode != ''">and oo.order_code = #{filter.orderCode}</if>
         <if test="filter.orderType != null">and oo.order_type = #{filter.orderType}</if>
         <if test="filter.orderStatus != null">and oo.order_status = #{filter.orderStatus}</if>
+        <if test="filter.excludeOrderStatuses != null and filter.excludeOrderStatuses.size() > 0">
+          and oo.order_status not in
+            <foreach collection="filter.excludeOrderStatuses" item="excludeOrderStatus" separator="," open="(" close=")">
+                #{excludeOrderStatus}
+            </foreach>
+        </if>
         <if test="filter.confirmStatus != null">and oo.confirm_status = #{filter.confirmStatus}</if>
         <if test="filter.payType != null">and oo.pay_type = #{filter.payType}</if>
         <if test="filter.receiverPhone != null">and oo.receiver_phone = #{filter.receiverPhone}</if>

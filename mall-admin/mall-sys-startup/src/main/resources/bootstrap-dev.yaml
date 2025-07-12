@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: yunze.com:8848
+      config:
+        namespace: mall
+        extension-configs:
+          - data-id: yz-mall-datasource.yaml
+            refresh: true
+          - data-id: yz-mall-security.yaml
+            refresh: true
+          - data-id: rabbitmq.properties
+          - data-id: file.yaml
+      discovery:
+        namespace: mall
+      username: nacos
+      password: ${NACOS_PASSWORD}

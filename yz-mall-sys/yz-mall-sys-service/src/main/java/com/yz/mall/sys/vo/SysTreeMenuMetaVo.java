@@ -78,6 +78,6 @@ public class SysTreeMenuMetaVo implements Serializable {
     /**
      * 设置可访问当前路由菜单的角色
      */
-    private List<String> roles;
+    private List<Long> roles;
     
 }

@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: yunze.com:8848
+      config:
+        namespace: mall
+        extension-configs:
+          - data-id: yz-gateway.yaml
+            refresh: true
+      discovery:
+        namespace: mall
+      username: nacos
+      password: ${NACOS_PASSWORD}

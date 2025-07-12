@@ -1,17 +1,16 @@
 package com.yz.mall.security.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.temp.SaTempUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import com.yz.mall.security.UserInfo;
 import com.yz.mall.security.dto.AuthLoginDto;
 import com.yz.mall.security.dto.RefreshTokenDto;
 import com.yz.mall.security.dto.RegisterDto;
-import com.yz.mall.security.vo.UserLoginInfoVo;
 import com.yz.mall.sys.dto.InternalLoginInfoDto;
 import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
 import com.yz.mall.sys.dto.InternalSysUserAddDto;
@@ -73,7 +72,7 @@ public class LoginController extends ApiController {
      */
     @SaIgnore
     @PostMapping("login")
-    public Result<UserLoginInfoVo> login(@RequestBody @Valid AuthLoginDto loginDto) {
+    public Result<UserInfo> login(@RequestBody @Valid AuthLoginDto loginDto) {
         InternalLoginInfoDto loginInfo = internalSysUserService.checkLogin(new InternalSysUserCheckLoginDto(loginDto.getUsername(), loginDto.getPassword()));
         if (loginInfo == null) {
             return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "登录失败");
@@ -84,7 +83,7 @@ public class LoginController extends ApiController {
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         List<String> roles = getRoleByUserId(loginInfo.getId());
 
-        UserLoginInfoVo vo = new UserLoginInfoVo();
+        UserInfo vo = new UserInfo();
         BeanUtils.copyProperties(loginInfo, vo);
         vo.setUserId(loginInfo.getId());
         vo.setAccessToken(tokenInfo.tokenValue);
@@ -97,6 +96,10 @@ public class LoginController extends ApiController {
 
         BoundHashOperations<String, Object, Object> operations = defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
         operations.put("refreshToken", vo.getRefreshToken());
+        operations.put("userId", vo.getUserId());
+        operations.put("username", vo.getUsername());
+        operations.put("nickname", vo.getNickname());
+        operations.put("accessToken", vo.getAccessToken());
         operations.expire(86400, TimeUnit.SECONDS);
         return success(vo);
     }
@@ -108,9 +111,9 @@ public class LoginController extends ApiController {
      * @param userId 指定用户Id
      * @return 用户拥有的角色
      */
-    private List<String> getRoleByUserId(String userId) {
+    private List<String> getRoleByUserId(Long userId) {
         // 查询用户角色
-        List<Long> roles = internalSysUserService.getUserRoles(Long.parseLong(userId));
+        List<Long> roles = internalSysUserService.getUserRoles(userId);
         if (CollectionUtils.isEmpty(roles)) {
             return Collections.emptyList();
         }
@@ -143,9 +146,7 @@ public class LoginController extends ApiController {
             return permissions;
         }
 
-        permissionsByRoleIds.forEach((key, value) -> {
-            permissions.addAll(value);
-        });
+        permissionsByRoleIds.forEach((key, value) -> permissions.addAll(value));
 
         if (CollectionUtils.isEmpty(permissions)) {
             return Collections.emptyList();
@@ -162,7 +163,7 @@ public class LoginController extends ApiController {
      */
     @SaIgnore
     @PostMapping("/refreshToken")
-    public Result<UserLoginInfoVo> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
+    public Result<UserInfo> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
         // 1、验证
         Object userId = SaTempUtil.parseToken(refreshTokenDto.getRefreshToken());
         if (userId == null) {
@@ -173,14 +174,14 @@ public class LoginController extends ApiController {
         StpUtil.login(userId);
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         // 获取并缓存角色信息
-        getRoleByUserId(userId.toString());
+        getRoleByUserId(Long.parseLong(userId.toString()));
 
         // 3、返回信息
-        UserLoginInfoVo vo = new UserLoginInfoVo();
+        UserInfo vo = new UserInfo();
         vo.setAccessToken(tokenInfo.getTokenValue());
         vo.setRefreshToken(SaTempUtil.createToken(userId, 86400));
         vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
-        vo.setUserId(userId.toString());
+        vo.setUserId(Long.parseLong(userId.toString()));
         // 清理旧的临时token
         SaTempUtil.deleteToken(refreshTokenDto.getRefreshToken());
 
@@ -201,8 +202,8 @@ public class LoginController extends ApiController {
             return new Result<>(CodeEnum.SUCCESS.get(), null, "系统登出成功");
         }
         // 清理刷新token
-        String userId = StpUtil.getLoginIdAsString();
-        if (!StringUtils.hasText(userId)) {
+        Long userId = StpUtil.getLoginIdAsLong();
+        if (!StringUtils.hasText(StpUtil.getLoginIdAsString())) {
             return new Result<>(CodeEnum.SUCCESS.get(), null, "系统登出成功");
         }
         // 清理角色缓存信息
@@ -289,7 +290,7 @@ public class LoginController extends ApiController {
     @SaCheckLogin
     @SaIgnore
     @GetMapping("getUserInfo")
-    public Result<UserLoginInfoVo> getUserInfo() {
+    public Result<UserInfo> getUserInfo() {
         InternalLoginInfoVo loginInfo = internalSysUserService.getUserInfoById(StpUtil.getLoginIdAsLong());
         if (loginInfo == null) {
             // 数据库里不存在该用户信息，清理该token的信息
@@ -297,8 +298,8 @@ public class LoginController extends ApiController {
             return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, CodeEnum.ERROR_TOKEN_ILLEGAL.getMsg());
         }
 
-        List<String> roles = getRoleByUserId(StpUtil.getLoginIdAsString());
-        UserLoginInfoVo vo = new UserLoginInfoVo();
+        List<String> roles = getRoleByUserId(StpUtil.getLoginIdAsLong());
+        UserInfo vo = new UserInfo();
         BeanUtils.copyProperties(loginInfo, vo);
         vo.setUserId(loginInfo.getId());
 

@@ -213,6 +213,112 @@ docker 安装redis
 
 
 
+## 模块分层设计
+
+### 模块不存在扩展接口分层设计
+
+![模块不存在扩展接口分层设计](images/模块不存在扩展接口分层设计.png)
+
+### 模块存在扩展接口分层设计
+
+![微服务单模块分层设计（有内部扩展接口）-单模块案例版](images/微服务单模块分层设计（有内部扩展接口）-单模块案例版.png)
+
+
+
+
+
+## 模块间调用设计
+
+### 不存在扩展接口的模块间调用设计
+
+![单体项目分层设计（无内部扩展接口）-多项目案例版](images/单体项目分层设计（无内部扩展接口）-多项目案例版.png)
+
+### 存在扩展接口的模块间调用设计
+
+模块c通过openfeign调用模块a的扩展接口
+
+![模块调用设计-有内部扩展接口版.drawio](images/模块调用设计-有内部扩展接口版.drawio.png)
+
+
+
+## 模块服务设计
+
+![模块服务设计图](images/模块服务设计图.png)
+
+
+
+
+
+## 模块拆分目录与模块依赖
+
+```markdown
+project-root/
+    │
+  	├── auth/
+  			├── auth-interface/        					← 接口定义（供外部调用）
+        ├── auth-core/
+		        ├── auth-interface(依赖)
+		        └── sys-dao(依赖)
+    		│
+		    └── auth-feign/
+		        ├── auth-interface(依赖)
+		        └── sys-feign(依赖)
+    │
+  	├── sys/
+        ├── sys-interface/        					← 接口定义（供外部调用）
+        ├── sys-dao/              					← 数据访问层（DAO + Entity）
+        ├── sys-core/             					← 核心业务逻辑
+						├── sys-interface(依赖)
+						├── sys-dao(依赖)
+		        └── auth-interface
+    		│
+        ├── sys-feign/            					← 微服务 Feign 调用模块
+		        └── sys-interface(依赖)
+    		│
+        └── sys-startup/          					← 启动模块（Spring Boot 入口，依赖配置管理）
+		        ├── sys-core(依赖)
+						└── auth-core(依赖)
+    │
+  	├── module-a/
+        ├── module-a-interface/        			← 接口定义（供外部调用）
+        ├── module-a-dao/              			← 数据访问层（DAO + Entity）
+        ├── module-a-core/             			← 核心业务逻辑
+						├── module-a-interface(依赖)
+						├── module-a-dao(依赖)
+						├── sys-interface(依赖)
+						└── auth-interface(依赖)
+    		│
+        ├── module-a-feign/            			← 微服务 Feign 调用模块
+						├── module-a-interface(依赖)
+						└── sys-interface(依赖)
+    		│	
+        └── module-a-startup/          			← 启动模块（Spring Boot 入口，依赖配置管理）
+		        ├── module-a-core(依赖)
+		        ├── sys-core或sys-feign(依赖)
+						└── auth-core或auth-feign(依赖)	← 如果选择auth-feign，则必须选sys-feign
+    │
+    ├── module-b/
+				├── module-b-dao/              			← 数据访问层（DAO + Entity）
+        ├── module-b-core/             			← 核心业务逻辑
+		        ├── module-b-dao(依赖)
+		        ├── module-a-dao(依赖)
+						└── auth-interface(依赖)
+    		│	
+        └── module-b-startup/          			← 启动模块（Spring Boot 入口，依赖配置管理）
+		        ├── module-b-core(依赖)
+						└── auth-core或auth-feign(依赖)	← 如果选择auth-feign，则必须选sys-feign
+```
+
+
+
+示意图
+
+![模块设计图](images/模块设计图.png)
+
+
+
+
+
 
 
 

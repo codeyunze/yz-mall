@@ -41,7 +41,7 @@ public class RedisCacheKey {
      *
      * @param userId 用户信息
      */
-    public static String loginInfo(String userId) {
+    public static String loginInfo(Long userId) {
         return "Authorization:login:info:" + userId;
     }
 

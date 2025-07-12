@@ -11,6 +11,7 @@ import com.yz.mall.sys.dto.SysUserRelationOrgUpdateDto;
 import com.yz.mall.sys.entity.SysUserRelationOrg;
 import com.yz.mall.sys.mapper.SysUserRelationOrgMapper;
 import com.yz.mall.sys.service.SysUserRelationOrgService;
+import com.yz.mall.sys.vo.InternalSysUserRelationOrgVo;
 import com.yz.mall.web.common.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,11 @@ public class SysUserRelationOrgServiceImpl extends ServiceImpl<SysUserRelationOr
             return Collections.emptyList();
         }
         return array.stream().map(SysUserRelationOrg::getUserId).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InternalSysUserRelationOrgVo> getOrgByUserId(Long userId) {
+        return baseMapper.selectOrgByUserId(userId);
     }
 }
 

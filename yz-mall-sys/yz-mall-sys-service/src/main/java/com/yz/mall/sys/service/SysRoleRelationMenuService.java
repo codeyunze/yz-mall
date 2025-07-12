@@ -6,6 +6,7 @@ import com.yz.mall.sys.dto.SysRoleRelationMenuQueryDto;
 import com.yz.mall.sys.entity.SysRole;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.enums.MenuTypeEnum;
+import com.yz.mall.sys.vo.MenuByRoleVo;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -51,6 +52,14 @@ public interface SysRoleRelationMenuService extends IService<SysRoleRelationMenu
      * @return 权限标识 <角色Id，List<权限标识>>
      */
     Map<String, List<String>> getPermissionsAndCacheByRoleIds(MenuTypeEnum menuType, @NotNull List<Long> roleIds);
+
+    /**
+     * 获取指定菜单所关联的角色
+     *
+     * @param menuIds 菜单Id
+     * @return 菜单所关联的角色
+     */
+    List<MenuByRoleVo> getRoleIdByMenuIds(List<Long> menuIds);
 
     /**
      * 角色绑定菜单

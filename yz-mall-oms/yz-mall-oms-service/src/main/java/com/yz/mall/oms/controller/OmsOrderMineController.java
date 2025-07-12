@@ -11,6 +11,7 @@ import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
 import com.yz.mall.oms.entity.OmsOrder;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.oms.vo.OmsOrderDetailVo;
+import com.yz.mall.oms.vo.OmsOrderSlimVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.web.common.ApiController;
 import com.yz.mall.web.common.PageFilter;
@@ -22,21 +23,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 订单信息表(OmsOrder)表控制层
+ * 我的订单信息
  *
  * @author yunze
  * @since 2025-01-30 19:12:59
  */
 @RestController
-@RequestMapping("oms/order")
-public class OmsOrderController extends ApiController {
+@RequestMapping("oms/order/mine")
+public class OmsOrderMineController extends ApiController {
 
     /**
      * 服务对象
      */
     private final OmsOrderService service;
 
-    public OmsOrderController(OmsOrderService service) {
+    public OmsOrderMineController(OmsOrderService service) {
         this.service = service;
     }
 
@@ -45,7 +46,7 @@ public class OmsOrderController extends ApiController {
      */
     @SaCheckPermission("api:oms:order:add")
     @PostMapping("generate")
-    public Result<Long> generateOrder(@RequestBody @Valid InternalOmsOrderByCartDto dto) {
+    public Result<OmsOrderSlimVo> generateOrder(@RequestBody @Valid InternalOmsOrderByCartDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
         return success(this.service.generateOrder(dto));
     }
@@ -64,8 +65,8 @@ public class OmsOrderController extends ApiController {
      * 用户分页查询自己的订单信息
      */
     @SaCheckPermission("api:oms:order:add")
-    @PostMapping("page")
-    public Result<ResultTable<OmsOrderVo>> page(@RequestBody PageFilter<OmsOrderQueryDto> filter) {
+    @PostMapping("/page")
+    public Result<ResultTable<OmsOrderVo>> minePage(@RequestBody PageFilter<OmsOrderQueryDto> filter) {
         filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());
         Page<OmsOrderVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());

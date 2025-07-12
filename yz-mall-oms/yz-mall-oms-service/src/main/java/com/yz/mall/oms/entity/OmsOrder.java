@@ -167,6 +167,11 @@ public class OmsOrder extends Model<OmsOrder> {
     private String email;
 
     /**
+     * 商家组织Id
+     */
+    private String businessOrgId;
+
+    /**
      * 获取主键值
      *
      * @return 主键值
