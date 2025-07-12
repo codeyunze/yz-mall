@@ -1,6 +1,5 @@
 package com.yz.mall.sys.service;
 
-import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysUserQueryDto;
 import com.yz.mall.sys.mapper.SysUserMapper;
@@ -72,6 +71,6 @@ class SysUserServiceTest {
         // 4. 验证结果
         assertEquals(21, result.getTotal());
         assertEquals("test2@example.com", result.getRecords().get(2).getEmail());
-        // verify(userMapper, times(1)).selectPage(page, queryDto); // 验证调用次数
+        verify(userMapper, times(1)).selectPage(any(), eq(queryDto)); // 验证调用次数
     }
 }

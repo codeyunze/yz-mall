@@ -2,13 +2,16 @@ package com.yz.mall.sys.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yz.mall.base.PageFilter;
+import com.yz.mall.base.Result;
 import com.yz.mall.base.ResultTable;
+import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.sys.dto.SysUserQueryDto;
 import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.vo.SysUserVo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 基础-用户(BaseUser)表控制层
@@ -26,10 +29,13 @@ public class SysUserController {
         this.userService = userService;
     }
 
-    @GetMapping("page")
-    public ResultTable<SysUserVo> page() {
-        Page<SysUserVo> result = userService.page(1L, 10L, new SysUserQueryDto());
-        return new ResultTable<>(result.getRecords(), result.getTotal());
+    /**
+     * 分页查询
+     */
+    @PostMapping("page")
+    public Result<ResultTable<SysUserVo>> page(@RequestBody @Valid PageFilter<SysUserQueryDto> filter) {
+        Page<SysUserVo> result = userService.page(filter.getCurrent(), filter.getSize(), filter.getFilter());
+        return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(result.getRecords(), result.getTotal()), "查询成功");
     }
 
 }

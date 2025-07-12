@@ -1,16 +1,18 @@
 package com.yz.mall.base;
 
+import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * @ClassName PageFilter
- * @Description 分页查询请求
- * @Author yunze
- * @Date 2023/2/9 0:16
- * @Version 1.0
+ * 分页查询请求
+ * @author yunze
+ * @date 2023/2/9 0:16
+ * @version 1.0
  */
+@Data
 public class PageFilter<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,28 +33,4 @@ public class PageFilter<T> implements Serializable {
     @Valid
     @NotNull(message = "过滤条件不能为空")
     private T filter;
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public long getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(long current) {
-        this.current = current;
-    }
-
-    public T getFilter() {
-        return filter;
-    }
-
-    public void setFilter(T filter) {
-        this.filter = filter;
-    }
 }
