@@ -15,14 +15,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 用户基础信息
+ * 用户综合信息
  *
  * @author yunze
  * @date 2024/8/3 09:30
  */
 @Data
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-public class UserInfo implements Serializable {
+public class AuthUserIntegratedInfoDto implements Serializable {
 
     private final static long serialVersionUID = 1L;
 

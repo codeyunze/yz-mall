@@ -3,6 +3,7 @@ package com.yz.mall.auth.dto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
@@ -21,20 +22,20 @@ public class RegisterDto implements Serializable {
      * 登录账号
      */
     @Length(min = 2, max = 10)
-    @NotEmpty(message = "请输入账号")
+    @NotBlank(message = "请输入账号")
     private String username;
 
     /**
      * 登录密码
      */
     @Length(min = 8, max = 255)
-    @NotEmpty(message = "请输入登录密码")
+    @NotBlank(message = "请输入登录密码")
     private String password;
 
     /**
      * 手机号
      */
     @Length(min = 8, max = 11)
-    @NotEmpty(message = "请输入手机号")
+    @NotBlank(message = "请输入手机号")
     private String phone;
 }
