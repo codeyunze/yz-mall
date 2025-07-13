@@ -1,13 +1,14 @@
 package com.yz.mall.sys;
 
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * @author yunze
- * @since 2025/7/7 18:06
+ * @since 2025/7/7 18:09
  */
 @Configuration
 @ComponentScan({"com.yz.mall.sys"})
-public class MallSysInterfaceConfig {
+public class MallSysFeignConfig {
 }
