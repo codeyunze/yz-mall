@@ -19,6 +19,7 @@
         <module>mall-serial</module>
         <module>mall-base</module>
         <module>mall-redis</module>
+        <module>mall-web</module>
     </modules>
 
     <properties>

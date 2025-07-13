@@ -51,6 +51,14 @@ public class OverallExceptionHandle {
         return new Result<>(CodeEnum.ALREADY_EXISTS_ERROR.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.ALREADY_EXISTS_ERROR.getMsg());
     }
 
+    /**
+     * 重复提交问题处理
+     */
+    @ExceptionHandler(RepeatSubmitException.class)
+    Result<?> businessExceptionHandle(RepeatSubmitException e) {
+        return new Result<>(CodeEnum.REPEAT_SUBMIT.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.REPEAT_SUBMIT.getMsg());
+    }
+
 
     /**
      * 参数校验异常提示

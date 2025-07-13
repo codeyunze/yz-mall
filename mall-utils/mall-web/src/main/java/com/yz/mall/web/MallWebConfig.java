@@ -1,14 +1,16 @@
-package com.yz.mall.auth;
+package com.yz.mall.web;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+
 /**
  * @author yunze
- * @since 2025/7/13 00:19
+ * @since 2025/7/13 22:53
  */
+@EnableAutoConfiguration
 @Configuration
-@ComponentScan({"com.yz.mall.auth"})
-public class MallAuthFeignConfig {
+@ComponentScan({"com.yz.mall.web"})
+public class MallWebConfig {
 }

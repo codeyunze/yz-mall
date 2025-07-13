@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>mall-auth</artifactId>
+        <artifactId>mall-utils</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>mall-auth-core</artifactId>
-    <description>认证授权服务核心功能实现</description>
+    <artifactId>mall-web</artifactId>
+    <description>在以基类工具模块上的web增强</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -22,20 +22,29 @@
     <dependencies>
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>mall-auth-interface</artifactId>
+            <artifactId>mall-base</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>mall-sys-dao</artifactId>
+            <artifactId>mall-redis</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>mall-web</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 

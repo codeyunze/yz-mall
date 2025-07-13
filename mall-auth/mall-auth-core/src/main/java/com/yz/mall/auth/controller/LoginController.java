@@ -17,6 +17,7 @@ import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.enums.MenuTypeEnum;
 import com.yz.mall.redis.RedisCacheKey;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -270,6 +271,7 @@ public class LoginController extends ApiController {
      * @param dto 注册用户信息
      * @return 注册用户Id
      */
+    @RepeatSubmit
     @SaIgnore
     @PostMapping("register")
     public Result<Long> register(@Valid @RequestBody RegisterDto dto) {

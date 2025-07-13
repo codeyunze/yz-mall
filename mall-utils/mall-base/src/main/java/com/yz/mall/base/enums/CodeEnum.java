@@ -58,7 +58,7 @@ public enum CodeEnum {
     /**
      * 重复提交异常
      */
-    REPEAT_SUBMIT(30005, "重复提交，请稍后再试"),
+    REPEAT_SUBMIT(30005, "频繁重复提交，请稍后再试"),
     /**
      * 数据库相关异常
      */

@@ -1,6 +1,6 @@
 package com.yz.mall.sys.dto;
 
-import com.yz.mall.sys.enums.MenuTypeEnum;
+import com.yz.mall.base.enums.MenuTypeEnum;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
