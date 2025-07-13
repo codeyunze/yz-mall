@@ -5,6 +5,7 @@ import com.yz.mall.base.enums.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,12 +35,22 @@ public class OverallExceptionHandle {
     }
 
     /**
-     * 业务异常问题处理
+     * 业务数据不存在异常问题处理
      */
     @ExceptionHandler(DataNotExistException.class)
-    Result<?> DataNotExistExceptionHandle(DataNotExistException e) {
+    Result<?> dataNotExistExceptionHandle(DataNotExistException e) {
         return Result.error(e.getMessage());
     }
+
+
+    /**
+     * 业务数据已经存在异常问题处理
+     */
+    @ExceptionHandler(DuplicateException.class)
+    Result<?> duplicateExceptionHandle(DuplicateException e) {
+        return new Result<>(CodeEnum.ALREADY_EXISTS_ERROR.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.ALREADY_EXISTS_ERROR.getMsg());
+    }
+
 
     /**
      * 参数校验异常提示

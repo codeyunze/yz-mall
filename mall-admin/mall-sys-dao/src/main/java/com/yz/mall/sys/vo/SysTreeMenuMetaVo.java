@@ -17,7 +17,7 @@ import java.util.List;
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class SysTreeMenuMetaVo implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 菜单图标 {@link SysMenu#getIcon()}

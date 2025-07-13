@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 public class SysAccountAuAddDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 交易类型：0买入，1卖出

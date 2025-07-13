@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class SysPendingTasksQueryDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 待办创建开始时间

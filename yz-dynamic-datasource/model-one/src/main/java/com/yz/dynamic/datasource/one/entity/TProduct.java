@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 public class TProduct extends Model<TProduct> {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键ID

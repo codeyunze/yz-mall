@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Data
 public class InternalSysUserCheckLoginDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 登录手机号

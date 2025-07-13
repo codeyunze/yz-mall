@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Data
 public class PmsProductAddDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 商品名称

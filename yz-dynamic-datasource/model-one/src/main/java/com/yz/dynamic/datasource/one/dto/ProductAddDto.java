@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Data
 public class ProductAddDto extends Model<ProductAddDto> {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键ID

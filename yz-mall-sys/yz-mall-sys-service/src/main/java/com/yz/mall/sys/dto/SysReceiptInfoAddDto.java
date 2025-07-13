@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Data
 public class SysReceiptInfoAddDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 收货地址省编码

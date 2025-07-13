@@ -1,6 +1,6 @@
 package com.yz.mall.auth.service.impl;
 
-import com.yz.mall.auth.dto.InternalRolePermissionQueryDto;
+import com.yz.mall.auth.dto.AuthRolePermissionQueryDto;
 import com.yz.mall.auth.service.AuthSysRoleRelationMenuService;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.Map;
 public class AuthSysRoleRelationMenuServiceImpl implements AuthSysRoleRelationMenuService {
 
     @Override
-    public Map<String, List<String>> getPermissionsByRoleIds(InternalRolePermissionQueryDto query) {
+    public Map<String, List<String>> getPermissionsByRoleIds(AuthRolePermissionQueryDto query) {
         return Collections.emptyMap();
     }
 

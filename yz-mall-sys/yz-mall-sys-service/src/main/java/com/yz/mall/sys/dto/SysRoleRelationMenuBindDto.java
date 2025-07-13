@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 public class SysRoleRelationMenuBindDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 角色Id {@link SysRole#getId()}

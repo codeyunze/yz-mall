@@ -3,13 +3,14 @@ package com.yz.mall.auth.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yz.mall.auth.dto.AuthUserBaseInfoDto;
-import com.yz.mall.auth.dto.InternalSysUserAddDto;
-import com.yz.mall.auth.dto.InternalSysUserCheckLoginDto;
+import com.yz.mall.auth.dto.AuthSysUserCheckLoginDto;
+import com.yz.mall.auth.dto.RegisterDto;
 import com.yz.mall.auth.service.AuthSysUserService;
-import com.yz.mall.auth.vo.InternalLoginInfoVo;
+import com.yz.mall.auth.vo.AuthUserInfoVo;
 import com.yz.mall.base.enums.EnableEnum;
 import com.yz.mall.base.enums.SexEnum;
 import com.yz.mall.base.exception.BusinessException;
+import com.yz.mall.base.exception.DuplicateException;
 import com.yz.mall.redis.RedisCacheKey;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.entity.SysUserRelationRole;
@@ -45,7 +46,7 @@ public class AuthSysUserServiceImpl implements AuthSysUserService {
     }
 
     @Override
-    public AuthUserBaseInfoDto checkLogin(InternalSysUserCheckLoginDto dto) {
+    public AuthUserBaseInfoDto checkLogin(AuthSysUserCheckLoginDto dto) {
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysUser::getPhone, dto.getPhone());
         SysUser user = userMapper.selectOne(queryWrapper);
@@ -79,15 +80,23 @@ public class AuthSysUserServiceImpl implements AuthSysUserService {
     }
 
     @Override
-    public InternalLoginInfoVo getUserInfoById(Long userId) {
+    public AuthUserInfoVo getUserInfoById(Long userId) {
         SysUser user = userMapper.selectById(userId);
-        InternalLoginInfoVo vo = new InternalLoginInfoVo();
+        AuthUserInfoVo vo = new AuthUserInfoVo();
         BeanUtils.copyProperties(user, vo);
         return vo;
     }
 
     @Override
-    public Long add(InternalSysUserAddDto dto) {
+    public Long add(RegisterDto dto) {
+        // 账号重复校验
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getPhone, dto.getPhone());
+        SysUser user = userMapper.selectOne(queryWrapper);
+        if (user != null) {
+            throw new DuplicateException("手机号已被使用");
+        }
+
         SysUser bo = new SysUser();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class SysAreaAddDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "Id不能为空")
     private String id;

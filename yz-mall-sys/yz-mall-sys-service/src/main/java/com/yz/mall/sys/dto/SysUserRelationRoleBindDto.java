@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 public class SysUserRelationRoleBindDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 关联用户Id/组织Id

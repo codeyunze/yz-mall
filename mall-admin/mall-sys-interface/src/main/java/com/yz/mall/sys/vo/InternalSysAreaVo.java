@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 public class InternalSysAreaVo implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 行政地区Id（地区编码）

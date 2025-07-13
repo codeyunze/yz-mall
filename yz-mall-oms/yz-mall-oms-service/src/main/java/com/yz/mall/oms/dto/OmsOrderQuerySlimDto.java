@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 public class OmsOrderQuerySlimDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 订单编号: 省市区年月日000001

@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PmsStockOutDetailAddDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 关联商品Id

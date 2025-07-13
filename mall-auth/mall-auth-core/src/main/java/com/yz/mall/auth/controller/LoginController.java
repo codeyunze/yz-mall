@@ -10,8 +10,8 @@ import cn.hutool.crypto.digest.BCrypt;
 import com.yz.mall.auth.dto.*;
 import com.yz.mall.auth.service.AuthSysRoleRelationMenuService;
 import com.yz.mall.auth.service.AuthSysUserService;
-import com.yz.mall.auth.vo.InternalLoginInfoVo;
 import com.yz.mall.auth.vo.AuthUserIntegratedInfoDto;
+import com.yz.mall.auth.vo.AuthUserInfoVo;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
@@ -67,7 +67,7 @@ public class LoginController extends ApiController {
     @SaIgnore
     @PostMapping("login")
     public Result<AuthUserIntegratedInfoDto> login(@RequestBody @Valid AuthLoginDto loginDto) {
-        AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new InternalSysUserCheckLoginDto(loginDto.getUsername(), loginDto.getPassword()));
+        AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new AuthSysUserCheckLoginDto(loginDto.getUsername(), loginDto.getPassword()));
         if (loginInfo == null) {
             return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "登录失败");
         }
@@ -128,7 +128,7 @@ public class LoginController extends ApiController {
         // 所拥有的所有按钮权限
         List<String> permissions = new ArrayList<>();
 
-        InternalRolePermissionQueryDto queryDto = new InternalRolePermissionQueryDto();
+        AuthRolePermissionQueryDto queryDto = new AuthRolePermissionQueryDto();
         queryDto.setMenuType(MenuTypeEnum.BUTTON);
         queryDto.setRoleIds(roleIds.stream().map(Long::parseLong).collect(Collectors.toList()));
         Map<String, List<String>> permissionsByRoleIds = authSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
@@ -267,15 +267,15 @@ public class LoginController extends ApiController {
     /**
      * 注册用户
      *
-     * @param registerDto 注册用户信息
+     * @param dto 注册用户信息
      * @return 注册用户Id
      */
     @SaIgnore
     @PostMapping("register")
-    public Result<Long> register(@Valid @RequestBody RegisterDto registerDto) {
-        InternalSysUserAddDto userAddDto = new InternalSysUserAddDto();
-        BeanUtils.copyProperties(registerDto, userAddDto);
-        return success(authSysUserService.add(userAddDto));
+    public Result<Long> register(@Valid @RequestBody RegisterDto dto) {
+        // InternalSysUserAddDto userAddDto = new InternalSysUserAddDto();
+        // BeanUtils.copyProperties(registerDto, userAddDto);
+        return success(authSysUserService.add(dto));
     }
 
     /**
@@ -285,7 +285,7 @@ public class LoginController extends ApiController {
     @SaIgnore
     @GetMapping("getUserInfo")
     public Result<AuthUserIntegratedInfoDto> getUserInfo() {
-        InternalLoginInfoVo loginInfo = authSysUserService.getUserInfoById(StpUtil.getLoginIdAsLong());
+        AuthUserInfoVo loginInfo = authSysUserService.getUserInfoById(StpUtil.getLoginIdAsLong());
         if (loginInfo == null) {
             // 数据库里不存在该用户信息，清理该token的信息
             StpUtil.logout();

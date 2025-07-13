@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
  * @since 2024-06-16 23:25:55
  */
 @Data
-public class InternalLoginInfoVo implements Serializable {
+public class AuthUserInfoVo implements Serializable {
 
-    private final long serialVesionUID = 1L;
+    private final long serialVersionUID = 1L;
 
     /**
      * 主键标识

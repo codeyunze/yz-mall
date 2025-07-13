@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class SysApplicationUpdateDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键标识

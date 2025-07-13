@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 public class SysUserQueryDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 创建时间

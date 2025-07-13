@@ -1,9 +1,9 @@
 package com.yz.mall.auth.service;
 
 import com.yz.mall.auth.dto.AuthUserBaseInfoDto;
-import com.yz.mall.auth.dto.InternalSysUserAddDto;
-import com.yz.mall.auth.dto.InternalSysUserCheckLoginDto;
-import com.yz.mall.auth.vo.InternalLoginInfoVo;
+import com.yz.mall.auth.dto.AuthSysUserCheckLoginDto;
+import com.yz.mall.auth.dto.RegisterDto;
+import com.yz.mall.auth.vo.AuthUserInfoVo;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,7 +19,7 @@ public interface AuthSysUserService {
     /**
      * 手机号登录校验
      */
-    AuthUserBaseInfoDto checkLogin(@Valid InternalSysUserCheckLoginDto dto);
+    AuthUserBaseInfoDto checkLogin(@Valid AuthSysUserCheckLoginDto dto);
 
     /**
      * 获取指定用户所拥有的角色
@@ -35,7 +35,7 @@ public interface AuthSysUserService {
      * @param userId 用户Id
      * @return 用户信息
      */
-    InternalLoginInfoVo getUserInfoById(Long userId);
+    AuthUserInfoVo getUserInfoById(Long userId);
 
     /**
      * 新增用户
@@ -43,5 +43,5 @@ public interface AuthSysUserService {
      * @param dto 新增用户信息数据
      * @return 主键Id
      */
-    Long add(@Valid InternalSysUserAddDto dto);
+    Long add(@Valid RegisterDto dto);
 }

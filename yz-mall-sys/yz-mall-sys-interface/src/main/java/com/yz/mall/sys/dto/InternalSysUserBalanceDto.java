@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Data
 public class InternalSysUserBalanceDto implements Serializable {
 
-    private static final long serialVesionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     // TODO: 2024/6/19 星期三 yunze 用户标识调整为从token对应的请求者获取
     /**
