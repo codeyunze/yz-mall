@@ -1,4 +1,4 @@
-package com.yz.mall.sys.enums;
+package com.yz.mall.base.enums;
 
 /**
  * 菜单类型

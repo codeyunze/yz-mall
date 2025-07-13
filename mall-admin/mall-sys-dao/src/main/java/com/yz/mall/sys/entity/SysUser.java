@@ -26,13 +26,12 @@ public class SysUser extends Model<SysUser> {
     /**
      * 主键标识
      */
-    private String id;
+    private Long id;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    // @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime createTime;
 
 
@@ -40,7 +39,6 @@ public class SysUser extends Model<SysUser> {
      * 更新时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    // @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime updateTime;
 
     /**
@@ -75,7 +73,7 @@ public class SysUser extends Model<SysUser> {
     private String username;
 
     /**
-     * 状态1-启用,0-停用 {@link com.yz.mall.sys.enums.EnableEnum}
+     * 状态1-启用,0-停用 {@link com.yz.mall.base.enums.EnableEnum}
      */
     private Integer status;
 
@@ -85,7 +83,7 @@ public class SysUser extends Model<SysUser> {
     private String avatar;
 
     /**
-     * 性别 {@link com.yz.mall.sys.enums.SexEnum}
+     * 性别 {@link com.yz.mall.base.enums.SexEnum}
      */
     private Integer sex;
 

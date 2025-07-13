@@ -50,15 +50,15 @@ public enum CodeEnum {
     /**
      * 业务数据不存在异常
      */
-    NOT_EXIST_ERROR(30003, "业务数据不存在异常"),
+    NOT_EXIST_ERROR(30003, "数据不存在"),
     /**
      * 数据已经存在异常
      */
-    ALREADY_EXISTS_ERROR(30004, "数据已经存在异常"),
+    ALREADY_EXISTS_ERROR(30004, "数据已经存在"),
     /**
      * 重复提交异常
      */
-    REPEAT_SUBMIT(30005, "不允许重复提交，请稍后再试"),
+    REPEAT_SUBMIT(30005, "重复提交，请稍后再试"),
     /**
      * 数据库相关异常
      */

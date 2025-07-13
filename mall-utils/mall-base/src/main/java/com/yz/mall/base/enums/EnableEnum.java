@@ -1,4 +1,4 @@
-package com.yz.mall.sys.enums;
+package com.yz.mall.base.enums;
 
 /**
  * 状态枚举: 1-启用 0-停用

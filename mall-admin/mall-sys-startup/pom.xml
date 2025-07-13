@@ -28,7 +28,7 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>mall-base</artifactId>
+            <artifactId>mall-auth-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 

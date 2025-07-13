@@ -5,7 +5,7 @@ spring:
       config:
         namespace: mall
         extension-configs:
-          - data-id: yz-gateway.yaml
+          - data-id: mall-gateway.yaml
             refresh: true
       discovery:
         namespace: mall

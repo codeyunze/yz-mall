@@ -20,7 +20,17 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-auth-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-sys-dao</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -18,6 +18,7 @@
         <module>mall-mybatis</module>
         <module>mall-serial</module>
         <module>mall-base</module>
+        <module>mall-redis</module>
     </modules>
 
     <properties>

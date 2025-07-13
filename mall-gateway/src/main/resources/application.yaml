@@ -4,4 +4,4 @@ server:
 
 spring:
   application:
-    name: yz-gateway
+    name: mall-gateway
