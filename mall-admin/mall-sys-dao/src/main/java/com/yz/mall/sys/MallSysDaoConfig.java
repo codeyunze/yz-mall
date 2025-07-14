@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
  * @since 2025/7/7 18:06
  */
 @Configuration
-// @EnableCaching
 @MapperScan(basePackages = "com.yz.mall.sys.mapper")
 @ComponentScan({"com.yz.mall.sys"})
 public class MallSysDaoConfig {
