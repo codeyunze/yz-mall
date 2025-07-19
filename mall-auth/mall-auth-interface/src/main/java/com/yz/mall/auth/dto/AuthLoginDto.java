@@ -19,7 +19,7 @@ public class AuthLoginDto implements Serializable {
      * 登录账号
      */
     @NotEmpty(message = "请输入登录账号")
-    private String username;
+    private String account;
 
     /**
      * 登录密码

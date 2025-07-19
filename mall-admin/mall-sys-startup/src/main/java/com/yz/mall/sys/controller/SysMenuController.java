@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 系统-菜单资源表(SysMenu)表控制层
+ * 系统-菜单资源
  *
  * @author yunze
  * @since 2024-11-21 23:29:01

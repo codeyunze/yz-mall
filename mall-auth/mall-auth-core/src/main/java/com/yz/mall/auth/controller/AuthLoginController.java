@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping
-public class LoginController extends ApiController {
+public class AuthLoginController extends ApiController {
 
     private final AuthSysUserService authSysUserService;
 
@@ -54,7 +54,7 @@ public class LoginController extends ApiController {
 
     private final RedisTemplate<String, Object> defaultRedisTemplate;
 
-    public LoginController(RedisTemplate<String, Object> defaultRedisTemplate
+    public AuthLoginController(RedisTemplate<String, Object> defaultRedisTemplate
             , AuthSysUserService authSysUserService
             , AuthSysRoleRelationMenuService authSysRoleRelationMenuService) {
         this.defaultRedisTemplate = defaultRedisTemplate;
@@ -68,7 +68,7 @@ public class LoginController extends ApiController {
     @SaIgnore
     @PostMapping("login")
     public Result<AuthUserIntegratedInfoDto> login(@RequestBody @Valid AuthLoginDto loginDto) {
-        AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new AuthSysUserCheckLoginDto(loginDto.getUsername(), loginDto.getPassword()));
+        AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new AuthSysUserCheckLoginDto(loginDto.getAccount(), loginDto.getPassword()));
         if (loginInfo == null) {
             return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "登录失败");
         }
@@ -86,6 +86,9 @@ public class LoginController extends ApiController {
         // 刷新令牌有效期1天
         vo.setRefreshToken(SaTempUtil.createToken(loginInfo.getId(), 86400));
         vo.setRoles(roles);
+
+        // 获取指定角色所拥有的按钮权限，同时查询接口权限，并缓存
+        getPermissionByRoleIds(roles);
         vo.setPermissions(getPermissionByRoleIds(roles));
         vo.setAvatar(loginInfo.getAvatar());
 
@@ -132,16 +135,14 @@ public class LoginController extends ApiController {
         AuthRolePermissionQueryDto queryDto = new AuthRolePermissionQueryDto();
         queryDto.setMenuType(MenuTypeEnum.BUTTON);
         queryDto.setRoleIds(roleIds.stream().map(Long::parseLong).collect(Collectors.toList()));
-        Map<String, List<String>> permissionsByRoleIds = authSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
+        Map<String, List<String>> permissionsBtnByRoleIds = authSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
 
         queryDto.setMenuType(MenuTypeEnum.API);
         authSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
 
-        if (CollectionUtils.isEmpty(permissionsByRoleIds)) {
-            return permissions;
+        if (!CollectionUtils.isEmpty(permissionsBtnByRoleIds)) {
+            permissionsBtnByRoleIds.forEach((key, value) -> permissions.addAll(value));
         }
-
-        permissionsByRoleIds.forEach((key, value) -> permissions.addAll(value));
 
         if (CollectionUtils.isEmpty(permissions)) {
             return Collections.emptyList();

@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 系统-角色关联菜单表(SysRoleRelationMenu)表控制层
+ * 系统-角色关联菜单
  *
  * @author yunze
  * @since 2024-11-28 12:42:36

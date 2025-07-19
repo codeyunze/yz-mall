@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 系统-角色数据表(SysRole)表控制层
+ * 系统-角色管理
  *
  * @author yunze
  * @since 2024-11-17 18:15:15

@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 系统-组织表(SysOrg)表控制层
+ * 系统-组织管理
  *
  * @author yunze
  * @since 2024-11-17 20:19:07

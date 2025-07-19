@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
- * 系统-用户关联组织数据表(SysUserRelationOrg)表控制层
+ * 系统-用户关联组织
  *
  * @author yunze
  * @since 2024-11-17 20:26:16

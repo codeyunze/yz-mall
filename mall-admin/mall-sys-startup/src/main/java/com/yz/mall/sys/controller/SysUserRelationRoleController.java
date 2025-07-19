@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 系统-关联角色数据表(SysUserRelationRole)表控制层
+ * 系统-用户关联角色
  *
  * @author yunze
  * @since 2024-11-17 19:55:59

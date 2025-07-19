@@ -28,6 +28,12 @@
 
         <dependency>
             <groupId>com.yz</groupId>
+            <artifactId>mall-serial-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
             <artifactId>mall-auth-core</artifactId>
             <version>${project.version}</version>
         </dependency>

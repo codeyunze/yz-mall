@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>mall-admin</artifactId>
+        <artifactId>mall-utils</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>mall-sys-core</artifactId>
-    <description>系统服务核心功能实现模块</description>
+    <artifactId>mall-serial-core</artifactId>
+    <description>序号工具模块</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -22,19 +22,19 @@
     <dependencies>
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>mall-sys-dao</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>mall-sys-interface</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
             <artifactId>mall-serial-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-mybatis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-base</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -55,35 +55,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Mockito 用于模拟对象 -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- 断言库 -->
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>

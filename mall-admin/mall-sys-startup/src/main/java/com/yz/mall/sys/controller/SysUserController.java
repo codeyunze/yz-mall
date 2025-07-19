@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 基础-用户(BaseUser)表控制层
+ * 系统-用户管理
  *
  * @author yunze
  * @since 2024-06-16 23:25:55

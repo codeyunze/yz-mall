@@ -9,9 +9,15 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
     <artifactId>mall-serial</artifactId>
-    <description>序号工具模块</description>
+    <packaging>pom</packaging>
+    <description>序号服务</description>
+
+    <modules>
+        <module>mall-serial-interface</module>
+        <module>mall-serial-core</module>
+        <module>mall-serial-feign</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,28 +26,32 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-           <!-- <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <dependencyManagement>
+        <dependencies>
+
+        </dependencies>
+    </dependencyManagement>
+
 </project>
