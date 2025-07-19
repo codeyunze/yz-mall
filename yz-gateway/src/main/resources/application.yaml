@@ -1,7 +1,0 @@
-
-server:
-  port: 30001
-
-spring:
-  application:
-    name: yz-gateway

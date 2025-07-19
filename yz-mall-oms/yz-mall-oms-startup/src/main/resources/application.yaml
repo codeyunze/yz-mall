@@ -1,6 +1,0 @@
-server:
-  port: 30006
-
-spring:
-  application:
-    name: yz-mall-oms

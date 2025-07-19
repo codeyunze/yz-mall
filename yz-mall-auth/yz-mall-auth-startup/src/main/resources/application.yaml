@@ -1,6 +1,0 @@
-server:
-  port: 30002
-
-spring:
-  application:
-    name: yz-mall-auth
