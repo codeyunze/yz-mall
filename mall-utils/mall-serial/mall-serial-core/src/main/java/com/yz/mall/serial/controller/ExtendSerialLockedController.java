@@ -20,7 +20,7 @@ import javax.validation.Valid;
  * @since 2024-06-23 22:52:36
  */
 @RestController
-@RequestMapping("extend/unqid/v2/")
+@RequestMapping("extend/serial/v2/")
 public class ExtendSerialLockedController extends ApiController {
 
 

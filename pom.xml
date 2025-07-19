@@ -18,14 +18,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>yz-common</module>
-        <module>yz-gateway</module>
-        <module>yz-unqid</module>
-        <module>yz-mall-sys</module>
-        <module>yz-mall-auth</module>
-        <module>yz-mall-pms</module>
-        <module>yz-mall-oms</module>
-
         <module>yz-design-patterns</module>
         <!-- <module>yz-dynamic-datasource</module> -->
 

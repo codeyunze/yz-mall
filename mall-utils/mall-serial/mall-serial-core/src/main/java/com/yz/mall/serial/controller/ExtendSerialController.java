@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 系统-流水号表(SysUnqid)表控制层
@@ -36,15 +35,7 @@ public class ExtendSerialController extends ApiController {
     @PostMapping("generateNumber")
     public Result<String> generateNumber(@RequestBody @Valid ExtendUnqidDto dto) {
         // Thread.sleep(30000);
-        return success(this.service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
-    }
-
-    /**
-     * 批量生成流水号
-     */
-    @PostMapping("generateSerialNumbers")
-    public Result<List<String>> generateSerialNumbers(@RequestBody @Valid ExtendUnqidDto dto) {
-        return success(this.service.generateSerialNumbers(dto.getPrefix(), dto.getNumberLength(), dto.getQuantity()));
+        return success(this.service.generateNumber(dto.getPrefix(), dto.getNumberLength()));
     }
 
 }
