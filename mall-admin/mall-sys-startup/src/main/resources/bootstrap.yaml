@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: mall-sys
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: ${NACOS_PASSWORD}
+      config:
+        namespace: mall
+        import-check:
+          enabled: false
+        extension-configs:
+          - data-id: datasource.yaml
+            refresh: true
+          - data-id: sa-token.yaml
+            refresh: true
+          - data-id: rabbitmq.properties
+          - data-id: file.yaml
+      discovery:
+        namespace: mall

@@ -15,8 +15,8 @@ import com.yz.mall.serial.service.SerialService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 /**
  * 工具-流水号管理

@@ -9,7 +9,7 @@ import com.yz.mall.sys.dto.SysUserRelationRoleBindDto;
 import com.yz.mall.sys.service.SysUserRelationRoleService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

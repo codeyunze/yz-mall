@@ -15,7 +15,7 @@ import com.yz.mall.sys.service.SysAreaService;
 import com.yz.mall.sys.vo.AreaVo;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

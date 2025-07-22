@@ -9,7 +9,7 @@ import com.yz.mall.sys.dto.SysRoleUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysRole;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

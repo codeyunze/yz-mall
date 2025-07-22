@@ -11,7 +11,7 @@ import com.yz.mall.sys.service.SysUserService;
 import com.yz.mall.sys.vo.SysUserVo;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * 系统-用户管理

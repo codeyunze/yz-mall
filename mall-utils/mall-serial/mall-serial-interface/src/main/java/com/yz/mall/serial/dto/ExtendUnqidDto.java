@@ -1,8 +1,8 @@
 package com.yz.mall.serial.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -22,12 +22,14 @@ public class ExtendUnqidDto implements Serializable {
 
     /**
      * 流水号的序号长度（默认长度为6）
+     *
      * @mock 6
      */
     private Integer numberLength = 6;
 
     /**
      * 生成流水号数量（默认为1）
+     *
      * @mock 1
      */
     private Integer quantity = 1;

@@ -8,7 +8,7 @@ import com.yz.mall.sys.dto.SysOrgQueryDto;
 import com.yz.mall.sys.dto.SysOrgUpdateDto;
 import com.yz.mall.sys.entity.SysOrg;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

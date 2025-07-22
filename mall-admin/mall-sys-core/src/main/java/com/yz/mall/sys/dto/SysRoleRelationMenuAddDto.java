@@ -4,7 +4,7 @@ import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysRole;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

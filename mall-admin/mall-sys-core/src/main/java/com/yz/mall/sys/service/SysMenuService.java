@@ -8,7 +8,7 @@ import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 

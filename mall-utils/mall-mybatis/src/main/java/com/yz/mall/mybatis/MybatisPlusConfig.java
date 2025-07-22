@@ -2,8 +2,9 @@ package com.yz.mall.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+// import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2023/10/29 0029 17:45
  */
 @Configuration
+@ComponentScan("com.yz.mall.mybatis")
 public class MybatisPlusConfig {
 
     @Bean
@@ -19,7 +21,7 @@ public class MybatisPlusConfig {
         // return new PaginationInnerInterceptor();
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         //添加MySQL的分页拦截器
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        // interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }
 }

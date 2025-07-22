@@ -5,7 +5,7 @@ import com.yz.mall.auth.dto.AuthSysUserCheckLoginDto;
 import com.yz.mall.auth.dto.RegisterDto;
 import com.yz.mall.auth.vo.AuthUserInfoVo;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

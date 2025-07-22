@@ -14,6 +14,7 @@ import com.yz.mall.serial.dto.SerialUpdateDto;
 import com.yz.mall.serial.entity.SysUnqid;
 import com.yz.mall.serial.mapper.SerialMapper;
 import com.yz.mall.serial.service.SerialService;
+import jakarta.annotation.Resource;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.springframework.beans.BeanUtils;
@@ -21,7 +22,6 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

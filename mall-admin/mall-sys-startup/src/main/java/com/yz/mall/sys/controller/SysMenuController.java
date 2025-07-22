@@ -14,7 +14,7 @@ import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.mall.web.annotation.RepeatSubmit;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

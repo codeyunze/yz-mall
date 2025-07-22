@@ -10,7 +10,7 @@ import com.yz.mall.sys.entity.SysUserRelationOrg;
 import com.yz.mall.sys.vo.InternalSysUserRelationOrgVo;
 import com.yz.mall.sys.vo.SysUserRelationOrgVo;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

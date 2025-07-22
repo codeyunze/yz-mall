@@ -5,6 +5,7 @@ import com.yz.mall.base.Result;
 import com.yz.mall.base.exception.RepeatSubmitException;
 import com.yz.mall.redis.RedisCacheKey;
 import com.yz.mall.web.annotation.RepeatSubmit;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 

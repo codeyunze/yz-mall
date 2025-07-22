@@ -9,7 +9,7 @@ import com.yz.mall.sys.dto.SysAreaUpdateDto;
 import com.yz.mall.sys.entity.SysArea;
 import com.yz.mall.sys.vo.AreaVo;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
