@@ -67,8 +67,15 @@ public class AuthUserIntegratedInfoDto implements Serializable {
 
     /**
      * 用户资源权限（按钮）
+     * @deprecated 替换使用 {@link AuthUserIntegratedInfoDto#btnPermissions}
      */
+    @Deprecated
     private List<String> permissions;
+
+    /**
+     * 用户资源权限（按钮）
+     */
+    private List<String> btnPermissions;
 
     /**
      * 头像

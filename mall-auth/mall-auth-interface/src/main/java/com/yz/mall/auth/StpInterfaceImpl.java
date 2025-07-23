@@ -34,11 +34,11 @@ public class StpInterfaceImpl implements StpInterface {
             return Collections.emptyList();
         }
         // 用户拥有的角色
-        List<String> roleIds = roles.stream().map(String::valueOf).collect(Collectors.toList());
+        List<String> roleIds = roles.stream().map(String::valueOf).toList();
         roleIds.forEach(roleId -> {
             List<Object> apiPermissions = defaultRedisTemplate.boundListOps(RedisCacheKey.permission("API", roleId)).range(0, -1);
             if (!CollectionUtils.isEmpty(apiPermissions)) {
-                permissionList.addAll(apiPermissions.stream().map(String::valueOf).collect(Collectors.toList()));
+                permissionList.addAll(apiPermissions.stream().map(String::valueOf).toList());
             }
         });
 

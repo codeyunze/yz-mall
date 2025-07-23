@@ -5,37 +5,23 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.temp.SaTempUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.yz.mall.auth.dto.*;
-import com.yz.mall.auth.service.AuthSysRoleRelationMenuService;
 import com.yz.mall.auth.service.AuthSysUserService;
-import com.yz.mall.auth.vo.AuthUserIntegratedInfoDto;
+import com.yz.mall.auth.service.AuthenticationService;
 import com.yz.mall.auth.vo.AuthUserInfoVo;
+import com.yz.mall.auth.vo.AuthUserIntegratedInfoDto;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
-import com.yz.mall.base.enums.MenuTypeEnum;
 import com.yz.mall.redis.RedisCacheKey;
 import com.yz.mall.web.annotation.RepeatSubmit;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 身份认证接口
@@ -45,21 +31,21 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping
-public class AuthLoginController extends ApiController {
+@RequestMapping("/authentication")
+public class AuthenticationController extends ApiController {
 
     private final AuthSysUserService authSysUserService;
 
-    private final AuthSysRoleRelationMenuService authSysRoleRelationMenuService;
+    private final AuthenticationService authenticationService;
 
     private final RedisTemplate<String, Object> defaultRedisTemplate;
 
-    public AuthLoginController(RedisTemplate<String, Object> defaultRedisTemplate
+    public AuthenticationController(RedisTemplate<String, Object> defaultRedisTemplate
             , AuthSysUserService authSysUserService
-            , AuthSysRoleRelationMenuService authSysRoleRelationMenuService) {
+            , AuthenticationService authenticationService) {
         this.defaultRedisTemplate = defaultRedisTemplate;
         this.authSysUserService = authSysUserService;
-        this.authSysRoleRelationMenuService = authSysRoleRelationMenuService;
+        this.authenticationService = authenticationService;
     }
 
     /**
@@ -75,81 +61,13 @@ public class AuthLoginController extends ApiController {
 
         // 登录
         StpUtil.login(loginInfo.getId());
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        List<String> roles = getRoleByUserId(loginInfo.getId());
 
-        AuthUserIntegratedInfoDto vo = new AuthUserIntegratedInfoDto();
-        BeanUtils.copyProperties(loginInfo, vo);
-        vo.setUserId(loginInfo.getId());
-        vo.setAccessToken(tokenInfo.tokenValue);
-        vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
-        // 刷新令牌有效期1天
-        vo.setRefreshToken(SaTempUtil.createToken(loginInfo.getId(), 86400));
-        vo.setRoles(roles);
-
-        // 获取指定角色所拥有的按钮权限，同时查询接口权限，并缓存
-        getPermissionByRoleIds(roles);
-        vo.setPermissions(getPermissionByRoleIds(roles));
-        vo.setAvatar(loginInfo.getAvatar());
-
-        BoundHashOperations<String, Object, Object> operations = defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
-        operations.put("refreshToken", vo.getRefreshToken());
-        operations.put("userId", vo.getUserId());
-        operations.put("username", vo.getUsername());
-        operations.put("nickname", vo.getNickname());
-        operations.put("accessToken", vo.getAccessToken());
-        operations.expire(86400, TimeUnit.SECONDS);
-        return success(vo);
+        AuthUserIntegratedInfoDto userInfo = authenticationService.getUserInfo(loginInfo.getId());
+        userInfo.setAvatar(loginInfo.getAvatar());
+        userInfo.setUsername(loginInfo.getUsername());
+        userInfo.setNickname(loginInfo.getUsername());
+        return success(userInfo);
     }
-
-
-    /**
-     * 获取指定用户拥有的角色信息，并缓存到redis
-     *
-     * @param userId 指定用户Id
-     * @return 用户拥有的角色
-     */
-    private List<String> getRoleByUserId(Long userId) {
-        // 查询用户角色
-        List<Long> roles = authSysUserService.getUserRoles(userId);
-        if (CollectionUtils.isEmpty(roles)) {
-            return Collections.emptyList();
-        }
-
-        return roles.stream().map(String::valueOf).collect(Collectors.toList());
-    }
-
-    /**
-     * 获取指定角色所拥有的按钮权限，同时查询接口权限，并缓存
-     *
-     * @param roleIds 角色Id列表
-     * @return 按钮资源权限
-     */
-    private List<String> getPermissionByRoleIds(List<String> roleIds) {
-        if (CollectionUtils.isEmpty(roleIds)) {
-            return Collections.emptyList();
-        }
-        // 所拥有的所有按钮权限
-        List<String> permissions = new ArrayList<>();
-
-        AuthRolePermissionQueryDto queryDto = new AuthRolePermissionQueryDto();
-        queryDto.setMenuType(MenuTypeEnum.BUTTON);
-        queryDto.setRoleIds(roleIds.stream().map(Long::parseLong).collect(Collectors.toList()));
-        Map<String, List<String>> permissionsBtnByRoleIds = authSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
-
-        queryDto.setMenuType(MenuTypeEnum.API);
-        authSysRoleRelationMenuService.getPermissionsByRoleIds(queryDto);
-
-        if (!CollectionUtils.isEmpty(permissionsBtnByRoleIds)) {
-            permissionsBtnByRoleIds.forEach((key, value) -> permissions.addAll(value));
-        }
-
-        if (CollectionUtils.isEmpty(permissions)) {
-            return Collections.emptyList();
-        }
-        return permissions.stream().distinct().collect(Collectors.toList());
-    }
-
 
     /**
      * 更新访问令牌
@@ -168,22 +86,10 @@ public class AuthLoginController extends ApiController {
 
         // 2、为其生成新的短 token
         StpUtil.login(userId);
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        // 获取并缓存角色信息
-        getRoleByUserId(Long.parseLong(userId.toString()));
 
-        // 3、返回信息
-        AuthUserIntegratedInfoDto vo = new AuthUserIntegratedInfoDto();
-        vo.setAccessToken(tokenInfo.getTokenValue());
-        vo.setRefreshToken(SaTempUtil.createToken(userId, 86400));
-        vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
-        vo.setUserId(Long.parseLong(userId.toString()));
         // 清理旧的临时token
         SaTempUtil.deleteToken(refreshTokenDto.getRefreshToken());
-
-        BoundHashOperations<String, Object, Object> operations = defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
-        operations.put("refreshToken", vo.getRefreshToken());
-        operations.expire(86400, TimeUnit.SECONDS);
+        AuthUserIntegratedInfoDto vo = authenticationService.getUserInfo(Long.parseLong(userId.toString()));
         return new Result<>(CodeEnum.SUCCESS.get(), vo, "访问令牌更新成功");
     }
 
@@ -295,20 +201,21 @@ public class AuthLoginController extends ApiController {
             return new Result<>(CodeEnum.ERROR_TOKEN_ILLEGAL.get(), null, CodeEnum.ERROR_TOKEN_ILLEGAL.getMsg());
         }
 
-        List<String> roles = getRoleByUserId(StpUtil.getLoginIdAsLong());
-        AuthUserIntegratedInfoDto vo = new AuthUserIntegratedInfoDto();
-        BeanUtils.copyProperties(loginInfo, vo);
-        vo.setUserId(loginInfo.getId());
-
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        vo.setAccessToken(tokenInfo.tokenValue);
-        vo.setExpires(LocalDateTimeUtil.offset(LocalDateTime.now(), tokenInfo.tokenTimeout, ChronoUnit.SECONDS));
-        // 获取刷新令牌
-        vo.setRefreshToken((String) defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId())).get("refreshToken"));
-        vo.setRoles(roles);
-        vo.setPermissions(getPermissionByRoleIds(roles));
+        AuthUserIntegratedInfoDto vo = authenticationService.getUserInfo(loginInfo.getId());
         vo.setAvatar(loginInfo.getAvatar());
+        vo.setUsername(loginInfo.getUsername());
+        vo.setNickname(loginInfo.getUsername());
         return success(vo);
     }
 
+    /**
+     * 验证用户权限
+     *
+     * @param dto 验证权限信息
+     * @return true: 验证通过    false: 验证失败
+     */
+    @PostMapping("checkPermission")
+    public Result<Boolean> checkPermission(@RequestBody @Valid AuthCheckPermissionDto dto) {
+        return success(authenticationService.checkPermission(dto));
+    }
 }

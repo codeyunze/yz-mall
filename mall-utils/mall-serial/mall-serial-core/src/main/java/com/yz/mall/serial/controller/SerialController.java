@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
  * @since 2024-06-23 22:52:36
  */
 @RestController
-@RequestMapping("/unqid")
+@RequestMapping("/serial")
 public class SerialController extends ApiController {
 
     @Value("${server.port}")

@@ -19,7 +19,7 @@ public class RedisCacheKey {
     }
 
     /**
-     * 权限信息-角色
+     * 权限信息-用户所拥有的角色
      */
     public static String permissionRole(String userId) {
         return "permission:role-by-user:" + userId;
