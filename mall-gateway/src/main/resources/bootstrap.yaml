@@ -3,7 +3,7 @@ spring:
     compatibility-verifier:
       enabled: false
     nacos:
-      server-addr: 127.0.0.1:8848
+      server-addr: yunze.com:8848
       username: nacos
       password: ${NACOS_PASSWORD}
       config:
