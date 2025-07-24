@@ -27,4 +27,12 @@ public class AuthRolePermissionQueryDto implements Serializable {
      */
     @NotNull(message = "角色不能为空")
     private List<Long> roleIds;
+
+    public AuthRolePermissionQueryDto(MenuTypeEnum menuType, List<Long> roleIds) {
+        this.menuType = menuType;
+        this.roleIds = roleIds;
+    }
+
+    public AuthRolePermissionQueryDto() {
+    }
 }

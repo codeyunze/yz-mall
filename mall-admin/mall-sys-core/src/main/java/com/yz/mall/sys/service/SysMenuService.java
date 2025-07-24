@@ -7,8 +7,8 @@ import com.yz.mall.sys.dto.SysMenuUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
-
 import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +30,7 @@ public interface SysMenuService extends IService<SysMenu> {
 
     /**
      * 更新数据
+     * <br> 会同时更新所有角色的按钮和接口权限缓存
      *
      * @param dto 更新基础数据
      * @return 是否操作成功

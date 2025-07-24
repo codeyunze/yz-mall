@@ -63,7 +63,7 @@ public class AuthUserIntegratedInfoDto implements Serializable {
     /**
      * 用户角色
      */
-    private List<String> roles;
+    private List<Long> roles;
 
     /**
      * 用户资源权限（按钮）

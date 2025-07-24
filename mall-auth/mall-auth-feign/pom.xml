@@ -20,8 +20,19 @@
     <dependencies>
         <dependency>
             <groupId>com.yz</groupId>
+            <artifactId>mall-auth-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
             <artifactId>mall-base</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
 

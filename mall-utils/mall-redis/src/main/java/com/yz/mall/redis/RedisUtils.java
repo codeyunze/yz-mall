@@ -23,7 +23,7 @@ public class RedisUtils {
     }
 
     /**
-     * 删除匹配条件的的缓存信息
+     * 删除匹配条件的的100条缓存信息
      *
      * @param pattern 模糊匹配key
      */
@@ -41,7 +41,7 @@ public class RedisUtils {
     }
 
     /**
-     * 获取匹配条件的缓存key
+     * 获取匹配条件的100条缓存key
      *
      * @param pattern 模糊匹配key
      * @return 缓存信息的key

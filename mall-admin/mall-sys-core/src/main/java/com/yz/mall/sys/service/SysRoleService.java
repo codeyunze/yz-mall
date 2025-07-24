@@ -8,8 +8,8 @@ import com.yz.mall.sys.dto.SysRoleQueryDto;
 import com.yz.mall.sys.dto.SysRoleUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysRole;
-
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 /**
@@ -67,5 +67,12 @@ public interface SysRoleService extends IService<SysRole> {
      * @return 菜单Id {@link SysMenu#getId()}
      */
     List<String> getRoleMenusByRoleId(Long roleId);
+
+    /**
+     * 获取所有有效的角色Id
+     *
+     * @return 系统当前所有有效的角色Id
+     */
+    List<Long> getEffectiveRoleIds();
 }
 

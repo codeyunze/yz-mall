@@ -58,7 +58,7 @@ public class SysMenuController extends ApiController {
     }
 
     /**
-     * 查询-菜单简略信息
+     * 查询所有菜单的简略信息
      */
     @SaCheckPermission("api:system:menu:list")
     @PostMapping("listSlim")

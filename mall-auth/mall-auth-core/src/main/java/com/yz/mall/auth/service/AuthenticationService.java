@@ -54,7 +54,7 @@ public class AuthenticationService {
      */
     public AuthUserIntegratedInfoDto getUserInfo(Long userId) {
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        List<String> roles = getRoleByUserId(userId);
+        List<Long> roles = authSysUserService.getUserRoles(userId);
 
         AuthUserIntegratedInfoDto vo = new AuthUserIntegratedInfoDto();
         // BeanUtils.copyProperties(loginInfo, vo);
@@ -108,39 +108,20 @@ public class AuthenticationService {
 
 
     /**
-     * 获取指定用户拥有的角色信息，并缓存到redis
-     *
-     * @param userId 指定用户Id
-     * @return 用户拥有的角色
-     */
-    private List<String> getRoleByUserId(Long userId) {
-        // 查询用户角色
-        List<Long> roles = authSysUserService.getUserRoles(userId);
-        if (CollectionUtils.isEmpty(roles)) {
-            return Collections.emptyList();
-        }
-
-        return roles.stream().map(String::valueOf).collect(Collectors.toList());
-    }
-
-    /**
      * 获取指定角色所拥有的按钮权限，同时查询接口权限，并缓存
      *
      * @param roleIds 角色Id列表
      * @return 按钮资源权限
      */
-    private List<String> getPermissionByRoleIds(List<String> roleIds) {
+    private List<String> getPermissionByRoleIds(List<Long> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptyList();
         }
         // 所拥有的所有按钮权限
         List<String> permissions = new ArrayList<>();
 
-        AuthRolePermissionQueryDto queryDto = new AuthRolePermissionQueryDto();
         // 查询并缓存指定角色的按钮权限
-        queryDto.setMenuType(MenuTypeEnum.BUTTON);
-        queryDto.setRoleIds(roleIds.stream().map(Long::parseLong).collect(Collectors.toList()));
-        Map<String, List<String>> permissionsBtnByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(queryDto);
+        Map<String, List<String>> permissionsBtnByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
         if (!CollectionUtils.isEmpty(permissionsBtnByRoleIds)) {
             permissionsBtnByRoleIds.forEach((roleId, btnRoles) -> {
                 String cacheKey = RedisCacheKey.permission(MenuTypeEnum.BUTTON.name(), roleId);
@@ -155,8 +136,7 @@ public class AuthenticationService {
         }
 
         // 查询并缓存指定角色的API权限
-        queryDto.setMenuType(MenuTypeEnum.API);
-        Map<String, List<String>> permissionsApiByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(queryDto);
+        Map<String, List<String>> permissionsApiByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
         if (!CollectionUtils.isEmpty(permissionsApiByRoleIds)) {
             permissionsApiByRoleIds.forEach((roleId, apiRoles) -> {
                 String cacheKey = RedisCacheKey.permission(MenuTypeEnum.API.name(), String.valueOf(roleId));
@@ -172,6 +152,6 @@ public class AuthenticationService {
         if (CollectionUtils.isEmpty(permissions)) {
             return Collections.emptyList();
         }
-        return permissions.stream().distinct().collect(Collectors.toList());
+        return permissions.stream().distinct().toList();
     }
 }

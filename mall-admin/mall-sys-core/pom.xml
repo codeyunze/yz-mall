@@ -27,6 +27,12 @@
 
         <dependency>
             <groupId>com.yz</groupId>
+            <artifactId>mall-auth-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
             <artifactId>mall-web</artifactId>
             <version>${project.version}</version>
         </dependency>

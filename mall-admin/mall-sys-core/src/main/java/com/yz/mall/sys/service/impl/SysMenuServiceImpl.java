@@ -3,10 +3,12 @@ package com.yz.mall.sys.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.auth.dto.AuthRolePermissionQueryDto;
+import com.yz.mall.auth.service.ExtendPermissionService;
 import com.yz.mall.base.enums.EnableEnum;
 import com.yz.mall.base.enums.MenuTypeEnum;
 import com.yz.mall.base.exception.DataNotExistException;
-import com.yz.mall.redis.RedisUtils;
+import com.yz.mall.redis.RedisCacheKey;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
@@ -14,10 +16,12 @@ import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.mapper.SysMenuMapper;
 import com.yz.mall.sys.service.RefreshPermission;
 import com.yz.mall.sys.service.SysMenuService;
+import com.yz.mall.sys.service.SysRoleService;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.mall.sys.vo.SysTreeMenuMetaVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -36,13 +41,22 @@ import java.util.stream.Collectors;
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
-    private final RedisUtils redisUtils;
-
     private final RefreshPermission refreshPermission;
 
-    public SysMenuServiceImpl(RedisUtils redisUtils, RefreshPermission refreshPermission) {
-        this.redisUtils = redisUtils;
+    private final SysRoleService roleService;
+
+    private final ExtendPermissionService extendPermissionService;
+
+    private final RedisTemplate<String, Object> defaultRedisTemplate;
+
+    public SysMenuServiceImpl(RefreshPermission refreshPermission
+            , ExtendPermissionService extendPermissionService
+            , SysRoleService roleService
+            , RedisTemplate<String, Object> defaultRedisTemplate) {
         this.refreshPermission = refreshPermission;
+        this.extendPermissionService = extendPermissionService;
+        this.roleService = roleService;
+        this.defaultRedisTemplate = defaultRedisTemplate;
     }
 
     @Override
@@ -69,11 +83,42 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         boolean flag = baseMapper.updateById(bo) > 0;
 
         // 清理角色的按钮和接口缓存
-        if (MenuTypeEnum.BUTTON.get().equals(menu.getMenuType())) {
-            refreshPermission.refreshButtonPermissionCache();
-        } else if (MenuTypeEnum.API.get().equals(menu.getMenuType())) {
-            refreshPermission.refreshApiPermissionCache();
+        refreshPermission.refreshButtonPermissionCache();
+        refreshPermission.refreshApiPermissionCache();
+
+        // 获取系统所有有效的角色
+        /*List<Long> roleIds = roleService.getEffectiveRoleIds();
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return flag;
         }
+
+        // 缓存角色的按钮权限
+        Map<String, List<String>> permissionsBtnByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
+        if (!CollectionUtils.isEmpty(permissionsBtnByRoleIds)) {
+            permissionsBtnByRoleIds.forEach((roleId, btnRoles) -> {
+                String cacheKey = RedisCacheKey.permission(MenuTypeEnum.BUTTON.name(), roleId);
+                if (!CollectionUtils.isEmpty(btnRoles)) {
+                    btnRoles.forEach(btnRole -> {
+                        defaultRedisTemplate.opsForList().rightPush(cacheKey, btnRole);
+                        defaultRedisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
+                    });
+                }
+            });
+        }
+
+        // 缓存角色的接口权限
+        Map<String, List<String>> permissionsApiByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
+        if (!CollectionUtils.isEmpty(permissionsApiByRoleIds)) {
+            permissionsApiByRoleIds.forEach((roleId, apiRoles) -> {
+                String cacheKey = RedisCacheKey.permission(MenuTypeEnum.API.name(), String.valueOf(roleId));
+                if (!CollectionUtils.isEmpty(apiRoles)) {
+                    apiRoles.forEach(apiRole -> {
+                        defaultRedisTemplate.opsForList().rightPush(cacheKey, apiRole);
+                        defaultRedisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
+                    });
+                }
+            });
+        }*/
 
         return flag;
     }
