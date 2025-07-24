@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.UnknownHostException;
@@ -59,24 +60,12 @@ public class OverallExceptionHandle {
         return new Result<>(CodeEnum.REPEAT_SUBMIT.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.REPEAT_SUBMIT.getMsg());
     }
 
-
-    /**
-     * 参数校验异常提示
-     *
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    Result<?> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException e) {
-        return new Result<>(CodeEnum.PARAMS_ERROR.get(), null, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
-    }
-
     /**
      * SQL完整性约束异常
      */
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     Result<?> sqlIntegrityConstraintViolationExceptionHandle(SQLIntegrityConstraintViolationException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         return new Result<>(CodeEnum.ALREADY_EXISTS_ERROR.get(), null, CodeEnum.ALREADY_EXISTS_ERROR.getMsg());
     }
 
@@ -85,7 +74,7 @@ public class OverallExceptionHandle {
      */
     @ExceptionHandler(FeignException.class)
     Result<?> feignExceptionHandle(FeignException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         return new Result<>(e.getCode(), null, e.getMessage());
     }
 
@@ -104,5 +93,24 @@ public class OverallExceptionHandle {
     Result<?> authenticationExceptionHandle(UnknownHostException e) {
         log.error(e.getMessage(), e);
         return new Result<>(CodeEnum.SYSTEM_ERROR.get(), null, "服务异常，请稍后再试");
+    }
+
+    /**
+     * 参数校验异常提示
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    Result<?> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException e) {
+        log.error(e.getMessage(), e);
+        return new Result<>(CodeEnum.PARAMS_ERROR.get(), null, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+    }
+
+    /**
+     * 参数错误问题处理
+     */
+    // @ResponseBody
+    @ExceptionHandler(value = ParamsException.class)
+    public Result<?> paramsExceptionHandler(ParamsException e) {
+        log.error(e.getMessage(), e);
+        return new Result<>(e.getCode(), null, e.getMessage());
     }
 }

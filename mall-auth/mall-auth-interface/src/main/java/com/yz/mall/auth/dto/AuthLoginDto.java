@@ -1,5 +1,6 @@
 package com.yz.mall.auth.dto;
 
+import com.yz.mall.base.validators.SpecifiedRange;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -36,5 +37,6 @@ public class AuthLoginDto implements Serializable {
     /**
      * 登录类型
      */
+    @SpecifiedRange(allowed = {"1", "2"}, message = "未知的登录类型")
     private String type;
 }
