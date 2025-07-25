@@ -38,12 +38,16 @@ public class AuthenticationService {
 
     private final AuthSysRoleRelationMenuService roleRelationMenuService;
 
+    private final AuthOperateCacheService authOperateCacheService;
+
     public AuthenticationService(RedisTemplate<String, Object> defaultRedisTemplate
             , AuthSysUserService authSysUserService
-            , AuthSysRoleRelationMenuService roleRelationMenuService) {
+            , AuthSysRoleRelationMenuService roleRelationMenuService
+            , AuthOperateCacheService authOperateCacheService) {
         this.defaultRedisTemplate = defaultRedisTemplate;
         this.authSysUserService = authSysUserService;
         this.roleRelationMenuService = roleRelationMenuService;
+        this.authOperateCacheService = authOperateCacheService;
     }
 
     /**
@@ -117,41 +121,16 @@ public class AuthenticationService {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptyList();
         }
-        // 所拥有的所有按钮权限
-        List<String> permissions = new ArrayList<>();
 
         // 查询并缓存指定角色的按钮权限
         Map<String, List<String>> permissionsBtnByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
-        if (!CollectionUtils.isEmpty(permissionsBtnByRoleIds)) {
-            permissionsBtnByRoleIds.forEach((roleId, btnRoles) -> {
-                String cacheKey = RedisCacheKey.permission(MenuTypeEnum.BUTTON.name(), roleId);
-                if (!CollectionUtils.isEmpty(btnRoles)) {
-                    btnRoles.forEach(btnRole -> {
-                        defaultRedisTemplate.opsForList().rightPush(cacheKey, btnRole);
-                        defaultRedisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
-                    });
-                }
-                permissions.addAll(btnRoles);
-            });
-        }
+        authOperateCacheService.updateCache(MenuTypeEnum.BUTTON, permissionsBtnByRoleIds);
 
         // 查询并缓存指定角色的API权限
         Map<String, List<String>> permissionsApiByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
-        if (!CollectionUtils.isEmpty(permissionsApiByRoleIds)) {
-            permissionsApiByRoleIds.forEach((roleId, apiRoles) -> {
-                String cacheKey = RedisCacheKey.permission(MenuTypeEnum.API.name(), String.valueOf(roleId));
-                if (!CollectionUtils.isEmpty(apiRoles)) {
-                    apiRoles.forEach(apiRole -> {
-                        defaultRedisTemplate.opsForList().rightPush(cacheKey, apiRole);
-                        defaultRedisTemplate.expire(cacheKey, 86400, TimeUnit.SECONDS);
-                    });
-                }
-            });
-        }
+        authOperateCacheService.updateCache(MenuTypeEnum.API, permissionsApiByRoleIds);
 
-        if (CollectionUtils.isEmpty(permissions)) {
-            return Collections.emptyList();
-        }
-        return permissions.stream().distinct().toList();
+        // 所拥有的所有按钮权限
+        return permissionsBtnByRoleIds.values().stream().flatMap(Collection::stream).distinct().toList();
     }
 }

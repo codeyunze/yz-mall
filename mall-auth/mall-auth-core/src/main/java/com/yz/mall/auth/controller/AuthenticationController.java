@@ -62,6 +62,7 @@ public class AuthenticationController extends ApiController {
         // 登录
         StpUtil.login(loginInfo.getId());
 
+        // 登录成功，获取用户信息
         AuthUserIntegratedInfoDto userInfo = authenticationService.getUserInfo(loginInfo.getId());
         userInfo.setAvatar(loginInfo.getAvatar());
         userInfo.setUsername(loginInfo.getUsername());

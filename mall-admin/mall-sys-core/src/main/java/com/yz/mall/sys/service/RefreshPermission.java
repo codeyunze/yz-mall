@@ -1,21 +1,17 @@
 package com.yz.mall.sys.service;
 
 import com.yz.mall.auth.dto.AuthRolePermissionQueryDto;
+import com.yz.mall.auth.service.AuthOperateCacheService;
 import com.yz.mall.auth.service.ExtendPermissionService;
 import com.yz.mall.base.enums.MenuTypeEnum;
 import com.yz.mall.redis.RedisCacheKey;
 import com.yz.mall.redis.RedisUtils;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,18 +27,18 @@ public class RefreshPermission {
 
     private final RedisUtils redisUtils;
 
-    private final RedisTemplate<String, Object> defaultRedisTemplate;
+    private final AuthOperateCacheService authOperateCacheService;
 
     private final ExtendPermissionService extendPermissionService;
 
     private final SysRoleService roleService;
 
     public RefreshPermission(RedisUtils redisUtils
-            , RedisTemplate<String, Object> defaultRedisTemplate
+            , AuthOperateCacheService authOperateCacheService
             , ExtendPermissionService extendPermissionService
             , SysRoleService roleService) {
         this.redisUtils = redisUtils;
-        this.defaultRedisTemplate = defaultRedisTemplate;
+        this.authOperateCacheService = authOperateCacheService;
         this.extendPermissionService = extendPermissionService;
         this.roleService = roleService;
     }
@@ -50,14 +46,19 @@ public class RefreshPermission {
     @PostConstruct
     public void loadRolePermissionCache() {
         log.info("refresh all permission cache");
-        // refreshPermissionCache(MenuTypeEnum.BUTTON);
-        // refreshPermissionCache(MenuTypeEnum.API);
+        // 获取系统当前所有有效的角色Id
         List<Long> roleIds = roleService.getEffectiveRoleIds();
         if (CollectionUtils.isEmpty(roleIds)) {
             return;
         }
 
-        extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
+        // 查询并缓存各角色的按钮权限
+        Map<String, List<String>> permissionsBtnByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
+        authOperateCacheService.updateCache(MenuTypeEnum.BUTTON, permissionsBtnByRoleIds);
+
+        // 查询并缓存各角色的接口权限
+        Map<String, List<String>> permissionsApiByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
+        authOperateCacheService.updateCache(MenuTypeEnum.API, permissionsApiByRoleIds);
     }
 
     /**
@@ -76,7 +77,7 @@ public class RefreshPermission {
 
 
     /**
-     * 刷新指定类型权限缓存信息
+     * 刷新指定类型权限（按钮或接口）的所有角色的权限缓存信息
      *
      * @param type 权限类型
      */
@@ -99,31 +100,6 @@ public class RefreshPermission {
         // 获取指定角色，指定菜单类型所拥有的权限
         Map<String, List<String>> permissions = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(type, roleIds));
         // 更新缓存
-        updateCache(type, permissions);
-    }
-
-    /**
-     * 更新缓存
-     *
-     * @param type        权限类型
-     * @param permissions Map<角色Id, List<权限>>
-     */
-    private void updateCache(MenuTypeEnum type, Map<String, List<String>> permissions) {
-        // 执行 lua 脚本
-        DefaultRedisScript<Boolean> redisScript = new DefaultRedisScript<>();
-        // 指定 lua 脚本
-        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/RefreshPermission.lua")));
-        // 指定返回类型
-        redisScript.setResultType(Boolean.class);
-        log.info("roleId信息：{}", permissions.keySet());
-        for (String roleId : permissions.keySet()) {
-            log.info("roleId permissions:{}", permissions.get(roleId));
-            if (!permissions.containsKey(roleId)) {
-                continue;
-            }
-            // 参数一：redisScript，参数二：key列表，参数三：arg（可多个）
-            String[] array = permissions.get(roleId).toArray(new String[0]);
-            defaultRedisTemplate.execute(redisScript, Collections.singletonList(RedisCacheKey.permission(type.name(), roleId)), array);
-        }
+        authOperateCacheService.updateCache(type, permissions);
     }
 }

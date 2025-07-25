@@ -15,7 +15,7 @@ import java.util.Map;
 public interface ExtendPermissionService {
 
     /**
-     * 获取指定角色，指定菜单类型所拥有的权限
+     * 获取指定角色，指定菜单类型所拥有的权限（本操作不缓存信息）
      *
      * @param query 用户拥有的角色Id和查询的菜单权限类型
      * @return 权限标识 <角色Id，List<权限标识>>
