@@ -75,7 +75,8 @@ public class SysMenuController extends ApiController {
     @SaCheckPermission("api:system:menu:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
-        return success(this.service.removeById(id));
+        return success(this.service.recursionRemoveById(id));
+        // return success(this.service.removeById(id));
     }
 
     /**

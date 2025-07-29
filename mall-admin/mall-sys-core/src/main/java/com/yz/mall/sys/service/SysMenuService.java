@@ -59,5 +59,14 @@ public interface SysMenuService extends IService<SysMenu> {
      * @return 树形结构菜单信息
      */
     List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, Map<Long, List<Long>> roleByMenuMap);
+
+    /**
+     * 递归删除菜单
+     * <br>删除选中的菜单及其子菜单和资源，并刷新权限缓存
+     *
+     * @param id 菜单Id
+     * @return 是否删除成功
+     */
+    boolean recursionRemoveById(Long id);
 }
 

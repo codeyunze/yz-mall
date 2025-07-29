@@ -18,6 +18,7 @@ import com.yz.mall.sys.vo.SysTreeMenuMetaVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -140,6 +141,63 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             treeMenuVos.add(vo);
         }
         return treeMenuVos;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean recursionRemoveById(Long id) {
+        SysMenu topMenu = baseMapper.selectById(id);
+        if (topMenu == null) {
+            throw new DataNotExistException("选择删除菜单数据不存在");
+        }
+
+        // 需要删除的菜单Id
+        List<Long> needDelMenuIds = new ArrayList<>();
+        needDelMenuIds.add(id);
+
+        if (!topMenu.getParentId().equals(0L)) {
+            List<SysMenu> childrenMenu = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getParentId, id));
+            needDelMenuIds.addAll(getNeedDelMenuIds(childrenMenu));
+        }
+
+        if (baseMapper.deleteByIds(needDelMenuIds) > 0) {
+            // 清理所有角色的按钮和接口缓存
+            refreshPermission.refreshButtonPermissionCache();
+            refreshPermission.refreshApiPermissionCache();
+        }
+        return false;
+    }
+
+    /**
+     * 递归获取需要删除的菜单Id
+     *
+     * @param children 菜单信息
+     * @return 需要删除的菜单Id
+     */
+    private List<Long> getNeedDelMenuIds(List<SysMenu> children) {
+        if (CollectionUtils.isEmpty(children)) {
+            return new ArrayList<>();
+        }
+
+        // 需要删除的菜单Id
+        List<Long> needDelMenuIds = new ArrayList<>();
+        // 需要继续往下查询的菜单Id
+        List<Long> childParentIds = new ArrayList<>();
+        for (SysMenu child : children) {
+            needDelMenuIds.add(child.getId());
+            if (child.getParentId().equals(0L)) {
+                break;
+            }
+            childParentIds.add(child.getId());
+        }
+
+        if (CollectionUtils.isEmpty(childParentIds)) {
+            return needDelMenuIds;
+        }
+
+        List<SysMenu> childrenMenu = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>().in(SysMenu::getParentId, childParentIds));
+        needDelMenuIds.addAll(getNeedDelMenuIds(childrenMenu));
+        return needDelMenuIds;
     }
 
     /**

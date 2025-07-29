@@ -24,7 +24,8 @@ public class ExtendSysAreaServiceImpl implements ExtendSysAreaService {
         this.service = service;
     }
 
-    @Cacheable(value = "system:area-detail", key = "#id")
+    // 缓存空值（防穿透）
+    @Cacheable(value = "system:area-detail", key = "#id", unless = "#result == null")
     @Override
     public InternalSysAreaVo getById(String id) {
         SysArea area = service.getById(id);

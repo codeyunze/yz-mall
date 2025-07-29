@@ -13,6 +13,7 @@ import com.yz.mall.sys.dto.SysReceiptInfoQueryDto;
 import com.yz.mall.sys.dto.SysReceiptInfoUpdateDto;
 import com.yz.mall.sys.service.SysReceiptInfoService;
 import com.yz.mall.sys.vo.SysReceiptInfoVo;
+import com.yz.mall.web.annotation.RepeatSubmit;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,7 @@ public class SysReceiptInfoController extends ApiController {
     /**
      * 更新
      */
+    @RepeatSubmit
     @SaCheckPermission("api:system:receipt:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysReceiptInfoUpdateDto dto) {
