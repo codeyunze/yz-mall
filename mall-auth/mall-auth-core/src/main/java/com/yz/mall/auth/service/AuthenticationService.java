@@ -11,6 +11,9 @@ import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.enums.MenuTypeEnum;
 import com.yz.mall.base.exception.AuthenticationException;
 import com.yz.mall.redis.RedisCacheKey;
+import com.yz.mall.redis.RedissonLockKey;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,6 +37,8 @@ public class AuthenticationService {
 
     private final RedisTemplate<String, Object> defaultRedisTemplate;
 
+    private final Redisson redisson;
+
     private final AuthSysUserService authSysUserService;
 
     private final AuthSysRoleRelationMenuService roleRelationMenuService;
@@ -41,10 +46,12 @@ public class AuthenticationService {
     private final AuthOperateCacheService authOperateCacheService;
 
     public AuthenticationService(RedisTemplate<String, Object> defaultRedisTemplate
+            , Redisson redisson
             , AuthSysUserService authSysUserService
             , AuthSysRoleRelationMenuService roleRelationMenuService
             , AuthOperateCacheService authOperateCacheService) {
         this.defaultRedisTemplate = defaultRedisTemplate;
+        this.redisson = redisson;
         this.authSysUserService = authSysUserService;
         this.roleRelationMenuService = roleRelationMenuService;
         this.authOperateCacheService = authOperateCacheService;
@@ -112,7 +119,7 @@ public class AuthenticationService {
 
 
     /**
-     * 获取指定角色所拥有的按钮权限，同时查询接口权限，并缓存
+     * 获取并返回指定角色所拥有的按钮权限，同时仅查询接口权限。按钮权限和接口权限都缓存。
      *
      * @param roleIds 角色Id列表
      * @return 按钮资源权限
@@ -122,15 +129,62 @@ public class AuthenticationService {
             return Collections.emptyList();
         }
 
-        // 查询并缓存指定角色的按钮权限
-        Map<String, List<String>> permissionsBtnByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
-        authOperateCacheService.updateCache(MenuTypeEnum.BUTTON, permissionsBtnByRoleIds);
+        // 是否需要去查库
+        boolean needToQuery;
+        // 缓存的按钮权限
+        List<String> cachedButtonPermissions = new ArrayList<>();
+        // 判断缓存是否存在所需角色的权限信息
+        needToQuery = getCacheNeedToQuery(cachedButtonPermissions, roleIds);
 
-        // 查询并缓存指定角色的API权限
-        Map<String, List<String>> permissionsApiByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
-        authOperateCacheService.updateCache(MenuTypeEnum.API, permissionsApiByRoleIds);
+        // 如果不需要查库，直接返回按钮的权限信息即可
+        if (!needToQuery) {
+            return cachedButtonPermissions;
+        }
 
-        // 所拥有的所有按钮权限
-        return permissionsBtnByRoleIds.values().stream().flatMap(Collection::stream).distinct().toList();
+        RLock rLock = redisson.getLock(RedissonLockKey.keyRefreshPermission());
+        rLock.lock(20, TimeUnit.SECONDS);
+        try {
+            // 双重检查锁，防止获取锁后，因为前一个线程已经获取了锁，并已经更新了缓存，然后导致当前线程在之前获取的缓存数据不完整
+            if (!getCacheNeedToQuery(cachedButtonPermissions, roleIds)) {
+                return cachedButtonPermissions;
+            }
+
+            // 查询并缓存指定角色的按钮权限
+            Map<String, List<String>> permissionsBtnByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
+            authOperateCacheService.updateCache(MenuTypeEnum.BUTTON, permissionsBtnByRoleIds);
+
+            // 查询并缓存指定角色的API权限
+            Map<String, List<String>> permissionsApiByRoleIds = roleRelationMenuService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
+            authOperateCacheService.updateCache(MenuTypeEnum.API, permissionsApiByRoleIds);
+
+            // 所拥有的所有按钮权限
+            return permissionsBtnByRoleIds.values().stream().flatMap(Collection::stream).distinct().toList();
+        } finally {
+            rLock.unlock();
+        }
+    }
+
+    /**
+     * 判断缓存是否存在所需角色的权限信息
+     *
+     * @param cachedButtonPermissions 缓存里的按钮权限信息
+     * @param roleIds                 角色Id列表
+     * @return 是否需要去查库
+     */
+    private boolean getCacheNeedToQuery(List<String> cachedButtonPermissions, List<Long> roleIds) {
+        // 判断缓存是否存在所需角色的权限信息
+        for (Long roleId : roleIds) {
+            List<Object> buttonPermissions = defaultRedisTemplate.boundListOps(RedisCacheKey.permission(MenuTypeEnum.BUTTON.name(), roleId.toString())).range(0, -1);
+            if (CollectionUtils.isEmpty(buttonPermissions)) {
+                return true;
+            } else {
+                cachedButtonPermissions.addAll(buttonPermissions.stream().map(String::valueOf).toList());
+            }
+            List<Object> apiPermissions = defaultRedisTemplate.boundListOps(RedisCacheKey.permission(MenuTypeEnum.API.name(), roleId.toString())).range(0, -1);
+            if (CollectionUtils.isEmpty(apiPermissions)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

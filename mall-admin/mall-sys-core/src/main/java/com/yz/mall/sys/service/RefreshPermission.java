@@ -6,14 +6,18 @@ import com.yz.mall.auth.service.ExtendPermissionService;
 import com.yz.mall.base.enums.MenuTypeEnum;
 import com.yz.mall.redis.RedisCacheKey;
 import com.yz.mall.redis.RedisUtils;
+import com.yz.mall.redis.RedissonLockKey;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 权限信息刷新（按钮权限和接口权限）
@@ -33,32 +37,42 @@ public class RefreshPermission {
 
     private final SysRoleService roleService;
 
+    private final Redisson redisson;
+
     public RefreshPermission(RedisUtils redisUtils
             , AuthOperateCacheService authOperateCacheService
             , ExtendPermissionService extendPermissionService
-            , SysRoleService roleService) {
+            , SysRoleService roleService
+            , Redisson redisson) {
         this.redisUtils = redisUtils;
         this.authOperateCacheService = authOperateCacheService;
         this.extendPermissionService = extendPermissionService;
         this.roleService = roleService;
+        this.redisson = redisson;
     }
 
     @PostConstruct
     public void loadRolePermissionCache() {
-        log.info("refresh all permission cache");
-        // 获取系统当前所有有效的角色Id
-        List<Long> roleIds = roleService.getEffectiveRoleIds();
-        if (CollectionUtils.isEmpty(roleIds)) {
-            return;
+        RLock rLock = redisson.getLock(RedissonLockKey.keyRefreshPermission());
+        rLock.lock(20, TimeUnit.SECONDS);
+        try {
+            log.info("refresh all permission cache");
+            // 获取系统当前所有有效的角色Id
+            List<Long> roleIds = roleService.getEffectiveRoleIds();
+            if (CollectionUtils.isEmpty(roleIds)) {
+                return;
+            }
+
+            // 查询并缓存各角色的按钮权限
+            Map<String, List<String>> permissionsBtnByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
+            authOperateCacheService.updateCache(MenuTypeEnum.BUTTON, permissionsBtnByRoleIds);
+
+            // 查询并缓存各角色的接口权限
+            Map<String, List<String>> permissionsApiByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
+            authOperateCacheService.updateCache(MenuTypeEnum.API, permissionsApiByRoleIds);
+        } finally {
+            rLock.unlock();
         }
-
-        // 查询并缓存各角色的按钮权限
-        Map<String, List<String>> permissionsBtnByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.BUTTON, roleIds));
-        authOperateCacheService.updateCache(MenuTypeEnum.BUTTON, permissionsBtnByRoleIds);
-
-        // 查询并缓存各角色的接口权限
-        Map<String, List<String>> permissionsApiByRoleIds = extendPermissionService.getPermissionsByRoleIds(new AuthRolePermissionQueryDto(MenuTypeEnum.API, roleIds));
-        authOperateCacheService.updateCache(MenuTypeEnum.API, permissionsApiByRoleIds);
     }
 
     /**
