@@ -21,7 +21,7 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
         // 新建分页拦截器paginationInnerInterceptor
         PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-        paginationInnerInterceptor.setOverflow(true);
+        // paginationInnerInterceptor.setOverflow(true);
         paginationInnerInterceptor.setMaxLimit(100L);
         // 把分页拦截器添加到MybatisPlus拦截器中
         mybatisPlusInterceptor.addInnerInterceptor(paginationInnerInterceptor);
