@@ -5,7 +5,7 @@
 
     <groupId>com.yz</groupId>
     <artifactId>yz-mall</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>yz-mall</name>
     <description>yz-mall</description>
     <packaging>pom</packaging>

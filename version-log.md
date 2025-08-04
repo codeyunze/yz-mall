@@ -1,5 +1,10 @@
 # 系统变更记录
 
+## 0.0.2-SNAPSHOT
+
+- Spring Boot2升级到Spring Boot3
+- 
+
 ## 0.0.1-SNAPSHOT
 
 ### 新增
