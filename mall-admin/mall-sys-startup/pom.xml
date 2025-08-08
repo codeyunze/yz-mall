@@ -26,7 +26,7 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>mall-serial-core</artifactId>
+            <artifactId>mall-serial-feign</artifactId>
             <version>${project.version}</version>
         </dependency>
 

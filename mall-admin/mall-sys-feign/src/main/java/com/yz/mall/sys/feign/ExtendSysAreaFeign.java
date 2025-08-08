@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author yunze
  * @since 2025/4/21 19:42
  */
-@FeignClient(name = "mall-sys", contextId = "internalArea", path = "extend/area")
+@FeignClient(name = "mall-sys", contextId = "extendArea", path = "extend/area")
 public interface ExtendSysAreaFeign {
 
     /**

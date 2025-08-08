@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2025/7/18 15:38
  */
 @Configuration
-@EnableFeignClients
 @ComponentScan({"com.yz.mall.serial"})
+@EnableFeignClients(basePackages = {"com.yz.mall.serial"})
 public class SerialFeignConfig {
 }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.yz.mall.sys.business.task.AbstractSysPendingTasksQueueConfig;
+import com.yz.mall.sys.AbstractSysPendingTasksQueueConfig;
 import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
 import com.yz.mall.sys.dto.SysPendingTasksQueryDto;
 import com.yz.mall.sys.dto.SysPendingTasksUpdateDto;

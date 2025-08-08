@@ -1,7 +1,10 @@
 package com.yz.mall.sys.service.impl;
 
 import com.yz.mall.sys.service.ExtendSysUserRelationOrgService;
+import com.yz.mall.sys.service.SysUserRelationOrgService;
 import com.yz.mall.sys.vo.InternalSysUserRelationOrgVo;
+import com.yz.mall.sys.vo.SysUserRelationOrgVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,14 +18,19 @@ import java.util.List;
 @Service
 public class ExtendSysUserRelationOrgServiceImpl implements ExtendSysUserRelationOrgService {
 
-    private final ExtendSysUserRelationOrgService extendSysUserRelationOrgService;
+    private final SysUserRelationOrgService sysUserRelationOrgService;
 
-    public ExtendSysUserRelationOrgServiceImpl(ExtendSysUserRelationOrgService extendSysUserRelationOrgService) {
-        this.extendSysUserRelationOrgService = extendSysUserRelationOrgService;
+    public ExtendSysUserRelationOrgServiceImpl(SysUserRelationOrgService sysUserRelationOrgService) {
+        this.sysUserRelationOrgService = sysUserRelationOrgService;
     }
 
     @Override
     public List<InternalSysUserRelationOrgVo> getOrgByUserId(Long userId) {
-        return extendSysUserRelationOrgService.getOrgByUserId(userId);
+        List<SysUserRelationOrgVo> list = sysUserRelationOrgService.getOrgByUserId(userId);
+        return list.stream().map(t -> {
+            InternalSysUserRelationOrgVo vo = new InternalSysUserRelationOrgVo();
+            BeanUtils.copyProperties(t, vo);
+            return vo;
+        }).toList();
     }
 }

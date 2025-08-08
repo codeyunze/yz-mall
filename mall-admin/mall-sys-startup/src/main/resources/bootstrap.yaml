@@ -7,15 +7,12 @@ spring:
       username: nacos
       password: ${NACOS_PASSWORD}
       config:
-        namespace: mall
-        import-check:
-          enabled: false
-        extension-configs:
-          - data-id: datasource.yaml
-            refresh: true
-          - data-id: sa-token.yaml
-            refresh: true
-          - data-id: rabbitmq.properties
-          - data-id: file.yaml
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
       discovery:
-        namespace: mall
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+  config:
+    import:
+      - nacos:datasource.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+      - nacos:sa-token.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true

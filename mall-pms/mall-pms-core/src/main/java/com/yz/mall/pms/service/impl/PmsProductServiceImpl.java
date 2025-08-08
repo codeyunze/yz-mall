@@ -45,9 +45,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
     // private final InternalSysFilesService internalSysFilesService;
 
     public PmsProductServiceImpl(PmsStockService stockService
-            , ExtendSysPendingTasksService extendSysPendingTasksService
-            // , InternalSysFilesService internalSysFilesService
-    ) {
+            , ExtendSysPendingTasksService extendSysPendingTasksService) {
         this.stockService = stockService;
         this.extendSysPendingTasksService = extendSysPendingTasksService;
         // this.internalSysFilesService = internalSysFilesService;
