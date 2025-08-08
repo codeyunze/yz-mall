@@ -1,0 +1,7 @@
+
+server:
+  port: 30005
+
+spring:
+  application:
+    name: mall-pms

@@ -1,0 +1,73 @@
+package com.yz.mall.sys.service.impl;
+
+import com.yz.mall.base.Result;
+import com.yz.mall.base.enums.CodeEnum;
+import com.yz.mall.base.exception.FeignException;
+import com.yz.mall.sys.dto.InternalSysUserAddDto;
+import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
+import com.yz.mall.sys.feign.ExtendSysUserFeign;
+import com.yz.mall.sys.service.ExtendSysUserService;
+import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * 内部暴露service实现类: 用户信息
+ *
+ * @author yunze
+ * @date 2024/6/22 23:42
+ */
+@Service
+public class ExtendSysUserServiceImpl implements ExtendSysUserService {
+
+    private final ExtendSysUserFeign feign;
+
+    public ExtendSysUserServiceImpl(ExtendSysUserFeign feign) {
+        this.feign = feign;
+    }
+
+    @Override
+    public void deduct(Long userId, BigDecimal amount) {
+        Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new FeignException(result.getCode(), result.getMsg());
+        }
+    }
+
+    @Override
+    public void recharge(Long userId, BigDecimal amount) {
+        Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new FeignException(result.getCode(), result.getMsg());
+        }
+    }
+
+    @Override
+    public List<Long> getUserRoles(Long userId) {
+        Result<List<Long>> result = feign.getUserRoles(userId);
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new FeignException(result.getCode(), result.getMsg());
+        }
+        return result.getData();
+    }
+
+    @Override
+    public InternalLoginInfoVo getUserInfoById(Long userId) {
+        Result<InternalLoginInfoVo> result = feign.getUserInfo(userId);
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new FeignException(result.getCode(), result.getMsg());
+        }
+        return result.getData();
+    }
+
+    @Override
+    public Long add(InternalSysUserAddDto dto) {
+        Result<Long> result = feign.add(dto);
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new FeignException(result.getCode(), result.getMsg());
+        }
+        return result.getData();
+    }
+}

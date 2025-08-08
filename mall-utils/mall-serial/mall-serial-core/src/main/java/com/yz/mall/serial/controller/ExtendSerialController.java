@@ -3,8 +3,8 @@ package com.yz.mall.serial.controller;
 
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
-import com.yz.mall.serial.dto.ExtendUnqidDto;
-import com.yz.mall.serial.service.ExtendUnqidService;
+import com.yz.mall.serial.dto.ExtendSerialDto;
+import com.yz.mall.serial.service.ExtendSerialService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +22,9 @@ import jakarta.validation.Valid;
 @RequestMapping("extend/serial/")
 public class ExtendSerialController extends ApiController {
 
-    private final ExtendUnqidService service;
+    private final ExtendSerialService service;
 
-    public ExtendSerialController(ExtendUnqidService service) {
+    public ExtendSerialController(ExtendSerialService service) {
         this.service = service;
     }
 
@@ -33,7 +33,7 @@ public class ExtendSerialController extends ApiController {
      * 生成流水号
      */
     @PostMapping("generateNumber")
-    public Result<String> generateNumber(@RequestBody @Valid ExtendUnqidDto dto) {
+    public Result<String> generateNumber(@RequestBody @Valid ExtendSerialDto dto) {
         // Thread.sleep(30000);
         return success(this.service.generateNumber(dto.getPrefix(), dto.getNumberLength()));
     }

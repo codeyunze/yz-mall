@@ -6,7 +6,7 @@ import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.ResultTable;
-import com.yz.mall.serial.dto.ExtendUnqidDto;
+import com.yz.mall.serial.dto.ExtendSerialDto;
 import com.yz.mall.serial.dto.SerialAddDto;
 import com.yz.mall.serial.dto.SerialQueryDto;
 import com.yz.mall.serial.dto.SerialUpdateDto;
@@ -44,7 +44,7 @@ public class SerialController extends ApiController {
      * 生成流水号
      */
     @PostMapping("generateNumber")
-    public Result<String> generateNumber(@RequestBody @Valid ExtendUnqidDto dto) {
+    public Result<String> generateNumber(@RequestBody @Valid ExtendSerialDto dto) {
         System.out.println("节点：" + port);
         return success(this.v3Service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
     }

@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: mall-sys
   cloud:
     compatibility-verifier:
       enabled: false

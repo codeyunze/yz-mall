@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.oms.mapper.OmsOrderRelationProductMapper">
+
+
+    <select id="selectOrderProductByOrderIds" resultType="com.yz.mall.oms.vo.OmsOrderProductVo">
+        select oorp.id, oorp.order_id, oorp.product_id, oorp.product_quantity, oorp.discount_amount
+             , oorp.real_amount, oorp.product_attributes, oorp.product_name, oorp.product_price
+             , oorp.remark, oorp.album_pics
+        from oms_order_relation_product oorp
+        where invalid = 0
+        and oorp.order_id in
+        <foreach collection="orderIds" item="orderId" separator="," open="(" close=")">
+            #{orderId}
+        </foreach>
+        order by oorp.id
+    </select>
+</mapper>

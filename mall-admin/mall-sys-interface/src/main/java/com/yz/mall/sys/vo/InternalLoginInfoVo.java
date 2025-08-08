@@ -57,7 +57,7 @@ public class InternalLoginInfoVo implements Serializable {
     private String avatar;
 
     /**
-     * 性别 {@link com.yz.mall.sys.enums.SexEnum}
+     * 性别 {@link com.yz.mall.base.enums.SexEnum}
      */
     private Integer sex;
 }

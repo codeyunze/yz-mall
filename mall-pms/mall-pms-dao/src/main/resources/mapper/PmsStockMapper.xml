@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.pms.mapper.PmsStockMapper">
+
+    <select id="selectPageByFilter" resultType="com.yz.mall.pms.vo.PmsProductStockVo">
+        select pp.id as product_id, pp.product_name, pp.titles, pp.product_price, 0 as quantity
+        from pms_product pp
+        where pp.invalid = 0 and pp.publish_status = 1 and pp.verify_status = 1
+        order by pp.id desc
+    </select>
+
+    <select id="selectStockByProductIds" resultType="com.yz.mall.pms.vo.PmsStockVo">
+        select ps.product_id, sum(ps.quantity) as quantity
+        from pms_stock ps
+        where invalid = 0 and ps.product_id in
+        <foreach collection="productIds" item="productId" open="(" close=")" separator=",">
+            #{productId}
+        </foreach>
+        group by ps.product_id
+    </select>
+</mapper>

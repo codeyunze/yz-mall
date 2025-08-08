@@ -3,7 +3,7 @@ package com.yz.mall.serial.controller;
 
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
-import com.yz.mall.serial.dto.ExtendUnqidDto;
+import com.yz.mall.serial.dto.ExtendSerialDto;
 import com.yz.mall.serial.service.SerialService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +31,7 @@ public class ExtendSerialLockedController extends ApiController {
      * 生成流水号
      */
     @PostMapping("generateNumber")
-    public Result<String> generateNumber(@RequestBody @Valid ExtendUnqidDto dto) {
+    public Result<String> generateNumber(@RequestBody @Valid ExtendSerialDto dto) {
         return success(this.service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
     }
 }

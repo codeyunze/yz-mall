@@ -18,7 +18,23 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-pms-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
