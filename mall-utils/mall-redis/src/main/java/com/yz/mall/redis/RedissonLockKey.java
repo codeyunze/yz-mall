@@ -18,4 +18,13 @@ public class RedissonLockKey {
         return "lock:unqid:" + prefix;
     }
 
+    /**
+     * 刷新权限缓存锁的key
+     *
+     * @return 权限缓存数据更新锁的key
+     */
+    public static String keyRefreshPermission() {
+        return "lock:permission:button-and-api";
+    }
+
 }

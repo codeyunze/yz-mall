@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.base.enums.EnableEnum;
 import com.yz.mall.base.enums.MenuTypeEnum;
 import com.yz.mall.base.exception.DataNotExistException;
-import com.yz.mall.redis.RedisUtils;
 import com.yz.mall.sys.dto.SysMenuAddDto;
 import com.yz.mall.sys.dto.SysMenuQueryDto;
 import com.yz.mall.sys.dto.SysMenuUpdateDto;
@@ -19,6 +18,7 @@ import com.yz.mall.sys.vo.SysTreeMenuMetaVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -36,12 +36,9 @@ import java.util.stream.Collectors;
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
-    private final RedisUtils redisUtils;
-
     private final RefreshPermission refreshPermission;
 
-    public SysMenuServiceImpl(RedisUtils redisUtils, RefreshPermission refreshPermission) {
-        this.redisUtils = redisUtils;
+    public SysMenuServiceImpl(RefreshPermission refreshPermission) {
         this.refreshPermission = refreshPermission;
     }
 
@@ -68,13 +65,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         BeanUtils.copyProperties(dto, bo);
         boolean flag = baseMapper.updateById(bo) > 0;
 
-        // 清理角色的按钮和接口缓存
-        if (MenuTypeEnum.BUTTON.get().equals(menu.getMenuType())) {
-            refreshPermission.refreshButtonPermissionCache();
-        } else if (MenuTypeEnum.API.get().equals(menu.getMenuType())) {
-            refreshPermission.refreshApiPermissionCache();
-        }
-
+        // 清理所有角色的按钮和接口缓存
+        refreshPermission.refreshButtonPermissionCache();
+        refreshPermission.refreshApiPermissionCache();
         return flag;
     }
 
@@ -150,8 +143,66 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return treeMenuVos;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean recursionRemoveById(Long id) {
+        SysMenu topMenu = baseMapper.selectById(id);
+        if (topMenu == null) {
+            throw new DataNotExistException("选择删除菜单数据不存在");
+        }
+
+        // 需要删除的菜单Id
+        List<Long> needDelMenuIds = new ArrayList<>();
+        needDelMenuIds.add(id);
+
+        if (!topMenu.getParentId().equals(0L)) {
+            List<SysMenu> childrenMenu = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getParentId, id));
+            needDelMenuIds.addAll(getNeedDelMenuIds(childrenMenu));
+        }
+
+        if (baseMapper.deleteByIds(needDelMenuIds) > 0) {
+            // 清理所有角色的按钮和接口缓存
+            refreshPermission.refreshButtonPermissionCache();
+            refreshPermission.refreshApiPermissionCache();
+        }
+        return false;
+    }
+
+    /**
+     * 递归获取需要删除的菜单Id
+     *
+     * @param children 菜单信息
+     * @return 需要删除的菜单Id
+     */
+    private List<Long> getNeedDelMenuIds(List<SysMenu> children) {
+        if (CollectionUtils.isEmpty(children)) {
+            return new ArrayList<>();
+        }
+
+        // 需要删除的菜单Id
+        List<Long> needDelMenuIds = new ArrayList<>();
+        // 需要继续往下查询的菜单Id
+        List<Long> childParentIds = new ArrayList<>();
+        for (SysMenu child : children) {
+            needDelMenuIds.add(child.getId());
+            if (child.getParentId().equals(0L)) {
+                break;
+            }
+            childParentIds.add(child.getId());
+        }
+
+        if (CollectionUtils.isEmpty(childParentIds)) {
+            return needDelMenuIds;
+        }
+
+        List<SysMenu> childrenMenu = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>().in(SysMenu::getParentId, childParentIds));
+        needDelMenuIds.addAll(getNeedDelMenuIds(childrenMenu));
+        return needDelMenuIds;
+    }
+
     /**
      * 一级菜单处理
+     *
      * @param menu 菜单信息
      * @return 处理后的菜单路由信息
      */

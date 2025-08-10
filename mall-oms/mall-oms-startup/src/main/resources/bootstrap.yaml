@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      server-addr: 192.168.3.72:8848
+      username: nacos
+      password: ${NACOS_PASSWORD}
+      config:
+        namespace: mall
+        import-check:
+          enabled: false
+        extension-configs:
+          - data-id: datasource.yaml
+            refresh: true
+          - data-id: sa-token.yaml
+            refresh: true
+          - data-id: resilience4j.yaml
+            refresh: true
+        file-extension: yaml
+      discovery:
+        namespace: mall

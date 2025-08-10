@@ -1,7 +1,7 @@
 package com.yz.mall.sys.feign;
 
 import com.yz.mall.base.Result;
-import com.yz.mall.sys.vo.InternalSysAreaVo;
+import com.yz.mall.sys.vo.ExtendSysAreaVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author yunze
  * @since 2025/4/21 19:42
  */
-@FeignClient(name = "mall-sys", contextId = "internalArea", path = "extend/area")
+@FeignClient(name = "mall-sys", contextId = "extendArea", path = "extend/area")
 public interface ExtendSysAreaFeign {
 
     /**
@@ -21,5 +21,5 @@ public interface ExtendSysAreaFeign {
      * @return 行政地区信息
      */
     @GetMapping("get/{id}")
-    Result<InternalSysAreaVo> getById(@PathVariable String id);
+    Result<ExtendSysAreaVo> getById(@PathVariable String id);
 }

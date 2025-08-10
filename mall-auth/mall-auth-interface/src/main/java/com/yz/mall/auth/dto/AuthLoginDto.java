@@ -1,12 +1,14 @@
 package com.yz.mall.auth.dto;
 
+import com.yz.mall.base.validators.SpecifiedRange;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**
  * 登录请求基础信息
+ *
  * @author yunze
  * @date 2024/7/30 23:18
  */
@@ -18,13 +20,13 @@ public class AuthLoginDto implements Serializable {
     /**
      * 登录账号
      */
-    @NotEmpty(message = "请输入登录账号")
+    @NotBlank(message = "请输入登录账号")
     private String account;
 
     /**
      * 登录密码
      */
-    @NotEmpty(message = "请输入登录密码")
+    @NotBlank(message = "请输入登录密码")
     private String password;
 
     /**
@@ -35,5 +37,6 @@ public class AuthLoginDto implements Serializable {
     /**
      * 登录类型
      */
+    @SpecifiedRange(allowed = {"1", "2"}, message = "未知的登录类型")
     private String type;
 }

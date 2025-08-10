@@ -6,7 +6,7 @@ import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.ResultTable;
-import com.yz.mall.serial.dto.ExtendUnqidDto;
+import com.yz.mall.serial.dto.ExtendSerialDto;
 import com.yz.mall.serial.dto.SerialAddDto;
 import com.yz.mall.serial.dto.SerialQueryDto;
 import com.yz.mall.serial.dto.SerialUpdateDto;
@@ -15,8 +15,8 @@ import com.yz.mall.serial.service.SerialService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 /**
  * 工具-流水号管理
@@ -25,7 +25,7 @@ import javax.validation.Valid;
  * @since 2024-06-23 22:52:36
  */
 @RestController
-@RequestMapping("/unqid")
+@RequestMapping("/serial")
 public class SerialController extends ApiController {
 
     @Value("${server.port}")
@@ -44,7 +44,7 @@ public class SerialController extends ApiController {
      * 生成流水号
      */
     @PostMapping("generateNumber")
-    public Result<String> generateNumber(@RequestBody @Valid ExtendUnqidDto dto) {
+    public Result<String> generateNumber(@RequestBody @Valid ExtendSerialDto dto) {
         System.out.println("节点：" + port);
         return success(this.v3Service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
     }

@@ -11,8 +11,8 @@ public class ApiController {
     }
 
 
-    protected Result error(CodeEnum codeEnum) {
-        return new Result<>(codeEnum.get(), null, codeEnum.getMsg());
+    protected Result error(CodeEnum code) {
+        return new Result<>(code.get(), null, code.getMsg());
     }
 
     protected Result failed(String msg) {

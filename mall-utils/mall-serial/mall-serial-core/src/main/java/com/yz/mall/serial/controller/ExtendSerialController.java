@@ -3,15 +3,14 @@ package com.yz.mall.serial.controller;
 
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
-import com.yz.mall.serial.dto.ExtendUnqidDto;
-import com.yz.mall.serial.service.ExtendUnqidService;
+import com.yz.mall.serial.dto.ExtendSerialDto;
+import com.yz.mall.serial.service.ExtendSerialService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
+import jakarta.validation.Valid;
 
 /**
  * 系统-流水号表(SysUnqid)表控制层
@@ -23,9 +22,9 @@ import java.util.List;
 @RequestMapping("extend/serial/")
 public class ExtendSerialController extends ApiController {
 
-    private final ExtendUnqidService service;
+    private final ExtendSerialService service;
 
-    public ExtendSerialController(ExtendUnqidService service) {
+    public ExtendSerialController(ExtendSerialService service) {
         this.service = service;
     }
 
@@ -34,17 +33,9 @@ public class ExtendSerialController extends ApiController {
      * 生成流水号
      */
     @PostMapping("generateNumber")
-    public Result<String> generateNumber(@RequestBody @Valid ExtendUnqidDto dto) {
+    public Result<String> generateNumber(@RequestBody @Valid ExtendSerialDto dto) {
         // Thread.sleep(30000);
-        return success(this.service.generateSerialNumber(dto.getPrefix(), dto.getNumberLength()));
-    }
-
-    /**
-     * 批量生成流水号
-     */
-    @PostMapping("generateSerialNumbers")
-    public Result<List<String>> generateSerialNumbers(@RequestBody @Valid ExtendUnqidDto dto) {
-        return success(this.service.generateSerialNumbers(dto.getPrefix(), dto.getNumberLength(), dto.getQuantity()));
+        return success(this.service.generateNumber(dto.getPrefix(), dto.getNumberLength()));
     }
 
 }

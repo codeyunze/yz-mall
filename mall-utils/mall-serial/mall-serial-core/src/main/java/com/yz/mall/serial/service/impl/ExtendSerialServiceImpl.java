@@ -1,6 +1,6 @@
 package com.yz.mall.serial.service.impl;
 
-import com.yz.mall.serial.service.ExtendUnqidService;
+import com.yz.mall.serial.service.ExtendSerialService;
 import com.yz.mall.serial.service.SerialService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * @date 2024/6/23 星期日 22:59
  */
 @Service
-public class ExtendSerialServiceImpl implements ExtendUnqidService {
+public class ExtendSerialServiceImpl implements ExtendSerialService {
 
     private final SerialService service;
 

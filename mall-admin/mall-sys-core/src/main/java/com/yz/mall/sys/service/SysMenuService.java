@@ -7,8 +7,8 @@ import com.yz.mall.sys.dto.SysMenuUpdateDto;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
+import jakarta.validation.Valid;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +30,7 @@ public interface SysMenuService extends IService<SysMenu> {
 
     /**
      * 更新数据
+     * <br> 会同时更新所有角色的按钮和接口权限缓存
      *
      * @param dto 更新基础数据
      * @return 是否操作成功
@@ -58,5 +59,14 @@ public interface SysMenuService extends IService<SysMenu> {
      * @return 树形结构菜单信息
      */
     List<SysTreeMenuVo> menusInfoProcessor(List<SysMenu> menus, Long parentId, Map<Long, List<Long>> roleByMenuMap);
+
+    /**
+     * 递归删除菜单
+     * <br>删除选中的菜单及其子菜单和资源，并刷新权限缓存
+     *
+     * @param id 菜单Id
+     * @return 是否删除成功
+     */
+    boolean recursionRemoveById(Long id);
 }
 

@@ -1,16 +1,17 @@
 package com.yz.mall.base;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
  * 分页查询请求
+ *
  * @author yunze
- * @date 2023/2/9 0:16
  * @version 1.0
+ * @date 2023/2/9 0:16
  */
 @Data
 public class PageFilter<T> implements Serializable {

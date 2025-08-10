@@ -8,7 +8,7 @@ import com.yz.mall.sys.entity.SysRole;
 import com.yz.mall.sys.entity.SysRoleRelationMenu;
 import com.yz.mall.sys.vo.MenuByRoleVo;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 

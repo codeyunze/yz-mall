@@ -14,8 +14,8 @@ import com.yz.mall.sys.entity.SysUserRelationOrg;
 import com.yz.mall.sys.service.SysUserRelationOrgService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 /**
  * 系统-用户关联组织

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  * @author yunze
  * @since 2024-11-21 23:29:01
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class SysMenu extends Model<SysMenu> {
 
@@ -51,7 +53,7 @@ public class SysMenu extends Model<SysMenu> {
 
     /**
      * 菜单类型0-菜单,1-iframe,2-外链接,3-按钮,4-接口
-     * {@link com.yz.mall.sys.enums.MenuTypeEnum}
+     * {@link com.yz.mall.base.enums.MenuTypeEnum}
      */
     private Integer menuType;
 
@@ -121,32 +123,32 @@ public class SysMenu extends Model<SysMenu> {
     private String frameSrc;
 
     /**
-     * 加载动画(内嵌的iframe页面是否开启首次加载动画) {@link com.yz.mall.sys.enums.EnableEnum}
+     * 加载动画(内嵌的iframe页面是否开启首次加载动画) {@link com.yz.mall.base.enums.EnableEnum}
      */
     private Integer frameLoading;
 
     /**
-     * 缓存页面(是否缓存该路由页面) {@link com.yz.mall.sys.enums.EnableEnum}
+     * 缓存页面(是否缓存该路由页面) {@link com.yz.mall.base.enums.EnableEnum}
      */
     private Integer keepAlive;
 
     /**
-     * 标签页(当前菜单名称或自定义信息禁止添加到标签页) {@link com.yz.mall.sys.enums.EnableEnum}
+     * 标签页(当前菜单名称或自定义信息禁止添加到标签页) {@link com.yz.mall.base.enums.EnableEnum}
      */
     private Integer hiddenTag;
 
     /**
-     * 固定标签页(当前菜单名称是否固定显示在标签页且不可关闭) {@link com.yz.mall.sys.enums.EnableEnum}
+     * 固定标签页(当前菜单名称是否固定显示在标签页且不可关闭) {@link com.yz.mall.base.enums.EnableEnum}
      */
     private Integer fixedTag;
 
     /**
-     * 是否显示该菜单 {@link com.yz.mall.sys.enums.EnableEnum}
+     * 是否显示该菜单 {@link com.yz.mall.base.enums.EnableEnum}
      */
     private Integer showLink;
 
     /**
-     * 是否显示父级菜单 {@link com.yz.mall.sys.enums.EnableEnum}
+     * 是否显示父级菜单 {@link com.yz.mall.base.enums.EnableEnum}
      */
     private Integer showParent;
 

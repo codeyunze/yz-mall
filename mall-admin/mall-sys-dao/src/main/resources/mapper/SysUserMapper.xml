@@ -9,6 +9,9 @@
         <if test="filter.roleId != null and filter.roleId != ''">
             inner join sys_user_relation_role surr on su.id = surr.relation_id
         </if>
+        <if test="filter.orgId != null and filter.orgId != ''">
+            inner join sys_user_relation_org suro on su.id = suro.user_id
+        </if>
         where su.invalid = 0
         <if test="filter.phone != null and filter.phone != ''">and su.phone like concat('%', #{filter.phone}, '%')</if>
         <if test="filter.email != null and filter.email != ''">and su.email like concat('%', #{filter.email}, '%')</if>
@@ -25,6 +28,7 @@
             </foreach>
         </if>
         <if test="filter.roleId != null and filter.roleId != ''">and surr.invalid = 0 and surr.role_id = #{filter.roleId}</if>
+        <if test="filter.orgId != null and filter.orgId != ''">and suro.invalid = 0 and suro.org_id = #{filter.orgId}</if>
         order by su.id desc
     </select>
 </mapper>

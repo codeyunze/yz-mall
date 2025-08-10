@@ -12,7 +12,6 @@ import com.yz.mall.sys.dto.SysUserRelationOrgUpdateDto;
 import com.yz.mall.sys.entity.SysUserRelationOrg;
 import com.yz.mall.sys.mapper.SysUserRelationOrgMapper;
 import com.yz.mall.sys.service.SysUserRelationOrgService;
-import com.yz.mall.sys.vo.InternalSysUserRelationOrgVo;
 import com.yz.mall.sys.vo.SysUserRelationOrgVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

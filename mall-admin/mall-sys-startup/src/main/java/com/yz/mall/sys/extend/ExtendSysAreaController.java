@@ -3,7 +3,7 @@ package com.yz.mall.sys.extend;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
 import com.yz.mall.sys.service.ExtendSysAreaService;
-import com.yz.mall.sys.vo.InternalSysAreaVo;
+import com.yz.mall.sys.vo.ExtendSysAreaVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ public class ExtendSysAreaController extends ApiController {
      * @return 行政地区信息
      */
     @GetMapping("get/{id}")
-    public Result<InternalSysAreaVo> getById(@PathVariable String id) {
+    public Result<ExtendSysAreaVo> getById(@PathVariable String id) {
         return success(areaService.getById(id));
     }
 }

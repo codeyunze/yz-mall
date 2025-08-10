@@ -8,7 +8,7 @@ import com.yz.mall.serial.dto.SerialQueryDto;
 import com.yz.mall.serial.dto.SerialUpdateDto;
 import com.yz.mall.serial.entity.SysUnqid;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

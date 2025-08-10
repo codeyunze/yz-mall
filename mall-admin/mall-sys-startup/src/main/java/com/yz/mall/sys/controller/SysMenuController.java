@@ -14,7 +14,7 @@ import com.yz.mall.sys.vo.SysMenuSlimVo;
 import com.yz.mall.web.annotation.RepeatSubmit;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -58,7 +58,7 @@ public class SysMenuController extends ApiController {
     }
 
     /**
-     * 查询-菜单简略信息
+     * 查询所有菜单的简略信息
      */
     @SaCheckPermission("api:system:menu:list")
     @PostMapping("listSlim")
@@ -75,7 +75,8 @@ public class SysMenuController extends ApiController {
     @SaCheckPermission("api:system:menu:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
-        return success(this.service.removeById(id));
+        return success(this.service.recursionRemoveById(id));
+        // return success(this.service.removeById(id));
     }
 
     /**

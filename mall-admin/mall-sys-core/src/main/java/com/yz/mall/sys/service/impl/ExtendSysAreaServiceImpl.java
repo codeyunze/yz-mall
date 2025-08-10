@@ -4,7 +4,7 @@ import com.yz.mall.base.exception.DataNotExistException;
 import com.yz.mall.sys.entity.SysArea;
 import com.yz.mall.sys.service.ExtendSysAreaService;
 import com.yz.mall.sys.service.SysAreaService;
-import com.yz.mall.sys.vo.InternalSysAreaVo;
+import com.yz.mall.sys.vo.ExtendSysAreaVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,12 +24,13 @@ public class ExtendSysAreaServiceImpl implements ExtendSysAreaService {
         this.service = service;
     }
 
-    @Cacheable(value = "system:area-detail", key = "#id")
+    // 缓存空值（防穿透）
+    @Cacheable(value = "system:area-detail", key = "#id", unless = "#result == null")
     @Override
-    public InternalSysAreaVo getById(String id) {
+    public ExtendSysAreaVo getById(String id) {
         SysArea area = service.getById(id);
         if (area != null) {
-            InternalSysAreaVo vo = new InternalSysAreaVo();
+            ExtendSysAreaVo vo = new ExtendSysAreaVo();
             BeanUtils.copyProperties(area, vo);
             return vo;
         }

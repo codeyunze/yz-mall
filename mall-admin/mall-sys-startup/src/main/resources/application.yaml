@@ -5,3 +5,10 @@ server:
 spring:
   application:
     name: mall-sys
+# spring-cloud-alibaba 2023.X版本使用的nacos配置中心
+#  config:
+#    import:
+#      - nacos:datasource.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+#      - nacos:sa-token.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+#      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+#      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true

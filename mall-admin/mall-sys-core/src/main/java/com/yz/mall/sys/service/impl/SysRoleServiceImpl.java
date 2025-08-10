@@ -18,6 +18,7 @@ import com.yz.mall.sys.mapper.SysRoleMapper;
 import com.yz.mall.sys.service.SysRoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Collections;
@@ -85,8 +86,20 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         return baseMapper.selectList(queryWrapper);
     }
 
+    @DS("slave")
     @Override
     public List<String> getRoleMenusByRoleId(Long roleId) {
+        return Collections.emptyList();
+    }
+
+    @DS("slave")
+    @Override
+    public List<Long> getEffectiveRoleIds() {
+        LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
+        List<SysRole> roles = baseMapper.selectList(queryWrapper);
+        if (!CollectionUtils.isEmpty(roles)) {
+            return roles.stream().map(SysRole::getId).toList();
+        }
         return Collections.emptyList();
     }
 }
