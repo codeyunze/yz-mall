@@ -1,6 +1,6 @@
 package com.yz.mall.sys.service;
 
-import com.yz.mall.sys.vo.InternalSysAreaVo;
+import com.yz.mall.sys.vo.ExtendSysAreaVo;
 
 /**
  * 内部开放接口: 系统管理-地区接口
@@ -16,6 +16,6 @@ public interface ExtendSysAreaService {
      * @param id 行政地区Id（行政地区编码）
      * @return 行政地区信息
      */
-    InternalSysAreaVo getById(String id);
+    ExtendSysAreaVo getById(String id);
 
 }

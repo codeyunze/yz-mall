@@ -3,10 +3,10 @@ package com.yz.mall.pms.service.impl;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.exception.BusinessException;
-import com.yz.mall.pms.dto.InternalPmsCartDto;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsCartDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.feign.ExtendPmsShopCartFeign;
-import com.yz.mall.pms.service.InternalPmsShopCartService;
+import com.yz.mall.pms.service.ExtendPmsShopCartService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,17 +19,17 @@ import java.util.Map;
  * @date 2025/2/4 16:01
  */
 @Service
-public class InternalPmsShopCartServiceImpl implements InternalPmsShopCartService {
+public class ExtendPmsShopCartServiceImpl implements ExtendPmsShopCartService {
 
     private final ExtendPmsShopCartFeign extendPmsShopCartFeign;
 
-    public InternalPmsShopCartServiceImpl(ExtendPmsShopCartFeign extendPmsShopCartFeign) {
+    public ExtendPmsShopCartServiceImpl(ExtendPmsShopCartFeign extendPmsShopCartFeign) {
         this.extendPmsShopCartFeign = extendPmsShopCartFeign;
     }
 
     @Override
-    public Map<Long, InternalPmsCartDto> getCartByIds(Long userId, List<Long> cartIds) {
-        Result<Map<Long, InternalPmsCartDto>> result = extendPmsShopCartFeign.getCartByIds(cartIds);
+    public Map<Long, ExtendPmsCartDto> getCartByIds(Long userId, List<Long> cartIds) {
+        Result<Map<Long, ExtendPmsCartDto>> result = extendPmsShopCartFeign.getCartByIds(cartIds);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }
@@ -46,7 +46,7 @@ public class InternalPmsShopCartServiceImpl implements InternalPmsShopCartServic
     }
 
     @Override
-    public boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products) {
+    public boolean removeCartByProductIds(Long userId, List<ExtendPmsStockDto> products) {
         Result<Boolean> result = extendPmsShopCartFeign.removeCartByProductIds(products);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());

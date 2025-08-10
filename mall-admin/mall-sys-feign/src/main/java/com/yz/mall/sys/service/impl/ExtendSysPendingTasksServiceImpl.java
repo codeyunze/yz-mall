@@ -2,7 +2,7 @@ package com.yz.mall.sys.service.impl;
 
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.exception.FeignException;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.feign.ExtendSysPendingTaskFeign;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import com.yz.mall.base.IdDto;
@@ -25,7 +25,7 @@ public class ExtendSysPendingTasksServiceImpl implements ExtendSysPendingTasksSe
     }
 
     @Override
-    public Long startTask(InternalSysPendingTasksAddDto taskInfo) {
+    public Long startTask(ExtendSysPendingTasksAddDto taskInfo) {
         Result<Long> result = extendSysPendingTaskFeign.startTask(taskInfo);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());

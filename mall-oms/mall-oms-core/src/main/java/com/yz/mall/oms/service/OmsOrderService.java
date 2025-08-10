@@ -3,8 +3,8 @@ package com.yz.mall.oms.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.base.PageFilter;
-import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
-import com.yz.mall.oms.dto.InternalOmsOrderDto;
+import com.yz.mall.oms.dto.ExtendOmsOrderByCartDto;
+import com.yz.mall.oms.dto.ExtendOmsOrderDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
 import com.yz.mall.oms.entity.OmsOrder;
@@ -26,7 +26,7 @@ public interface OmsOrderService extends IService<OmsOrder> {
      * @param dto 新增基础数据
      * @return 订单主键Id {@link OmsOrder#getId()}
      */
-    OmsOrderSlimVo generateOrder(InternalOmsOrderByCartDto dto);
+    OmsOrderSlimVo generateOrder(ExtendOmsOrderByCartDto dto);
 
     /**
      * 新增数据
@@ -34,7 +34,7 @@ public interface OmsOrderService extends IService<OmsOrder> {
      * @param dto 新增基础数据
      * @return 订单主键Id {@link OmsOrder#getId()}
      */
-    Long add(InternalOmsOrderDto dto);
+    Long add(ExtendOmsOrderDto dto);
 
     /**
      * 订单信息分页查询

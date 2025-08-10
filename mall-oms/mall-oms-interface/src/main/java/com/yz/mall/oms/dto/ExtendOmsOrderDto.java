@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2025/1/30 19:25
  */
 @Data
-public class InternalOmsOrderDto extends BaseOmsOrder implements Serializable {
+public class ExtendOmsOrderDto extends BaseOmsOrder implements Serializable {
 
     private final static long serialVersionUID = 1L;
 
@@ -19,6 +19,6 @@ public class InternalOmsOrderDto extends BaseOmsOrder implements Serializable {
      * 订单商品信息
      */
     @NotNull(message = "商品信息不能为空")
-    private List<InternalOmsOrderProductDto> products;
+    private List<ExtendOmsOrderProductDto> products;
 
 }

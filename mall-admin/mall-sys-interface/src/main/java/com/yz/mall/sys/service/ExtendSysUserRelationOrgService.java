@@ -1,6 +1,6 @@
 package com.yz.mall.sys.service;
 
-import com.yz.mall.sys.vo.InternalSysUserRelationOrgVo;
+import com.yz.mall.sys.vo.ExtendSysUserRelationOrgVo;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface ExtendSysUserRelationOrgService {
      * @param userId 用户信息
      * @return 用户加入的组织信息
      */
-    List<InternalSysUserRelationOrgVo> getOrgByUserId(Long userId);
+    List<ExtendSysUserRelationOrgVo> getOrgByUserId(Long userId);
 }

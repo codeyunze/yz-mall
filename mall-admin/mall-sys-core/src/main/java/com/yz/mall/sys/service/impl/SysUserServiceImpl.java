@@ -16,7 +16,7 @@ import com.yz.mall.sys.service.SysMenuService;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
 import com.yz.mall.sys.service.SysUserRelationRoleService;
 import com.yz.mall.sys.service.SysUserService;
-import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendLoginInfoVo;
 import com.yz.mall.sys.vo.MenuByRoleVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
@@ -111,9 +111,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public InternalLoginInfoVo getUserInfoById(Long userId) {
+    public ExtendLoginInfoVo getUserInfoById(Long userId) {
         SysUser user = baseMapper.selectById(userId);
-        InternalLoginInfoVo vo = new InternalLoginInfoVo();
+        ExtendLoginInfoVo vo = new ExtendLoginInfoVo();
         BeanUtils.copyProperties(user, vo);
         return vo;
     }

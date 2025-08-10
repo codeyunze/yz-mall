@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @since 2024-11-17 18:15:15
  */
 @Data
-public class InternalSysUserRoleVo implements Serializable {
+public class ExtendSysUserRoleVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

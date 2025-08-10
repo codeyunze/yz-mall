@@ -12,7 +12,7 @@ import com.yz.mall.pms.dto.PmsStockInDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockInDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockInDetail;
 import com.yz.mall.pms.mapper.PmsStockInDetailMapper;
-import com.yz.mall.pms.service.PmsProductExpandService;
+import com.yz.mall.pms.service.PmsProductQueryService;
 import com.yz.mall.pms.service.PmsStockInDetailService;
 import com.yz.mall.pms.vo.PmsProductSlimVo;
 import com.yz.mall.pms.vo.PmsStockInDetailVo;
@@ -40,11 +40,11 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
 
     private final ExtendSerialService extendSerialService;
 
-    private final PmsProductExpandService pmsProductExpandService;
+    private final PmsProductQueryService pmsProductQueryService;
 
-    public PmsStockInDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductExpandService pmsProductExpandService) {
+    public PmsStockInDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductQueryService pmsProductQueryService) {
         this.extendSerialService = extendSerialService;
-        this.pmsProductExpandService = pmsProductExpandService;
+        this.pmsProductQueryService = pmsProductQueryService;
     }
 
     @Transactional
@@ -81,7 +81,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         }
 
         List<Long> productIds = stockInPage.getRecords().stream().map(PmsStockInDetail::getProductId).collect(Collectors.toList());
-        List<PmsProductSlimVo> products = pmsProductExpandService.getProductByProductIds(productIds);
+        List<PmsProductSlimVo> products = pmsProductQueryService.getProductByProductIds(productIds);
         if (CollectionUtils.isEmpty(products)) {
             return new Page<>();
         }

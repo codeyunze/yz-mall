@@ -1,7 +1,7 @@
 package com.yz.mall.sys.service;
 
-import com.yz.mall.sys.dto.InternalSysUserAddDto;
-import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import com.yz.mall.sys.dto.ExtendSysUserAddDto;
+import com.yz.mall.sys.vo.ExtendLoginInfoVo;
 import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
@@ -45,7 +45,7 @@ public interface ExtendSysUserService {
      * @param userId 用户Id
      * @return 用户信息
      */
-    InternalLoginInfoVo getUserInfoById(Long userId);
+    ExtendLoginInfoVo getUserInfoById(Long userId);
 
     /**
      * 新增用户
@@ -53,5 +53,5 @@ public interface ExtendSysUserService {
      * @param dto 新增用户信息数据
      * @return 主键Id
      */
-    Long add(@Valid InternalSysUserAddDto dto);
+    Long add(@Valid ExtendSysUserAddDto dto);
 }

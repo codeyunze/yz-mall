@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.base.IdDto;
 import com.yz.mall.base.PageFilter;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.dto.SysPendingTasksQueryDto;
 import com.yz.mall.sys.dto.SysPendingTasksUpdateDto;
 import com.yz.mall.sys.entity.SysPendingTasks;
@@ -24,7 +24,7 @@ public interface SysPendingTasksService extends IService<SysPendingTasks> {
      * @param dto 新增基础数据
      * @return 主键Id
      */
-    Long save(InternalSysPendingTasksAddDto dto);
+    Long save(ExtendSysPendingTasksAddDto dto);
 
     /**
      * 更新数据

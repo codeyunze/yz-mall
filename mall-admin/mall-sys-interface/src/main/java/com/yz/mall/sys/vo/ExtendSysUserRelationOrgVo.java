@@ -9,7 +9,7 @@ import lombok.Data;
  * @since 2024-11-17 20:26:16
  */
 @Data
-public class InternalSysUserRelationOrgVo {
+public class ExtendSysUserRelationOrgVo {
 
     /**
      * 组织Id

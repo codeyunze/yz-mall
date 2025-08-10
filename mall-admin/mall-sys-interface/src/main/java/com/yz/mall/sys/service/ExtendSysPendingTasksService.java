@@ -1,6 +1,6 @@
 package com.yz.mall.sys.service;
 
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,7 +17,7 @@ public interface ExtendSysPendingTasksService {
      * @param taskInfo 任务信息
      * @return 任务Id
      */
-    Long startTask(@Valid InternalSysPendingTasksAddDto taskInfo);
+    Long startTask(@Valid ExtendSysPendingTasksAddDto taskInfo);
 
     /**
      * 结束任务

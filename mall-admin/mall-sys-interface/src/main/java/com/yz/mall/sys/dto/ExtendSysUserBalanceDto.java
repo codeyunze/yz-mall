@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @since 2024-06-16 23:25:56
  */
 @Data
-public class InternalSysUserBalanceDto implements Serializable {
+public class ExtendSysUserBalanceDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,10 +27,10 @@ public class InternalSysUserBalanceDto implements Serializable {
     @NotNull(message = "金额不能为空")
     private BigDecimal amount;
 
-    public InternalSysUserBalanceDto() {
+    public ExtendSysUserBalanceDto() {
     }
 
-    public InternalSysUserBalanceDto(Long userId, BigDecimal amount) {
+    public ExtendSysUserBalanceDto(Long userId, BigDecimal amount) {
         this.userId = userId;
         this.amount = amount;
     }

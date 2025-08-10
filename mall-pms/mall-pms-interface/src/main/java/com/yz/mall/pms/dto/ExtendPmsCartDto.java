@@ -12,9 +12,15 @@ import java.math.BigDecimal;
  * @since 2024-06-16 16:14:09
  */
 @Data
-public class InternalPmsCartDto implements Serializable {
+public class ExtendPmsCartDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 购物车信息id
+     * <br>对应PmsShopCart#getId()
+     */
+    private Long id;
 
     /**
      * 商品信息Id

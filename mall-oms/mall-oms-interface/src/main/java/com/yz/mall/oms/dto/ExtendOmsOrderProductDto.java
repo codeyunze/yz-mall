@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @date 2025/1/30 19:25
  */
 @Data
-public class InternalOmsOrderProductDto implements Serializable {
+public class ExtendOmsOrderProductDto implements Serializable {
 
     private final static long serialVersionUID = 1L;
 

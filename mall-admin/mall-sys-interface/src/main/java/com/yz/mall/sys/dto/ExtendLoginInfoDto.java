@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @since 2024-06-16 23:25:55
  */
 @Data
-public class InternalLoginInfoDto implements Serializable {
+public class ExtendLoginInfoDto implements Serializable {
 
     private final long serialVersionUID = 1L;
 

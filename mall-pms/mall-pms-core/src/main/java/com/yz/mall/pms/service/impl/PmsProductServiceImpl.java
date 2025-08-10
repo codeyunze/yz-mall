@@ -17,9 +17,9 @@ import com.yz.mall.pms.service.PmsProductService;
 import com.yz.mall.pms.service.PmsStockService;
 import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
 import com.yz.mall.pms.vo.PmsProductVo;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
-import com.yz.mall.sys.vo.InternalQofFileInfoVo;
+import com.yz.mall.sys.vo.ExtendQofFileInfoVo;
 import com.yz.mall.base.PageFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -77,7 +77,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         product.setPublishStatus(1);
 
         int updated = baseMapper.updateById(product);
-        InternalSysPendingTasksAddDto tasksAddDto = new InternalSysPendingTasksAddDto();
+        ExtendSysPendingTasksAddDto tasksAddDto = new ExtendSysPendingTasksAddDto();
         tasksAddDto.setTaskCode("PMS:PRODUCT:PUBLISH");
         tasksAddDto.setTaskNode("待审核");
         tasksAddDto.setTaskTitle(product.getTitles() + "上架审核");
@@ -218,13 +218,13 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
      * @param productId             本次组装的产品Id
      */
     private static void assembleProductImage(PmsProductDisplayInfoVo vo
-            , List<InternalQofFileInfoVo> qofFileInfoVos
+            , List<ExtendQofFileInfoVo> qofFileInfoVos
             , Map<Long, Long> imageIdToProductIdMap
             , Long productId) {
         if (CollectionUtils.isEmpty(vo.getProductImages())) {
             vo.setProductImages(new ArrayList<>());
         }
-        for (InternalQofFileInfoVo fileInfoVo : qofFileInfoVos) {
+        for (ExtendQofFileInfoVo fileInfoVo : qofFileInfoVos) {
             if (!imageIdToProductIdMap.containsKey(fileInfoVo.getFileId())) {
                 continue;
             }

@@ -1,7 +1,7 @@
 package com.yz.mall.pms.feign;
 
 import com.yz.mall.base.Result;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
@@ -24,19 +24,19 @@ public interface ExtendPmsStockFeign {
      * 扣减商品库存
      */
     @PostMapping("deduct")
-    Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto);
+    Result<Boolean> deduct(@RequestBody @Valid ExtendPmsStockDto dto);
 
     /**
      * 扣减商品库存
      */
     @PostMapping("deductBatch")
-    Result<Object> deductBatch(@RequestBody @Valid List<InternalPmsStockDto> dto);
+    Result<Boolean> deductBatch(@RequestBody @Valid List<ExtendPmsStockDto> dto);
 
     /**
      * 增加商品库存
      */
     @PostMapping("add")
-    Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto);
+    Result<Boolean> add(@RequestBody @Valid ExtendPmsStockDto dto);
 
     /**
      * 获取指定商品的库存

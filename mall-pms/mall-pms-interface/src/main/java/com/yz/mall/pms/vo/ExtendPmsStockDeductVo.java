@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date 2025/2/1 18:30
  */
 @Data
-public class InternalPmsStockDeductVo implements Serializable {
+public class ExtendPmsStockDeductVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

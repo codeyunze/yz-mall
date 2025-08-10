@@ -7,7 +7,7 @@ import com.yz.mall.sys.dto.SysUserQueryDto;
 import com.yz.mall.sys.dto.SysUserResetPasswordDto;
 import com.yz.mall.sys.dto.SysUserUpdateDto;
 import com.yz.mall.sys.entity.SysUser;
-import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendLoginInfoVo;
 import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
 import jakarta.validation.Valid;
@@ -53,7 +53,7 @@ public interface SysUserService extends IService<SysUser> {
      * @param userId 用户Id
      * @return 用户信息
      */
-    InternalLoginInfoVo getUserInfoById(Long userId);
+    ExtendLoginInfoVo getUserInfoById(Long userId);
 
     /**
      * 重置用户密码

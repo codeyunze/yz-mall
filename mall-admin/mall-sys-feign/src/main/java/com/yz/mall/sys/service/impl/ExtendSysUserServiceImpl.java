@@ -3,11 +3,11 @@ package com.yz.mall.sys.service.impl;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.exception.FeignException;
-import com.yz.mall.sys.dto.InternalSysUserAddDto;
-import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
+import com.yz.mall.sys.dto.ExtendSysUserAddDto;
+import com.yz.mall.sys.dto.ExtendSysUserBalanceDto;
 import com.yz.mall.sys.feign.ExtendSysUserFeign;
 import com.yz.mall.sys.service.ExtendSysUserService;
-import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendLoginInfoVo;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,7 +30,7 @@ public class ExtendSysUserServiceImpl implements ExtendSysUserService {
 
     @Override
     public void deduct(Long userId, BigDecimal amount) {
-        Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
+        Result<Boolean> result = feign.deduct(new ExtendSysUserBalanceDto(userId, amount));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
         }
@@ -38,7 +38,7 @@ public class ExtendSysUserServiceImpl implements ExtendSysUserService {
 
     @Override
     public void recharge(Long userId, BigDecimal amount) {
-        Result<Boolean> result = feign.deduct(new InternalSysUserBalanceDto(userId, amount));
+        Result<Boolean> result = feign.deduct(new ExtendSysUserBalanceDto(userId, amount));
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
         }
@@ -54,8 +54,8 @@ public class ExtendSysUserServiceImpl implements ExtendSysUserService {
     }
 
     @Override
-    public InternalLoginInfoVo getUserInfoById(Long userId) {
-        Result<InternalLoginInfoVo> result = feign.getUserInfo(userId);
+    public ExtendLoginInfoVo getUserInfoById(Long userId) {
+        Result<ExtendLoginInfoVo> result = feign.getUserInfo(userId);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
         }
@@ -63,7 +63,7 @@ public class ExtendSysUserServiceImpl implements ExtendSysUserService {
     }
 
     @Override
-    public Long add(InternalSysUserAddDto dto) {
+    public Long add(ExtendSysUserAddDto dto) {
         Result<Long> result = feign.add(dto);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());

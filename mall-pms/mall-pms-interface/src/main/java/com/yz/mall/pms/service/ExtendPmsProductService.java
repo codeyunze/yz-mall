@@ -1,6 +1,6 @@
 package com.yz.mall.pms.service;
 
-import com.yz.mall.pms.dto.InternalPmsProductSlimVo;
+import com.yz.mall.pms.dto.ExtendPmsProductSlimVo;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @author yunze
  * @date 2025/03/16 18:54
  */
-public interface InternalPmsProductService {
+public interface ExtendPmsProductService {
 
     /**
      * 根据商品Id查询对应的商品信息
@@ -18,5 +18,5 @@ public interface InternalPmsProductService {
      * @param productIds 商品Id
      * @return 商品信息
      */
-    List<InternalPmsProductSlimVo> getProductByProductIds(List<Long> productIds);
+    List<ExtendPmsProductSlimVo> getProductByProductIds(List<Long> productIds);
 }

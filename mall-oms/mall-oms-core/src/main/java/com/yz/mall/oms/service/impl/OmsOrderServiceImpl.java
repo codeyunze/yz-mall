@@ -22,16 +22,16 @@ import com.yz.mall.oms.vo.OmsOrderDetailVo;
 import com.yz.mall.oms.vo.OmsOrderProductVo;
 import com.yz.mall.oms.vo.OmsOrderSlimVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
-import com.yz.mall.pms.dto.InternalPmsProductSlimVo;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
-import com.yz.mall.pms.service.InternalPmsProductService;
-import com.yz.mall.pms.service.InternalPmsShopCartService;
-import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.pms.dto.ExtendPmsProductSlimVo;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
+import com.yz.mall.pms.service.ExtendPmsProductService;
+import com.yz.mall.pms.service.ExtendPmsShopCartService;
+import com.yz.mall.pms.service.ExtendPmsStockService;
 import com.yz.mall.serial.service.ExtendSerialService;
 import com.yz.mall.sys.service.ExtendSysAreaService;
 // import com.yz.mall.sys.service.InternalSysFilesService;
 import com.yz.mall.sys.service.ExtendSysUserService;
-import com.yz.mall.sys.vo.InternalQofFileInfoVo;
+import com.yz.mall.sys.vo.ExtendQofFileInfoVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,11 +56,11 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final OmsOrderRelationProductService omsOrderRelationProductService;
 
-    private final InternalPmsStockService internalPmsStockService;
+    private final ExtendPmsStockService extendPmsStockService;
 
-    private final InternalPmsShopCartService internalPmsShopCartService;
+    private final ExtendPmsShopCartService extendPmsShopCartService;
 
-    private final InternalPmsProductService internalPmsProductService;
+    private final ExtendPmsProductService extendPmsProductService;
 
     private final ExtendSysUserService extendSysUserService;
 
@@ -70,17 +70,17 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     public OmsOrderServiceImpl(ExtendSerialService extendSerialService
             , OmsOrderRelationProductService omsOrderRelationProductService
-            , InternalPmsStockService internalPmsStockService
-            , InternalPmsShopCartService internalPmsShopCartService
-            , InternalPmsProductService internalPmsProductService
+            , ExtendPmsStockService extendPmsStockService
+            , ExtendPmsShopCartService extendPmsShopCartService
+            , ExtendPmsProductService extendPmsProductService
             , ExtendSysUserService extendSysUserService
             // , InternalSysFilesService internalSysFilesService
             , ExtendSysAreaService internalSysAreaService) {
         this.extendSerialService = extendSerialService;
         this.omsOrderRelationProductService = omsOrderRelationProductService;
-        this.internalPmsStockService = internalPmsStockService;
-        this.internalPmsShopCartService = internalPmsShopCartService;
-        this.internalPmsProductService = internalPmsProductService;
+        this.extendPmsStockService = extendPmsStockService;
+        this.extendPmsShopCartService = extendPmsShopCartService;
+        this.extendPmsProductService = extendPmsProductService;
         this.extendSysUserService = extendSysUserService;
         // this.internalSysFilesService = internalSysFilesService;
         this.internalSysAreaService = internalSysAreaService;
@@ -88,7 +88,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     @Transactional
     @Override
-    public OmsOrderSlimVo generateOrder(InternalOmsOrderByCartDto dto) {
+    public OmsOrderSlimVo generateOrder(ExtendOmsOrderByCartDto dto) {
         OmsOrder bo = new OmsOrder();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
@@ -107,19 +107,19 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
         // TODO 2025/1/31 yunze 暂时先直接扣除商品库存，应该是锁定商品库存的，等支付订单之后再扣减库存
         // 扣减库存信息
-        List<InternalPmsStockDto> deductStocks = new ArrayList<>();
+        List<ExtendPmsStockDto> deductStocks = new ArrayList<>();
 
         // 订单商品信息入库
-        List<Long> productIds = dto.getProducts().stream().map(InternalOmsOrderProductDto::getProductId).collect(Collectors.toList());
-        List<InternalPmsProductSlimVo> productsInfo = internalPmsProductService.getProductByProductIds(productIds);
-        Map<Long, InternalPmsProductSlimVo> productMap = productsInfo.stream().collect(Collectors.toMap(InternalPmsProductSlimVo::getId, t -> t));
+        List<Long> productIds = dto.getProducts().stream().map(ExtendOmsOrderProductDto::getProductId).collect(Collectors.toList());
+        List<ExtendPmsProductSlimVo> productsInfo = extendPmsProductService.getProductByProductIds(productIds);
+        Map<Long, ExtendPmsProductSlimVo> productMap = productsInfo.stream().collect(Collectors.toMap(ExtendPmsProductSlimVo::getId, t -> t));
 
         List<OmsOrderRelationProduct> products = new ArrayList<>();
 
         // 订单总金额
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-        for (InternalOmsOrderProductDto product : dto.getProducts()) {
+        for (ExtendOmsOrderProductDto product : dto.getProducts()) {
             // 订单下的商品信息
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(product, relationProduct);
@@ -130,7 +130,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             relationProduct.setAlbumPics(productMap.get(product.getProductId()).getAlbumPics());
             products.add(relationProduct);
 
-            InternalPmsStockDto stock = new InternalPmsStockDto();
+            ExtendPmsStockDto stock = new ExtendPmsStockDto();
             stock.setProductId(product.getProductId());
             stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
@@ -144,19 +144,19 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         bo.setPayAmount(totalAmount);
 
         // 扣除商品库存
-        internalPmsStockService.deductBatch(deductStocks);
+        extendPmsStockService.deductBatch(deductStocks);
         // 订单信息入库
         baseMapper.insert(bo);
         // 订单详情信息入库
         omsOrderRelationProductService.saveBatch(products);
         // 清理购物车中下单的商品
-        internalPmsShopCartService.removeCartByProductIds(bo.getUserId(), deductStocks);
+        extendPmsShopCartService.removeCartByProductIds(bo.getUserId(), deductStocks);
         return new OmsOrderSlimVo(bo.getId(), bo.getOrderCode());
     }
 
     @Transactional
     @Override
-    public Long add(InternalOmsOrderDto dto) {
+    public Long add(ExtendOmsOrderDto dto) {
         OmsOrder bo = new OmsOrder();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
@@ -172,17 +172,17 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
         // TODO 2025/1/31 yunze 暂时先直接扣除商品库存，应该是锁定商品库存的
         // 扣减库存信息
-        List<InternalPmsStockDto> deductStocks = new ArrayList<>();
+        List<ExtendPmsStockDto> deductStocks = new ArrayList<>();
 
         // 订单商品信息入库
         List<OmsOrderRelationProduct> products = new ArrayList<>();
-        for (InternalOmsOrderProductDto product : dto.getProducts()) {
+        for (ExtendOmsOrderProductDto product : dto.getProducts()) {
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(product, relationProduct);
             relationProduct.setOrderId(bo.getId());
             products.add(relationProduct);
 
-            InternalPmsStockDto stock = new InternalPmsStockDto();
+            ExtendPmsStockDto stock = new ExtendPmsStockDto();
             stock.setProductId(product.getProductId());
             stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
@@ -191,7 +191,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         }
 
         // 扣除商品库存
-        internalPmsStockService.deductBatch(deductStocks);
+        extendPmsStockService.deductBatch(deductStocks);
         // 订单信息入库
         baseMapper.insert(bo);
         // 订单详情信息入库
@@ -252,7 +252,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
         // 获取商品文件信息
         // List<InternalQofFileInfoVo> filesInfo = internalSysFilesService.getFileInfoByFileIdsAndPublic(fileIds);
-        List<InternalQofFileInfoVo> filesInfo = new ArrayList<>();
+        List<ExtendQofFileInfoVo> filesInfo = new ArrayList<>();
         if (CollectionUtils.isEmpty(filesInfo)) {
             return detailVo;
         }
@@ -270,11 +270,11 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
      * @param qofFileInfoVos        所有图片预览数据
      */
     private void assembleProductImage(OmsOrderProductVo vo
-            , List<InternalQofFileInfoVo> qofFileInfoVos) {
+            , List<ExtendQofFileInfoVo> qofFileInfoVos) {
         if (!StringUtils.hasText(vo.getAlbumPics())) {
             return;
         }
-        for (InternalQofFileInfoVo fileInfoVo : qofFileInfoVos) {
+        for (ExtendQofFileInfoVo fileInfoVo : qofFileInfoVos) {
             if (StringUtils.hasText(vo.getPreviewAddress())
                     || !fileInfoVo.getFileId().equals(Long.parseLong(vo.getAlbumPics().split(",")[0]))) {
                 continue;

@@ -1,7 +1,7 @@
 package com.yz.mall.pms.feign;
 
-import com.yz.mall.pms.dto.InternalPmsCartDto;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsCartDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.base.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
@@ -29,7 +29,7 @@ public interface ExtendPmsShopCartFeign {
      * @return Map<购物车信息id, 商品信息>
      */
     @PostMapping("getCartByIds")
-    Result<Map<Long, InternalPmsCartDto>> getCartByIds(@RequestBody List<Long> cartIds);
+    Result<Map<Long, ExtendPmsCartDto>> getCartByIds(@RequestBody List<Long> cartIds);
 
     /**
      * 根据指定的购物车信息Id获取用户购物车里指定商品相关信息
@@ -47,5 +47,5 @@ public interface ExtendPmsShopCartFeign {
      * @return 是否操作成功 true: 成功，false：失败
      */
     @DeleteMapping("removeCartByProductIds")
-    Result<Boolean> removeCartByProductIds(@RequestBody List<InternalPmsStockDto> products);
+    Result<Boolean> removeCartByProductIds(@RequestBody List<ExtendPmsStockDto> products);
 }

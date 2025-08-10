@@ -12,7 +12,7 @@ import java.util.List;
  * @author yunze
  * @since 2024-06-16 16:06:43
  */
-public interface PmsProductExpandService extends IService<PmsProduct> {
+public interface PmsProductQueryService extends IService<PmsProduct> {
 
     /**
      * 根据商品Id查询对应的商品信息

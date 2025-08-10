@@ -3,7 +3,7 @@ package com.yz.mall.pms.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.service.PmsStockService;
@@ -60,7 +60,7 @@ public class PmsStockController extends ApiController {
      */
     @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deduct")
-    public Result<Boolean> deduct(@RequestBody @Valid InternalPmsStockDto dto) {
+    public Result<Boolean> deduct(@RequestBody @Valid ExtendPmsStockDto dto) {
         return success(this.service.deduct(dto));
     }
 
@@ -70,7 +70,7 @@ public class PmsStockController extends ApiController {
      */
     @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deducts")
-    public Result<Object> deducts(@RequestBody @Valid List<InternalPmsStockDto> productStocks) {
+    public Result<Object> deducts(@RequestBody @Valid List<ExtendPmsStockDto> productStocks) {
         this.service.deduct(productStocks);
         return success("");
     }
@@ -81,7 +81,7 @@ public class PmsStockController extends ApiController {
      */
     @SaCheckPermission("api:pms:stock:add")
     @PostMapping("add")
-    public Result<Boolean> add(@RequestBody @Valid InternalPmsStockDto dto) {
+    public Result<Boolean> add(@RequestBody @Valid ExtendPmsStockDto dto) {
         return success(this.service.add(dto));
     }
 }

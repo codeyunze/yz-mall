@@ -2,7 +2,7 @@ package com.yz.mall.pms.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.vo.PmsProductStockVo;
@@ -33,14 +33,14 @@ public interface PmsStockService extends IService<PmsStock> {
      * @param deductStock 指定的商品及其库存
      * @return 是否扣减成功
      */
-    Boolean deduct(InternalPmsStockDto deductStock);
+    Boolean deduct(ExtendPmsStockDto deductStock);
 
     /**
      * 批量扣减指定商品库存
      *
      * @param deductStocks 指定的商品及其库存
      */
-    void deduct(List<InternalPmsStockDto> deductStocks);
+    void deduct(List<ExtendPmsStockDto> deductStocks);
 
     /**
      * 增加库存
@@ -48,7 +48,7 @@ public interface PmsStockService extends IService<PmsStock> {
      * @param addStock 增加商品库存
      * @return 是否增加成功
      */
-    Boolean add(InternalPmsStockDto addStock);
+    Boolean add(ExtendPmsStockDto addStock);
 
     /**
      * 获取指定商品的库存

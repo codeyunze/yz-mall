@@ -1,7 +1,7 @@
 package com.yz.mall.sys.service.impl;
 
 import com.yz.mall.base.IdDto;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import com.yz.mall.sys.service.SysPendingTasksService;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class ExtendSysPendingTasksServiceImpl implements ExtendSysPendingTasksSe
     }
 
     @Override
-    public Long startTask(InternalSysPendingTasksAddDto taskInfo) {
+    public Long startTask(ExtendSysPendingTasksAddDto taskInfo) {
         return sysPendingTasksService.save(taskInfo);
     }
 

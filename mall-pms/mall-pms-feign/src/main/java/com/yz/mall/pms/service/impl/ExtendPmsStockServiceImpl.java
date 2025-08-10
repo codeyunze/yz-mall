@@ -1,8 +1,8 @@
 package com.yz.mall.pms.service.impl;
 
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.feign.ExtendPmsStockFeign;
-import com.yz.mall.pms.service.InternalPmsStockService;
+import com.yz.mall.pms.service.ExtendPmsStockService;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.exception.BusinessException;
@@ -16,17 +16,17 @@ import java.util.List;
  * @date 2024/6/23 16:25
  */
 @Service
-public class InternalPmsStockServiceImpl implements InternalPmsStockService {
+public class ExtendPmsStockServiceImpl implements ExtendPmsStockService {
 
     private final ExtendPmsStockFeign feign;
 
     @Autowired
-    public InternalPmsStockServiceImpl(ExtendPmsStockFeign feign) {
+    public ExtendPmsStockServiceImpl(ExtendPmsStockFeign feign) {
         this.feign = feign;
     }
 
     @Override
-    public Boolean deduct(InternalPmsStockDto deductStock) {
+    public Boolean deduct(ExtendPmsStockDto deductStock) {
         Result<Boolean> result = feign.deduct(deductStock);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
@@ -35,15 +35,16 @@ public class InternalPmsStockServiceImpl implements InternalPmsStockService {
     }
 
     @Override
-    public void deductBatch(List<InternalPmsStockDto> productStocks) {
-        Result<Object> result = feign.deductBatch(productStocks);
+    public Boolean deductBatch(List<ExtendPmsStockDto> productStocks) {
+        Result<Boolean> result = feign.deductBatch(productStocks);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }
+        return result.getData();
     }
 
     @Override
-    public Boolean add(InternalPmsStockDto dto) {
+    public Boolean add(ExtendPmsStockDto dto) {
         Result<Boolean> result = feign.add(dto);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());

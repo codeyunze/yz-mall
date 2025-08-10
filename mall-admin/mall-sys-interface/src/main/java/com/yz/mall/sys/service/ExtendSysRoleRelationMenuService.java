@@ -1,6 +1,6 @@
 package com.yz.mall.sys.service;
 
-import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
+import com.yz.mall.sys.dto.ExtendRolePermissionQueryDto;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +19,6 @@ public interface ExtendSysRoleRelationMenuService {
      * @param query 用户拥有的角色Id和查询的菜单权限类型
      * @return 按钮权限标识 <角色Id，List<权限标识>>
      */
-    Map<String, List<String>> getPermissionsByRoleIds(InternalRolePermissionQueryDto query);
+    Map<String, List<String>> getPermissionsByRoleIds(ExtendRolePermissionQueryDto query);
 
 }

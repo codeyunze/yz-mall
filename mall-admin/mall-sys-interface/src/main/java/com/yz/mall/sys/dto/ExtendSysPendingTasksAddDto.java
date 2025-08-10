@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @since 2025-01-15 16:58:30
  */
 @Data
-public class InternalSysPendingTasksAddDto implements Serializable {
+public class ExtendSysPendingTasksAddDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

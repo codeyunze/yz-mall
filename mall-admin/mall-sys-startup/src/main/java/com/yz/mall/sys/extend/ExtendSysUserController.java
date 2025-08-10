@@ -4,10 +4,10 @@ package com.yz.mall.sys.extend;
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
-import com.yz.mall.sys.dto.InternalSysUserAddDto;
-import com.yz.mall.sys.dto.InternalSysUserBalanceDto;
+import com.yz.mall.sys.dto.ExtendSysUserAddDto;
+import com.yz.mall.sys.dto.ExtendSysUserBalanceDto;
 import com.yz.mall.sys.service.ExtendSysUserService;
-import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendLoginInfoVo;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +33,7 @@ public class ExtendSysUserController extends ApiController {
      * 扣减余额
      */
     @PostMapping("deduct")
-    public Result<Boolean> deduct(@RequestBody @Valid InternalSysUserBalanceDto dto) {
+    public Result<Boolean> deduct(@RequestBody @Valid ExtendSysUserBalanceDto dto) {
         service.deduct(dto.getUserId(), dto.getAmount());
         return success(true);
     }
@@ -42,7 +42,7 @@ public class ExtendSysUserController extends ApiController {
      * 账户充值
      */
     @PostMapping("recharge")
-    public Result<Boolean> recharge(@RequestBody @Valid InternalSysUserBalanceDto dto) {
+    public Result<Boolean> recharge(@RequestBody @Valid ExtendSysUserBalanceDto dto) {
         service.recharge(dto.getUserId(), dto.getAmount());
         return success(true);
     }
@@ -66,7 +66,7 @@ public class ExtendSysUserController extends ApiController {
      */
     @SaIgnore
     @PostMapping("add")
-    public Result<Long> add(@Valid @RequestBody InternalSysUserAddDto dto) {
+    public Result<Long> add(@Valid @RequestBody ExtendSysUserAddDto dto) {
         return success(service.add(dto));
     }
 
@@ -77,7 +77,7 @@ public class ExtendSysUserController extends ApiController {
      * @return 用户信息
      */
     @GetMapping("getUserInfo/{id}")
-    public Result<InternalLoginInfoVo> getUserInfo(@PathVariable Long id) {
+    public Result<ExtendLoginInfoVo> getUserInfo(@PathVariable Long id) {
         return success(this.service.getUserInfoById(id));
     }
 }

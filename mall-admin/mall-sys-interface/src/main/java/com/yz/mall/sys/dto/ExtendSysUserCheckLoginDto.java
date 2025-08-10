@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @since 2024-06-16 23:25:56
  */
 @Data
-public class InternalSysUserCheckLoginDto implements Serializable {
+public class ExtendSysUserCheckLoginDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,10 +28,10 @@ public class InternalSysUserCheckLoginDto implements Serializable {
     @NotNull(message = "密码不能为空")
     private String password;
 
-    public InternalSysUserCheckLoginDto() {
+    public ExtendSysUserCheckLoginDto() {
     }
 
-    public InternalSysUserCheckLoginDto(String phone, String password) {
+    public ExtendSysUserCheckLoginDto(String phone, String password) {
         this.phone = phone;
         this.password = password;
     }

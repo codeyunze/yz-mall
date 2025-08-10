@@ -2,7 +2,7 @@ package com.yz.mall.sys.service.impl;
 
 import com.yz.mall.sys.feign.ExtendSysUserRelationOrgFeign;
 import com.yz.mall.sys.service.ExtendSysUserRelationOrgService;
-import com.yz.mall.sys.vo.InternalSysUserRelationOrgVo;
+import com.yz.mall.sys.vo.ExtendSysUserRelationOrgVo;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.exception.FeignException;
@@ -26,8 +26,8 @@ public class ExtendSysUserRelationOrgServiceImpl implements ExtendSysUserRelatio
     }
 
     @Override
-    public List<InternalSysUserRelationOrgVo> getOrgByUserId(Long userId) {
-        Result<List<InternalSysUserRelationOrgVo>> result = internalSysUserRelationOrgFeign.getOrgByUserId(userId);
+    public List<ExtendSysUserRelationOrgVo> getOrgByUserId(Long userId) {
+        Result<List<ExtendSysUserRelationOrgVo>> result = internalSysUserRelationOrgFeign.getOrgByUserId(userId);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
         }

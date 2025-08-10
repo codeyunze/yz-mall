@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsShopCartAddDto;
 import com.yz.mall.pms.dto.PmsShopCartQueryDto;
 import com.yz.mall.pms.dto.PmsShopCartUpdateDto;
@@ -85,8 +85,8 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
     @DS("master")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products) {
-        Map<Long, InternalPmsStockDto> productMap = products.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, item -> item));
+    public boolean removeCartByProductIds(Long userId, List<ExtendPmsStockDto> products) {
+        Map<Long, ExtendPmsStockDto> productMap = products.stream().collect(Collectors.toMap(ExtendPmsStockDto::getProductId, item -> item));
 
         LambdaQueryWrapper<PmsShopCart> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PmsShopCart::getUserId, userId);

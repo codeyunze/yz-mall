@@ -1,6 +1,6 @@
 package com.yz.mall.sys.service.impl;
 
-import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
+import com.yz.mall.sys.dto.ExtendRolePermissionQueryDto;
 import com.yz.mall.sys.feign.ExtendSysRoleRelationMenuFeign;
 import com.yz.mall.sys.service.ExtendSysRoleRelationMenuService;
 import com.yz.mall.base.Result;
@@ -27,7 +27,7 @@ public class ExtendSysRoleRelationMenuServiceImpl implements ExtendSysRoleRelati
     }
 
     @Override
-    public Map<String, List<String>> getPermissionsByRoleIds(InternalRolePermissionQueryDto query) {
+    public Map<String, List<String>> getPermissionsByRoleIds(ExtendRolePermissionQueryDto query) {
         Result<Map<String, List<String>>> result = feign.getPermissionsByRoleIds(query);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());

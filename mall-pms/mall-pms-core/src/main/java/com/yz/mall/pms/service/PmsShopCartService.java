@@ -2,7 +2,7 @@ package com.yz.mall.pms.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsShopCartAddDto;
 import com.yz.mall.pms.dto.PmsShopCartQueryDto;
 import com.yz.mall.pms.dto.PmsShopCartUpdateDto;
@@ -54,7 +54,7 @@ public interface PmsShopCartService extends IService<PmsShopCart> {
      * @param products 指定的商品Id和数量
      * @return 是否操作成功 true: 成功，false：失败
      */
-    boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products);
+    boolean removeCartByProductIds(Long userId, List<ExtendPmsStockDto> products);
 
     /**
      * 分页查询

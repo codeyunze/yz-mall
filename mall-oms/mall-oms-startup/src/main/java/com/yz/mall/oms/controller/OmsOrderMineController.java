@@ -6,8 +6,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.enums.CodeEnum;
-import com.yz.mall.oms.dto.InternalOmsOrderByCartDto;
-import com.yz.mall.oms.dto.InternalOmsOrderDto;
+import com.yz.mall.oms.dto.ExtendOmsOrderByCartDto;
+import com.yz.mall.oms.dto.ExtendOmsOrderDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
 import com.yz.mall.oms.entity.OmsOrder;
@@ -45,7 +45,7 @@ public class OmsOrderMineController extends ApiController {
      */
     @SaCheckPermission("api:oms:order:add")
     @PostMapping("generate")
-    public Result<OmsOrderSlimVo> generateOrder(@RequestBody @Valid InternalOmsOrderByCartDto dto) {
+    public Result<OmsOrderSlimVo> generateOrder(@RequestBody @Valid ExtendOmsOrderByCartDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
         return success(this.service.generateOrder(dto));
     }
@@ -55,7 +55,7 @@ public class OmsOrderMineController extends ApiController {
      */
     @SaCheckPermission("api:oms:order:add")
     @PostMapping("add")
-    public Result<Long> add(@RequestBody @Valid InternalOmsOrderDto dto) {
+    public Result<Long> add(@RequestBody @Valid ExtendOmsOrderDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
         return success(this.service.add(dto));
     }

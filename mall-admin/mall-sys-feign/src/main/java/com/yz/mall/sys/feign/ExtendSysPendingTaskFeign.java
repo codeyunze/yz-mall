@@ -2,7 +2,7 @@ package com.yz.mall.sys.feign;
 
 import com.yz.mall.base.IdDto;
 import com.yz.mall.base.Result;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.web.configuration.OpenFeignConfig;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,7 +26,7 @@ public interface ExtendSysPendingTaskFeign {
      * @return 任务Id
      */
     @PostMapping("startTask")
-    Result<Long> startTask(@RequestBody @Valid InternalSysPendingTasksAddDto taskInfo);
+    Result<Long> startTask(@RequestBody @Valid ExtendSysPendingTasksAddDto taskInfo);
 
     /**
      * 结束任务

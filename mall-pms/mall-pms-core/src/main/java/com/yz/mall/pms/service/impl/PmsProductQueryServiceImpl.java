@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.mapper.PmsProductMapper;
-import com.yz.mall.pms.service.PmsProductExpandService;
+import com.yz.mall.pms.service.PmsProductQueryService;
 import com.yz.mall.pms.vo.PmsProductSlimVo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @since 2024-06-16 16:06:43
  */
 @Service
-public class PmsProductExpandServiceImpl extends ServiceImpl<PmsProductMapper, PmsProduct> implements PmsProductExpandService {
+public class PmsProductQueryServiceImpl extends ServiceImpl<PmsProductMapper, PmsProduct> implements PmsProductQueryService {
 
     @Override
     public List<PmsProductSlimVo> getProductByProductIds(List<Long> productIds) {

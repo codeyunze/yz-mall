@@ -4,7 +4,7 @@ package com.yz.mall.sys.extend;
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.Result;
-import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
+import com.yz.mall.sys.dto.ExtendRolePermissionQueryDto;
 import com.yz.mall.sys.service.ExtendSysRoleRelationMenuService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +39,7 @@ public class ExtendSysRoleRelationMenuController extends ApiController {
      */
     @SaIgnore
     @PostMapping("getPermissionsByRoleIds")
-    public Result<Map<String, List<String>>> getPermissionsByRoleIds(@Valid @RequestBody InternalRolePermissionQueryDto query) {
+    public Result<Map<String, List<String>>> getPermissionsByRoleIds(@Valid @RequestBody ExtendRolePermissionQueryDto query) {
         return success(service.getPermissionsByRoleIds(query));
     }
 

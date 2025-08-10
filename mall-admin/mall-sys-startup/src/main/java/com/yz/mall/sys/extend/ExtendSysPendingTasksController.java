@@ -3,7 +3,7 @@ package com.yz.mall.sys.extend;
 import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.base.IdDto;
 import com.yz.mall.base.Result;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class ExtendSysPendingTasksController {
      * @return 任务Id
      */
     @PostMapping("startTask")
-    public Result<Long> startTask(@RequestBody @Valid InternalSysPendingTasksAddDto taskInfo) {
+    public Result<Long> startTask(@RequestBody @Valid ExtendSysPendingTasksAddDto taskInfo) {
         taskInfo.setCreateId(StpUtil.getLoginIdAsLong());
         boolean login = StpUtil.isLogin();
         log.info("用户是否登录：{}", login);

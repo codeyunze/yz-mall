@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @since 2024-06-16 23:25:56
  */
 @Data
-public class InternalSysUserAddDto implements Serializable {
+public class ExtendSysUserAddDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

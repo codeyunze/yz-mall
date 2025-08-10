@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @since 2025-02-16 15:43:41
  */
 @Data
-public class InternalQofFileInfoVo {
+public class ExtendQofFileInfoVo {
 
     /**
      * 文件唯一Id

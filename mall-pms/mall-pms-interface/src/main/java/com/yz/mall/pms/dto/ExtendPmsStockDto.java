@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @since 2024-06-16 16:14:09
  */
 @Data
-public class InternalPmsStockDto implements Serializable {
+public class ExtendPmsStockDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

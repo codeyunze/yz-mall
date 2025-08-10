@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.exception.BusinessException;
 import com.yz.mall.json.JacksonUtil;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
@@ -17,7 +17,7 @@ import com.yz.mall.pms.mapper.PmsStockMapper;
 import com.yz.mall.pms.service.PmsStockInDetailService;
 import com.yz.mall.pms.service.PmsStockOutDetailService;
 import com.yz.mall.pms.service.PmsStockService;
-import com.yz.mall.pms.vo.InternalPmsStockDeductVo;
+import com.yz.mall.pms.vo.ExtendPmsStockDeductVo;
 import com.yz.mall.pms.vo.PmsProductStockVo;
 import com.yz.mall.pms.vo.PmsStockVo;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +78,7 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     @DS("master")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Boolean deduct(InternalPmsStockDto deductStock) {
+    public Boolean deduct(ExtendPmsStockDto deductStock) {
         // TODO: 2024/6/16 星期日 yunze 加锁
         LambdaQueryWrapper<PmsStock> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PmsStock::getProductId, deductStock.getProductId());
@@ -100,18 +100,18 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
     @DS("master")
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deduct(List<InternalPmsStockDto> productStocks) {
+    public void deduct(List<ExtendPmsStockDto> productStocks) {
         // 各商品需要扣除的库存数量
-        Map<Long, Integer> productQuantityuMap = productStocks.stream().collect(Collectors.toMap(InternalPmsStockDto::getProductId, InternalPmsStockDto::getQuantity));
-        List<Long> productIds = productStocks.stream().map(InternalPmsStockDto::getProductId).collect(Collectors.toList());
+        Map<Long, Integer> productQuantityuMap = productStocks.stream().collect(Collectors.toMap(ExtendPmsStockDto::getProductId, ExtendPmsStockDto::getQuantity));
+        List<Long> productIds = productStocks.stream().map(ExtendPmsStockDto::getProductId).collect(Collectors.toList());
         // TODO: 2024/6/27 星期四 yunze 锁对应商品的库存
         List<PmsStock> stocks = getPmsStocksByProductIds(productIds);
         Map<Long, PmsStock> stockByProductIdMap = stocks.stream().collect(Collectors.toMap(PmsStock::getProductId, t -> t));
 
         // 扣减库存结果
-        List<InternalPmsStockDeductVo> deductStocks = new ArrayList<>();
+        List<ExtendPmsStockDeductVo> deductStocks = new ArrayList<>();
         for (Long productId : productIds) {
-            InternalPmsStockDeductVo deductVo = new InternalPmsStockDeductVo();
+            ExtendPmsStockDeductVo deductVo = new ExtendPmsStockDeductVo();
             deductVo.setProductId(productId);
             // 指定商品的库存信息
             PmsStock stock = stockByProductIdMap.get(productId);
@@ -153,7 +153,7 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
 
     @Transactional
     @Override
-    public Boolean add(InternalPmsStockDto addStock) {
+    public Boolean add(ExtendPmsStockDto addStock) {
         // TODO: 2024/6/16 星期日 yunze 加锁
         PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getId, PmsStock::getQuantity).eq(PmsStock::getProductId, addStock.getProductId()));
         if (stock == null || stock.getId() == null) {

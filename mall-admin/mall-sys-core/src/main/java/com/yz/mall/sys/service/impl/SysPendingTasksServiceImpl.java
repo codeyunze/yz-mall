@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yz.mall.sys.AbstractSysPendingTasksQueueConfig;
-import com.yz.mall.sys.dto.InternalSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.dto.SysPendingTasksQueryDto;
 import com.yz.mall.sys.dto.SysPendingTasksUpdateDto;
 import com.yz.mall.sys.entity.SysPendingTasks;
@@ -40,7 +40,7 @@ public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMappe
     }
 
     @Override
-    public Long save(InternalSysPendingTasksAddDto dto) {
+    public Long save(ExtendSysPendingTasksAddDto dto) {
         SysPendingTasks bo = new SysPendingTasks();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());

@@ -26,13 +26,25 @@
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>mall-serial-core</artifactId>
+            <artifactId>mall-serial-feign</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.yz</groupId>
-            <artifactId>mall-auth-core</artifactId>
+            <artifactId>mall-sys-feign</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-auth-feign</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-pms-feign</artifactId>
             <version>${project.version}</version>
         </dependency>
 

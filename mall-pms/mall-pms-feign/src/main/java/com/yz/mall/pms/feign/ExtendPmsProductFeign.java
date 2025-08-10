@@ -1,7 +1,7 @@
 package com.yz.mall.pms.feign;
 
 import com.yz.mall.base.Result;
-import com.yz.mall.pms.dto.InternalPmsProductSlimVo;
+import com.yz.mall.pms.dto.ExtendPmsProductSlimVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +26,6 @@ public interface ExtendPmsProductFeign {
      * @return 商品信息
      */
     @PostMapping("getProductByProductIds")
-    public Result<List<InternalPmsProductSlimVo>> getProductByProductIds(@RequestBody List<Long> productIds);
+    public Result<List<ExtendPmsProductSlimVo>> getProductByProductIds(@RequestBody List<Long> productIds);
 
 }

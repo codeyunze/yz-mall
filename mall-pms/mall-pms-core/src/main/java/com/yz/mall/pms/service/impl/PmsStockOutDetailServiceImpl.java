@@ -6,13 +6,13 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailUpdateDto;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
 import com.yz.mall.pms.mapper.PmsStockOutDetailMapper;
-import com.yz.mall.pms.service.PmsProductExpandService;
+import com.yz.mall.pms.service.PmsProductQueryService;
 import com.yz.mall.pms.service.PmsStockOutDetailService;
 import com.yz.mall.pms.vo.PmsProductSlimVo;
 import com.yz.mall.pms.vo.PmsStockOutDetailVo;
@@ -41,11 +41,11 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
 
     private final ExtendSerialService extendSerialService;
 
-    private final PmsProductExpandService pmsProductExpandService;
+    private final PmsProductQueryService pmsProductQueryService;
 
-    public PmsStockOutDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductExpandService pmsProductExpandService) {
+    public PmsStockOutDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductQueryService pmsProductQueryService) {
         this.extendSerialService = extendSerialService;
-        this.pmsProductExpandService = pmsProductExpandService;
+        this.pmsProductQueryService = pmsProductQueryService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -62,7 +62,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean outBatch(List<InternalPmsStockDto> outDetails) {
+    public boolean outBatch(List<ExtendPmsStockDto> outDetails) {
         String prefix = "CK" + LocalDateTimeUtil.format(LocalDate.now(), DatePattern.PURE_DATE_PATTERN);
         String stockOutCode = extendSerialService.generateNumber(prefix, 6);
         List<PmsStockOutDetail> outDetailList = new ArrayList<>();
@@ -98,7 +98,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
         }
 
         List<Long> productIds = stockOutPage.getRecords().stream().map(PmsStockOutDetail::getProductId).collect(Collectors.toList());
-        List<PmsProductSlimVo> products = pmsProductExpandService.getProductByProductIds(productIds);
+        List<PmsProductSlimVo> products = pmsProductQueryService.getProductByProductIds(productIds);
         if (CollectionUtils.isEmpty(products)) {
             return new Page<>();
         }

@@ -5,7 +5,7 @@ import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.exception.FeignException;
 import com.yz.mall.sys.feign.ExtendSysAreaFeign;
 import com.yz.mall.sys.service.ExtendSysAreaService;
-import com.yz.mall.sys.vo.InternalSysAreaVo;
+import com.yz.mall.sys.vo.ExtendSysAreaVo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,8 +24,8 @@ public class ExtendSysAreaServiceImpl implements ExtendSysAreaService {
     }
 
     @Override
-    public InternalSysAreaVo getById(String id) {
-        Result<InternalSysAreaVo> result = areaFeign.getById(id);
+    public ExtendSysAreaVo getById(String id) {
+        Result<ExtendSysAreaVo> result = areaFeign.getById(id);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
         }

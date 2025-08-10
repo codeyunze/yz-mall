@@ -1,7 +1,7 @@
 package com.yz.mall.sys.feign;
 
 import com.yz.mall.base.Result;
-import com.yz.mall.sys.dto.InternalRolePermissionQueryDto;
+import com.yz.mall.sys.dto.ExtendRolePermissionQueryDto;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +26,6 @@ public interface ExtendSysRoleRelationMenuFeign {
      * @return 按钮权限标识
      */
     @PostMapping("getPermissionsByRoleIds")
-    Result<Map<String, List<String>>> getPermissionsByRoleIds(@Valid @RequestBody InternalRolePermissionQueryDto query);
+    Result<Map<String, List<String>>> getPermissionsByRoleIds(@Valid @RequestBody ExtendRolePermissionQueryDto query);
 
 }

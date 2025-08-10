@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2024/12/10 14:23
  */
 @Data
-public class InternalRolePermissionQueryDto implements Serializable {
+public class ExtendRolePermissionQueryDto implements Serializable {
 
     /**
      * 菜单类型

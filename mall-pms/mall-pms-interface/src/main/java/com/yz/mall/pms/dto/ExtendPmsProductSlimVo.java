@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @since 2024-12-20 13:08:05
  */
 @Data
-public class InternalPmsProductSlimVo implements Serializable {
+public class ExtendPmsProductSlimVo implements Serializable {
 
     private static final long serialVersionUID = 43L;
 

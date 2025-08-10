@@ -15,7 +15,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class InternalOmsOrderByCartDto extends BaseOmsOrder implements Serializable {
+public class ExtendOmsOrderByCartDto extends BaseOmsOrder implements Serializable {
 
     private final static long serialVersionUID = 1L;
 
@@ -23,5 +23,5 @@ public class InternalOmsOrderByCartDto extends BaseOmsOrder implements Serializa
      * 订单商品信息(在购物车里选择的商品)
      */
     @NotNull(message = "商品信息不能为空")
-    private List<InternalOmsOrderProductDto> products;
+    private List<ExtendOmsOrderProductDto> products;
 }

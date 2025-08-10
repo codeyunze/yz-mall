@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class InternalSysAreaVo implements Serializable {
+public class ExtendSysAreaVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,7 +1,7 @@
 package com.yz.mall.pms.service;
 
-import com.yz.mall.pms.dto.InternalPmsCartDto;
-import com.yz.mall.pms.dto.InternalPmsStockDto;
+import com.yz.mall.pms.dto.ExtendPmsCartDto;
+import com.yz.mall.pms.dto.ExtendPmsStockDto;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * @author yunze
  * @date 2024/6/23 09:14
  */
-public interface InternalPmsShopCartService {
+public interface ExtendPmsShopCartService {
 
     /**
      * 根据指定的购物车信息Id获取用户购物车里指定商品相关信息
@@ -21,7 +21,7 @@ public interface InternalPmsShopCartService {
      * @param cartIds 指定的商品Id列表
      * @return Map<购物车信息id, 商品信息>
      */
-    Map<Long, InternalPmsCartDto> getCartByIds(Long userId, List<Long> cartIds);
+    Map<Long, ExtendPmsCartDto> getCartByIds(Long userId, List<Long> cartIds);
 
     /**
      * 根据指定的购物车信息Id获取用户购物车里指定商品相关信息
@@ -39,5 +39,5 @@ public interface InternalPmsShopCartService {
      * @param products 指定的商品Id和数量
      * @return 是否操作成功 true: 成功，false：失败
      */
-    boolean removeCartByProductIds(Long userId, List<InternalPmsStockDto> products);
+    boolean removeCartByProductIds(Long userId, List<ExtendPmsStockDto> products);
 }

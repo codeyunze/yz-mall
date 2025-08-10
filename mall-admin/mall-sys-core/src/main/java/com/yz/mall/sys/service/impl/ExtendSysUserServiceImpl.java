@@ -2,11 +2,11 @@ package com.yz.mall.sys.service.impl;
 
 import com.yz.mall.base.enums.EnableEnum;
 import com.yz.mall.base.enums.SexEnum;
-import com.yz.mall.sys.dto.InternalSysUserAddDto;
+import com.yz.mall.sys.dto.ExtendSysUserAddDto;
 import com.yz.mall.sys.dto.SysUserAddDto;
 import com.yz.mall.sys.service.ExtendSysUserService;
 import com.yz.mall.sys.service.SysUserService;
-import com.yz.mall.sys.vo.InternalLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendLoginInfoVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -44,12 +44,12 @@ public class ExtendSysUserServiceImpl implements ExtendSysUserService {
     }
 
     @Override
-    public InternalLoginInfoVo getUserInfoById(Long userId) {
+    public ExtendLoginInfoVo getUserInfoById(Long userId) {
         return service.getUserInfoById(userId);
     }
 
     @Override
-    public Long add(InternalSysUserAddDto dto) {
+    public Long add(ExtendSysUserAddDto dto) {
         SysUserAddDto userAddDto = new SysUserAddDto();
         BeanUtils.copyProperties(dto, userAddDto);
         userAddDto.setSex(SexEnum.MALE.get());
