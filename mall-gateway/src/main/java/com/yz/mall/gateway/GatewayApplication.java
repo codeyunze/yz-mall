@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2024/7/21 星期日 17:31
  */
 @SpringBootApplication
-public class MallGatewayApplication {
+public class GatewayApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MallGatewayApplication.class, args);
+        SpringApplication.run(GatewayApplication.class, args);
         // System.out.println("启动成功，Sa-Token 配置如下：" + SaManager.getConfig());
     }
 }
