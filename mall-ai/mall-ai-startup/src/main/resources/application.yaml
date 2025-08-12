@@ -1,0 +1,11 @@
+
+spring:
+  ai:
+    dashscope:
+      agent:
+        app-id: ${APP_ID} # 大模型应用ID，如未配置环境变量，请在这里替换为实际的值
+      api-key: ${DASHSCOPE_API_KEY} # 百炼API Key，如未配置环境变量，请在这里替换为实际的值
+      #workspace-id: ${WORKSPACE_ID} # 业务空间ID，可选，未配置时使用主账号空间
+# 如端口冲突，可自定义新的端口
+#server:
+#  port: 9000

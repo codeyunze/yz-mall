@@ -17,6 +17,7 @@
         <module>mall-gateway</module>
         <module>mall-pms</module>
         <module>mall-oms</module>
+        <module>mall-ai</module>
     </modules>
 
     <properties>
