@@ -7,7 +7,7 @@ spring:
       username: nacos
       password: ${NACOS_PASSWORD}
       config:
-        namespace: mall
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
         import-check:
           enabled: false
         extension-configs:
@@ -15,7 +15,7 @@ spring:
           - data-id: sa-token.yaml
           - data-id: rabbitmq.yaml
       discovery:
-        namespace: mall
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
 
 
 # 调度中心部署根地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
