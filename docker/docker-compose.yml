@@ -8,8 +8,8 @@ services:
     container_name: 'redis-7.4.5'
     command: redis-server --requirepass "ss7Q22x"
     volumes:
-      - C:\tools\docker\redis\config\redis.conf:/usr/local/etc/redis/redis.conf
-      - C:\tools\docker\redis\data:/data
+      - /opt/docker-dev-environment/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
+      - /opt/docker-dev-environment/redis/data:/data
     ports:
       - '6379:6379'
 
@@ -19,6 +19,10 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
     ports:
       - '9200:9200'
       - '9300:9300'
@@ -31,6 +35,8 @@ services:
   kibana:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/kibana:8.19.0
     container_name: 'kibana-8.19.0'
+    environment:
+      - ELASTICSEARCH_HOSTS=http://192.168.3.237:9200
     ports:
       - '5601:5601'
     depends_on:
@@ -38,17 +44,39 @@ services:
     networks:
       - mall
 
+  logstash:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/logstash:8.19.0
+    container_name: 'logstash-8.19.0'
+    ports:
+      - '4560:4560'
+    environment:
+      - LS_JAVA_OPTS=-Xmx512m -Xms512m
+    volumes:
+      - /opt/docker-dev-environment/logstash/mall-elk.conf:/usr/share/logstash/config/mall-elk.conf
+      - /opt/docker-dev-environment/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+    entrypoint:
+      - logstash
+      - -f
+      - /usr/share/logstash/config/mall-elk.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "30m"
+        max-file: "3"
+    networks:
+      - mall
+
   nacos:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/nacos-server:v2.5.1
     container_name: 'nacos-2.5.1'
     volumes:
-      - C:\tools\docker\nacos\application.properties:/home/nacos/conf/application.properties
+      - /opt/docker-dev-environment/nacos2.5.1/application.properties:/home/nacos/conf/application.properties
     ports:
       - '8848:8848'
       - '9848:9848'
       - '9849:9849'
     env_file:
-      - C:\tools\docker\nacos\config.env
+      - /opt/docker-dev-environment/nacos2.5.1/config.env
     networks:
       - mall
 
