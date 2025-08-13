@@ -7,16 +7,13 @@ spring:
       username: nacos
       password: ${NACOS_PASSWORD}
       config:
-        namespace: mall
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
         import-check:
           enabled: false
         extension-configs:
           - data-id: datasource.yaml
-            refresh: true
           - data-id: sa-token.yaml
-            refresh: true
           - data-id: resilience4j.yaml
-            refresh: true
         file-extension: yaml
       discovery:
-        namespace: mall
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
