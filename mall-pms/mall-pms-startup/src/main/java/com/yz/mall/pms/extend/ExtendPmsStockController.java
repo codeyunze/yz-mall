@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * 内部暴露接口: 商品库存信息
+ *
  * @author yunze
  * @date 2025/8/9 星期六 18:57
  */
