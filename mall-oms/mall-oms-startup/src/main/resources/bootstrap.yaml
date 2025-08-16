@@ -13,7 +13,7 @@ spring:
         extension-configs:
           - data-id: datasource.yaml
           - data-id: sa-token.yaml
-          - data-id: resilience4j.yaml
+          - data-id: rabbitmq.yaml
         file-extension: yaml
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8

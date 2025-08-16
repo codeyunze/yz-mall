@@ -16,7 +16,7 @@ import java.util.Map;
  * @author yunze
  * @date 2024/12/9 19:42
  */
-@FeignClient(name = "yz-mall-sys", contextId = "extendSysRoleRelationMenu", path = "extend/sys/role/menu")
+@FeignClient(name = "mall-sys", contextId = "extendSysRoleRelationMenu", path = "extend/sys/role/menu")
 public interface ExtendSysRoleRelationMenuFeign {
 
     /**

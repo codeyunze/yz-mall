@@ -14,7 +14,7 @@ import java.util.List;
  * @author yunze
  * @since 2025/5/18 23:00
  */
-@FeignClient(name = "yz-mall-sys", contextId = "extendSysUserOrg", path = "extend/sys/user/org")
+@FeignClient(name = "mall-sys", contextId = "extendSysUserOrg", path = "extend/sys/user/org")
 public interface ExtendSysUserRelationOrgFeign {
 
     /**

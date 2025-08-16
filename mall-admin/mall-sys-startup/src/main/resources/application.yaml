@@ -12,3 +12,8 @@ spring:
 #      - nacos:sa-token.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true

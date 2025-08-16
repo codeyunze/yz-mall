@@ -4,3 +4,45 @@ server:
 spring:
   application:
     name: mall-oms
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: false
+      httpclient:
+        connection-timeout: 2000
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 10s
+  circuitbreaker: # CircuitBreaker是由一个有限状态机实现的，包含三个一般性状态：CLOSED, OPEN, HALF_OPEN（关闭、打开、半开）和两个特定状态：DISABLED, FORCED_OPEN（禁用、强开）
+    configs:
+      default:
+        failureRateThreshold: 50      # 当请求失败率大于50%时circuitbreaker的状态由CLOSED转为OPEN，后续的请求就会直接进入预设的服务降级方法
+        waitDurationInOpenState: 5s   # 从OPEN到HALF_OPEN状态需要等待的时间
+        slowCallDurationThreshold: 2s # 慢调用时间阈值，高于这个阈值的视为慢调用，并增加慢调用比例。
+        slowCallRateThreshold: 30     # 慢调用百分比峰值，断路器把调用时间⼤于slowCallDurationThreshold，视为慢调用，当慢调用比例高于阈值，断路器打开，并开启服务降级
+        slidingWindowType: TIME_BASED # 滑动窗口的类型(基于计数的滑动窗口 COUNT_BASED 统计最近N次调用的结果。基于时间的滑动窗口 TIME_BASED 统计最近N秒的调用结果。)
+        slidingWindowSize: 2          # 滑动窗口的大小配置，配置TIME_BASED表示2秒
+        minimumNumberOfCalls: 2       # 断路器计算失败率或慢调用率之前所需的最小样本(每个滑动窗口周期)
+        permittedNumberOfCallsInHalfOpenState: 10  # 半开状态允许的最大请求数，默认值为10。
+
+  retry:
+    instances:
+      testRetry:
+        max-attempts: 3       # 最大重试次数（包含首次调用）
+        wait-duration:
+          seconds: 1          # 每次重试间隔1秒
+        retry-exceptions:     # 仅对以下设置的异常进行重试
+          - feign.FeignException
+
+  ratelimiter:
+    instances:
+      testRateLimiter:
+        limit-for-period: 2       # 每秒最多10次请求
+        limit-refresh-period: 500ms  # 限流周期为1秒
+        timeout-duration: 0       # 请求超过限流时，最多等待3s
+        register-health-indicator: true
+        event-consumer-buffer-size: 100
+
+  
