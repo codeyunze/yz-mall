@@ -51,7 +51,6 @@ public class OmsTestController {
      * 测试接口（限流）
      */
     @SaIgnore
-    @RateLimiter(name = "testRateLimiter")
     @RequestMapping("testRateLimiter/{id}")
     public String testRateLimiter(@PathVariable String id) {
         log.info("限流测试接口");

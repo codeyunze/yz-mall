@@ -23,7 +23,10 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                 log.warn("进入SaInterceptor拦截: {}", this.getClass());
             SaRouter.match("/**")
                     // "/beat", "/idleBeat", "/kill", "/run", "/log"为xxljob所需接口
-                    .notMatch("/extend/**", "/sys/test/*", "/beat", "/idleBeat", "/kill", "/run", "/log", "/actuator/**")
+                    .notMatch("/extend/**", "/sys/test/*"
+                            , "/beat", "/idleBeat", "/kill", "/run", "/log"
+                            , "/error/**"
+                            , "/actuator/**")
                     .check(r -> StpUtil.checkLogin());
         })).addPathPatterns("/**");
     }
