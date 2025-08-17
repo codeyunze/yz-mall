@@ -42,7 +42,7 @@ resilience4j:
         limit-for-period: 2       # 每秒最多10次请求
         limit-refresh-period: 500ms  # 限流周期为1秒
         timeout-duration: 0       # 请求超过限流时，最多等待3s
-        register-health-indicator: true
-        event-consumer-buffer-size: 100
+#        register-health-indicator: true
+#        event-consumer-buffer-size: 100
 
   
