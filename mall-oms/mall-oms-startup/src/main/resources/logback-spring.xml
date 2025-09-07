@@ -54,6 +54,6 @@
         <!--appender将会添加到这个loger-->
         <appender-ref ref="console"/>
         <appender-ref ref="timeFileOutput"/>
-        <appender-ref ref="logstash"/>
+<!--        <appender-ref ref="logstash"/>-->
     </root>
 </configuration>
