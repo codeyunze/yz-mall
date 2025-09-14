@@ -15,7 +15,7 @@ public class Producer {
         // 初始化一个消息生产者
         DefaultMQProducer producer = new DefaultMQProducer("DemoProducer");
         // 指定nameserver地址
-        producer.setNamesrvAddr("192.168.3.237:9876");
+        producer.setNamesrvAddr("192.168.3.246:9876");
         // 启动消息生产者服务
         producer.start();
         for (int i = 0; i < 100; i++) {

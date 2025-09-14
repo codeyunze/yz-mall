@@ -21,7 +21,7 @@ public class Consumer {
         // 构建一个消息消费者
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("DemoConsumer");
         // 指定nameserver地址
-        consumer.setNamesrvAddr("192.168.3.237:9876");
+        consumer.setNamesrvAddr("192.168.3.246:9876");
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 订阅一个感兴趣的话题，这个话题需要与消息的topic一致
         consumer.subscribe("TopicTest", "*");
