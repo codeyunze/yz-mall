@@ -14,7 +14,9 @@
     <description>demo服务</description>
 
     <modules>
+        <module>mall-java</module>
         <module>mall-rocketmq</module>
+        <module>mall-springboot</module>
     </modules>
 
     <properties>

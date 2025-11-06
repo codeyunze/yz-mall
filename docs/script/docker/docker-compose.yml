@@ -5,17 +5,14 @@ networks:
 services:
   redis:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis:7.4.5
-    container_name: 'redis-7.4.5'
-    command: redis-server --requirepass "ss7Q22x"
-    volumes:
-      - /opt/docker-dev-environment/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
-      - /opt/docker-dev-environment/redis/data:/data
+    container_name: 'dev-redis-7.4.5'
+    command: redis-server --requirepass "12345678"
     ports:
       - '6379:6379'
 
   elasticsearch:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/elasticsearch:8.19.0
-    container_name: 'elasticsearch-8.19.0'
+    container_name: 'dev-elasticsearch-8.19.0'
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
@@ -34,9 +31,9 @@ services:
 
   kibana:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/kibana:8.19.0
-    container_name: 'kibana-8.19.0'
+    container_name: 'dev-kibana-8.19.0'
     environment:
-      - ELASTICSEARCH_HOSTS=http://192.168.3.237:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - '5601:5601'
     depends_on:
@@ -46,14 +43,14 @@ services:
 
   logstash:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/logstash:8.19.0
-    container_name: 'logstash-8.19.0'
+    container_name: 'dev-logstash-8.19.0'
     ports:
       - '4560:4560'
     environment:
-      - LS_JAVA_OPTS=-Xmx512m -Xms512m
+      - LS_JAVA_OPTS=-Xmx512m -Xms256m
     volumes:
-      - /opt/docker-dev-environment/logstash/mall-elk.conf:/usr/share/logstash/config/mall-elk.conf
-      - /opt/docker-dev-environment/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /Users/gaohan/Documents/docker/dev/logstash/mall-elk.conf:/usr/share/logstash/config/mall-elk.conf
+      - /Users/gaohan/Documents/docker/dev/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
     entrypoint:
       - logstash
       - -f
@@ -68,26 +65,14 @@ services:
 
   nacos:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/nacos-server:v2.5.1
-    container_name: 'nacos-2.5.1'
+    container_name: 'dev-nacos-2.5.1'
     volumes:
-      - /opt/docker-dev-environment/nacos2.5.1/application.properties:/home/nacos/conf/application.properties
+      - /Users/gaohan/Documents/docker/dev/nacos/application.properties:/home/nacos/conf/application.properties
     ports:
       - '8848:8848'
       - '9848:9848'
       - '9849:9849'
     env_file:
-      - /opt/docker-dev-environment/nacos2.5.1/config.env
-    networks:
-      - mall
-
-  rabbitmq:
-    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rabbitmq:3.13.7
-    container_name: 'rabbitmq-3.13.7'
-    ports:
-      - '5672:5672'
-      - '15672:15672'
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
+      - /Users/gaohan/Documents/docker/dev/nacos/config.env
     networks:
       - mall
