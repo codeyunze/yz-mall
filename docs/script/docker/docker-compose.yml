@@ -76,3 +76,30 @@ services:
       - /Users/gaohan/Documents/docker/dev/nacos/config.env
     networks:
       - mall
+  
+  namesrv:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
+    container_name: rocketmq-namesrv
+    ports:
+      - "9876:9876"
+    command: "sh mqnamesrv"
+  
+  broker:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
+    container_name: rocketmq-broker
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+    ports:
+      - "10911:10911"
+      - "10909:10909"
+    depends_on:
+      - namesrv
+    command: "sh mqbroker -n namesrv:9876"
+  
+  rocketmq-dashboard:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq-dashboard:2.1.0
+    container_name: rocketmq-dashboard-2.1
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876
+    ports:
+      - "8082:8082"
