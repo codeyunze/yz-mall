@@ -32,7 +32,7 @@
         <druid.version>1.2.25</druid.version>
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <dynamic-datasource.version>4.3.1</dynamic-datasource.version>
-        <hutool-all.version>5.8.39</hutool-all.version>
+        <hutool.version>5.8.39</hutool.version>
         <redisson.version>3.50.0</redisson.version>
         <sa-token.version>1.43.0</sa-token.version>
         <xxl-job.version>2.4.2</xxl-job.version>
@@ -40,6 +40,8 @@
 <!--        <qof.version>0.0.6</qof.version>-->
         <logback.version>1.5.18</logback.version>
         <resilience4j.version>2.2.0</resilience4j.version>
+        <logstash-logback.version>6.6</logstash-logback.version>
+        <prometheus.version>1.11.5</prometheus.version>
     </properties>
 
     <dependencies>
@@ -120,7 +122,13 @@
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>${hutool-all.version}</version>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
             <dependency>
@@ -159,7 +167,7 @@
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
-                <version>1.11.5</version>
+                <version>${prometheus.version}</version>
             </dependency>
 
             <dependency>
@@ -209,7 +217,7 @@
             <dependency>
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
-                <version>6.6</version>
+                <version>${logstash-logback.version}</version>
             </dependency>
 
             <!--<dependency>

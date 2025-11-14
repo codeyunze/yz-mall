@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
-    private RequestHeaderMdcInterceptor mdcInterceptor;
+    private RequestHeaderInterceptor mdcInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

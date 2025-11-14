@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @since 2025/11/7 12:22
  */
 @Component
-public class RequestHeaderMdcInterceptor implements HandlerInterceptor {
+public class RequestHeaderInterceptor implements HandlerInterceptor {
 
     private static final String TRACE_ID_HEADER = "X-Trace-ID";
     private static final String USER_IP_HEADER = "X-Forwarded-For";
