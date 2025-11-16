@@ -1,4 +1,4 @@
-package com.yz.mall.sys;
+package com.yz.mall.web.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -35,7 +35,7 @@
         <hutool.version>5.8.39</hutool.version>
         <redisson.version>3.50.0</redisson.version>
         <sa-token.version>1.43.0</sa-token.version>
-        <xxl-job.version>2.4.2</xxl-job.version>
+        <xxl-job.version>3.1.1</xxl-job.version>
         <jackson.version>2.19.2</jackson.version>
 <!--        <qof.version>0.0.6</qof.version>-->
         <logback.version>1.5.18</logback.version>

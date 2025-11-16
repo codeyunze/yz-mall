@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2025/8/7 00:25
  */
 @Configuration
-@ConditionalOnProperty
+// @ConditionalOnProperty
 @ComponentScan({"com.yz.mall.oms"})
 public class OmsCoreConfig {
 }

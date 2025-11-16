@@ -24,3 +24,18 @@ management:
     web:
       exposure:
         include:  '*'
+
+xxl:
+  job:
+    admin:
+      addresses: http://localhost:30009/xxl-job-admin
+      accessToken: 987654321
+      timeout: 3
+    executor:
+      appname: mall
+      address: http://192.168.3.29:31004/
+      ip: 192.168.3.29
+      port: 31004
+      logpath: ./logs/sys
+      logretentiondays: 10
+      excludepackages: org.springframework,spring
