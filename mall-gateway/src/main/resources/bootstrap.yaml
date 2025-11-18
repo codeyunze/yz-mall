@@ -3,15 +3,15 @@ spring:
     compatibility-verifier:
       enabled: false
     nacos:
-      server-addr: yunze.com:8848
+      server-addr: 127.0.0.1:8848
       username: nacos
       password: ${NACOS_PASSWORD}
       config:
-        namespace: mall
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
         import-check:
           enabled: false
         extension-configs:
           - data-id: mall-gateway.yaml
             refresh: true
       discovery:
-        namespace: mall
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8

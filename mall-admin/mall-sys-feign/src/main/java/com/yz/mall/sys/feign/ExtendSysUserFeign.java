@@ -21,7 +21,7 @@ import java.util.List;
  * @author yunze
  * @date 2024/6/22 23:44
  */
-@FeignClient(name = "yz-mall-sys", contextId = "extendSysUser", path = "extend/sys/user")
+@FeignClient(name = "mall-sys", contextId = "extendSysUser", path = "extend/sys/user")
 public interface ExtendSysUserFeign {
 
     /**

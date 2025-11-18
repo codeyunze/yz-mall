@@ -5,6 +5,7 @@ import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import java.util.List;
 
 /**
+ * 内部开放接口: 商品库存信息
  * @author yunze
  * @date 2024/6/23 09:14
  */

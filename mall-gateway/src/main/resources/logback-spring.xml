@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
     <!--设置存储路径变量-->
-    <property name="LOG_HOME" value="./logs"/>
+    <property name="LOG_HOME" value="./logs/gateway"/>
 
     <!--控制台输出appender-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -40,6 +40,13 @@
 
     </appender>
 
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>127.0.0.1:4560</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"platform": "mall", "app_name": "mall-gateway"}</customFields>
+        </encoder>
+    </appender>
+
     <logger name="com.yz.mall.sys.mapper" level="DEBUG"/>
 
     <!--指定基础的日志输出级别-->
@@ -47,5 +54,6 @@
         <!--appender将会添加到这个loger-->
         <appender-ref ref="console"/>
         <appender-ref ref="timeFileOutput"/>
+        <appender-ref ref="logstash"/>
     </root>
 </configuration>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
+ * 内部暴露接口: 商品信息
  * @author yunze
  * @date 2025/8/10 星期日 9:27
  */

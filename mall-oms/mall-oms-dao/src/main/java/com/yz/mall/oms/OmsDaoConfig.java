@@ -10,6 +10,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @MapperScan("com.yz.mall.oms.mapper")
-@ComponentScan({"com.yz.mall.oms"})
+// @ComponentScan({"com.yz.mall.oms"})
 public class OmsDaoConfig {
 }

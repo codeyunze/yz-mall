@@ -5,3 +5,19 @@ server:
 spring:
   application:
     name: mall-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: mall-sys
+          uri: lb://mall-sys
+          predicates:
+            - Path=/sys/**,/authentication/**,/serial/**
+        - id: mall-oms
+          uri: lb://mall-oms
+          predicates:
+            - Path=/oms/**
+        - id: mall-pms
+          uri: lb://mall-pms
+          predicates:
+            - Path=/pms/**

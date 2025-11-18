@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author yunze
  * @date 2025/1/22 14:06
  */
-@FeignClient(name = "yz-mall-sys", contextId = "extendSysPendingTask", path = "extend/sys/tasks", configuration = OpenFeignConfig.class)
+@FeignClient(name = "mall-sys", contextId = "extendSysPendingTask", path = "extend/sys/tasks", configuration = OpenFeignConfig.class)
 public interface ExtendSysPendingTaskFeign {
 
     /**

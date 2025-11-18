@@ -40,6 +40,13 @@
 
     </appender>
 
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>192.168.3.29:4560</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"platform": "mall", "app_name": "mall-pms"}</customFields>
+        </encoder>
+    </appender>
+
     <logger name="com.yz.mall.pms.mapper" level="DEBUG"/>
 
     <!--指定基础的日志输出级别-->
@@ -47,5 +54,6 @@
         <!--appender将会添加到这个loger-->
         <appender-ref ref="console"/>
         <appender-ref ref="timeFileOutput"/>
+        <appender-ref ref="logstash"/>
     </root>
 </configuration>

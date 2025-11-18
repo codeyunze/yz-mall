@@ -2,6 +2,8 @@ package com.yz.mall.auth.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 组织信息
  *
@@ -9,7 +11,9 @@ import lombok.Data;
  * @since 2025/5/18 21:42
  */
 @Data
-public class OrgInfo {
+public class OrgInfo implements Serializable {
+
+    private final static long serialVersionUID = 1L;
 
     /**
      * 组织Id
