@@ -2,7 +2,6 @@ package com.yz.mall.gateway.filter;
 
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -12,7 +11,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * 自定义全局网关过滤器
@@ -22,7 +20,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
-public class CustomGatewayFilter implements GlobalFilter, Ordered {
+public class TraceGatewayFilter implements GlobalFilter, Ordered {
 
     private static final String TRACE_ID_HEADER = "X-Trace-ID";
     private static final String REAL_IP_HEADER = "X-Real-IP";

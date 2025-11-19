@@ -5,7 +5,6 @@ server:
 spring:
   application:
     name: mall-gateway
-
   cloud:
     gateway:
       routes:
@@ -21,3 +20,19 @@ spring:
           uri: lb://mall-pms
           predicates:
             - Path=/pms/**
+
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: ${NACOS_PASSWORD}
+      config:
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+        import-check:
+          enabled: false
+#        extension-configs:
+#          - data-id: mall-gateway.yaml
+#            refresh: true
+      discovery:
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
