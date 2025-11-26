@@ -41,13 +41,13 @@
     </appender>
 
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>192.168.3.29:4560</destination>
+        <destination>yunze.com:4560</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"platform": "mall", "app_name": "mall-seata-user"}</customFields>
         </encoder>
     </appender>
 
-    <logger name="com.yz.mall.oms.mapper" level="DEBUG"/>
+    <logger name="com.yz.mall.su.mapper" level="DEBUG"/>
 
     <!--指定基础的日志输出级别-->
     <root level="INFO">

@@ -5,28 +5,11 @@ spring:
   application:
     name: mall-seata-order
 
-  cloud:
-    compatibility-verifier:
-      enabled: false
-    nacos:
-      server-addr: yunze.com:8848
-      username: nacos
-      password: ${NACOS_PASSWORD}
-      config:
-        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
-        import-check:
-          enabled: false
-        extension-configs:
-#          - data-id: datasource.yaml
-        file-extension: yaml
-      discovery:
-        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
-
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
-    url: jdbc:mysql://43.138.193.177:3306/mall_seata_order?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://${MYSQL_HOST}:3306/mall_seata_order?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:
