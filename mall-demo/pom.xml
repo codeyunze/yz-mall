@@ -11,12 +11,13 @@
 
     <artifactId>mall-demo</artifactId>
     <packaging>pom</packaging>
-    <description>demo服务</description>
+    <description>demo 服务</description>
 
     <modules>
         <module>mall-java</module>
         <module>mall-rocketmq</module>
         <module>mall-springboot</module>
+        <module>mall-seata</module>
     </modules>
 
     <properties>
