@@ -156,3 +156,28 @@ services:
       - ./seata/application.yml/:/seata-server/resources/application.yml
     networks:
       - mall
+
+  redis-exporter:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis_exporter:v1.64.1
+    container_name: 'dev-redis-exporter-1.64.1'
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+      - REDIS_PASSWORD=123456
+    volumes:
+      - /etc/localtime:/etc/localtime
+    ports:
+      - '9121:9121'
+    networks:
+      - mall
+
+  mysqld-exporter:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/mysqld-exporter:v0.15.1
+    container_name: 'dev-mysqld-exporter-0.15.1'
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./exporter/mysql/my.cnf:/etc/mysql/my.cnf
+    command: --config.my-cnf=/etc/mysql/my.cnf
+    ports:
+      - '9104:9104'
+    networks:
+      - mall
