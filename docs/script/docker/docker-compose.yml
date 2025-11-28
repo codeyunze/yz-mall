@@ -103,3 +103,56 @@ services:
       - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876
     ports:
       - "8082:8082"
+
+  prometheus:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/prometheus:v3.7.3
+    container_name: 'dev-prometheus-3.7.3'
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '9090:9090'
+    networks:
+      - mall
+
+  grafana:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/grafana:12.2
+    container_name: 'dev-grafana-12.2'
+    volumes:
+      - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./localtime:/etc/localtime:ro
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./grafana/config.monitoring
+    depends_on:
+      - prometheus
+    networks:
+      - mall
+
+  xxl-job-admin:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/xxl-job-admin:3.1.1
+    container_name: 'dev-xxl-job-admin-3.1.1'
+    ports:
+      - "30009:8080"
+    environment:
+      PARAMS: >-
+        --spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+        --spring.datasource.username=xxl_job_dev
+        --spring.datasource.password=123456
+        --xxl.job.admin.accessToken=123456789
+
+  seata-server:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/seata-server:1.6.1
+    container_name: 'dev-seata-server-1.6.1'
+    ports:
+      - "7091:7091"
+      - "8091:8091"
+    environment:
+      - SEATA_IP=192.168.3.29
+      - SEATA_PORT=8091
+    volumes:
+      - ./seata/application.yml/:/seata-server/resources/application.yml
+    networks:
+      - mall
