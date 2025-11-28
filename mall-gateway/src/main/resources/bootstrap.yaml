@@ -1,0 +1,49 @@
+
+spring:
+  config:
+    import:
+      - optional:nacos:gateway.yaml
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      server-addr: yunze.com:8848
+      username: nacos
+      password: ${NACOS_PASSWORD}
+      config:
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+        import-check:
+          enabled: false
+        file-extension: yaml
+        extension-configs:
+          - data-id: gateway.yaml
+      discovery:
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+
+
+#    gateway:
+#      routes:
+#        - id: mall-sys
+#          uri: lb://mall-sys
+#          predicates:
+#            - Path=/sys/**,/authentication/**,/serial/**
+#        - id: mall-oms
+#          uri: lb://mall-oms
+#          predicates:
+#            - Path=/oms/**
+#        - id: mall-pms
+#          uri: lb://mall-pms
+#          predicates:
+#            - Path=/pms/**
+#        - id: mall-seate-order
+#          uri: lb://mall-seate-order
+#          predicates:
+#            - Path=/seataOrder/**
+#        - id: mall-seate-stock
+#          uri: lb://mall-seate-stock
+#          predicates:
+#            - Path=/seataStock/**
+#        - id: mall-seate-user
+#          uri: lb://mall-seate-user
+#          predicates:
+#            - Path=/seataUser/**

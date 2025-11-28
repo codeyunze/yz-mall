@@ -77,5 +77,15 @@ public class SeataStockController extends ApiController {
         return success(this.service.getById(id));
     }
 
+    /**
+     * 扣减库存
+     *
+     * @param productId    商品 Id
+     * @param productStock 扣减库存数量
+     */
+    @PostMapping("decreaseStock")
+    public Result<Boolean> decreaseStock(@RequestParam Long productId, @RequestParam Integer productStock) {
+        return success(this.service.decreaseStock(productId, productStock));
+    }
 }
 

@@ -22,19 +22,19 @@ import java.util.Objects;
 @Component
 public class TraceGatewayFilter implements GlobalFilter, Ordered {
 
-    private static final String TRACE_ID_HEADER = "X-Trace-ID";
-    private static final String REAL_IP_HEADER = "X-Real-IP";
+    private static final String TRACE_ID_HEADER = "x-trace-id";
+    private static final String REAL_IP_HEADER = "x-real-ip";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("自定义网关过滤器...");
+        log.info("自定义网关过滤器：{}", exchange.getRequest().getURI());
         // 获取原始请求
         ServerHttpRequest request = exchange.getRequest();
 
         // 构建新的请求构建器，基于现有请求
         ServerHttpRequest.Builder builder = request.mutate();
 
-        // 判断如果header里没有X-Trace-ID参数，则为其赋值随机UUID
+        // 判断如果header里没有x-trace-id参数，则为其赋值随机UUID
         if (exchange.getRequest().getHeaders().get(TRACE_ID_HEADER) == null) {
             builder.header(TRACE_ID_HEADER, IdUtil.getSnowflakeNextIdStr());
         }

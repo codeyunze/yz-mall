@@ -2,9 +2,11 @@ package com.yz.mall.ss.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.base.PageFilter;
+import com.yz.mall.base.exception.BusinessException;
 import com.yz.mall.ss.dto.SeataStockAddDto;
 import com.yz.mall.ss.dto.SeataStockQueryDto;
 import com.yz.mall.ss.dto.SeataStockUpdateDto;
@@ -43,6 +45,31 @@ public class SeataStockServiceImpl extends ServiceImpl<SeataStockMapper, SeataSt
     public Page<SeataStock> page(PageFilter<SeataStockQueryDto> filter) {
         LambdaQueryWrapper<SeataStock> queryWrapper = new LambdaQueryWrapper<>();
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+    }
+
+    @Override
+    public boolean decreaseStock(Long productId, Integer productStock) {
+        LambdaQueryWrapper<SeataStock> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SeataStock::getProductId, productId);
+        SeataStock stock = baseMapper.selectOne(queryWrapper);
+        if (stock == null) {
+            throw new BusinessException("商品不存在库存");
+        }
+
+        if (stock.getProductStock() < productStock) {
+            throw new BusinessException("商品库存不足");
+        }
+
+        LambdaUpdateWrapper<SeataStock> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(SeataStock::getProductId, productId)
+                .apply("product_stock >= {0}", productStock)
+                .set(SeataStock::getProductStock, stock.getProductStock() - productStock);
+
+        int updated = baseMapper.update(updateWrapper);
+        if (updated == 0) {
+            throw new BusinessException("商品库存不足，扣减失败");
+        }
+        return true;
     }
 }
 

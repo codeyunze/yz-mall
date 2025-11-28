@@ -42,5 +42,13 @@ public interface SeataStockService extends IService<SeataStock> {
      */
     Page<SeataStock> page(PageFilter<SeataStockQueryDto> filter);
 
+    /**
+     * 扣减库存
+     *
+     * @param productId    商品 Id
+     * @param productStock 扣减库存数量
+     */
+    boolean decreaseStock(Long productId, Integer productStock);
+
 }
 

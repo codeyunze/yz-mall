@@ -58,11 +58,13 @@ public class SeataUserServiceImpl extends ServiceImpl<SeataUserMapper, SeataUser
     @Override
     public boolean decreaseBalance(Long userId, Long amount) {
         // 先查询用户信息，检查余额是否足够
-        SeataUser user = baseMapper.selectById(userId);
+        LambdaQueryWrapper<SeataUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SeataUser::getUserId, userId);
+        SeataUser user = baseMapper.selectOne(queryWrapper);
+
         if (user == null) {
             throw new BusinessException("用户不存在");
         }
-        
         // 检查余额是否足够
         if (user.getBalanceCents() < amount) {
             throw new BusinessException("用户余额不足");
@@ -71,7 +73,7 @@ public class SeataUserServiceImpl extends ServiceImpl<SeataUserMapper, SeataUser
         // 扣减余额
         // TODO: 2025/11/26 yunze 会有 sql 注入风险
         LambdaUpdateWrapper<SeataUser> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(SeataUser::getId, userId)
+        updateWrapper.eq(SeataUser::getUserId, userId)
                     .apply("balance_cents >= {0}", amount)
                     .set(SeataUser::getBalanceCents, user.getBalanceCents() - amount);
         

@@ -24,7 +24,11 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-web</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

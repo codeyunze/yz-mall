@@ -1,6 +1,7 @@
 package com.yz.mall.web.configuration;
 
 
+import com.yz.mall.base.HeaderConstants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +41,7 @@ public class OpenFeignConfig implements RequestInterceptor {
     private Map<String, String> getHeaders(HttpServletRequest request) {
         Map<String, String> map = new LinkedHashMap<>();
         Enumeration<String> enumeration = request.getHeaderNames();
-        // 需要携带的header
+        // 需要携带的 header
         Set<String> matchHeader = new HashSet<>();
         matchHeader.add("authorization");
         matchHeader.add("cookie");
@@ -49,6 +50,8 @@ public class OpenFeignConfig implements RequestInterceptor {
         matchHeader.add("x-forwarded-host");
         matchHeader.add("accept");
         matchHeader.add("sec-ch-ua-platform");
+        matchHeader.add(HeaderConstants.TRACE_ID_HEADER);
+        matchHeader.add(HeaderConstants.USER_IP_HEADER);
 
         while (enumeration.hasMoreElements()) {
             String key = enumeration.nextElement();
