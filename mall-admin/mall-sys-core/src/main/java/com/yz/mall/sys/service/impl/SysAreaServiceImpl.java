@@ -34,6 +34,11 @@ import java.util.List;
 @Service
 public class SysAreaServiceImpl extends ServiceImpl<SysAreaMapper, SysArea> implements SysAreaService {
 
+    @Override
+    public void keepalive() {
+        Integer keepalive = baseMapper.keepalive();
+    }
+
     @Caching(evict = {
             @CacheEvict(value = "system:area-administer", allEntries = true),
             @CacheEvict(value = "system:area-detail", allEntries = true)

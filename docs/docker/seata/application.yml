@@ -25,7 +25,7 @@ logging:
     path: ${log.home:${user.home}/logs/seata}
   extend:
     logstash-appender:
-      destination: 127.0.0.1:4560
+      destination: yunze.com:4560
     kafka-appender:
       bootstrap-servers: 127.0.0.1:9092
       topic: logback_to_logstash

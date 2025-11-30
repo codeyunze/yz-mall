@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * SaToken相关全局异常捕获
+ * SaToken 相关全局异常捕获
  *
  * @author yunze
  * @date 2024/11/30 星期六 22:57

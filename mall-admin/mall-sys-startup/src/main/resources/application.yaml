@@ -28,13 +28,13 @@ management:
 xxl:
   job:
     admin:
-      addresses: http://localhost:30009/xxl-job-admin
-      accessToken: 987654321
+      addresses: http://192.168.3.237:30009/xxl-job-admin
+      accessToken: 123456789
       timeout: 3
     executor:
       appname: mall
-      address: http://yunze.com:31004/
-      ip: yunze.com
+      address: http://192.168.3.77:31004/
+      ip: 192.168.3.77
       port: 31004
       logpath: ./logs/sys
       logretentiondays: 10

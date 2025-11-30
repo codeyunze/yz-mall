@@ -7,6 +7,8 @@ services:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis:7.4.5
     container_name: 'dev-redis-7.4.5'
     command: redis-server --requirepass "12345678"
+    volumes:
+      - /etc/localtime:/etc/localtime
     ports:
       - '6379:6379'
 
@@ -15,11 +17,13 @@ services:
     container_name: 'dev-elasticsearch-8.19.0'
     environment:
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
+      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m -Duser.timezone=Asia/Shanghai
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - '9200:9200'
       - '9300:9300'
@@ -34,10 +38,14 @@ services:
     container_name: 'dev-kibana-8.19.0'
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - '5601:5601'
     depends_on:
       - elasticsearch
+    mem_limit: 1536m
     networks:
       - mall
 
@@ -48,9 +56,11 @@ services:
       - '4560:4560'
     environment:
       - LS_JAVA_OPTS=-Xmx512m -Xms256m
+      - TZ=Asia/Shanghai
     volumes:
-      - /Users/gaohan/Documents/docker/dev/logstash/mall-elk.conf:/usr/share/logstash/config/mall-elk.conf
-      - /Users/gaohan/Documents/docker/dev/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/mall-elk.conf:/usr/share/logstash/config/mall-elk.conf
+      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /etc/localtime:/etc/localtime:ro
     entrypoint:
       - logstash
       - -f
@@ -67,13 +77,13 @@ services:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/nacos-server:v2.5.1
     container_name: 'dev-nacos-2.5.1'
     volumes:
-      - /Users/gaohan/Documents/docker/dev/nacos/application.properties:/home/nacos/conf/application.properties
+      - ./nacos/application.properties:/home/nacos/conf/application.properties
     ports:
       - '8848:8848'
       - '9848:9848'
       - '9849:9849'
     env_file:
-      - /Users/gaohan/Documents/docker/dev/nacos/config.env
+      - ./nacos/config.env
     networks:
       - mall
   
@@ -121,7 +131,7 @@ services:
     volumes:
       - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini
       - ./grafana/provisioning/:/etc/grafana/provisioning/
-      - ./localtime:/etc/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - '3000:3000'
     env_file:
@@ -141,7 +151,7 @@ services:
         --spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
         --spring.datasource.username=xxl_job_dev
         --spring.datasource.password=123456
-        --xxl.job.admin.accessToken=123456789
+        --xxl.job.accessToken=123456789
 
   seata-server:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/seata-server:1.6.1
@@ -150,10 +160,13 @@ services:
       - "7091:7091"
       - "8091:8091"
     environment:
-      - SEATA_IP=192.168.3.29
+      - SEATA_IP=192.168.3.237
       - SEATA_PORT=8091
+      - TZ=Asia/Shanghai
     volumes:
       - ./seata/application.yml/:/seata-server/resources/application.yml
+    depends_on:
+      - nacos
     networks:
       - mall
 
@@ -181,3 +194,11 @@ services:
       - '9104:9104'
     networks:
       - mall
+      
+  node-exporter:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/node-exporter:v1.10.2
+    container_name: 'dev-node-exporter-1.10.2'
+    hostname: node-exporter
+    restart: always
+    ports:
+      - "9100:9100"

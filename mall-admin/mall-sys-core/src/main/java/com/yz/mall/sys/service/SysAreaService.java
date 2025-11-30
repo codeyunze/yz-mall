@@ -21,6 +21,11 @@ import java.util.List;
 public interface SysAreaService extends IService<SysArea> {
 
     /**
+     * 保持数据库连接
+     */
+    void keepalive();
+
+    /**
      * 新增数据
      *
      * @param dto 新增基础数据
