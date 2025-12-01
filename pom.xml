@@ -230,7 +230,7 @@
             <dependency>
                 <groupId>org.junit.vintage</groupId>
                 <artifactId>junit-vintage-engine</artifactId>
-                <version>5.7.0</version>
+                <version>5.13.4</version>
             </dependency>
 
             <dependency>
@@ -239,6 +239,17 @@
                 <version>1.12.2</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-engine</artifactId>
+                <version>1.12.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-commons</artifactId>
+                <version>1.12.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
