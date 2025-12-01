@@ -1,6 +1,5 @@
 package com.yz.mall.sys.service.impl;
 
-import cn.hutool.core.annotation.Link;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
@@ -23,7 +22,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +97,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             throw new BusinessException("数据字典不存在");
         }
         // 将 dictionaries 以 parentId 为分组字段进行分组，赋值给 dictionaryMap
-        Map<Long, List<SysDictionary>>  dictionaryMap = dictionaries.stream().collect(Collectors.groupingBy(SysDictionary::getParentId, LinkedHashMap::new, Collectors.toList()));
+        Map<Long, List<SysDictionary>> dictionaryMap = dictionaries.stream().collect(Collectors.groupingBy(SysDictionary::getParentId, LinkedHashMap::new, Collectors.toList()));
 
         ExtendSysDictionaryVo result = new ExtendSysDictionaryVo();
         // 根目录节点--顶层数据子弹
@@ -107,12 +106,19 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
 
         dictionaryMap.remove(0L);
 
+        // 字典数据组装为树形结构
         assembly(result, dictionaryMap);
 
         return result;
     }
 
-    private void assembly(ExtendSysDictionaryVo result, Map<Long, List<SysDictionary>>  dictionaryMap) {
+    /**
+     * 数据组装
+     *
+     * @param result        根目录节点
+     * @param dictionaryMap 数据字典信息
+     */
+    private void assembly(ExtendSysDictionaryVo result, Map<Long, List<SysDictionary>> dictionaryMap) {
         List<SysDictionary> dictionaries = dictionaryMap.get(result.getId());
         if (CollectionUtils.isEmpty(dictionaries)) {
             return;
@@ -122,6 +128,10 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             BeanUtils.copyProperties(dictionary, child);
             // 递归组装子节点的子节点数据
             assembly(child, dictionaryMap);
+
+            if (CollectionUtils.isEmpty(result.getChildren())) {
+                result.setChildren(new ArrayList<>());
+            }
             result.getChildren().add(child);
         }
     }
