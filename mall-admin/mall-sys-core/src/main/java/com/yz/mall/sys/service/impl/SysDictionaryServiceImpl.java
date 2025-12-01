@@ -101,12 +101,29 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         Map<Long, List<SysDictionary>>  dictionaryMap = dictionaries.stream().collect(Collectors.groupingBy(SysDictionary::getParentId, LinkedHashMap::new, Collectors.toList()));
 
         ExtendSysDictionaryVo result = new ExtendSysDictionaryVo();
-        // result.setId();
+        // 根目录节点--顶层数据子弹
+        SysDictionary rootDic = dictionaryMap.get(0L).get(0);
+        BeanUtils.copyProperties(rootDic, result);
 
-        // dictionaryMap.forEach((parentId, dictionaryList) -> {
+        dictionaryMap.remove(0L);
 
-        // });
+        assembly(result, dictionaryMap);
+
         return result;
+    }
+
+    private void assembly(ExtendSysDictionaryVo result, Map<Long, List<SysDictionary>>  dictionaryMap) {
+        List<SysDictionary> dictionaries = dictionaryMap.get(result.getId());
+        if (CollectionUtils.isEmpty(dictionaries)) {
+            return;
+        }
+        for (SysDictionary dictionary : dictionaries) {
+            ExtendSysDictionaryVo child = new ExtendSysDictionaryVo();
+            BeanUtils.copyProperties(dictionary, child);
+            // 递归组装子节点的子节点数据
+            assembly(child, dictionaryMap);
+            result.getChildren().add(child);
+        }
     }
 }
 
