@@ -6,6 +6,7 @@ import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.ResultTable;
+import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.sys.dto.SysDictionaryAddDto;
 import com.yz.mall.sys.dto.SysDictionaryQueryDto;
 import com.yz.mall.sys.dto.SysDictionaryUpdateDto;
@@ -48,7 +49,8 @@ public class SysDictionaryController extends ApiController {
      */
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysDictionaryUpdateDto dto) {
-        return success(this.service.update(dto));
+        boolean updated = this.service.update(dto);
+        return updated ? success(true) : Result.error(false, "数据字典更新失败");
     }
 
     /**

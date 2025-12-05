@@ -28,6 +28,11 @@ public class SysDictionary extends Model<SysDictionary> {
     private Long id;
 
     /**
+     * 祖先ID，如果没有父节点则为0
+     */
+    private Long ancestorId;
+
+    /**
      * 父节点ID，如果没有父节点则为0
      */
     private Long parentId;

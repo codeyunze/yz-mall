@@ -19,6 +19,11 @@ public class SysDictionaryAddDto implements Serializable {
     private static final long serialVesionUID = 1L;
 
     /**
+     * 祖先ID，如果没有父节点则为0
+     */
+    private Long ancestorId;
+
+    /**
      * 父节点ID，如果没有父节点则为0
      */
     private Long parentId;
