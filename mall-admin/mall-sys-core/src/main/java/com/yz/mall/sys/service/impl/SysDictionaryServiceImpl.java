@@ -63,65 +63,86 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         BeanUtils.copyProperties(dto, bo);
 
         boolean updated = baseMapper.updateById(bo) > 0;
-        if (updated) {
-            // 清理缓存，更新前更新后的都要清理
-            // 更新前缓存
-            String dictionaryKeyUpdateBefore;
-            if (dictionary.getAncestorId() == 0L) {
-                // 是第一层顶级数据字典
-                dictionaryKeyUpdateBefore = dictionary.getDictionaryKey();
-            } else {
-                dictionaryKeyUpdateBefore = baseMapper.getKeyById(dictionary.getAncestorId());
-            }
-            redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateBefore));
-
-            // 更新后缓存
-            String dictionaryKeyUpdateAfter;
-            if (bo.getAncestorId() == null || bo.getAncestorId() == 0L) {
-                // 是第一层顶级数据字典
-                dictionaryKeyUpdateAfter = bo.getDictionaryKey();
-            } else {
-                // 是第二层及以后得数据字典，需要清理其祖宗数据字典缓存
-                dictionaryKeyUpdateAfter = baseMapper.getKeyById(bo.getAncestorId());
-            }
-            redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateAfter));
-
+        if (!updated) {
+            // 更新失败，直接返回
+            return false;
         }
-        return updated;
+
+        // 清理缓存，更新前更新后的都要清理
+        // 更新前缓存
+        String dictionaryKeyUpdateBefore;
+        if (dictionary.getAncestorId() == 0L) {
+            // 是第一层顶级数据字典
+            dictionaryKeyUpdateBefore = dictionary.getDictionaryKey();
+        } else {
+            dictionaryKeyUpdateBefore = baseMapper.getKeyById(dictionary.getAncestorId());
+        }
+        redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateBefore));
+
+        // 更新后缓存
+        String dictionaryKeyUpdateAfter;
+        if (bo.getAncestorId() == null || bo.getAncestorId() == 0L) {
+            // 是第一层顶级数据字典
+            dictionaryKeyUpdateAfter = bo.getDictionaryKey();
+        } else {
+            // 是第二层及以后得数据字典，需要清理其祖宗数据字典缓存
+            dictionaryKeyUpdateAfter = baseMapper.getKeyById(bo.getAncestorId());
+        }
+        redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateAfter));
+        return true;
     }
 
 
     @Override
     public Long save(SysDictionaryAddDto dto) {
-        SysDictionary bo = new SysDictionary();
-
-        LambdaQueryWrapper<SysDictionary> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysDictionary::getParentId, dto.getParentId() != null ? dto.getParentId() : 0L);
-        List<SysDictionary> dictionaries = baseMapper.selectList(queryWrapper);
-        if (!CollectionUtils.isEmpty(dictionaries)) {
-            for (SysDictionary dictionary : dictionaries) {
-                if (dictionary.getDictionaryKey().equals(dto.getDictionaryKey())) {
-                    throw new BusinessException("数据字典 Key 已经存在，不可重复新增");
-                }
-            }
-        } else if (dto.getParentId() != null && dto.getParentId() != 0L) {
-            SysDictionary dictionary = baseMapper.selectById(dto.getParentId());
-            if (dictionary == null) {
+        // 验证父节点是否存在
+        Long parentId = dto.getParentId() != null ? dto.getParentId() : 0L;
+        if (parentId != 0L) {
+            SysDictionary parentDictionary = baseMapper.selectById(parentId);
+            if (parentDictionary == null) {
                 throw new BusinessException("父级数据字典不存在");
             }
         }
 
-        BeanUtils.copyProperties(dto, bo);
-        bo.setId(IdUtil.getSnowflakeNextId());
-        if (baseMapper.insert(bo) > 0) {
-            // 清理缓存
-            String dictionaryKey = bo.getDictionaryKey();
-            if (bo.getAncestorId() != null && bo.getAncestorId() != 0L) {
-                dictionaryKey = baseMapper.getKeyById(bo.getAncestorId());
-            }
-            redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKey));
+        // 检查同一父节点下 Key 是否重复，使用 limit 1 优化性能
+        LambdaQueryWrapper<SysDictionary> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysDictionary::getParentId, parentId);
+        queryWrapper.eq(SysDictionary::getDictionaryKey, dto.getDictionaryKey());
+        queryWrapper.last("limit 1");
+        SysDictionary existDictionary = baseMapper.selectOne(queryWrapper);
+        if (existDictionary != null) {
+            throw new BusinessException("数据字典 Key 已经存在，不可重复新增");
         }
 
+        // 计算 ancestorId：如果 parentId 为 0，则 ancestorId 为 0；否则使用父节点的 ancestorId
+        Long ancestorId = 0L;
+        if (parentId != 0L) {
+            SysDictionary parentDictionary = baseMapper.selectById(parentId);
+            // 如果父节点是顶级节点（ancestorId 为 0），则当前节点的 ancestorId 为父节点的 id
+            // 否则，当前节点的 ancestorId 继承父节点的 ancestorId
+            ancestorId = (parentDictionary.getAncestorId() == null || parentDictionary.getAncestorId() == 0L)
+                    ? parentDictionary.getId() : parentDictionary.getAncestorId();
+        }
+
+        SysDictionary bo = new SysDictionary();
+        BeanUtils.copyProperties(dto, bo);
+        bo.setId(IdUtil.getSnowflakeNextId());
+        bo.setParentId(parentId);
+        bo.setAncestorId(ancestorId);
+
+        if (baseMapper.insert(bo) == 0) {
+            throw new BusinessException("数据字典保存失败");
+        }
+
+        // 清理缓存
+        String dictionaryKey = bo.getDictionaryKey();
+        if (ancestorId != 0L) {
+            String ancestorKey = baseMapper.getKeyById(ancestorId);
+            if (ancestorKey != null) {
+                dictionaryKey = ancestorKey;
+            }
+        }
+        redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKey));
         return bo.getId();
     }
 
