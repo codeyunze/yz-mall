@@ -59,8 +59,35 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         if (dictionary == null) {
             throw new BusinessException("数据字典不存在");
         }
+
+        // 如果修改了 dictionaryKey，检查新 key 是否已存在，使用 limit 1 优化性能
+        if (dto.getDictionaryKey() != null && !dto.getDictionaryKey().equals(dictionary.getDictionaryKey())) {
+            Long parentId = dto.getParentId() != null ? dto.getParentId() : dictionary.getParentId();
+            LambdaQueryWrapper<SysDictionary> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SysDictionary::getParentId, parentId);
+            queryWrapper.eq(SysDictionary::getDictionaryKey, dto.getDictionaryKey());
+            queryWrapper.ne(SysDictionary::getId, dto.getId());
+            queryWrapper.last("limit 1");
+            SysDictionary existDictionary = baseMapper.selectOne(queryWrapper);
+            if (existDictionary != null) {
+                throw new BusinessException("数据字典 Key 已经存在，不可重复");
+            }
+        }
+
+        // 如果修改了 parentId，需要验证和重新计算 ancestorId
+        Long newParentId = dto.getParentId() != null ? dto.getParentId() : dictionary.getParentId();
+        Long newAncestorId = dictionary.getAncestorId();
+
+        if (!newParentId.equals(dictionary.getParentId())) {
+            newAncestorId = loopCheck(dto.getId(), newParentId);
+        }
+
         SysDictionary bo = new SysDictionary();
         BeanUtils.copyProperties(dto, bo);
+        bo.setAncestorId(newAncestorId);
+        if (bo.getParentId() == null) {
+            bo.setParentId(dictionary.getParentId());
+        }
 
         boolean updated = baseMapper.updateById(bo) > 0;
         if (!updated) {
@@ -71,37 +98,109 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         // 清理缓存，更新前更新后的都要清理
         // 更新前缓存
         String dictionaryKeyUpdateBefore;
-        if (dictionary.getAncestorId() == 0L) {
-            // 是第一层顶级数据字典
+        if (dictionary.getAncestorId() == null || dictionary.getAncestorId() == 0L) {
             dictionaryKeyUpdateBefore = dictionary.getDictionaryKey();
         } else {
-            dictionaryKeyUpdateBefore = baseMapper.getKeyById(dictionary.getAncestorId());
+            String ancestorKey = baseMapper.getKeyById(dictionary.getAncestorId());
+            dictionaryKeyUpdateBefore = ancestorKey != null ? ancestorKey : dictionary.getDictionaryKey();
         }
         redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateBefore));
 
         // 更新后缓存
         String dictionaryKeyUpdateAfter;
-        if (bo.getAncestorId() == null || bo.getAncestorId() == 0L) {
-            // 是第一层顶级数据字典
-            dictionaryKeyUpdateAfter = bo.getDictionaryKey();
+        if (newAncestorId == null || newAncestorId == 0L) {
+            dictionaryKeyUpdateAfter = bo.getDictionaryKey() != null ? bo.getDictionaryKey() : dictionary.getDictionaryKey();
         } else {
-            // 是第二层及以后得数据字典，需要清理其祖宗数据字典缓存
-            dictionaryKeyUpdateAfter = baseMapper.getKeyById(bo.getAncestorId());
+            String ancestorKey = baseMapper.getKeyById(newAncestorId);
+            dictionaryKeyUpdateAfter = ancestorKey != null ? ancestorKey : (bo.getDictionaryKey() != null ? bo.getDictionaryKey() : dictionary.getDictionaryKey());
         }
         redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateAfter));
         return true;
     }
 
+    /**
+     * 循环检查，验证循环引用：不能将 parentId 设置为自己的 id 或子节点的 id
+     *
+     * @param updateDictionaryId 更新字典的主键 Id
+     * @param newParentId        新的父节点 ID
+     * @return 新的祖先节点 ID
+     */
+    private Long loopCheck(Long updateDictionaryId, Long newParentId) {
+        Long newAncestorId;
+        // 验证循环引用：不能将 parentId 设置为自己的 id 或子节点的 id
+        if (newParentId.equals(updateDictionaryId)) {
+            throw new BusinessException("不能将父节点设置为自己");
+        }
+
+        // 检查是否将 parentId 设置为子节点的 id（会造成循环引用）
+        if (newParentId == 0L) {
+            return 0L;
+        }
+
+        // 检查当前数据字典的 parentId ，是否是当前数据字典的后代节点
+        if (isDescendant(updateDictionaryId, newParentId)) {
+            throw new BusinessException("不能将父节点设置为子节点，会造成循环引用");
+        }
+
+        // 验证新的父节点是否存在
+        SysDictionary newParent = baseMapper.selectById(newParentId);
+        if (newParent == null) {
+            throw new BusinessException("父级数据字典不存在");
+        }
+
+        // 重新计算 ancestorId
+        newAncestorId = (newParent.getAncestorId() == null || newParent.getAncestorId() == 0L)
+                ? newParent.getId() : newParent.getAncestorId();
+        return newAncestorId;
+    }
+
+    /**
+     * 检查 targetId 是否是 ancestorId 的后代节点（包括直接子节点和间接子节点）
+     *
+     * @param ancestorId 祖先节点 ID
+     * @param targetId   目标节点 ID
+     * @return 如果是后代节点返回 true，否则返回 false
+     */
+    private boolean isDescendant(Long ancestorId, Long targetId) {
+        if (targetId == null || targetId == 0L || ancestorId == null) {
+            return false;
+        }
+        SysDictionary target = baseMapper.selectById(targetId);
+        if (target == null) {
+            return false;
+        }
+        // 如果目标节点的 ancestorId 等于 ancestorId，说明是后代
+        if (ancestorId.equals(target.getAncestorId())) {
+            return true;
+        }
+        // 如果目标节点的 parentId 等于 ancestorId，说明是直接子节点
+        if (ancestorId.equals(target.getParentId())) {
+            return true;
+        }
+        // 递归向上查找父节点链，检查是否包含 ancestorId
+        if (target.getParentId() != null && target.getParentId() != 0L) {
+            return isDescendant(ancestorId, target.getParentId());
+        }
+        return false;
+    }
+
 
     @Override
     public Long save(SysDictionaryAddDto dto) {
-        // 验证父节点是否存在
+        // 验证父节点是否存在并计算 ancestorId
         Long parentId = dto.getParentId() != null ? dto.getParentId() : 0L;
+        Long ancestorId = 0L;
+        SysDictionary parentDictionary = null;
+
         if (parentId != 0L) {
-            SysDictionary parentDictionary = baseMapper.selectById(parentId);
+            parentDictionary = baseMapper.selectById(parentId);
             if (parentDictionary == null) {
                 throw new BusinessException("父级数据字典不存在");
             }
+            // 如果父节点是顶级节点（ancestorId 为 0），则当前节点的 ancestorId 为父节点的 id
+            // 否则，当前节点的 ancestorId 继承父节点的 ancestorId
+            ancestorId = (parentDictionary.getAncestorId() == null || parentDictionary.getAncestorId() == 0L)
+                    ? parentDictionary.getId() : parentDictionary.getAncestorId();
         }
 
         // 检查同一父节点下 Key 是否重复，使用 limit 1 优化性能
@@ -112,16 +211,6 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         SysDictionary existDictionary = baseMapper.selectOne(queryWrapper);
         if (existDictionary != null) {
             throw new BusinessException("数据字典 Key 已经存在，不可重复新增");
-        }
-
-        // 计算 ancestorId：如果 parentId 为 0，则 ancestorId 为 0；否则使用父节点的 ancestorId
-        Long ancestorId = 0L;
-        if (parentId != 0L) {
-            SysDictionary parentDictionary = baseMapper.selectById(parentId);
-            // 如果父节点是顶级节点（ancestorId 为 0），则当前节点的 ancestorId 为父节点的 id
-            // 否则，当前节点的 ancestorId 继承父节点的 ancestorId
-            ancestorId = (parentDictionary.getAncestorId() == null || parentDictionary.getAncestorId() == 0L)
-                    ? parentDictionary.getId() : parentDictionary.getAncestorId();
         }
 
         SysDictionary bo = new SysDictionary();
@@ -156,8 +245,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             queryWrapper.eq(SysDictionary::getParentId, queryDto.getParentId() != null ? queryDto.getParentId() : 0L);
         }
         queryWrapper.orderByAsc(SysDictionary::getSortOrder);
-        Page<SysDictionary> page = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
-        return page;
+        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
     }
 
     @Override
