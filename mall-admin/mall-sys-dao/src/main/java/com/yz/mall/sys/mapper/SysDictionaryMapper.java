@@ -26,6 +26,14 @@ public interface SysDictionaryMapper extends BaseMapper<SysDictionary> {
     List<SysDictionary> selectRecursionByKey(@Param("key") String key);
 
     /**
+     * 递归查询指定数据字典
+     *
+     * @param ids 数据字典 主键 id
+     * @return 指定的数据字典及其下面挂载的子级字典
+     */
+    List<SysDictionary> selectRecursionByIds(@Param("ids") List<Long> ids);
+
+    /**
      * 根据 id 查询 key
      *
      * @param id 数据字典 id

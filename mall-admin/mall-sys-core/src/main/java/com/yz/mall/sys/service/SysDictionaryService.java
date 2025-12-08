@@ -41,7 +41,7 @@ public interface SysDictionaryService extends IService<SysDictionary> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<SysDictionary> page(PageFilter<SysDictionaryQueryDto> filter);
+    Page<ExtendSysDictionaryVo> page(PageFilter<SysDictionaryQueryDto> filter);
 
     /**
      * 根据数据字典 Key 获取数据字典信息

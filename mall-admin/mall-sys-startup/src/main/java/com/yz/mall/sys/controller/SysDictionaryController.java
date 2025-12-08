@@ -67,8 +67,8 @@ public class SysDictionaryController extends ApiController {
      * 分页查询
      */
     @PostMapping("page")
-    public Result<ResultTable<SysDictionary>> page(@RequestBody @Valid PageFilter<SysDictionaryQueryDto> filter) {
-        Page<SysDictionary> page = this.service.page(filter);
+    public Result<ResultTable<ExtendSysDictionaryVo>> page(@RequestBody @Valid PageFilter<SysDictionaryQueryDto> filter) {
+        Page<ExtendSysDictionaryVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 

@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -236,8 +233,9 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
     }
 
     @Override
-    public Page<SysDictionary> page(PageFilter<SysDictionaryQueryDto> filter) {
+    public Page<ExtendSysDictionaryVo> page(PageFilter<SysDictionaryQueryDto> filter) {
         LambdaQueryWrapper<SysDictionary> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(SysDictionary::getId);
         if (filter.getFilter() != null) {
             SysDictionaryQueryDto queryDto = filter.getFilter();
             queryWrapper.eq(queryDto.getId() != null, SysDictionary::getId, queryDto.getId());
@@ -245,7 +243,31 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             queryWrapper.eq(SysDictionary::getParentId, queryDto.getParentId() != null ? queryDto.getParentId() : 0L);
         }
         queryWrapper.orderByAsc(SysDictionary::getSortOrder);
-        return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        Page<SysDictionary> page = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        if (page.getTotal() == 0) {
+            return new Page<>();
+        }
+
+        List<Long> ids = page.getRecords().stream().map(SysDictionary::getId).collect(Collectors.toList());
+        List<SysDictionary> dictionaries = baseMapper.selectRecursionByIds(ids);
+
+        // 根节点顶层数据字典
+        List<ExtendSysDictionaryVo> tops = dictionaries.stream().filter(t -> t.getParentId() == 0L).map(t -> {
+            ExtendSysDictionaryVo vo = new ExtendSysDictionaryVo();
+            BeanUtils.copyProperties(t, vo);
+            return vo;
+        }).sorted(Comparator.comparing(ExtendSysDictionaryVo::getSortOrder)).toList();
+
+        // 将 dictionaries 以 parentId 为分组字段进行分组，赋值给 dictionaryMap
+        Map<Long, List<SysDictionary>> dictionaryMap = dictionaries.stream().filter(t -> t.getParentId() != 0L).collect(Collectors.groupingBy(SysDictionary::getParentId));
+
+        tops.forEach(rootDictionaries -> {
+            assembly(rootDictionaries, dictionaryMap);
+        });
+
+        Page<ExtendSysDictionaryVo> result = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
+        result.setRecords(tops);
+        return result;
     }
 
     @Override
