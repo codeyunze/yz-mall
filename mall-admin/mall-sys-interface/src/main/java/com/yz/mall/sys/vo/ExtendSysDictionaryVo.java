@@ -48,6 +48,11 @@ public class ExtendSysDictionaryVo {
     private Integer sortOrder;
 
     /**
+     * 字典状态：0启用、1禁用
+     */
+    private Integer dictionaryEnable;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)

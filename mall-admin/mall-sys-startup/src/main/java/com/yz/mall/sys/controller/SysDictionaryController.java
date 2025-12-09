@@ -14,6 +14,7 @@ import com.yz.mall.sys.entity.SysDictionary;
 import com.yz.mall.sys.service.SysDictionaryService;
 import com.yz.mall.sys.vo.ExtendSysDictionaryVo;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -76,8 +77,11 @@ public class SysDictionaryController extends ApiController {
      * 详情查询
      */
     @GetMapping("get/{id}")
-    public Result<SysDictionary> get(@PathVariable String id) {
-        return success(this.service.getById(id));
+    public Result<ExtendSysDictionaryVo> get(@PathVariable String id) {
+        SysDictionary bo = this.service.getById(id);
+        ExtendSysDictionaryVo vo = new  ExtendSysDictionaryVo();
+        BeanUtils.copyProperties(bo, vo);
+        return success(vo);
     }
 
     /**

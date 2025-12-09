@@ -3,7 +3,10 @@ package com.yz.mall.sys.dto;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
+import cn.hutool.core.date.DatePattern;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 系统字典表(SysDictionary)表查询过滤条件数据模型类
@@ -32,10 +35,22 @@ public class SysDictionaryQueryDto implements Serializable {
     private String dictionaryKey;
 
     /**
-     * 创建时间
+     * 字典状态：0启用、1禁用
      */
-    private LocalDateTime createTime;
+    private Integer dictionaryEnable;
 
+    /**
+     * 创建时间-开始
+     */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime createTimeFrom;
 
+    /**
+     * 创建时间-结束
+     */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime createTimeTo;
 }
 

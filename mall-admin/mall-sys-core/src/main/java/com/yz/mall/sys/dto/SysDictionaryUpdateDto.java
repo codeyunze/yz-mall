@@ -43,6 +43,9 @@ public class SysDictionaryUpdateDto implements Serializable {
      */
     private Integer sortOrder;
 
-
+    /**
+     * 字典状态：0启用、1禁用
+     */
+    private Integer dictionaryEnable;
 }
 

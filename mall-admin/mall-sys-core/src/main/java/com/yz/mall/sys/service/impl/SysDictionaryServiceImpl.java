@@ -241,6 +241,9 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             queryWrapper.eq(queryDto.getId() != null, SysDictionary::getId, queryDto.getId());
             queryWrapper.like(StringUtils.hasText(queryDto.getDictionaryKey()), SysDictionary::getDictionaryKey, queryDto.getDictionaryKey());
             queryWrapper.eq(SysDictionary::getParentId, queryDto.getParentId() != null ? queryDto.getParentId() : 0L);
+            queryWrapper.eq(queryDto.getDictionaryEnable() != null, SysDictionary::getDictionaryEnable, queryDto.getDictionaryEnable());
+            queryWrapper.ge(queryDto.getCreateTimeFrom() != null, SysDictionary::getCreateTime, queryDto.getCreateTimeFrom());
+            queryWrapper.le(queryDto.getCreateTimeTo() != null, SysDictionary::getCreateTime, queryDto.getCreateTimeTo());
         }
         queryWrapper.orderByAsc(SysDictionary::getSortOrder);
         Page<SysDictionary> page = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
@@ -350,6 +353,12 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         }
     }
 
+    /**
+     * 从数据库查询指定 key 的数据字典信息
+     *
+     * @param key 指定的数据字典 key
+     * @return 数据字典信息
+     */
     private ExtendSysDictionaryVo selectByKeyFromDB(String key) {
         List<SysDictionary> dictionaries = baseMapper.selectRecursionByKey(key);
         if (CollectionUtils.isEmpty(dictionaries)) {
