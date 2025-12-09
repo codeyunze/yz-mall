@@ -42,6 +42,7 @@
         <resilience4j.version>2.2.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
         <prometheus.version>1.11.5</prometheus.version>
+        <caffeine.version>3.1.8</caffeine.version>
     </properties>
 
     <dependencies>
@@ -249,6 +250,13 @@
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-commons</artifactId>
                 <version>1.12.2</version>
+            </dependency>
+
+            <!-- Caffeine 本地缓存 -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

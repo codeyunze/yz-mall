@@ -17,6 +17,7 @@ import com.yz.mall.sys.entity.SysDictionary;
 import com.yz.mall.sys.mapper.SysDictionaryMapper;
 import com.yz.mall.sys.service.SysDictionaryService;
 import com.yz.mall.sys.vo.ExtendSysDictionaryVo;
+import com.github.benmanes.caffeine.cache.Cache;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
@@ -44,10 +45,14 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
 
     private final Redisson redisson;
 
+    private final Cache<String, Object> caffeineCache;
+
     public SysDictionaryServiceImpl(RedisTemplate<String, Object> redisTemplate
-            , Redisson redisson) {
+            , Redisson redisson
+            , Cache<String, Object> caffeineCache) {
         this.redisTemplate = redisTemplate;
         this.redisson = redisson;
+        this.caffeineCache = caffeineCache;
     }
 
     @Override
@@ -101,7 +106,9 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             String ancestorKey = baseMapper.getKeyById(dictionary.getAncestorId());
             dictionaryKeyUpdateBefore = ancestorKey != null ? ancestorKey : dictionary.getDictionaryKey();
         }
-        redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateBefore));
+        String cacheKeyBefore = RedisCacheKey.dictionary(dictionaryKeyUpdateBefore);
+        redisTemplate.delete(cacheKeyBefore);
+        caffeineCache.invalidate(cacheKeyBefore);
 
         // 更新后缓存
         String dictionaryKeyUpdateAfter;
@@ -111,7 +118,9 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             String ancestorKey = baseMapper.getKeyById(newAncestorId);
             dictionaryKeyUpdateAfter = ancestorKey != null ? ancestorKey : (bo.getDictionaryKey() != null ? bo.getDictionaryKey() : dictionary.getDictionaryKey());
         }
-        redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKeyUpdateAfter));
+        String cacheKeyAfter = RedisCacheKey.dictionary(dictionaryKeyUpdateAfter);
+        redisTemplate.delete(cacheKeyAfter);
+        caffeineCache.invalidate(cacheKeyAfter);
         return true;
     }
 
@@ -228,7 +237,9 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
                 dictionaryKey = ancestorKey;
             }
         }
-        redisTemplate.delete(RedisCacheKey.dictionary(dictionaryKey));
+        String cacheKey = RedisCacheKey.dictionary(dictionaryKey);
+        redisTemplate.delete(cacheKey);
+        caffeineCache.invalidate(cacheKey);
         return bo.getId();
     }
 
@@ -319,19 +330,35 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
      * @return 数据字典
      */
     private ExtendSysDictionaryVo selectByKeyFromCache(String key) {
-        if (!redisTemplate.hasKey(RedisCacheKey.dictionary(key))) {
+        String cacheKey = RedisCacheKey.dictionary(key);
+        
+        // 先从Caffeine本地缓存获取
+        Object caffeineValue = caffeineCache.getIfPresent(cacheKey);
+        if (caffeineValue != null) {
+            if (caffeineValue instanceof ExtendSysDictionaryVo) {
+                return (ExtendSysDictionaryVo) caffeineValue;
+            }
+        }
+
+        // 如果Caffeine缓存不存在，从Redis获取
+        if (!redisTemplate.hasKey(cacheKey)) {
             // 数据字典不存在缓存
             return null;
         }
 
-        Object obj = redisTemplate.boundValueOps(RedisCacheKey.dictionary(key)).get();
+        Object obj = redisTemplate.boundValueOps(cacheKey).get();
         if (obj == null || !StringUtils.hasText(obj.toString())) {
             // 缓存里数据为空
             return new ExtendSysDictionaryVo();
         }
 
         try {
-            return JacksonUtil.getObjectMapper().readValue(obj.toString(), ExtendSysDictionaryVo.class);
+            ExtendSysDictionaryVo result = JacksonUtil.getObjectMapper().readValue(obj.toString(), ExtendSysDictionaryVo.class);
+            // 将Redis中的数据同步到Caffeine缓存
+            if (result != null) {
+                caffeineCache.put(cacheKey, result);
+            }
+            return result;
         } catch (JsonProcessingException e) {
             log.error("解析数据字典缓存失败，key: {}", key, e);
             throw new BusinessException("数据字典缓存解析失败");
@@ -346,7 +373,11 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
     private void cacheDictionary(ExtendSysDictionaryVo result) {
         try {
             String str = JacksonUtil.getObjectMapper().writeValueAsString(result);
-            redisTemplate.boundValueOps(RedisCacheKey.dictionary(result.getDictionaryKey())).set(str, 1, TimeUnit.DAYS);
+            String cacheKey = RedisCacheKey.dictionary(result.getDictionaryKey());
+            // 缓存到Redis
+            redisTemplate.boundValueOps(cacheKey).set(str, 1, TimeUnit.DAYS);
+            // 缓存到Caffeine本地缓存
+            caffeineCache.put(cacheKey, result);
         } catch (JsonProcessingException e) {
             log.error("缓存数据字典失败，key: {}", result.getDictionaryKey(), e);
             // 缓存失败不影响主流程，只记录日志

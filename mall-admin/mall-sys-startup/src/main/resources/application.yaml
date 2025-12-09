@@ -39,3 +39,11 @@ xxl:
       logpath: ./logs/sys
       logretentiondays: 10
       excludepackages: org.springframework,spring
+
+yz:
+  mall:
+    sys:
+      caffeine-cache:
+        maximum-size: 10000
+        expire-after-write: 3600
+        expire-after-access: 0
