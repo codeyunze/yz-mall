@@ -60,4 +60,26 @@ public class RedisCacheKey {
     public static String dictionary(String key) {
         return "system:dictionary:" + key;
     }
+
+    /**
+     * 接口权限映射缓存
+     * 存储格式：key = "permission:api-mapping:服务名:URI", value = 权限标识
+     * 
+     * @param serviceName 服务名称，如：mall-sys, mall-oms
+     * @param uri 接口URI，如：/sys/dictionary/add
+     * @return Redis key
+     */
+    public static String apiPermissionMapping(String serviceName, String uri) {
+        return "permission:api-mapping:" + serviceName + ":" + uri;
+    }
+
+    /**
+     * 获取服务所有接口权限映射的匹配模式
+     * 
+     * @param serviceName 服务名称
+     * @return Redis key 匹配模式
+     */
+    public static String apiPermissionMappingPattern(String serviceName) {
+        return "permission:api-mapping:" + serviceName + ":*";
+    }
 }

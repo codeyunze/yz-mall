@@ -151,12 +151,14 @@
                 <version>${sa-token.version}</version>
             </dependency>
 
-            <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc -->
-            <!--<dependency>
+            <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc
+                 注意：sa-token-reactor-spring-boot-starter 在 1.35.0+ 版本已支持 Spring Boot 3
+                 当前版本 1.43.0 完全兼容 Spring Boot 3，无需使用专门的 spring-boot3 版本 -->
+            <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+                <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
-            </dependency>-->
+            </dependency>
 
             <dependency>
                 <groupId>cn.dev33</groupId>

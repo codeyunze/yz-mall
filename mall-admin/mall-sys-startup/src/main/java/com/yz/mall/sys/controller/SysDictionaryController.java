@@ -7,7 +7,6 @@ import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.ResultTable;
-import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.sys.dto.SysDictionaryAddDto;
 import com.yz.mall.sys.dto.SysDictionaryQueryDto;
 import com.yz.mall.sys.dto.SysDictionaryUpdateDto;
