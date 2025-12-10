@@ -16,8 +16,8 @@ import com.yz.mall.sys.dto.SysDictionaryUpdateDto;
 import com.yz.mall.sys.entity.SysDictionary;
 import com.yz.mall.sys.mapper.SysDictionaryMapper;
 import com.yz.mall.sys.service.SysDictionaryService;
+import com.yz.mall.sys.utils.CaffeineCacheUtil;
 import com.yz.mall.sys.vo.ExtendSysDictionaryVo;
-import com.github.benmanes.caffeine.cache.Cache;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
@@ -45,14 +45,14 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
 
     private final Redisson redisson;
 
-    private final Cache<String, Object> caffeineCache;
+    private final CaffeineCacheUtil caffeineCacheUtil;
 
     public SysDictionaryServiceImpl(RedisTemplate<String, Object> redisTemplate
             , Redisson redisson
-            , Cache<String, Object> caffeineCache) {
+            , CaffeineCacheUtil caffeineCacheUtil) {
         this.redisTemplate = redisTemplate;
         this.redisson = redisson;
-        this.caffeineCache = caffeineCache;
+        this.caffeineCacheUtil = caffeineCacheUtil;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         }
         String cacheKeyBefore = RedisCacheKey.dictionary(dictionaryKeyUpdateBefore);
         redisTemplate.delete(cacheKeyBefore);
-        caffeineCache.invalidate(cacheKeyBefore);
+        caffeineCacheUtil.invalidate(cacheKeyBefore);
 
         // 更新后缓存
         String dictionaryKeyUpdateAfter;
@@ -120,7 +120,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         }
         String cacheKeyAfter = RedisCacheKey.dictionary(dictionaryKeyUpdateAfter);
         redisTemplate.delete(cacheKeyAfter);
-        caffeineCache.invalidate(cacheKeyAfter);
+        caffeineCacheUtil.invalidate(cacheKeyAfter);
         return true;
     }
 
@@ -239,7 +239,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         }
         String cacheKey = RedisCacheKey.dictionary(dictionaryKey);
         redisTemplate.delete(cacheKey);
-        caffeineCache.invalidate(cacheKey);
+        caffeineCacheUtil.invalidate(cacheKey);
         return bo.getId();
     }
 
@@ -332,15 +332,13 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
     private ExtendSysDictionaryVo selectByKeyFromCache(String key) {
         String cacheKey = RedisCacheKey.dictionary(key);
         
-        // 先从Caffeine本地缓存获取
-        Object caffeineValue = caffeineCache.getIfPresent(cacheKey);
+        // 先从 Caffeine 本地缓存获取（工具类内部会判断是否启用）
+        ExtendSysDictionaryVo caffeineValue = caffeineCacheUtil.getIfPresent(cacheKey, ExtendSysDictionaryVo.class);
         if (caffeineValue != null) {
-            if (caffeineValue instanceof ExtendSysDictionaryVo) {
-                return (ExtendSysDictionaryVo) caffeineValue;
-            }
+            return caffeineValue;
         }
 
-        // 如果Caffeine缓存不存在，从Redis获取
+        // 如果Caffeine缓存不存在或未启用，从Redis获取
         if (!redisTemplate.hasKey(cacheKey)) {
             // 数据字典不存在缓存
             return null;
@@ -354,9 +352,9 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
 
         try {
             ExtendSysDictionaryVo result = JacksonUtil.getObjectMapper().readValue(obj.toString(), ExtendSysDictionaryVo.class);
-            // 将Redis中的数据同步到Caffeine缓存
+            // 将Redis中的数据同步到Caffeine缓存（工具类内部会判断是否启用）
             if (result != null) {
-                caffeineCache.put(cacheKey, result);
+                caffeineCacheUtil.put(cacheKey, result);
             }
             return result;
         } catch (JsonProcessingException e) {
@@ -376,8 +374,8 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
             String cacheKey = RedisCacheKey.dictionary(result.getDictionaryKey());
             // 缓存到Redis
             redisTemplate.boundValueOps(cacheKey).set(str, 1, TimeUnit.DAYS);
-            // 缓存到Caffeine本地缓存
-            caffeineCache.put(cacheKey, result);
+            // 缓存到Caffeine本地缓存（工具类内部会判断是否启用）
+            caffeineCacheUtil.put(cacheKey, result);
         } catch (JsonProcessingException e) {
             log.error("缓存数据字典失败，key: {}", result.getDictionaryKey(), e);
             // 缓存失败不影响主流程，只记录日志

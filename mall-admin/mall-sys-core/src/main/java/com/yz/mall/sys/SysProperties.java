@@ -31,6 +31,12 @@ public class SysProperties {
     @Data
     public static class CaffeineCache {
         /**
+         * 是否启用 Caffeine 本地缓存，默认为 true。
+         * 启用为 true，禁用为 false
+         */
+        private Boolean enable = true;
+
+        /**
          * 最大缓存数量
          */
         private Long maximumSize = 10000L;
