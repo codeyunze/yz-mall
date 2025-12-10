@@ -1,16 +1,17 @@
 package com.yz.mall.gateway.filter;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.reactor.context.SaReactorSyncHolder;
 import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.gateway.config.GatewayAuthProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -28,7 +29,8 @@ import java.nio.charset.StandardCharsets;
  * @since 2025-12-05
  */
 @Slf4j
-@Order(Ordered.HIGHEST_PRECEDENCE) // 最高优先级，最先执行
+@Component
+@Order(100) // 使用正数确保在 SaToken 响应式过滤器（通常使用负数优先级）之后执行
 public class AuthenticationGatewayFilter implements GlobalFilter {
 
     @Autowired
@@ -54,7 +56,10 @@ public class AuthenticationGatewayFilter implements GlobalFilter {
         }
         
         try {
-            // 登录校验
+            SaReactorSyncHolder.setContext(exchange);
+
+            // 登录校验（在响应式环境中，需要确保 SaToken 上下文已初始化）
+            // 如果上下文未初始化，会抛出 SaTokenContextException，需要捕获并处理
             StpUtil.checkLogin();
             
             // 获取用户ID
@@ -73,10 +78,21 @@ public class AuthenticationGatewayFilter implements GlobalFilter {
             log.warn("网关认证失败 - 未登录: {}, 路径: {}", e.getMessage(), path);
             return buildErrorResponse(exchange, HttpStatus.UNAUTHORIZED, 401, "未登录或登录已过期，请重新登录");
             
+        } catch (cn.dev33.satoken.exception.SaTokenContextException e) {
+            // SaToken 上下文未初始化异常（在响应式环境中可能发生）
+            // 这通常发生在 SaToken 响应式过滤器执行之前
+            // 对于白名单路径，应该已经提前返回，不应该执行到这里
+            // 如果执行到这里，说明可能是配置问题，记录警告并继续执行
+            log.warn("网关认证过滤器 - SaToken上下文未初始化，路径: {}, 错误: {}", path, e.getMessage());
+            // 对于上下文未初始化的情况，如果是白名单路径，应该已经提前返回
+            // 如果不是白名单路径，说明配置有问题，记录错误但继续执行（让下游服务处理）
+            return buildErrorResponse(exchange, HttpStatus.UNAUTHORIZED, 401, "未登录或登录已过期，请重新登录");
         } catch (Exception e) {
             // 其他异常
             log.error("网关认证异常 - 路径: {}", path, e);
             return buildErrorResponse(exchange, HttpStatus.INTERNAL_SERVER_ERROR, 500, "认证服务异常: " + e.getMessage());
+        } finally {
+            SaReactorSyncHolder.clearContext();
         }
     }
     

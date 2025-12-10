@@ -3,6 +3,7 @@ package com.yz.mall.gateway.service;
 import com.yz.mall.redis.RedisCacheKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +27,9 @@ public class GatewayPermissionService {
 
     @Resource
     private RedisTemplate<String, Object> defaultRedisTemplate;
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 路径匹配器
@@ -152,7 +156,8 @@ public class GatewayPermissionService {
                 
                 // 精确匹配
                 if (mappedPath.equals(path)) {
-                    String permission = (String) defaultRedisTemplate.opsForValue().get(key);
+                    // 使用 StringRedisTemplate 读取，因为保存时使用的是 StringRedisTemplate
+                    String permission = stringRedisTemplate.opsForValue().get(key);
                     if (StringUtils.hasText(permission)) {
                         log.debug("从Redis找到权限映射 - 路径: {}, 权限: {}, 服务: {}", path, permission, serviceName);
                         return permission;
@@ -161,7 +166,8 @@ public class GatewayPermissionService {
                 
                 // 路径匹配（支持通配符，如 /sys/dictionary/**）
                 if (pathMatcher.match(mappedPath, path)) {
-                    String permission = (String) defaultRedisTemplate.opsForValue().get(key);
+                    // 使用 StringRedisTemplate 读取，因为保存时使用的是 StringRedisTemplate
+                    String permission = stringRedisTemplate.opsForValue().get(key);
                     if (StringUtils.hasText(permission)) {
                         log.debug("从Redis找到权限映射（路径匹配） - 路径: {}, 权限: {}, 服务: {}", path, permission, serviceName);
                         return permission;

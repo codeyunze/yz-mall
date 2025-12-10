@@ -222,6 +222,7 @@ public class PermissionMappingScanner implements ApplicationListener<Application
             List<String> keys = Collections.singletonList(pattern);
 
             // 准备参数列表：key1, value1, key2, value2, ...
+            // 使用StringRedisTemplate确保key和value都使用String序列化，避免JSON序列化导致key带引号
             List<String> args = new ArrayList<>();
             for (Map.Entry<String, String> entry : permissionMappings.entrySet()) {
                 String uri = entry.getKey();
@@ -234,8 +235,14 @@ public class PermissionMappingScanner implements ApplicationListener<Application
                 log.debug("准备保存权限映射 - Key: {}, Value: {}", redisKey, permission);
             }
 
+            // 使用StringRedisTemplate执行Lua脚本，确保key和value都使用String序列化
+            // StringRedisTemplate默认使用StringRedisSerializer，不会对String进行JSON序列化
+            org.springframework.data.redis.core.StringRedisTemplate stringRedisTemplate = 
+                    new org.springframework.data.redis.core.StringRedisTemplate(
+                            defaultRedisTemplate.getConnectionFactory());
+            
             // 执行 Lua 脚本
-            List<Long> result = defaultRedisTemplate.execute(redisScript, keys, args.toArray());
+            List<Long> result = stringRedisTemplate.execute(redisScript, keys, (Object[]) args.toArray(new String[0]));
             
             if (result != null && result.size() >= 2) {
                 Long deletedCount = result.get(0);
@@ -261,13 +268,18 @@ public class PermissionMappingScanner implements ApplicationListener<Application
         String pattern = RedisCacheKey.apiPermissionMappingPattern(serviceName);
         deleteOldMappings(pattern);
         
+        // 使用StringRedisTemplate保存，确保value也使用String序列化，避免JSON序列化
+        org.springframework.data.redis.core.StringRedisTemplate stringRedisTemplate = 
+                new org.springframework.data.redis.core.StringRedisTemplate(
+                        defaultRedisTemplate.getConnectionFactory());
+        
         // 保存新映射
         for (Map.Entry<String, String> entry : permissionMappings.entrySet()) {
             String uri = entry.getKey();
             String permission = entry.getValue();
             
             String redisKey = RedisCacheKey.apiPermissionMapping(serviceName, uri);
-            defaultRedisTemplate.opsForValue().set(redisKey, permission);
+            stringRedisTemplate.opsForValue().set(redisKey, permission);
             
             log.debug("保存权限映射到Redis - Key: {}, Value: {}", redisKey, permission);
         }
