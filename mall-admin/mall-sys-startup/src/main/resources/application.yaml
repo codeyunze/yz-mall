@@ -44,6 +44,7 @@ yz:
   mall:
     sys:
       caffeine-cache:
+        enable: true  # 是否启用 Caffeine 本地缓存，默认为 true。设置为 false 时，仅使用 Redis 缓存
         maximum-size: 10000
         expire-after-write: 3600
         expire-after-access: 0
