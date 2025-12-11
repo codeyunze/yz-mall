@@ -13,6 +13,29 @@ spring:
 #      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 
+  datasource:
+    druid:
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        session-stat-enable: true
+        session-stat-max-count: 1000
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: false
+        login-password: s8F3as09
+        login-username: root
+        allow: 127.0.0.1
+      filter:
+        # 开启druiddatasource的状态监控
+        stat:
+          enabled: true
+          db-type: mysql
+      # Spring 监控，利用aop 对指定接口的执行时间，jdbc数进行记录
+      aop-patterns: "com.yz.mall.*"
+  
   cloud:
     openfeign:
       circuitbreaker:

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @date 2024/11/15 星期五 21:44
  */
 @Slf4j
-@Configuration
+// @Configuration
 public class SaTokenConfigure implements WebMvcConfigurer {
     // 注册 Sa-Token 拦截器，打开注解式鉴权功能
     @Override
@@ -26,9 +26,9 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                     .notMatch("/extend/**", "/sys/test/*"
                             , "/beat", "/idleBeat", "/kill", "/run", "/log"
                             , "/error/**"
-                            , "/actuator/**")
+                            , "/actuator/**", "/druid/**")
                     .check(r -> StpUtil.checkLogin());
-        })).addPathPatterns("/**");
+        })).addPathPatterns("/**").excludePathPatterns("/druid/**");
     }
 }
 
