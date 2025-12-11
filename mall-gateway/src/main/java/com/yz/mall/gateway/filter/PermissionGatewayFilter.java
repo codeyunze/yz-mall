@@ -31,8 +31,8 @@ import java.nio.charset.StandardCharsets;
  * @since 2025-12-05
  */
 @Slf4j
-@Component
-@Order(101) // 在认证过滤器之后执行，使用正数确保在 SaToken 响应式过滤器之后
+// @Component
+// @Order(101) // 在认证过滤器之后执行，使用正数确保在 SaToken 响应式过滤器之后
 public class PermissionGatewayFilter implements GlobalFilter {
 
     @Autowired

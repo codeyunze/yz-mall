@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @ComponentScan(basePackages = {
-    "com.yz.mall.gateway",
-    "com.yz.mall.redis"
+        "com.yz.mall.gateway",
+        "com.yz.mall.redis"
 })
 @Import(MallRedisConfig.class)
 public class GatewayConfig {
