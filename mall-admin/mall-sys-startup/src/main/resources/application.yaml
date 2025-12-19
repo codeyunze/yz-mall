@@ -70,3 +70,14 @@ yz:
         maximum-size: 10000
         expire-after-write: 3600
         expire-after-access: 0
+        
+qof:
+  persistent-enable: true
+  local:
+    enable: true
+    default-storage-station: c-station
+    multiple:
+      c-station:
+        filepath: ./files/c
+      d-station:
+        filepath: ./files/d
