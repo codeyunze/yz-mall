@@ -324,6 +324,54 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
     }
 
     /**
+     * 删除指定数据字典及其下面挂载的所有子数据字典
+     *
+     * @param id 数据字典主键 ID
+     * @return 是否删除成功
+     */
+    @Override
+    public boolean removeWithChildrenById(Long id) {
+        if (id == null) {
+            return false;
+        }
+
+        SysDictionary dictionary = baseMapper.selectById(id);
+        if (dictionary == null) {
+            throw new BusinessException("数据字典不存在");
+        }
+
+        // 计算需要清理缓存的根字典 key
+        Long ancestorId = dictionary.getAncestorId();
+        String dictionaryKey;
+        if (ancestorId == null || ancestorId == 0L) {
+            dictionaryKey = dictionary.getDictionaryKey();
+        } else {
+            String ancestorKey = baseMapper.getKeyById(ancestorId);
+            dictionaryKey = ancestorKey != null ? ancestorKey : dictionary.getDictionaryKey();
+        }
+
+        // 查询当前字典及其所有子节点（如果查询不到子节点，则只删除当前节点）
+        List<SysDictionary> dictionaries = baseMapper.selectRecursionByIds(Collections.singletonList(id));
+        if (CollectionUtils.isEmpty(dictionaries)) {
+            dictionaries = Collections.singletonList(dictionary);
+        }
+
+        List<Long> ids = dictionaries.stream().map(SysDictionary::getId).toList();
+        int deleteCount = baseMapper.deleteByIds(ids);
+        if (deleteCount == 0) {
+            return false;
+        }
+
+        // 清理缓存
+        if (StringUtils.hasText(dictionaryKey)) {
+            String cacheKey = RedisCacheKey.dictionary(dictionaryKey);
+            redisTemplate.delete(cacheKey);
+            caffeineCacheUtil.invalidate(cacheKey);
+        }
+        return true;
+    }
+
+    /**
      * 从缓存获取数据字典
      *
      * @param key 数据字典键

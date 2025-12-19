@@ -50,5 +50,13 @@ public interface SysDictionaryService extends IService<SysDictionary> {
      */
     ExtendSysDictionaryVo getByKey(String key);
 
+    /**
+     * 删除指定数据字典及其下面挂载的所有子数据字典
+     *
+     * @param id 数据字典主键 ID
+     * @return 是否删除成功
+     */
+    boolean removeWithChildrenById(Long id);
+
 }
 

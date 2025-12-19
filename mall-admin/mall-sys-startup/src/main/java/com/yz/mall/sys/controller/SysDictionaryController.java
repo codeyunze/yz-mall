@@ -65,7 +65,7 @@ public class SysDictionaryController extends ApiController {
     @SaCheckPermission("api:system:dictionary:update")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
-        return success(this.service.removeById(id));
+        return success(this.service.removeWithChildrenById(id));
     }
 
     /**
