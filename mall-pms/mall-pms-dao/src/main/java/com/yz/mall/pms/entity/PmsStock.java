@@ -67,6 +67,11 @@ public class PmsStock extends Model<PmsStock> {
     private Integer quantity;
 
     /**
+     * 锁定库存数量
+     */
+    private Integer lockedQuantity;
+
+    /**
      * 获取主键值
      *
      * @return 主键值

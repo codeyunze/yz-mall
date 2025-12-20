@@ -58,5 +58,35 @@ public interface PmsStockMapper extends BaseMapper<PmsStock> {
      */
     List<PmsStockVo> selectStockByProductIds(@Param("productIds") List<Long> productIds);
 
+    /**
+     * 锁定库存
+     *
+     * @param productId 商品id
+     * @param quantity  锁定数量
+     * @return 是否锁定成功
+     */
+    @Update("update pms_stock set quantity = quantity - #{quantity}, locked_quantity = locked_quantity + #{quantity} where invalid = 0 and product_id = #{productId} and quantity >= #{quantity}")
+    boolean lockStock(@Param("productId") Long productId, @Param("quantity") Integer quantity);
+
+    /**
+     * 释放锁定的库存
+     *
+     * @param productId 商品id
+     * @param quantity  释放数量
+     * @return 是否释放成功
+     */
+    @Update("update pms_stock set quantity = quantity + #{quantity}, locked_quantity = locked_quantity - #{quantity} where invalid = 0 and product_id = #{productId} and locked_quantity >= #{quantity}")
+    boolean unlockStock(@Param("productId") Long productId, @Param("quantity") Integer quantity);
+
+    /**
+     * 扣减锁定的库存
+     *
+     * @param productId 商品id
+     * @param quantity  扣减数量
+     * @return 是否扣减成功
+     */
+    @Update("update pms_stock set locked_quantity = locked_quantity - #{quantity} where invalid = 0 and product_id = #{productId} and locked_quantity >= #{quantity}")
+    boolean deductLockedStock(@Param("productId") Long productId, @Param("quantity") Integer quantity);
+
 }
 
