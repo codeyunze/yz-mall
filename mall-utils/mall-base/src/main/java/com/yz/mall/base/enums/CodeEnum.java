@@ -14,7 +14,7 @@ public enum CodeEnum {
     /**
      * 成功
      */
-    SUCCESS(0, "成功"),
+    SUCCESS(200, "成功"),
     /**
      * 业务异常
      */

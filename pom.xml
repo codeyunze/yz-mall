@@ -223,6 +223,12 @@
 
             <dependency>
                 <groupId>io.github.codeyunze</groupId>
+                <artifactId>qof-core</artifactId>
+                <version>${qof.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.codeyunze</groupId>
                 <artifactId>qof-web</artifactId>
                 <version>${qof.version}</version>
             </dependency>
