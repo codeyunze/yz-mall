@@ -51,7 +51,7 @@ public class QofFileAccessFilter implements GlobalFilter, Ordered {
     @Override
     public int getOrder() {
         // 设置较高优先级，确保在其他过滤器之前执行
-        return -100;
+        return -150;
     }
 }
 

@@ -1,12 +1,12 @@
 package com.yz.mall.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -16,20 +16,24 @@ import java.util.List;
  * <p>
  * 如果URL查询参数中包含token参数，则将其提取并添加到Authorization请求头中
  * 格式：Authorization: Bearer {token}
+ * <p>
+ * 注意：实现 WebFilter 接口，与 SaReactorFilter 使用相同的过滤器类型
+ * order 设置为 -200，确保在 SaReactorFilter（order=-100）之前执行
  *
  * @author yunze
  * @date 2025/12/21
  */
 @Slf4j
+@Order(-200)
 @Component
-public class TokenParameterFilter implements GlobalFilter, Ordered {
+public class TokenParameterFilter implements WebFilter {
 
     private static final String TOKEN_PARAM = "token";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         
         // 检查请求头中是否已有 Authorization
@@ -58,12 +62,6 @@ public class TokenParameterFilter implements GlobalFilter, Ordered {
         }
         
         return chain.filter(exchange);
-    }
-
-    @Override
-    public int getOrder() {
-        // 设置较高优先级，确保在认证过滤器之前执行
-        return -50;
     }
 }
 
