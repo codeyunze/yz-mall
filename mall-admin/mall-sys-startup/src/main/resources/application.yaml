@@ -29,9 +29,9 @@ spring:
         login-username: root
         allow: 127.0.0.1
       filter:
-        # 开启druiddatasource的状态监控
+        # 开启 druiddatasource 的状态监控
         stat:
-          enabled: true
+          enabled: false
           db-type: mysql
       # Spring 监控，利用aop 对指定接口的执行时间，jdbc数进行记录
       aop-patterns: "com.yz.mall.*"
@@ -50,17 +50,10 @@ management:
 
 xxl:
   job:
-    admin:
-#      addresses: http://192.168.3.237:30009/xxl-job-admin
-      addresses: http://192.168.3.29:30009/xxl-job-admin
-      accessToken: 123456789
-      timeout: 3
     executor:
-      appname: mall
-#      address: http://192.168.3.77:31004/
-      address: http://192.168.3.29:31004/
-#      ip: 192.168.3.77
-      ip: 192.168.3.29
+      appname: admin
+      address: http://${LOCAL_HOST}:31004/
+      ip: ${LOCAL_HOST}
       port: 31004
       logpath: ./logs/sys
       logretentiondays: 10
@@ -73,14 +66,3 @@ yz:
         maximum-size: 10000
         expire-after-write: 3600
         expire-after-access: 0
-
-qof:
-  persistent-enable: true
-  local:
-    enable: true
-    default-storage-station: c-station
-    multiple:
-      c-station:
-        filepath: ./files/c
-      d-station:
-        filepath: ./files/d

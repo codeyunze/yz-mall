@@ -14,5 +14,6 @@ spring:
           - data-id: sa-token.yaml
           - data-id: rabbitmq.yaml
           - data-id: file.yaml
+          - data-id: xxl-job-admin.yaml
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8

@@ -34,6 +34,7 @@ public class TokenParameterFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        log.debug("网关层token校验: {}", exchange.getRequest().getURI());
         ServerHttpRequest request = exchange.getRequest();
         
         // 检查请求头中是否已有 Authorization

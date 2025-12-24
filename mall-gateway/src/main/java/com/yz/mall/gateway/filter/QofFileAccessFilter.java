@@ -30,7 +30,8 @@ public class QofFileAccessFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
-        
+        log.info("网关层拦截禁止访问接口校验：{}", path);
+
         // 拦截 /file/* 路径的请求（排除 /sys/file/*）
         if (path.startsWith("/file/") && !path.startsWith("/sys/file/")) {
             log.warn("网关拦截：拒绝直接访问qof-web FileController接口: {}, 请使用 /sys/file/* 接口", path);
@@ -51,7 +52,7 @@ public class QofFileAccessFilter implements GlobalFilter, Ordered {
     @Override
     public int getOrder() {
         // 设置较高优先级，确保在其他过滤器之前执行
-        return -150;
+        return 1;
     }
 }
 
