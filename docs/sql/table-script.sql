@@ -194,6 +194,28 @@ CREATE UNIQUE INDEX uk_sys_user_phone ON sys_user (invalid, phone);
 CREATE UNIQUE INDEX uk_sys_user_email ON sys_user (email, invalid);
 
 
+CREATE TABLE sys_login_log
+(
+    `id`            BIGINT      NOT NULL COMMENT '主键标识',
+    `create_time`   DATETIME    DEFAULT current_timestamp COMMENT '创建时间',
+    `update_time`   DATETIME    DEFAULT current_timestamp ON UPDATE current_timestamp COMMENT '更新时间',
+    `invalid`       INT         DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `username`      VARCHAR(50) COMMENT '用户名',
+    `login_ip`      VARCHAR(50) COMMENT '登录IP',
+    `login_location` VARCHAR(100) COMMENT '登录地点',
+    `os`            VARCHAR(50) COMMENT '操作系统',
+    `browser`       VARCHAR(50) COMMENT '浏览器类型',
+    `status`        INT         COMMENT '登录状态：0-失败，1-成功',
+    `login_type`    INT         COMMENT '登录行为：1-账号登录，2-手机号登录，3-第三方登录',
+    `login_time`    DATETIME    DEFAULT current_timestamp COMMENT '登录时间',
+    PRIMARY KEY (id)
+) COMMENT = '系统-登录日志表';
+
+CREATE INDEX ix_sys_login_log_username ON sys_login_log (username, invalid);
+CREATE INDEX ix_sys_login_log_status ON sys_login_log (status, invalid);
+CREATE INDEX ix_sys_login_log_time ON sys_login_log (login_time, invalid);
+
+
 CREATE TABLE sys_menu
 (
     id               BIGINT   NOT NULL COMMENT '主键标识',

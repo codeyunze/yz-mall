@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.sys.mapper.SysLoginLogMapper">
+
+    <select id="selectPage" resultType="com.yz.mall.sys.vo.SysLoginLogVo">
+        select id, username, login_ip, login_location, os, browser, status, login_type, login_time, create_time
+        from sys_login_log
+        where invalid = 0
+        <if test="filter.username != null and filter.username != ''">
+            and username like concat('%', #{filter.username}, '%')
+        </if>
+        <if test="filter.status != null">
+            and status = #{filter.status}
+        </if>
+        <if test="filter.startTime != null">
+            and login_time >= #{filter.startTime}
+        </if>
+        <if test="filter.endTime != null">
+            and login_time &lt;= #{filter.endTime}
+        </if>
+        order by login_time desc
+    </select>
+</mapper>
+
