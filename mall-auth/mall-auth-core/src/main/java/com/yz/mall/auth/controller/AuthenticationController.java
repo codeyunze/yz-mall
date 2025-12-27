@@ -110,7 +110,7 @@ public class AuthenticationController extends ApiController {
             userInfo.setNickname(loginInfo.getUsername());
 
             // 记录登录成功日志
-            recordLoginLog(loginInfo.getUsername(), loginIp, loginLocation, os, browser, 1, loginType);
+            recordLoginLog(username, loginIp, loginLocation, os, browser, 1, loginType);
 
             return success(userInfo);
         } catch (Exception e) {

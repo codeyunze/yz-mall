@@ -32,7 +32,7 @@ public class SysLoginLogController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:system:loginLog:page")
+    // @SaCheckPermission("api:system:loginLog:page")
     @PostMapping("page")
     public Result<ResultTable<SysLoginLogVo>> page(@RequestBody @Valid PageFilter<SysLoginLogQueryDto> filter) {
         Page<SysLoginLogVo> result = loginLogService.page(filter);
@@ -43,7 +43,7 @@ public class SysLoginLogController {
      * 清空日志
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:loginLog:clear")
+    // @SaCheckPermission("api:system:loginLog:clear")
     @PostMapping("clear")
     public Result<Boolean> clear() {
         return Result.success(this.loginLogService.clearLogs());
