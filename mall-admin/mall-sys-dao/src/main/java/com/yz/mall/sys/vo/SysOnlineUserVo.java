@@ -55,10 +55,5 @@ public class SysOnlineUserVo implements Serializable {
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime loginTime;
-
-    /**
-     * Token值
-     */
-    private String token;
 }
 

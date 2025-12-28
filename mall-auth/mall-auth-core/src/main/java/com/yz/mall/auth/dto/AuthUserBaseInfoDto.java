@@ -2,6 +2,7 @@ package com.yz.mall.auth.dto;
 
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yz.mall.sys.entity.SysUser;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,7 +20,7 @@ public class AuthUserBaseInfoDto implements Serializable {
     private final long serialVersionUID = 1L;
 
     /**
-     * 主键标识
+     * 主键标识 {@link SysUser#getId()}
      */
     private Long id;
 

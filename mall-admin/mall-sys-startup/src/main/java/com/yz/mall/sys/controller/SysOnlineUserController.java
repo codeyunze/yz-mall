@@ -1,6 +1,7 @@
 package com.yz.mall.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.ResultTable;
 import com.yz.mall.base.enums.CodeEnum;
@@ -32,9 +33,9 @@ public class SysOnlineUserController {
     /**
      * 获取在线用户列表
      */
-    @SaCheckPermission("api:system:onlineUser:list")
+    // @SaCheckPermission("api:system:onlineUser:list")
     @PostMapping("list")
-    public Result<ResultTable<SysOnlineUserVo>> list(@RequestBody(required = false) SysOnlineUserQueryDto queryDto) {
+    public Result<ResultTable<SysOnlineUserVo>> list(@RequestBody PageFilter<SysOnlineUserQueryDto> queryDto) {
         List<SysOnlineUserVo> result = onlineUserService.list(queryDto);
         return new Result<>(CodeEnum.SUCCESS.get(), new ResultTable<>(result, (long) result.size()), "查询成功");
     }
@@ -44,9 +45,9 @@ public class SysOnlineUserController {
      *
      * @param token 用户token
      */
-    @RepeatSubmit
-    @SaCheckPermission("api:system:onlineUser:kickout")
-    @PostMapping("kickout")
+    // @RepeatSubmit
+    // @SaCheckPermission("api:system:onlineUser:kickout")
+    // @PostMapping("kickout")
     public Result<Boolean> kickout(@RequestParam String token) {
         return Result.success(this.onlineUserService.kickout(token));
     }
@@ -57,7 +58,7 @@ public class SysOnlineUserController {
      * @param userId 用户ID
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:onlineUser:kickout")
+    // @SaCheckPermission("api:system:onlineUser:kickout")
     @PostMapping("kickoutByUserId/{userId}")
     public Result<Boolean> kickoutByUserId(@PathVariable Long userId) {
         return Result.success(this.onlineUserService.kickoutByUserId(userId));
