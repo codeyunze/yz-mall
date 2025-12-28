@@ -16,7 +16,7 @@ spring:
   datasource:
     druid:
       web-stat-filter:
-        enabled: true
+        enabled: false
         url-pattern: /*
         exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
         session-stat-enable: true
@@ -50,6 +50,11 @@ management:
 
 xxl:
   job:
+    admin:
+      addresses: http://192.168.3.237:30009/xxl-job-admin
+#      addresses: http://192.168.3.29:30009/xxl-job-admin
+      accessToken: 123456789
+      timeout: 3
     executor:
       appname: admin
       address: http://${LOCAL_HOST}:31004/
