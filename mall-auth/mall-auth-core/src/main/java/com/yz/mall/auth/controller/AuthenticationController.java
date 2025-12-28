@@ -96,7 +96,7 @@ public class AuthenticationController extends ApiController {
             AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new AuthSysUserCheckLoginDto(loginDto.getAccount(), loginDto.getPassword()));
             if (loginInfo == null) {
                 // 记录登录失败日志
-                recordLoginLog(username, loginIp, loginLocation, os, browser, 0, loginType);
+                recordLoginLog(0L, username, loginIp, loginLocation, os, browser, 0, loginType);
                 return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "登录失败");
             }
 
@@ -110,12 +110,12 @@ public class AuthenticationController extends ApiController {
             userInfo.setNickname(loginInfo.getUsername());
 
             // 记录登录成功日志
-            recordLoginLog(username, loginIp, loginLocation, os, browser, 1, loginType);
+            recordLoginLog(userInfo.getUserId(), username, loginIp, loginLocation, os, browser, 1, loginType);
 
             return success(userInfo);
         } catch (Exception e) {
             // 记录登录失败日志
-            recordLoginLog(username, loginIp, loginLocation, os, browser, 0, loginType);
+            recordLoginLog(0L, username, loginIp, loginLocation, os, browser, 0, loginType);
             throw e;
         }
     }
@@ -123,11 +123,12 @@ public class AuthenticationController extends ApiController {
     /**
      * 记录登录日志
      */
-    private void recordLoginLog(String username, String loginIp, String loginLocation, String os, String browser, Integer status, Integer loginType) {
+    private void recordLoginLog(Long userId, String username, String loginIp, String loginLocation, String os, String browser, Integer status, Integer loginType) {
         try {
             SysLoginLog loginLog = new SysLoginLog();
             loginLog.setId(IdUtil.getSnowflakeNextId());
-            loginLog.setUsername(username != null ? username : "未知");
+            loginLog.setUserId(userId);
+            loginLog.setUsername(username);
             loginLog.setLoginIp(loginIp != null ? loginIp : "未知");
             loginLog.setLoginLocation(loginLocation != null ? loginLocation : "未知");
             loginLog.setOs(os != null ? os : "未知");

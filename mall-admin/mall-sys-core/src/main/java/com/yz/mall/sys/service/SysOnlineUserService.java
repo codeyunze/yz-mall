@@ -1,5 +1,6 @@
 package com.yz.mall.sys.service;
 
+import com.yz.mall.base.PageFilter;
 import com.yz.mall.sys.dto.SysOnlineUserQueryDto;
 import com.yz.mall.sys.vo.SysOnlineUserVo;
 
@@ -16,23 +17,23 @@ public interface SysOnlineUserService {
     /**
      * 获取在线用户列表
      *
-     * @param queryDto 查询条件
+     * @param filter 查询条件
      * @return 在线用户列表
      */
-    List<SysOnlineUserVo> list(SysOnlineUserQueryDto queryDto);
+    List<SysOnlineUserVo> list(PageFilter<SysOnlineUserQueryDto> filter);
 
     /**
      * 踢下线指定用户
      *
-     * @param token 用户token
+     * @param token 用户 token
      * @return 是否操作成功
      */
     boolean kickout(String token);
 
     /**
-     * 踢下线指定用户ID的所有会话
+     * 踢下线指定用户 ID 的所有会话
      *
-     * @param userId 用户ID
+     * @param userId 用户 ID
      * @return 是否操作成功
      */
     boolean kickoutByUserId(Long userId);

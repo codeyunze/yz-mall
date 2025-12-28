@@ -1,7 +1,10 @@
 package com.yz.mall.sys.service.impl;
 
+import cn.dev33.satoken.session.SaSession;
+import cn.dev33.satoken.session.SaTerminalInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.yz.mall.base.PageFilter;
 import com.yz.mall.redis.RedisCacheKey;
 import com.yz.mall.sys.dto.SysOnlineUserQueryDto;
 import com.yz.mall.sys.entity.SysLoginLog;
@@ -43,46 +46,36 @@ public class SysOnlineUserServiceImpl implements SysOnlineUserService {
     }
 
     @Override
-    public List<SysOnlineUserVo> list(SysOnlineUserQueryDto queryDto) {
+    public List<SysOnlineUserVo> list(PageFilter<SysOnlineUserQueryDto> filter) {
         List<SysOnlineUserVo> result = new ArrayList<>();
+
+        // 获取所有已登录的会话 id
+        List<String> sessionIdList = StpUtil.searchSessionId("", (int) ((filter.getCurrent() < 0 ? 0 : filter.getCurrent() - 1) * filter.getSize()), (int) filter.getSize(), false);
+
+        List<Long> userIds = new ArrayList<>();
+        for (String sessionId : sessionIdList) {
+            // 根据会话id，查询对应的 SaSession 对象，此处一个 SaSession 对象即代表一个登录的账号
+            SaSession session = StpUtil.getSessionBySessionId(sessionId);
+
+            // 查询这个账号都在哪些设备登录了，依据上面的示例，账号A 的 SaTerminalInfo 数量是 3，账号B 的 SaTerminalInfo 数量是 2
+            List<SaTerminalInfo> terminalList = session.terminalListCopy();
+            userIds.add(Long.parseLong(session.getLoginId().toString()));
+            System.out.println("用户Id：" + session.getLoginId() + "，会话id：" + sessionId + "，共在 " + terminalList.size() + " 设备登录");
+        }
 
         try {
             // 获取所有在线用户的token列表
             // List<String> tokenList = StpUtil.getTokenValueList(0, -1);
-            List<String> tokenList = new ArrayList<>();
 
-            for (String token : tokenList) {
+            for (Long userId : userIds) {
                 try {
-                    // 通过token获取用户ID
-                    Object loginId = StpUtil.getLoginIdByToken(token);
-                    if (loginId == null) {
-                        continue;
-                    }
-
-                    Long userId = Long.parseLong(loginId.toString());
-                    
-                    // 获取用户信息
-                    SysUser user = sysUserMapper.selectById(userId);
-                    if (user == null) {
-                        continue;
-                    }
-
-                    String username = user.getUsername();
-                    
-                    // 如果指定了用户名过滤条件，进行过滤
-                    if (queryDto != null && StringUtils.hasText(queryDto.getUsername())) {
-                        if (username == null || !username.contains(queryDto.getUsername())) {
-                            continue;
-                        }
-                    }
 
                     // 获取该用户最新的登录日志信息
-                    SysLoginLog latestLog = getLatestLoginLog(username);
+                    SysLoginLog latestLog = getLatestLoginLog(userId);
                     
                     SysOnlineUserVo vo = new SysOnlineUserVo();
                     vo.setUserId(userId);
-                    vo.setUsername(username);
-                    vo.setToken(token);
+                    vo.setUsername(latestLog.getUsername());
                     
                     if (latestLog != null) {
                         vo.setLoginIp(latestLog.getLoginIp());
@@ -101,8 +94,7 @@ public class SysOnlineUserServiceImpl implements SysOnlineUserService {
 
                     result.add(vo);
                 } catch (Exception e) {
-                    log.warn("处理token {} 时发生错误: {}", token, e.getMessage());
-                    // 继续处理下一个token
+                    log.error(e.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -169,24 +161,24 @@ public class SysOnlineUserServiceImpl implements SysOnlineUserService {
     /**
      * 获取用户最新的登录日志
      *
-     * @param username 用户名
+     * @param userId 用户 Id
      * @return 最新的登录日志
      */
-    private SysLoginLog getLatestLoginLog(String username) {
-        if (!StringUtils.hasText(username)) {
+    private SysLoginLog getLatestLoginLog(Long userId) {
+        if (userId == null) {
             return null;
         }
 
         try {
             LambdaQueryWrapper<SysLoginLog> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(SysLoginLog::getUsername, username)
+            queryWrapper.eq(SysLoginLog::getUserId, userId)
                     .eq(SysLoginLog::getStatus, 1) // 只查询成功的登录记录
                     .eq(SysLoginLog::getInvalid, 0)
                     .orderByDesc(SysLoginLog::getLoginTime)
                     .last("LIMIT 1");
             return sysLoginLogMapper.selectOne(queryWrapper);
         } catch (Exception e) {
-            log.warn("获取用户 {} 的最新登录日志失败: {}", username, e.getMessage());
+            log.warn("获取用户 {} 的最新登录日志失败: {}", userId, e.getMessage());
             return null;
         }
     }

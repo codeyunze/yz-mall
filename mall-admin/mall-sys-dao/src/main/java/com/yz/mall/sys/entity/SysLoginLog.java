@@ -30,6 +30,11 @@ public class SysLoginLog extends Model<SysLoginLog> {
     private Long id;
 
     /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
      * 用户名
      */
     private String username;
