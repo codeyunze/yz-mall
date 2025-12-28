@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.yz.mall.base.IdDto;
+import com.yz.mall.base.PageFilter;
+import com.yz.mall.base.exception.BusinessException;
+import com.yz.mall.json.JacksonUtil;
 import com.yz.mall.sys.AbstractSysPendingTasksQueueConfig;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.dto.SysPendingTasksQueryDto;
@@ -12,11 +16,7 @@ import com.yz.mall.sys.dto.SysPendingTasksUpdateDto;
 import com.yz.mall.sys.entity.SysPendingTasks;
 import com.yz.mall.sys.mapper.SysPendingTasksMapper;
 import com.yz.mall.sys.service.SysPendingTasksService;
-import com.yz.mall.base.IdDto;
-import com.yz.mall.json.JacksonUtil;
-import com.yz.mall.base.PageFilter;
-import com.yz.mall.base.exception.BusinessException;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -33,10 +33,13 @@ import java.time.LocalDateTime;
 public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMapper, SysPendingTasks> implements SysPendingTasksService {
 
 
-    private final RabbitTemplate rabbitTemplate;
+    /**
+     * 待办任务 RocketMQ 发送模板
+     */
+    private final RocketMQTemplate rocketMQTemplate;
 
-    public SysPendingTasksServiceImpl(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
+    public SysPendingTasksServiceImpl(RocketMQTemplate rocketMQTemplate) {
+        this.rocketMQTemplate = rocketMQTemplate;
     }
 
     @Override
@@ -46,12 +49,14 @@ public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMappe
         bo.setId(IdUtil.getSnowflakeNextId());
         baseMapper.insert(bo);
 
-        // 消息路由
+        // 消息路由（转换为 RocketMQ 的 Tag）
         String routingKey = bo.getTaskCode().toLowerCase().replace(":", "_");
 
         try {
             String message = JacksonUtil.getObjectMapper().writeValueAsString(bo);
-            rabbitTemplate.convertAndSend(AbstractSysPendingTasksQueueConfig.EXCHANGE_NAME, routingKey + "_start_key", message);
+            // RocketMQ 中使用 Topic:Tag 形式发送消息
+            String destination = AbstractSysPendingTasksQueueConfig.TOPIC_NAME + ":" + routingKey + "_start_key";
+            rocketMQTemplate.convertAndSend(destination, message);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -77,12 +82,13 @@ public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMappe
         tasks.setTaskEndTime(LocalDateTime.now());
         int updated = baseMapper.updateById(tasks);
 
-        // 消息路由
+        // 消息路由（转换为 RocketMQ 的 Tag）
         String routingKey = tasks.getTaskCode().toLowerCase().replace(":", "_");
 
         try {
             String message = JacksonUtil.getObjectMapper().writeValueAsString(tasks);
-            rabbitTemplate.convertAndSend(AbstractSysPendingTasksQueueConfig.EXCHANGE_NAME, routingKey + "_end_key", message);
+            String destination = AbstractSysPendingTasksQueueConfig.TOPIC_NAME + ":" + routingKey + "_end_key";
+            rocketMQTemplate.convertAndSend(destination, message);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
