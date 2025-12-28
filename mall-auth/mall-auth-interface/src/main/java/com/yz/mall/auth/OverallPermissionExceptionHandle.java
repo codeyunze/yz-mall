@@ -2,6 +2,8 @@ package com.yz.mall.auth;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.SaTokenException;
+import cn.dev33.satoken.util.SaResult;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.enums.CodeEnum;
 import lombok.extern.slf4j.Slf4j;

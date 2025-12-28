@@ -105,21 +105,7 @@ public class LoginLogUtil {
         }
         userAgent = userAgent.toLowerCase();
         if (userAgent.contains("windows")) {
-            if (userAgent.contains("windows nt 10.0")) {
-                return "Windows 10";
-            } else if (userAgent.contains("windows nt 6.3")) {
-                return "Windows 8.1";
-            } else if (userAgent.contains("windows nt 6.2")) {
-                return "Windows 8";
-            } else if (userAgent.contains("windows nt 6.1")) {
-                return "Windows 7";
-            } else if (userAgent.contains("windows nt 6.0")) {
-                return "Windows Vista";
-            } else if (userAgent.contains("windows nt 5.1")) {
-                return "Windows XP";
-            } else {
-                return "Windows";
-            }
+            return "Windows";
         } else if (userAgent.contains("mac")) {
             return "Mac OS";
         } else if (userAgent.contains("linux")) {
@@ -138,7 +124,7 @@ public class LoginLogUtil {
     /**
      * 根据IP地址获取登录地点（简化版，实际项目中可以使用IP地址库）
      *
-     * @param ip IP地址
+     * @param ip IP 地址
      * @return 登录地点
      */
     public static String getLoginLocation(String ip) {
@@ -146,11 +132,11 @@ public class LoginLogUtil {
         if (!StringUtils.hasText(ip)) {
             return "未知";
         }
-        // 本地IP
+        // 本地 IP
         if ("127.0.0.1".equals(ip) || ip.startsWith("192.168.") || ip.startsWith("10.") || ip.startsWith("172.")) {
             return "内网IP";
         }
-        // 这里可以集成第三方IP地址查询服务
+        // 这里可以集成第三方 IP 地址查询服务
         return "未知";
     }
 }
