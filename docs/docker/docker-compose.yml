@@ -11,6 +11,9 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - '6379:6379'
+    restart: unless-stopped
+    networks:
+      - mall
 
   elasticsearch:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/elasticsearch:8.19.0
@@ -30,6 +33,7 @@ services:
     # 可选：设置重启策略（除非手动停止，否则在容器意外退出时都会自动重启）
     restart: unless-stopped
     mem_limit: 1536m
+    restart: unless-stopped
     networks:
       - mall
 
@@ -46,6 +50,7 @@ services:
     depends_on:
       - elasticsearch
     mem_limit: 1536m
+    restart: unless-stopped
     networks:
       - mall
 
@@ -70,6 +75,7 @@ services:
       options:
         max-size: "30m"
         max-file: "3"
+    restart: unless-stopped
     networks:
       - mall
 
@@ -84,35 +90,45 @@ services:
       - '9849:9849'
     env_file:
       - ./nacos/config.env
+    restart: unless-stopped
     networks:
       - mall
   
   namesrv:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
-    container_name: rocketmq-namesrv
+    container_name: dev-rocketmq-namesrv-5.3.3
     ports:
       - "9876:9876"
     command: "sh mqnamesrv"
+    restart: unless-stopped
+    networks:
+      - mall
   
   broker:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
-    container_name: rocketmq-broker
-    environment:
-      - NAMESRV_ADDR=namesrv:9876
+    container_name: dev-rocketmq-broker-5.3.3
+    volumes:
+      - ./rocketmq/broker.conf:/home/rocketmq/rocketmq-5.3.3/conf/broker.conf
     ports:
       - "10911:10911"
       - "10909:10909"
     depends_on:
       - namesrv
-    command: "sh mqbroker -n namesrv:9876"
+    command: "sh mqbroker -n namesrv:9876 -c /home/rocketmq/rocketmq-5.3.3/conf/broker.conf"
+    restart: unless-stopped
+    networks:
+      - mall
   
   rocketmq-dashboard:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq-dashboard:2.1.0
-    container_name: rocketmq-dashboard-2.1
+    container_name: dev-rocketmq-dashboard-2.1
     environment:
       - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876
     ports:
       - "8082:8082"
+    restart: unless-stopped
+    networks:
+      - mall
 
   prometheus:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/prometheus:v3.7.3
@@ -122,6 +138,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - '9090:9090'
+    restart: unless-stopped
     networks:
       - mall
 
@@ -138,6 +155,7 @@ services:
       - ./grafana/config.monitoring
     depends_on:
       - prometheus
+    restart: unless-stopped
     networks:
       - mall
 
@@ -152,6 +170,9 @@ services:
         --spring.datasource.username=xxl_job_dev
         --spring.datasource.password=123456
         --xxl.job.accessToken=123456789
+    restart: unless-stopped
+    networks:
+      - mall
 
   seata-server:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/seata-server:1.6.1
@@ -167,6 +188,7 @@ services:
       - ./seata/application.yml/:/seata-server/resources/application.yml
     depends_on:
       - nacos
+    restart: unless-stopped
     networks:
       - mall
 
@@ -180,6 +202,7 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - '9121:9121'
+    restart: unless-stopped
     networks:
       - mall
 
@@ -192,6 +215,7 @@ services:
     command: --config.my-cnf=/etc/mysql/my.cnf
     ports:
       - '9104:9104'
+    restart: unless-stopped
     networks:
       - mall
       
@@ -202,3 +226,5 @@ services:
     restart: always
     ports:
       - "9100:9100"
+    networks:
+      - mall
