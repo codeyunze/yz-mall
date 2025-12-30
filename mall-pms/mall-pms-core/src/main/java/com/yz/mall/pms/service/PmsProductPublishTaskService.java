@@ -21,7 +21,7 @@ public class PmsProductPublishTaskService extends AbstractTaskService {
         this.productService = productService;
     }
 
-    @Override
+/*    @Override
     public String setMessageQueue() {
         return PmsProductPublishQueueConfig.QUEUE_NAME;
     }
@@ -38,5 +38,5 @@ public class PmsProductPublishTaskService extends AbstractTaskService {
         // 商品上架待办结束逻辑
         log.info("商品上架的待办结束逻辑: {}", taskId);
         productService.approvedReview(Long.parseLong(businessId));
-    }
+    }*/
 }

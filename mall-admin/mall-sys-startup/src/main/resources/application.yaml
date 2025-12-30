@@ -71,3 +71,11 @@ yz:
         maximum-size: 10000
         expire-after-write: 3600
         expire-after-access: 0
+        
+rocketmq:
+  name-server: 192.168.3.237:9876
+  producer:
+    group: producer-mall-sys
+  consumer:
+    group: consumer-mall-sys
+  

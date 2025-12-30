@@ -56,7 +56,7 @@ public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMappe
             String message = JacksonUtil.getObjectMapper().writeValueAsString(bo);
             // RocketMQ 中使用 Topic:Tag 形式发送消息
             String destination = AbstractSysPendingTasksQueueConfig.TOPIC_NAME + ":" + routingKey + "_start_key";
-            rocketMQTemplate.convertAndSend(destination, message);
+            rocketMQTemplate.syncSend(destination, message);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

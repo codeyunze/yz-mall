@@ -16,6 +16,6 @@ public abstract class AbstractSysPendingTasksQueueConfig {
     /**
      * 待办任务统一 Topic 名称
      */
-    public static final String TOPIC_NAME = "sys_task_topic";
+    public static final String TOPIC_NAME = "topic_sys_task";
 
 }
