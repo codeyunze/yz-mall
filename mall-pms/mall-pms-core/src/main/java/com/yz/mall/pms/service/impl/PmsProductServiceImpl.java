@@ -18,6 +18,7 @@ import com.yz.mall.pms.service.PmsStockService;
 import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
 import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.service.ExtendSysFilesService;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import com.yz.mall.sys.vo.ExtendQofFileInfoVo;
 import com.yz.mall.base.PageFilter;
@@ -42,13 +43,14 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     private final ExtendSysPendingTasksService extendSysPendingTasksService;
 
-    // private final InternalSysFilesService internalSysFilesService;
+    private final ExtendSysFilesService extendSysFilesService;
 
     public PmsProductServiceImpl(PmsStockService stockService
-            , ExtendSysPendingTasksService extendSysPendingTasksService) {
+            , ExtendSysPendingTasksService extendSysPendingTasksService
+            , ExtendSysFilesService extendSysFilesService) {
         this.stockService = stockService;
         this.extendSysPendingTasksService = extendSysPendingTasksService;
-        // this.internalSysFilesService = internalSysFilesService;
+        this.extendSysFilesService = extendSysFilesService;
     }
 
     @Transactional
@@ -139,28 +141,20 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
     @Override
     public List<PmsProductDisplayInfoVo> getProductDisplayInfoList(PmsProductSlimQueryDto filter) {
         List<PmsProductDisplayInfoVo> displayInfoVos = baseMapper.selectProductDisplayInfoList(filter);
-        // 取出所有商品的图片Id Map<图片Id, 产品Id>
-        Map<Long, Long> imageIdToProductIdMap = new HashMap<>();
-        List<Long> imageIds = new ArrayList<>();
         for (PmsProductDisplayInfoVo displayInfoVo : displayInfoVos) {
             String albumPics = displayInfoVo.getAlbumPics();
             if (!StringUtils.hasText(albumPics)) {
                 continue;
             }
             for (String imageId : albumPics.split(",")) {
-                imageIdToProductIdMap.put(Long.parseLong(imageId), displayInfoVo.getId());
-                imageIds.add(Long.parseLong(imageId));
+                List<String> filePreviewByFileIds = extendSysFilesService.getFilePreviewByFileIds(List.of(Long.parseLong(imageId)));
+                if (CollectionUtils.isEmpty(displayInfoVo.getProductImages())) {
+                    displayInfoVo.setProductImages(new ArrayList<>());
+                }
+                displayInfoVo.getProductImages().addAll(filePreviewByFileIds);
             }
         }
         return displayInfoVos;
-        // 查询图片的访问信息
-        // List<InternalQofFileInfoVo> qofFileInfoVos = internalSysFilesService.getFileInfoByFileIdsAndPublic(imageIds);
-
-        // 组装数据，循环遍历产品
-        /*for (PmsProductDisplayInfoVo infoVo : displayInfoVos) {
-            assembleProductImage(infoVo, qofFileInfoVos, imageIdToProductIdMap, infoVo.getId());
-        }
-        return displayInfoVos;*/
     }
 
     @DS("slave")
