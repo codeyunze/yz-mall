@@ -46,20 +46,8 @@ public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMappe
     public Long save(ExtendSysPendingTasksAddDto dto) {
         SysPendingTasks bo = new SysPendingTasks();
         BeanUtils.copyProperties(dto, bo);
-        bo.setId(IdUtil.getSnowflakeNextId());
+        bo.setId(dto.getTaskId() != null ? dto.getTaskId() : IdUtil.getSnowflakeNextId());
         baseMapper.insert(bo);
-
-        // 消息路由（转换为 RocketMQ 的 Tag）
-        String routingKey = bo.getTaskCode().toLowerCase().replace(":", "_");
-
-        try {
-            String message = JacksonUtil.getObjectMapper().writeValueAsString(bo);
-            // RocketMQ 中使用 Topic:Tag 形式发送消息
-            String destination = AbstractSysPendingTasksQueueConfig.TOPIC_NAME + ":" + routingKey + "_start_key";
-            rocketMQTemplate.syncSend(destination, message);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
         return bo.getId();
     }
 
@@ -82,11 +70,15 @@ public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMappe
         tasks.setTaskEndTime(LocalDateTime.now());
         int updated = baseMapper.updateById(tasks);
 
-        // 消息路由（转换为 RocketMQ 的 Tag）
+        // 消息路由
         String routingKey = tasks.getTaskCode().toLowerCase().replace(":", "_");
 
+        // 发送待办任务结束消息
         try {
-            String message = JacksonUtil.getObjectMapper().writeValueAsString(tasks);
+            ExtendSysPendingTasksAddDto tasksDto = new ExtendSysPendingTasksAddDto();
+            BeanUtils.copyProperties(tasks, tasksDto);
+            tasksDto.setTaskId(tasks.getId());
+            String message = JacksonUtil.getObjectMapper().writeValueAsString(tasksDto);
             String destination = AbstractSysPendingTasksQueueConfig.TOPIC_NAME + ":" + routingKey + "_end_key";
             rocketMQTemplate.convertAndSend(destination, message);
         } catch (JsonProcessingException e) {

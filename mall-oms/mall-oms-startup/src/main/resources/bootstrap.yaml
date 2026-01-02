@@ -17,3 +17,10 @@ spring:
         file-extension: yaml
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+
+rocketmq:
+  name-server: 192.168.3.237:9876
+  producer:
+    group: producer-mall-oms
+  consumer:
+    group: consumer-mall-oms

@@ -1,5 +1,6 @@
 package com.yz.mall.pms.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -79,12 +80,15 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         product.setPublishStatus(1);
 
         int updated = baseMapper.updateById(product);
+        // int updated = -1;
         ExtendSysPendingTasksAddDto tasksAddDto = new ExtendSysPendingTasksAddDto();
         tasksAddDto.setTaskCode("PMS:PRODUCT:PUBLISH");
         tasksAddDto.setTaskNode("待审核");
         tasksAddDto.setTaskTitle(product.getTitles() + "上架审核");
         tasksAddDto.setBusinessId(String.valueOf(id));
+        tasksAddDto.setCreateId(StpUtil.getLoginIdAsLong());
         Long taskId = extendSysPendingTasksService.startTask(tasksAddDto);
+        this.pendingReview(id);
         return updated > 0;
     }
 

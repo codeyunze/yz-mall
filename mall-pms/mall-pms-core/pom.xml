@@ -66,6 +66,25 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- RocketMQ 集成 -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <exclusions>
+                <!-- 排除可能被 spring-cloud-alibaba 引入的旧版本 rocketmq-client -->
+                <exclusion>
+                    <groupId>org.apache.rocketmq</groupId>
+                    <artifactId>rocketmq-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 显式引入与 rocketmq-spring-boot-starter 2.3.4 兼容的 rocketmq-client 版本 -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
