@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>mall-rocketmq</artifactId>
+        <artifactId>mall-demo-rocketmq</artifactId>
         <version>0.0.6-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>mall-rocketmq-consumer</artifactId>
-    <description>消费者启动类</description>
+    <artifactId>mall-rocketmq-producer</artifactId>
+    <description>生产者启动类</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,7 +47,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.5.3</version>
                 <configuration>
-                    <mainClass>com.yz.mall.demo.rkmq.RocketMQConsumerApplication</mainClass>
+                    <mainClass>com.yz.mall.demo.rkmq.RocketMQProducerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

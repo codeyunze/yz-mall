@@ -35,4 +35,21 @@ public class RedissonLockKey {
         return "lock:dictionary:" + ancestorKey;
     }
 
+    /**
+     * 消息重试锁的 key
+     * @param msgRetryId 消息重试记录ID
+     * @return 消息重试锁的 key
+     */
+    public static String keyMsgRetry(Long msgRetryId) {
+        return "lock:msg:retry:" + msgRetryId;
+    }
+
+    /**
+     * 消息重试定时任务锁的 key
+     * @return 消息重试定时任务锁的 key
+     */
+    public static String keyMsgRetryScheduler() {
+        return "lock:msg:retry:scheduler";
+    }
+
 }

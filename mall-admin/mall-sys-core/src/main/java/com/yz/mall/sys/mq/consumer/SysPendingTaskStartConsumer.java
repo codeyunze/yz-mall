@@ -1,12 +1,13 @@
 package com.yz.mall.sys.mq.consumer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yz.mall.base.exception.BusinessException;
-import com.yz.mall.json.JacksonUtil;
 import com.yz.mall.sys.AbstractSysPendingTasksQueueConfig;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.service.ExtendSysMsgRetryService;
 import com.yz.mall.sys.service.SysPendingTasksService;
+import com.yz.mall.rocketmq.utils.MsgConsumerHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.annotation.SelectorType;
@@ -26,28 +27,32 @@ import org.springframework.stereotype.Component;
         , selectorType = SelectorType.TAG
         , selectorExpression = "pms_product_publish_start_key"
         , messageModel = MessageModel.CLUSTERING)
-public class SysPendingTaskStartConsumer implements RocketMQListener<String> {
+public class SysPendingTaskStartConsumer implements RocketMQListener<MessageExt> {
 
     private final SysPendingTasksService sysPendingTasksService;
+    private final ExtendSysMsgRetryService extendSysMsgRetryService;
 
-    public SysPendingTaskStartConsumer(SysPendingTasksService sysPendingTasksService) {
+    public SysPendingTaskStartConsumer(SysPendingTasksService sysPendingTasksService,
+                                       ExtendSysMsgRetryService extendSysMsgRetryService) {
         this.sysPendingTasksService = sysPendingTasksService;
+        this.extendSysMsgRetryService = extendSysMsgRetryService;
     }
 
     @Override
-    public void onMessage(String s) {
-        try {
-            // 使用 readValue 方法将 JSON 字符串解析为对象
-            ExtendSysPendingTasksAddDto dto = JacksonUtil.getObjectMapper().readValue(s, ExtendSysPendingTasksAddDto.class);
-            Long id = sysPendingTasksService.save(dto);
-            if (id == null) {
-                log.error("待办任务创建失败：{}", s);
-                throw new BusinessException("待办任务创建失败");
-            }
-            log.info("消费【待办任务开始】消息：{}", id);
-        } catch (JsonProcessingException e) {
-            log.error("解析待办任务消息失败：{}", s, e);
-            throw new BusinessException("解析待办任务消息失败：" + e.getMessage());
-        }
+    public void onMessage(MessageExt messageExt) {
+        MsgConsumerHelper.consumeMessage(
+                messageExt,
+                "consumer-mall-sys",
+                extendSysMsgRetryService,
+                ExtendSysPendingTasksAddDto.class,
+                dto -> {
+                    Long id = sysPendingTasksService.save(dto);
+                    if (id == null) {
+                        throw new BusinessException("待办任务创建失败");
+                    }
+                    log.info("消费【待办任务开始】消息成功，taskId: {}", id);
+                    return dto.getBusinessId();
+                }
+        );
     }
 }

@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>mall-admin</artifactId>
+        <artifactId>mall-demo-rocketmq</artifactId>
         <version>0.0.6-SNAPSHOT</version>
     </parent>
 
 
-    <artifactId>mall-sys-feign</artifactId>
-    <description>系统微服务feign调用模块</description>
+    <artifactId>mall-rocketmq-consumer</artifactId>
+    <description>消费者启动类</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,32 +19,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>mall-base</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>mall-web</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>mall-sys-interface</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-spring-boot3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>mall-rocketmq</artifactId>
-            <version>0.0.6-SNAPSHOT</version>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
         </dependency>
     </dependencies>
 
@@ -62,14 +43,16 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.5.3</version>
+                <configuration>
+                    <mainClass>com.yz.mall.demo.rkmq.RocketMQConsumerApplication</mainClass>
+                </configuration>
                 <executions>
                     <execution>
-                        <phase>package</phase>
                         <goals>
-                            <goal>jar-no-fork</goal>
+                            <goal>repackage</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -9,7 +9,7 @@
         <version>0.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mall-rocketmq</artifactId>
+    <artifactId>mall-demo-rocketmq</artifactId>
     <packaging>pom</packaging>
     <description>rocketmq服务</description>
 

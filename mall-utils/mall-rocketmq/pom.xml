@@ -5,13 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>mall-rocketmq</artifactId>
+        <artifactId>mall-utils</artifactId>
         <version>0.0.6-SNAPSHOT</version>
     </parent>
 
-
-    <artifactId>mall-rocketmq-demo</artifactId>
-    <description>RocketMQ消息队列demo</description>
+    <artifactId>mall-rocketmq</artifactId>
+    <description>RocketMQ工具模块</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,14 +18,29 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-base</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-sys-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- RocketMQ 集成 -->
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-spring-boot-starter</artifactId>
             <exclusions>
+                <!-- 排除可能被 spring-cloud-alibaba 引入的旧版本 rocketmq-client -->
                 <exclusion>
                     <groupId>org.apache.rocketmq</groupId>
                     <artifactId>rocketmq-client</artifactId>
@@ -34,9 +48,15 @@
             </exclusions>
         </dependency>
 
+        <!-- 显式引入与 rocketmq-spring-boot-starter 2.3.4 兼容的 rocketmq-client 版本 -->
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 
@@ -54,16 +74,14 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.5.3</version>
-                <configuration>
-                    <mainClass>com.yz.mall.demo.rkmq.RocketMQConsumerApplication</mainClass>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -71,3 +89,4 @@
         </plugins>
     </build>
 </project>
+
