@@ -22,13 +22,9 @@ public class OpenFeignConfig implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        // TODO: 2026/1/4 星期日 yunze 存在空指针异常
-        /**
-         * java.lang.NullPointerException
-         * 	at java.base/java.util.Objects.requireNonNull(Objects.java:208)
-         * 	at com.yz.mall.web.configuration.OpenFeignConfig.getHttpServletRequest(OpenFeignConfig.java:34)
-         * 	at com.yz.mall.web.configuration.OpenFeignConfig.apply(OpenFeignConfig.java:25)
-         */
+        if (RequestContextHolder.getRequestAttributes() == null) {
+            return;
+        }
         Map<String, String> headers = getHeaders(Objects.requireNonNull(getHttpServletRequest()));
         for (String headerName : headers.keySet()) {
             requestTemplate.header(headerName, getHeaders(getHttpServletRequest()).get(headerName));
@@ -37,7 +33,6 @@ public class OpenFeignConfig implements RequestInterceptor {
 
     private HttpServletRequest getHttpServletRequest() {
         try {
-
             return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         } catch (Exception e) {
             e.printStackTrace();

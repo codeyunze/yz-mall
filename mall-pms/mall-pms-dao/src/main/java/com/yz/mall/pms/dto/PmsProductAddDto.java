@@ -3,6 +3,7 @@ package com.yz.mall.pms.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ public class PmsProductAddDto implements Serializable {
     /**
      * 商品名称
      */
+    @Length(max = 50, message = "商品名称长度不能超过50")
     @NotBlank(message = "商品名称不能为空")
     private String productName;
 
@@ -33,16 +35,19 @@ public class PmsProductAddDto implements Serializable {
     /**
      * 商品标签
      */
+    @Length(max = 50, message = "商品标签长度不能超过50")
     private String titles;
 
     /**
      * 商品备注信息
      */
+    @Length(max = 250, message = "商品备注信息长度不能超过250")
     private String remark;
 
     /**
      * 商品图片id，限制为5张，以逗号分割
      */
+    @Length(max = 164, message = "商品图片超过最大数量")
     private String albumPics;
 
 }

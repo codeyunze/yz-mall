@@ -130,6 +130,7 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
         PmsCategoryQueryDto query = filter.getFilter();
         LambdaQueryWrapper<PmsCategory> queryWrapper = new LambdaQueryWrapper<>();
 
+        queryWrapper.eq(query.getId() != null, PmsCategory::getId, query.getId());
         queryWrapper.eq(query.getParentId() != null, PmsCategory::getParentId, query.getParentId());
         queryWrapper.like(StringUtils.hasText(query.getCategoryName()), PmsCategory::getCategoryName, query.getCategoryName());
 
