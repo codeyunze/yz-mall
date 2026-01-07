@@ -1,7 +1,9 @@
 package com.yz.mall.sys.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.sys.dto.MsgRetryRecordDto;
+import com.yz.mall.sys.dto.SysMsgRetryQueryDto;
 import com.yz.mall.sys.entity.SysMsgRetry;
 
 import java.util.List;
@@ -61,5 +63,15 @@ public interface SysMsgRetryService extends IService<SysMsgRetry> {
      * @return 是否成功
      */
     boolean markAsIgnored(Long id);
+
+    /**
+     * 分页查询消息重试记录
+     *
+     * @param current 当前页
+     * @param size    每页大小
+     * @param queryDto 查询条件
+     * @return 分页结果
+     */
+    IPage<SysMsgRetry> page(long current, long size, SysMsgRetryQueryDto queryDto);
 }
 
