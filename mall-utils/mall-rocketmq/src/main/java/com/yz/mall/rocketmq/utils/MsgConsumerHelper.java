@@ -46,11 +46,22 @@ public class MsgConsumerHelper {
         String body = new String(messageExt.getBody(), StandardCharsets.UTF_8);
 
         try {
-            // 幂等性检查：如果消息已处理，直接返回
+            // 幂等性检查：如果消息已处理、待处理（重试次数用完）或已忽略，直接返回确认消息
+            // 这样可以让消息从RocketMQ队列中移除，避免堆积
             Integer status = extendSysMsgRetryService.getStatusByMsgId(msgId);
-            if (status != null && MsgRetryStatusEnum.PROCESSED.get().equals(status)) {
-                log.info("消息已处理，跳过消费，msgId: {}", msgId);
-                return;
+            if (status != null) {
+                if (MsgRetryStatusEnum.PROCESSED.get().equals(status)) {
+                    log.info("消息已处理，确认消息并从队列移除，msgId: {}", msgId);
+                    return;
+                }
+                if (MsgRetryStatusEnum.PENDING.get().equals(status)) {
+                    log.warn("消息重试次数已用完，状态为待处理，确认消息并从队列移除，msgId: {}", msgId);
+                    return;
+                }
+                if (MsgRetryStatusEnum.IGNORED.get().equals(status)) {
+                    log.info("消息已忽略，确认消息并从队列移除，msgId: {}", msgId);
+                    return;
+                }
             }
 
             // 解析消息体

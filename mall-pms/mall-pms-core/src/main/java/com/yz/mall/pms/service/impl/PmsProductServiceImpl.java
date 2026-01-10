@@ -82,6 +82,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         int updated = baseMapper.updateById(product);
         // int updated = -1;
         ExtendSysPendingTasksAddDto tasksAddDto = new ExtendSysPendingTasksAddDto();
+        tasksAddDto.setBusinessId(String.valueOf(id));
         tasksAddDto.setTaskCode("PMS:PRODUCT:PUBLISH");
         tasksAddDto.setTaskNode("待审核");
         tasksAddDto.setTaskTitle(product.getTitles() + "上架审核");

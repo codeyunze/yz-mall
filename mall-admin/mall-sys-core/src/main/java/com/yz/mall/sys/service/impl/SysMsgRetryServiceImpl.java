@@ -285,42 +285,26 @@ public class SysMsgRetryServiceImpl extends ServiceImpl<SysMsgRetryMapper, SysMs
         LambdaQueryWrapper<SysMsgRetry> queryWrapper = new LambdaQueryWrapper<>();
 
         // 消息ID
-        if (queryDto.getMsgId() != null && !queryDto.getMsgId().trim().isEmpty()) {
-            queryWrapper.eq(SysMsgRetry::getMsgId, queryDto.getMsgId());
-        }
+        queryWrapper.eq(queryDto.getMsgId() != null && !queryDto.getMsgId().trim().isEmpty(), SysMsgRetry::getMsgId, queryDto.getMsgId());
 
         // 业务数据ID
-        if (queryDto.getBusinessId() != null && !queryDto.getBusinessId().trim().isEmpty()) {
-            queryWrapper.eq(SysMsgRetry::getBusinessId, queryDto.getBusinessId());
-        }
+        queryWrapper.eq(queryDto.getBusinessId() != null && !queryDto.getBusinessId().trim().isEmpty(), SysMsgRetry::getBusinessId, queryDto.getBusinessId());
 
         // Topic
-        if (queryDto.getTopic() != null && !queryDto.getTopic().trim().isEmpty()) {
-            queryWrapper.like(SysMsgRetry::getTopic, queryDto.getTopic());
-        }
+        queryWrapper.like(queryDto.getTopic() != null && !queryDto.getTopic().trim().isEmpty(), SysMsgRetry::getTopic, queryDto.getTopic());
 
         // 消息标签
-        if (queryDto.getTags() != null && !queryDto.getTags().trim().isEmpty()) {
-            queryWrapper.like(SysMsgRetry::getTags, queryDto.getTags());
-        }
+        queryWrapper.like(queryDto.getTags() != null && !queryDto.getTags().trim().isEmpty(), SysMsgRetry::getTags, queryDto.getTags());
 
         // 消费者组
-        if (queryDto.getConsumerGroup() != null && !queryDto.getConsumerGroup().trim().isEmpty()) {
-            queryWrapper.eq(SysMsgRetry::getConsumerGroup, queryDto.getConsumerGroup());
-        }
+        queryWrapper.eq(queryDto.getConsumerGroup() != null && !queryDto.getConsumerGroup().trim().isEmpty(), SysMsgRetry::getConsumerGroup, queryDto.getConsumerGroup());
 
         // 状态
-        if (queryDto.getStatus() != null) {
-            queryWrapper.eq(SysMsgRetry::getStatus, queryDto.getStatus());
-        }
+        queryWrapper.eq(queryDto.getStatus() != null, SysMsgRetry::getStatus, queryDto.getStatus());
 
         // 创建时间范围
-        if (queryDto.getCreateTimeStart() != null) {
-            queryWrapper.ge(SysMsgRetry::getCreateTime, queryDto.getCreateTimeStart());
-        }
-        if (queryDto.getCreateTimeEnd() != null) {
-            queryWrapper.le(SysMsgRetry::getCreateTime, queryDto.getCreateTimeEnd());
-        }
+        queryWrapper.ge(queryDto.getCreateTimeStart() != null, SysMsgRetry::getCreateTime, queryDto.getCreateTimeStart());
+        queryWrapper.le(queryDto.getCreateTimeEnd() != null, SysMsgRetry::getCreateTime, queryDto.getCreateTimeEnd());
 
         // 按创建时间倒序
         queryWrapper.orderByDesc(SysMsgRetry::getCreateTime);
