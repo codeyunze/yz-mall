@@ -27,8 +27,13 @@ public class ExtendPmsStockDto implements Serializable {
     /**
      * 商品信息Id
      */
-    @NotNull(message = "商品信息Id不能为空")
     private Long productId;
+
+    /**
+     * SKU信息Id
+     */
+    @NotNull(message = "SKU信息Id不能为空")
+    private Long skuId;
 
     /**
      * 商品扣减/增加库存数量

@@ -50,5 +50,11 @@ public class PmsProductAddDto implements Serializable {
     @Length(max = 164, message = "商品图片超过最大数量")
     private String albumPics;
 
+    /**
+     * 商品分类ID
+     */
+    @NotNull(message = "商品分类不能为空")
+    private Long categoryId;
+
 }
 

@@ -10,9 +10,11 @@ import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailUpdateDto;
+import com.yz.mall.pms.entity.PmsSku;
 import com.yz.mall.pms.entity.PmsStockOutDetail;
 import com.yz.mall.pms.mapper.PmsStockOutDetailMapper;
 import com.yz.mall.pms.service.PmsProductQueryService;
+import com.yz.mall.pms.service.PmsSkuService;
 import com.yz.mall.pms.service.PmsStockOutDetailService;
 import com.yz.mall.pms.vo.PmsProductSlimVo;
 import com.yz.mall.pms.vo.PmsStockOutDetailVo;
@@ -43,9 +45,12 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
 
     private final PmsProductQueryService pmsProductQueryService;
 
-    public PmsStockOutDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductQueryService pmsProductQueryService) {
+    private final PmsSkuService skuService;
+
+    public PmsStockOutDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductQueryService pmsProductQueryService, PmsSkuService skuService) {
         this.extendSerialService = extendSerialService;
         this.pmsProductQueryService = pmsProductQueryService;
+        this.skuService = skuService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -70,9 +75,18 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
             PmsStockOutDetail bo = new PmsStockOutDetail();
             bo.setId(IdUtil.getSnowflakeNextId());
             bo.setStockOutCode(stockOutCode);
-            bo.setProductId(out.getProductId());
+            bo.setSkuId(out.getSkuId());
             bo.setQuantity(out.getQuantity());
             bo.setOrderId(out.getOrderId());
+            // 根据 skuId 获取 productId
+            Long productId = out.getProductId();
+            if (productId == null && out.getSkuId() != null) {
+                PmsSku sku = skuService.getById(out.getSkuId());
+                if (sku != null) {
+                    productId = sku.getProductId();
+                }
+            }
+            bo.setProductId(productId);
             outDetailList.add(bo);
         });
         return super.saveBatch(outDetailList);
@@ -90,14 +104,14 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
         PmsStockOutDetailQueryDto queryFilter = filter.getFilter();
         LambdaQueryWrapper<PmsStockOutDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.hasText(queryFilter.getStockOutCode()), PmsStockOutDetail::getStockOutCode, queryFilter.getStockOutCode());
-        queryWrapper.eq(queryFilter.getProductId() != null && queryFilter.getProductId() != 0, PmsStockOutDetail::getProductId, queryFilter.getProductId());
+        queryWrapper.eq(queryFilter.getProductId() != null && queryFilter.getProductId() != 0, PmsStockOutDetail::getSkuId, queryFilter.getProductId());
         queryWrapper.orderByDesc(PmsStockOutDetail::getId);
         Page<PmsStockOutDetail> stockOutPage = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
         if (stockOutPage.getTotal() == 0) {
             return new Page<>();
         }
 
-        List<Long> productIds = stockOutPage.getRecords().stream().map(PmsStockOutDetail::getProductId).collect(Collectors.toList());
+        List<Long> productIds = stockOutPage.getRecords().stream().map(PmsStockOutDetail::getSkuId).collect(Collectors.toList());
         List<PmsProductSlimVo> products = pmsProductQueryService.getProductByProductIds(productIds);
         if (CollectionUtils.isEmpty(products)) {
             return new Page<>();
@@ -111,7 +125,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
         stockOutPage.getRecords().forEach(t -> {
             PmsStockOutDetailVo vo = new PmsStockOutDetailVo();
             BeanUtils.copyProperties(t, vo);
-            PmsProductSlimVo productSlimVo = productMap.get(t.getProductId());
+            PmsProductSlimVo productSlimVo = productMap.get(t.getSkuId());
             vo.setProductName(productSlimVo.getProductName());
             vo.setTitles(productSlimVo.getTitles());
             vo.setAlbumPics(productSlimVo.getAlbumPics());

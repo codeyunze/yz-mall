@@ -14,9 +14,9 @@ public class ExtendPmsStockDeductVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 商品Id
+     * SKU Id
      */
-    private Long productId;
+    private Long skuId;
 
     /**
      * 库存扣减是否成功

@@ -15,6 +15,7 @@ public class ExtendOmsOrderProductDto implements Serializable {
 
     private final static long serialVersionUID = 1L;
 
+    // TODO: 2026/1/11 星期日 yunze 需要修改为skuId
     /**
      * 商品Id
      */

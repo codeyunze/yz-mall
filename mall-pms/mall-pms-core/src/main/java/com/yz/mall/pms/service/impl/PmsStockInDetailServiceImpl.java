@@ -10,11 +10,14 @@ import com.yz.mall.base.PageFilter;
 import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockInDetailQueryDto;
 import com.yz.mall.pms.dto.PmsStockInDetailUpdateDto;
+import com.yz.mall.pms.entity.PmsSku;
 import com.yz.mall.pms.entity.PmsStockInDetail;
 import com.yz.mall.pms.mapper.PmsStockInDetailMapper;
 import com.yz.mall.pms.service.PmsProductQueryService;
+import com.yz.mall.pms.service.PmsSkuService;
 import com.yz.mall.pms.service.PmsStockInDetailService;
 import com.yz.mall.pms.vo.PmsProductSlimVo;
+import com.yz.mall.pms.vo.PmsSkuVo;
 import com.yz.mall.pms.vo.PmsStockInDetailVo;
 import com.yz.mall.serial.service.ExtendSerialService;
 import org.springframework.beans.BeanUtils;
@@ -42,9 +45,12 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
 
     private final PmsProductQueryService pmsProductQueryService;
 
-    public PmsStockInDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductQueryService pmsProductQueryService) {
+    private final PmsSkuService pmsSkuService;
+
+    public PmsStockInDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductQueryService pmsProductQueryService, PmsSkuService pmsSkuService) {
         this.extendSerialService = extendSerialService;
         this.pmsProductQueryService = pmsProductQueryService;
+        this.pmsSkuService = pmsSkuService;
     }
 
     @Transactional
@@ -56,6 +62,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         bo.setStockInCode(extendSerialService.generateNumber(prefix, 6));
         bo.setRemark(dto.getRemark());
         bo.setProductId(dto.getProductId());
+        bo.setSkuId(dto.getSkuId());
         bo.setQuantity(dto.getQuantity());
         baseMapper.insert(bo);
         return bo.getId();
@@ -73,31 +80,78 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         PmsStockInDetailQueryDto queryFilter = filter.getFilter();
         LambdaQueryWrapper<PmsStockInDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.hasText(queryFilter.getStockInCode()), PmsStockInDetail::getStockInCode, queryFilter.getStockInCode());
-        queryWrapper.eq(queryFilter.getProductId() != null && queryFilter.getProductId() != 0, PmsStockInDetail::getProductId, queryFilter.getProductId());
+        queryWrapper.eq(queryFilter.getSkuId() != null && queryFilter.getSkuId() != 0, PmsStockInDetail::getSkuId, queryFilter.getSkuId());
         queryWrapper.orderByDesc(PmsStockInDetail::getId);
         Page<PmsStockInDetail> stockInPage = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
         if (stockInPage.getTotal() == 0) {
             return new Page<>();
         }
 
-        List<Long> productIds = stockInPage.getRecords().stream().map(PmsStockInDetail::getProductId).collect(Collectors.toList());
-        List<PmsProductSlimVo> products = pmsProductQueryService.getProductByProductIds(productIds);
-        if (CollectionUtils.isEmpty(products)) {
+        List<Long> productIds = stockInPage.getRecords().stream()
+                .map(PmsStockInDetail::getProductId)
+                .filter(id -> id != null && id != 0)
+                .distinct()
+                .collect(Collectors.toList());
+        List<Long> skuIds = stockInPage.getRecords().stream()
+                .map(PmsStockInDetail::getSkuId)
+                .filter(id -> id != null && id != 0)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // 查询商品信息
+        List<PmsProductSlimVo> products = CollectionUtils.isEmpty(productIds) 
+                ? new ArrayList<>() 
+                : pmsProductQueryService.getProductByProductIds(productIds);
+        
+        // 根据skuIds查询SKU的名称和编码信息
+        List<PmsSkuVo> skuList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(skuIds)) {
+            List<PmsSku> skuEntities = pmsSkuService.listByIds(skuIds);
+            if (!CollectionUtils.isEmpty(skuEntities)) {
+                skuList = skuEntities.stream().map(sku -> {
+                    PmsSkuVo vo = new PmsSkuVo();
+                    BeanUtils.copyProperties(sku, vo);
+                    return vo;
+                }).collect(Collectors.toList());
+            }
+        }
+
+        if (CollectionUtils.isEmpty(products) && CollectionUtils.isEmpty(skuList)) {
             return new Page<>();
         }
 
-        // 组装商品信息
+        // 组装商品信息和SKU信息
         Page<PmsStockInDetailVo> page = new Page<>();
         page.setTotal(stockInPage.getTotal());
-        Map<Long, PmsProductSlimVo> productMap = products.stream().collect(Collectors.toMap(PmsProductSlimVo::getId, t -> t));
+        Map<Long, PmsProductSlimVo> productMap = products.stream()
+                .collect(Collectors.toMap(PmsProductSlimVo::getId, t -> t));
+        Map<Long, PmsSkuVo> skuMap = skuList.stream()
+                .collect(Collectors.toMap(PmsSkuVo::getId, t -> t));
+        
         List<PmsStockInDetailVo> array = new ArrayList<>();
         stockInPage.getRecords().forEach(t -> {
             PmsStockInDetailVo vo = new PmsStockInDetailVo();
             BeanUtils.copyProperties(t, vo);
-            PmsProductSlimVo productSlimVo = productMap.get(t.getProductId());
-            vo.setProductName(productSlimVo.getProductName());
-            vo.setTitles(productSlimVo.getTitles());
-            vo.setAlbumPics(productSlimVo.getAlbumPics());
+            
+            // 设置商品信息（使用productId）
+            if (t.getProductId() != null) {
+                PmsProductSlimVo productSlimVo = productMap.get(t.getProductId());
+                if (productSlimVo != null) {
+                    vo.setProductName(productSlimVo.getProductName());
+                    vo.setTitles(productSlimVo.getTitles());
+                    vo.setAlbumPics(productSlimVo.getAlbumPics());
+                }
+            }
+            
+            // 设置SKU信息（使用skuId）
+            if (t.getSkuId() != null) {
+                PmsSkuVo skuVo = skuMap.get(t.getSkuId());
+                if (skuVo != null) {
+                    vo.setSkuCode(skuVo.getSkuCode());
+                    vo.setSkuName(skuVo.getSkuName());
+                }
+            }
+            
             array.add(vo);
         });
         page.setRecords(array);

@@ -70,5 +70,20 @@ public class PmsStockInDetailVo implements Serializable {
      * 商品图片id，限制为5张，以逗号分割
      */
     private String albumPics;
+
+    /**
+     * 关联SKU Id
+     */
+    private Long skuId;
+
+    /**
+     * SKU编码
+     */
+    private String skuCode;
+
+    /**
+     * SKU名称
+     */
+    private String skuName;
 }
 
