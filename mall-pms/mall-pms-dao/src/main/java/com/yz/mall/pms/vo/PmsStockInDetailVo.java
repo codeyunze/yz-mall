@@ -85,5 +85,15 @@ public class PmsStockInDetailVo implements Serializable {
      * SKU名称
      */
     private String skuName;
+
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
+
+    /**
+     * 商品分类名称
+     */
+    private String categoryName;
 }
 

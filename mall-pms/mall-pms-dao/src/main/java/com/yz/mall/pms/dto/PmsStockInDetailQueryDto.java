@@ -30,5 +30,15 @@ public class PmsStockInDetailQueryDto implements Serializable {
      */
     private Long supplierId;
 
+    /**
+     * SKU名称（模糊查询）
+     */
+    private String skuName;
+
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
+
 }
 
