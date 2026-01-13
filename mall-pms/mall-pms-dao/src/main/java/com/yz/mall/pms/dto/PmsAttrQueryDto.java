@@ -21,6 +21,11 @@ public class PmsAttrQueryDto implements Serializable {
     private Long relatedId;
 
     /**
+     * 属性类型：0商品；1SKU
+     */
+    private Integer attrType;
+
+    /**
      * 规格属性名称
      */
     private String attrName;

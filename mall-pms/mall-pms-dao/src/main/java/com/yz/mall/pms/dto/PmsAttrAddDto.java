@@ -1,5 +1,6 @@
 package com.yz.mall.pms.dto;
 
+import com.yz.mall.base.validators.SpecifiedRange;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,8 +22,20 @@ public class PmsAttrAddDto implements Serializable {
     /**
      * product_id或sku_id
      */
-    @NotNull(message = "关联ID不能为空")
+    @NotNull(message = "关联 ID 不能为空")
     private Long relatedId;
+
+    /**
+     * 属性类型：0商品；1SKU
+     */
+    @SpecifiedRange(allowed = {"0", "1"}, message = "属性类型只能为0-商品或1-SKU")
+    @NotNull(message = "属性类型不能为空")
+    private Integer attrType;
+
+    /**
+     * 必选属性：0非必选；1必选
+     */
+    private Integer attrRequired;
 
     /**
      * 规格属性名称

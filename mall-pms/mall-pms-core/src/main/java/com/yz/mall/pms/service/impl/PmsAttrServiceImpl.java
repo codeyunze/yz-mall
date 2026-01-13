@@ -1,6 +1,5 @@
 package com.yz.mall.pms.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -53,6 +52,7 @@ public class PmsAttrServiceImpl extends ServiceImpl<PmsAttrMapper, PmsAttr> impl
         LambdaQueryWrapper<PmsAttr> queryWrapper = new LambdaQueryWrapper<>();
 
         queryWrapper.eq(query.getRelatedId() != null, PmsAttr::getRelatedId, query.getRelatedId());
+        queryWrapper.eq(query.getAttrType() != null, PmsAttr::getAttrType, query.getAttrType());
         queryWrapper.like(StringUtils.hasText(query.getAttrName()), PmsAttr::getAttrName, query.getAttrName());
         queryWrapper.like(StringUtils.hasText(query.getAttrValue()), PmsAttr::getAttrValue, query.getAttrValue());
 
