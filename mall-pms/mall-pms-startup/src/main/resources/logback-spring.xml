@@ -41,7 +41,7 @@
     </appender>
 
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>192.168.3.29:4560</destination>
+        <destination>yunze.com:4560</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"platform": "mall", "app_name": "mall-pms"}</customFields>
         </encoder>

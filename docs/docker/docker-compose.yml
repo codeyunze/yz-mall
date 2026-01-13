@@ -1,0 +1,230 @@
+networks:
+  mall:
+    driver: bridge
+
+services:
+  redis:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis:7.4.5
+    container_name: 'dev-redis-7.4.5'
+    command: redis-server --requirepass "12345678"
+    volumes:
+      - /etc/localtime:/etc/localtime
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+    networks:
+      - mall
+
+  elasticsearch:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/elasticsearch:8.19.0
+    container_name: 'dev-elasticsearch-8.19.0'
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m -Duser.timezone=Asia/Shanghai
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    # 可选：设置重启策略（除非手动停止，否则在容器意外退出时都会自动重启）
+    restart: unless-stopped
+    mem_limit: 1536m
+    restart: unless-stopped
+    networks:
+      - mall
+
+  kibana:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/kibana:8.19.0
+    container_name: 'dev-kibana-8.19.0'
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '5601:5601'
+    depends_on:
+      - elasticsearch
+    mem_limit: 1536m
+    restart: unless-stopped
+    networks:
+      - mall
+
+  logstash:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/logstash:8.19.0
+    container_name: 'dev-logstash-8.19.0'
+    ports:
+      - '4560:4560'
+    environment:
+      - LS_JAVA_OPTS=-Xmx512m -Xms256m
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./logstash/mall-elk.conf:/usr/share/logstash/config/mall-elk.conf
+      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /etc/localtime:/etc/localtime:ro
+    entrypoint:
+      - logstash
+      - -f
+      - /usr/share/logstash/config/mall-elk.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "30m"
+        max-file: "3"
+    restart: unless-stopped
+    networks:
+      - mall
+
+  nacos:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/nacos-server:v2.5.1
+    container_name: 'dev-nacos-2.5.1'
+    volumes:
+      - ./nacos/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - '8848:8848'
+      - '9848:9848'
+      - '9849:9849'
+    env_file:
+      - ./nacos/config.env
+    restart: unless-stopped
+    networks:
+      - mall
+  
+  namesrv:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
+    container_name: dev-rocketmq-namesrv-5.3.3
+    ports:
+      - "9876:9876"
+    command: "sh mqnamesrv"
+    restart: unless-stopped
+    networks:
+      - mall
+  
+  broker:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
+    container_name: dev-rocketmq-broker-5.3.3
+    volumes:
+      - ./rocketmq/broker.conf:/home/rocketmq/rocketmq-5.3.3/conf/broker.conf
+    ports:
+      - "10911:10911"
+      - "10909:10909"
+    depends_on:
+      - namesrv
+    command: "sh mqbroker -n namesrv:9876 -c /home/rocketmq/rocketmq-5.3.3/conf/broker.conf"
+    restart: unless-stopped
+    networks:
+      - mall
+  
+  rocketmq-dashboard:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq-dashboard:2.1.0
+    container_name: dev-rocketmq-dashboard-2.1
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876
+    ports:
+      - "8082:8082"
+    restart: unless-stopped
+    networks:
+      - mall
+
+  prometheus:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/prometheus:v3.7.3
+    container_name: 'dev-prometheus-3.7.3'
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '9090:9090'
+    restart: unless-stopped
+    networks:
+      - mall
+
+  grafana:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/grafana:12.2
+    container_name: 'dev-grafana-12.2'
+    volumes:
+      - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./grafana/config.monitoring
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - mall
+
+  xxl-job-admin:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/xxl-job-admin:3.1.1
+    container_name: 'dev-xxl-job-admin-3.1.1'
+    ports:
+      - "30009:8080"
+    environment:
+      PARAMS: >-
+        --spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+        --spring.datasource.username=xxl_job_dev
+        --spring.datasource.password=123456
+        --xxl.job.accessToken=123456789
+    restart: unless-stopped
+    networks:
+      - mall
+
+  seata-server:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/seata-server:1.6.1
+    container_name: 'dev-seata-server-1.6.1'
+    ports:
+      - "7091:7091"
+      - "8091:8091"
+    environment:
+      - SEATA_IP=192.168.3.237
+      - SEATA_PORT=8091
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./seata/application.yml/:/seata-server/resources/application.yml
+    depends_on:
+      - nacos
+    restart: unless-stopped
+    networks:
+      - mall
+
+  redis-exporter:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis_exporter:v1.64.1
+    container_name: 'dev-redis-exporter-1.64.1'
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+      - REDIS_PASSWORD=123456
+    volumes:
+      - /etc/localtime:/etc/localtime
+    ports:
+      - '9121:9121'
+    restart: unless-stopped
+    networks:
+      - mall
+
+  mysqld-exporter:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/mysqld-exporter:v0.15.1
+    container_name: 'dev-mysqld-exporter-0.15.1'
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./exporter/mysql/my.cnf:/etc/mysql/my.cnf
+    command: --config.my-cnf=/etc/mysql/my.cnf
+    ports:
+      - '9104:9104'
+    restart: unless-stopped
+    networks:
+      - mall
+      
+  node-exporter:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/node-exporter:v1.10.2
+    container_name: 'dev-node-exporter-1.10.2'
+    hostname: node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+    networks:
+      - mall

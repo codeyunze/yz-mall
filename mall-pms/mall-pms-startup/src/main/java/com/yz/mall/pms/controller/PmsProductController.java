@@ -76,7 +76,7 @@ public class PmsProductController extends ApiController {
     /**
      * 删除
      *
-     * @param id 删除数据主键ID
+     * @param id 删除数据主键 ID
      */
     @SaCheckPermission("api:pms:product:edit")
     @DeleteMapping("delete/{id}")

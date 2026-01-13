@@ -86,7 +86,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean removeCartByProductIds(Long userId, List<ExtendPmsStockDto> products) {
-        Map<Long, ExtendPmsStockDto> productMap = products.stream().collect(Collectors.toMap(ExtendPmsStockDto::getProductId, item -> item));
+        Map<Long, ExtendPmsStockDto> productMap = products.stream().collect(Collectors.toMap(ExtendPmsStockDto::getSkuId, item -> item));
 
         LambdaQueryWrapper<PmsShopCart> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PmsShopCart::getUserId, userId);

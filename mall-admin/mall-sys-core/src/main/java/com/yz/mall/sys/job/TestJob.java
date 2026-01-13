@@ -2,6 +2,7 @@ package com.yz.mall.sys.job;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @author yunze
  * @since 2025/11/16 17:57
  */
+@Slf4j
 @Component
 public class TestJob {
 
@@ -27,10 +29,10 @@ public class TestJob {
     }
 
     public void init() {
-        XxlJobHelper.log("printJobHandler 定时任务 init 初始化");
+        log.info("printJobHandler 定时任务 init 初始化");
     }
 
     public void destroy() {
-        XxlJobHelper.log("printJobHandler 定时任务 destroy 销毁");
+        log.info("printJobHandler 执行任务线程销毁");
     }
 }

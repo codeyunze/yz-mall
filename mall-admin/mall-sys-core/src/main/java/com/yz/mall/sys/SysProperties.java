@@ -22,4 +22,33 @@ public class SysProperties {
      * 超级管理员角色
      */
     private String superAdminRoleId = "1858098107289014272";
+
+    /**
+     * Caffeine缓存配置
+     */
+    private CaffeineCache caffeineCache = new CaffeineCache();
+
+    @Data
+    public static class CaffeineCache {
+        /**
+         * 是否启用 Caffeine 本地缓存，默认为 true。
+         * 启用为 true，禁用为 false
+         */
+        private Boolean enable = true;
+
+        /**
+         * 最大缓存数量
+         */
+        private Long maximumSize = 10000L;
+
+        /**
+         * 写入后过期时间（秒）
+         */
+        private Long expireAfterWrite = 3600L;
+
+        /**
+         * 访问后过期时间（秒），如果为0则不启用
+         */
+        private Long expireAfterAccess = 0L;
+    }
 }

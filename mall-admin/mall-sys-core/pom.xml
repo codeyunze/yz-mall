@@ -27,6 +27,12 @@
 
         <dependency>
             <groupId>com.yz</groupId>
+            <artifactId>mall-rocketmq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
             <artifactId>mall-auth-interface</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -64,6 +70,23 @@
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Caffeine 本地缓存 -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.codeyunze</groupId>
+            <artifactId>qof-core</artifactId>
         </dependency>
     </dependencies>
 </project>

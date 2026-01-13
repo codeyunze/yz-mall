@@ -20,6 +20,7 @@
         <module>mall-base</module>
         <module>mall-redis</module>
         <module>mall-web</module>
+        <module>mall-rocketmq</module>
     </modules>
 
     <properties>

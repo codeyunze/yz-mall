@@ -39,12 +39,23 @@ public class PmsProductSlimVo {
      */
     private String albumPics;
 
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
+
+    /**
+     * 商品分类名称
+     */
+    private String categoryName;
+
     public PmsProductSlimVo(PmsProduct bo) {
         this.id = bo.getId();
         this.productName = bo.getProductName();
         this.productPrice = bo.getProductPrice();
         this.titles = bo.getTitles();
         this.albumPics = bo.getAlbumPics();
+        this.categoryId = bo.getCategoryId();
     }
 
     public PmsProductSlimVo() {}

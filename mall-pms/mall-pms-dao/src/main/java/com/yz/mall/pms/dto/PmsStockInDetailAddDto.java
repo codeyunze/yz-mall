@@ -20,8 +20,13 @@ public class PmsStockInDetailAddDto implements Serializable {
     /**
      * 关联商品Id
      */
-    @NotNull(message = "关联商品Id不能为空")
     private Long productId;
+
+    /**
+     * 关联SKU Id
+     */
+    @NotNull(message = "关联SKU Id不能为空")
+    private Long skuId;
 
     /**
      * 本次入库数量
@@ -39,8 +44,9 @@ public class PmsStockInDetailAddDto implements Serializable {
     @Length(max = 255, message = "商品入库备注说明不能超过255个字符")
     private String remark;
 
-    public PmsStockInDetailAddDto(Long productId, Integer quantity, String remark) {
+    public PmsStockInDetailAddDto(Long productId, Long skuId, Integer quantity, String remark) {
         this.productId = productId;
+        this.skuId = skuId;
         this.quantity = quantity;
         this.remark = remark;
     }

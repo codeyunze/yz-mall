@@ -50,6 +50,11 @@ public class PmsStockOutDetail extends Model<PmsStockOutDetail> {
     private Long productId;
 
     /**
+     * 关联SKU Id
+     */
+    private Long skuId;
+
+    /**
      * 出库编号
      */
     private String stockOutCode;

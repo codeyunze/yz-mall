@@ -50,6 +50,11 @@ public class PmsStockInDetail extends Model<PmsStockInDetail> {
     private Long productId;
 
     /**
+     * 关联SKU Id
+     */
+    private Long skuId;
+
+    /**
      * 入库编号
      */
     private String stockInCode;

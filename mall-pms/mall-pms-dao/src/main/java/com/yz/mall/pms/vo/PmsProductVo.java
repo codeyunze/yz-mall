@@ -76,5 +76,10 @@ public class PmsProductVo implements Serializable {
      * 商品剩余库存数量
      */
     private Integer quantity;
+
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
 }
 

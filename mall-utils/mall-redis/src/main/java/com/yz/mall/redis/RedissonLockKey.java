@@ -9,22 +9,47 @@ package com.yz.mall.redis;
 public class RedissonLockKey {
 
     /**
-     * 获取唯一序列号生成锁的key
+     * 获取唯一序列号生成锁的 key
      *
      * @param prefix 序列号前缀
-     * @return 序列号锁的key
+     * @return 序列号锁的 key
      */
     public static String keyUnqid(String prefix) {
         return "lock:unqid:" + prefix;
     }
 
     /**
-     * 刷新权限缓存锁的key
+     * 刷新权限缓存锁的 key
      *
-     * @return 权限缓存数据更新锁的key
+     * @return 权限缓存数据更新锁的 key
      */
     public static String keyRefreshPermission() {
         return "lock:permission:button-and-api";
+    }
+
+    /**
+     * 更新字典缓存锁的 ancestorKey
+     * @param ancestorKey 顶层字典键
+     */
+    public static String keyUpdateDic(String ancestorKey) {
+        return "lock:dictionary:" + ancestorKey;
+    }
+
+    /**
+     * 消息重试锁的 key
+     * @param msgRetryId 消息重试记录ID
+     * @return 消息重试锁的 key
+     */
+    public static String keyMsgRetry(Long msgRetryId) {
+        return "lock:msg:retry:" + msgRetryId;
+    }
+
+    /**
+     * 消息重试定时任务锁的 key
+     * @return 消息重试定时任务锁的 key
+     */
+    public static String keyMsgRetryScheduler() {
+        return "lock:msg:retry:scheduler";
     }
 
 }

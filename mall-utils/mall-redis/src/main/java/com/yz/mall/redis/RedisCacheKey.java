@@ -1,7 +1,7 @@
 package com.yz.mall.redis;
 
 /**
- * 缓存信息Key值同一管理
+ * 缓存信息 Key 值同一管理
  *
  * @author yunze
  * @date 2024/7/11 13:00
@@ -9,10 +9,10 @@ package com.yz.mall.redis;
 public class RedisCacheKey {
 
     /**
-     * 获取序列号信息的key
+     * 获取序列号信息的 key
      *
      * @param prefix 序列号前缀
-     * @return 序列号信息的key
+     * @return 序列号信息的 key
      */
     public static String objUnqid(String prefix) {
         return "obj:unqid:" + prefix;
@@ -27,10 +27,10 @@ public class RedisCacheKey {
 
 
     /**
-     * 权限信息缓存key
+     * 权限信息缓存 key
      *
      * @param menuTypeKey 菜单类型 (button或api)
-     * @param roleId      角色Id
+     * @param roleId      角色 Id
      */
     public static String permission(String menuTypeKey, String roleId) {
         return "permission:" + menuTypeKey.toLowerCase() + "-by-role:" + roleId;
@@ -47,9 +47,17 @@ public class RedisCacheKey {
 
     /**
      * 重复提交校验缓存
-     * @param key 校验key
+     * @param key 校验 key
      */
     public static String repeatSubmit(String key) {
         return "system:repeat-submit:" + key;
+    }
+
+    /**
+     * 数据字典缓存
+     * @param key 数据字典 key
+     */
+    public static String dictionary(String key) {
+        return "system:dictionary:" + key;
     }
 }

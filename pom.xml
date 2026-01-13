@@ -37,11 +37,12 @@
         <sa-token.version>1.43.0</sa-token.version>
         <xxl-job.version>3.1.1</xxl-job.version>
         <jackson.version>2.19.2</jackson.version>
-<!--        <qof.version>0.0.6</qof.version>-->
+        <qof.version>17.0.4-SNAPSHOT</qof.version>
         <logback.version>1.5.18</logback.version>
         <resilience4j.version>2.2.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
         <prometheus.version>1.11.5</prometheus.version>
+        <caffeine.version>3.1.8</caffeine.version>
     </properties>
 
     <dependencies>
@@ -151,11 +152,11 @@
             </dependency>
 
             <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc -->
-            <!--<dependency>
+            <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+                <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
-            </dependency>-->
+            </dependency>
 
             <dependency>
                 <groupId>cn.dev33</groupId>
@@ -220,17 +221,23 @@
                 <version>${logstash-logback.version}</version>
             </dependency>
 
-            <!--<dependency>
+            <dependency>
                 <groupId>io.github.codeyunze</groupId>
-                <artifactId>qof-core-slim</artifactId>
+                <artifactId>qof-core</artifactId>
                 <version>${qof.version}</version>
-            </dependency>-->
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.codeyunze</groupId>
+                <artifactId>qof-web</artifactId>
+                <version>${qof.version}</version>
+            </dependency>
 
 
             <dependency>
                 <groupId>org.junit.vintage</groupId>
                 <artifactId>junit-vintage-engine</artifactId>
-                <version>5.7.0</version>
+                <version>5.13.4</version>
             </dependency>
 
             <dependency>
@@ -239,6 +246,37 @@
                 <version>1.12.2</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-engine</artifactId>
+                <version>1.12.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-commons</artifactId>
+                <version>1.12.2</version>
+            </dependency>
+
+            <!-- Caffeine 本地缓存 -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>2.3.4</version>
+            </dependency>
+
+            <!-- RocketMQ Client 版本管理，确保与 rocketmq-spring-boot-starter 2.3.4 兼容 -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>5.3.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
