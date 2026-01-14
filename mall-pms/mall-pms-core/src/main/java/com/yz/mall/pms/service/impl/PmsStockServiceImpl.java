@@ -1,5 +1,6 @@
 package com.yz.mall.pms.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -185,8 +186,10 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
             stock = new PmsStock();
             stock.setSkuId(addStock.getSkuId());
             stock.setQuantity(addStock.getQuantity());
+            stock.setCreateId(StpUtil.getLoginIdAsLong());
         } else {
             stock.setQuantity(stock.getQuantity() + addStock.getQuantity());
+            stock.setUpdateId(StpUtil.getLoginIdAsLong());
         }
         if (!super.saveOrUpdate(stock)) {
             return false;

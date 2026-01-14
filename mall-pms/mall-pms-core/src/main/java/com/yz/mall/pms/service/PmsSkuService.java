@@ -42,7 +42,7 @@ public interface PmsSkuService extends IService<PmsSku> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<PmsSku> page(PageFilter<PmsSkuQueryDto> filter);
+    Page<PmsSkuVo> page(PageFilter<PmsSkuQueryDto> filter);
 
     /**
      * 详情查询

@@ -30,6 +30,11 @@ public class PmsSkuVo implements Serializable {
     private Long productId;
 
     /**
+     * 商品名称
+     */
+    private String productName;
+
+    /**
      * SKU编码(商品编码)，唯一
      */
     private String skuCode;
