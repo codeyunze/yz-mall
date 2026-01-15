@@ -35,6 +35,11 @@ public class AuthLoginDto implements Serializable {
     private String captcha;
 
     /**
+     * 验证码ID
+     */
+    private String captchaId;
+
+    /**
      * 登录类型
      */
     @SpecifiedRange(allowed = {"1", "2"}, message = "未知的登录类型")
