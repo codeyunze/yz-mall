@@ -84,7 +84,7 @@ public class AuthenticationController extends ApiController {
             
             // 将验证码存储到Redis，有效期5分钟
             String cacheKey = RedisCacheKey.captcha(captchaId);
-            defaultRedisTemplate.opsForValue().set(cacheKey, captchaResult.getCode(), 5, TimeUnit.MINUTES);
+            defaultRedisTemplate.opsForValue().set(cacheKey, captchaResult.getCode(), 3, TimeUnit.MINUTES);
             
             // 将图片转换为Base64
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
