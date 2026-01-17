@@ -15,9 +15,9 @@ import java.util.List;
 public interface PmsProductQueryService extends IService<PmsProduct> {
 
     /**
-     * 根据商品Id查询对应的商品信息
+     * 根据商品 Id查询对应的商品信息
      *
-     * @param productIds 商品Id
+     * @param productIds 商品 Id
      * @return 商品信息
      */
     List<PmsProductSlimVo> getProductByProductIds(List<Long> productIds);

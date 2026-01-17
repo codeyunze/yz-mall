@@ -1,5 +1,6 @@
 package com.yz.mall.demo.rkmq;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -10,6 +11,7 @@ import org.apache.rocketmq.remoting.common.RemotingHelper;
  * @author yunze
  * @since 2025/9/7 16:53
  */
+@Slf4j
 public class Producer {
     public static void main(String[] args) throws MQClientException, InterruptedException {
         // 初始化一个消息生产者
@@ -26,7 +28,7 @@ public class Producer {
                 SendResult sendResult = producer.send(msg);
                 System.out.printf("%s%n", sendResult);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("发送消息失败", e);
                 Thread.sleep(1000);
             }
         }

@@ -66,7 +66,7 @@ public class MallData {
                         // 没有变更，休息一会（根据实际业务情况定）
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("线程中断异常", e);
                     }
                 } else {
                     // 处理数据
@@ -75,7 +75,7 @@ public class MallData {
                         // 提交确认
                         connector.ack(batchId);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("处理数据失败", e);
                         // 处理失败, 回滚数据
                         connector.rollback(batchId);
                     }
