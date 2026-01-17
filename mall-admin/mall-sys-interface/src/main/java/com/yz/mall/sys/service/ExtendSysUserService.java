@@ -1,11 +1,15 @@
 package com.yz.mall.sys.service;
 
+import com.yz.mall.base.IdsDto;
 import com.yz.mall.sys.dto.ExtendSysUserAddDto;
 import com.yz.mall.sys.vo.ExtendLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendSysUserSlimVo;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 内部开放接口: 系统管理-用户信息
@@ -54,4 +58,12 @@ public interface ExtendSysUserService {
      * @return 主键Id
      */
     Long add(@Valid ExtendSysUserAddDto dto);
+
+    /**
+     * 获取用户基础信息
+     *
+     * @param idsDto 用户 Id列表
+     * @return 用户信息
+     */
+    Map<Long, ExtendSysUserSlimVo> getUserSlimByIds(@NotNull IdsDto<Long> idsDto);
 }

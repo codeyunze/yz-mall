@@ -1,5 +1,6 @@
 package com.yz.mall.pms.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
@@ -61,6 +62,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
         bo.setId(IdUtil.getSnowflakeNextId());
         String prefix = "CK" + LocalDateTimeUtil.format(LocalDate.now(), DatePattern.PURE_DATE_PATTERN);
         bo.setStockOutCode(extendSerialService.generateNumber(prefix, 6));
+        bo.setCreateId(StpUtil.getLoginIdAsLong());
         baseMapper.insert(bo);
         return bo.getId();
     }
@@ -71,6 +73,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
         String prefix = "CK" + LocalDateTimeUtil.format(LocalDate.now(), DatePattern.PURE_DATE_PATTERN);
         String stockOutCode = extendSerialService.generateNumber(prefix, 6);
         List<PmsStockOutDetail> outDetailList = new ArrayList<>();
+        Long createId = StpUtil.getLoginIdAsLong();
         outDetails.forEach(out -> {
             PmsStockOutDetail bo = new PmsStockOutDetail();
             bo.setId(IdUtil.getSnowflakeNextId());
@@ -78,6 +81,7 @@ public class PmsStockOutDetailServiceImpl extends ServiceImpl<PmsStockOutDetailM
             bo.setSkuId(out.getSkuId());
             bo.setQuantity(out.getQuantity());
             bo.setOrderId(out.getOrderId());
+            bo.setCreateId(createId);
             // 根据 skuId 获取 productId
             Long productId = out.getProductId();
             if (productId == null && out.getSkuId() != null) {

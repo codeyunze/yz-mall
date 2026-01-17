@@ -25,6 +25,11 @@ public class PmsStockOutDetailVo implements Serializable {
     private Long id;
 
     /**
+     * 创建人
+     */
+    private Long createId;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)

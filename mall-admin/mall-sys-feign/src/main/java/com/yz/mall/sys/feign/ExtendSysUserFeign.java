@@ -1,11 +1,13 @@
 package com.yz.mall.sys.feign;
 
+import com.yz.mall.base.IdsDto;
 import com.yz.mall.base.Result;
 import com.yz.mall.sys.dto.ExtendLoginInfoDto;
 import com.yz.mall.sys.dto.ExtendSysUserAddDto;
 import com.yz.mall.sys.dto.ExtendSysUserBalanceDto;
 import com.yz.mall.sys.dto.ExtendSysUserCheckLoginDto;
 import com.yz.mall.sys.vo.ExtendLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendSysUserSlimVo;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 内部暴露接口: 用户信息
@@ -68,4 +71,13 @@ public interface ExtendSysUserFeign {
      */
     @GetMapping("getUserInfo/{id}")
     Result<ExtendLoginInfoVo> getUserInfo(@PathVariable Long id);
+
+    /**
+     * 获取用户基础信息
+     *
+     * @param idsDto 用户 Id
+     * @return 用户信息
+     */
+    @PostMapping("getUserSlimByIds")
+    Result<Map<Long, ExtendSysUserSlimVo>> getUserSlimByIds(@RequestBody IdsDto<Long> idsDto);
 }
