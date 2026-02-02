@@ -35,10 +35,10 @@ public interface ExtendPmsStockService {
     Boolean add(ExtendPmsStockDto dto);
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      *
-     * @param productId 商品id
-     * @return 商品剩余库存
+     * @param skuId SKU id
+     * @return SKU剩余库存
      */
-    Integer getStockByProductId(Long productId);
+    Integer getStockBySkuId(Long skuId);
 }

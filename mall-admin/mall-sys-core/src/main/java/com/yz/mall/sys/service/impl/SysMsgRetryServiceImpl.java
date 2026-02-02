@@ -3,6 +3,8 @@ package com.yz.mall.sys.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yz.mall.base.exception.BusinessException;
@@ -10,6 +12,7 @@ import com.yz.mall.json.JacksonUtil;
 import com.yz.mall.redis.RedissonLockKey;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.dto.MsgRetryRecordDto;
+import com.yz.mall.sys.dto.SysMsgRetryQueryDto;
 import com.yz.mall.sys.entity.SysMsgRetry;
 import com.yz.mall.sys.enums.MsgRetryStatusEnum;
 import com.yz.mall.sys.mapper.SysMsgRetryMapper;
@@ -258,6 +261,7 @@ public class SysMsgRetryServiceImpl extends ServiceImpl<SysMsgRetryMapper, SysMs
         if (exception == null) {
             return null;
         }
+        log.error("获取异常信息", exception);
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         exception.printStackTrace(pw);
@@ -274,6 +278,39 @@ public class SysMsgRetryServiceImpl extends ServiceImpl<SysMsgRetryMapper, SysMs
         } catch (UnknownHostException e) {
             return "unknown";
         }
+    }
+
+    @Override
+    public IPage<SysMsgRetry> page(long current, long size, SysMsgRetryQueryDto queryDto) {
+        Page<SysMsgRetry> page = new Page<>(current, size);
+        LambdaQueryWrapper<SysMsgRetry> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 消息ID
+        queryWrapper.eq(queryDto.getMsgId() != null && !queryDto.getMsgId().trim().isEmpty(), SysMsgRetry::getMsgId, queryDto.getMsgId());
+
+        // 业务数据ID
+        queryWrapper.eq(queryDto.getBusinessId() != null && !queryDto.getBusinessId().trim().isEmpty(), SysMsgRetry::getBusinessId, queryDto.getBusinessId());
+
+        // Topic
+        queryWrapper.like(queryDto.getTopic() != null && !queryDto.getTopic().trim().isEmpty(), SysMsgRetry::getTopic, queryDto.getTopic());
+
+        // 消息标签
+        queryWrapper.like(queryDto.getTags() != null && !queryDto.getTags().trim().isEmpty(), SysMsgRetry::getTags, queryDto.getTags());
+
+        // 消费者组
+        queryWrapper.eq(queryDto.getConsumerGroup() != null && !queryDto.getConsumerGroup().trim().isEmpty(), SysMsgRetry::getConsumerGroup, queryDto.getConsumerGroup());
+
+        // 状态
+        queryWrapper.eq(queryDto.getStatus() != null, SysMsgRetry::getStatus, queryDto.getStatus());
+
+        // 创建时间范围
+        queryWrapper.ge(queryDto.getCreateTimeStart() != null, SysMsgRetry::getCreateTime, queryDto.getCreateTimeStart());
+        queryWrapper.le(queryDto.getCreateTimeEnd() != null, SysMsgRetry::getCreateTime, queryDto.getCreateTimeEnd());
+
+        // 按创建时间倒序
+        queryWrapper.orderByDesc(SysMsgRetry::getCreateTime);
+
+        return baseMapper.selectPage(page, queryWrapper);
     }
 }
 

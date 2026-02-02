@@ -16,6 +16,11 @@ public class PmsCategoryQueryDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 分类ID
+     */
+    private Long id;
+
+    /**
      * 父分类ID，0表示顶级分类
      */
     private Long parentId;

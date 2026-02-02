@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
+ * 请求头拦截器，补充全局Id、客户端IP等信息
+ *
  * @author yunze
  * @since 2025/11/7 12:22
  */

@@ -1,9 +1,12 @@
 package com.yz.base;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author yunze
  * @since 2025/10/9 00:18
  */
+@Slf4j
 public class VolatileExample1 {
     // 这里我们先不加 volatile 关键字
     private static volatile boolean flag = false;
@@ -14,7 +17,7 @@ public class VolatileExample1 {
             try {
                 Thread.sleep(2000); // 让主线程先跑起来
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("线程中断异常", e);
             }
             flag = true; // 修改 flag 为 true
             System.out.println("Thread A: flag has been set to true");

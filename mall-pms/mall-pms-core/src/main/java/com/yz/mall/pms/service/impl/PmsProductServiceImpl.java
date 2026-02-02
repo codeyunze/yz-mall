@@ -15,8 +15,10 @@ import com.yz.mall.pms.entity.PmsProduct;
 import com.yz.mall.pms.enums.ProductVerifyStatusEnum;
 import com.yz.mall.pms.mapper.PmsProductMapper;
 import com.yz.mall.pms.service.PmsProductService;
+import com.yz.mall.pms.service.PmsSkuService;
 import com.yz.mall.pms.service.PmsStockService;
 import com.yz.mall.pms.vo.PmsProductDisplayInfoVo;
+import com.yz.mall.pms.vo.PmsSkuVo;
 import com.yz.mall.pms.vo.PmsProductVo;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.service.ExtendSysFilesService;
@@ -30,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 商品表(PmsProduct)表服务实现类
@@ -42,14 +45,18 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     private final PmsStockService stockService;
 
+    private final PmsSkuService skuService;
+
     private final ExtendSysPendingTasksService extendSysPendingTasksService;
 
     private final ExtendSysFilesService extendSysFilesService;
 
     public PmsProductServiceImpl(PmsStockService stockService
+            , PmsSkuService skuService
             , ExtendSysPendingTasksService extendSysPendingTasksService
             , ExtendSysFilesService extendSysFilesService) {
         this.stockService = stockService;
+        this.skuService = skuService;
         this.extendSysPendingTasksService = extendSysPendingTasksService;
         this.extendSysFilesService = extendSysFilesService;
     }
@@ -82,6 +89,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         int updated = baseMapper.updateById(product);
         // int updated = -1;
         ExtendSysPendingTasksAddDto tasksAddDto = new ExtendSysPendingTasksAddDto();
+        tasksAddDto.setBusinessId(String.valueOf(id));
         tasksAddDto.setTaskCode("PMS:PRODUCT:PUBLISH");
         tasksAddDto.setTaskNode("待审核");
         tasksAddDto.setTaskTitle(product.getTitles() + "上架审核");
@@ -111,6 +119,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         queryWrapper.like(StringUtils.hasText(query.getTitles()), PmsProduct::getTitles, query.getTitles());
         queryWrapper.eq(query.getVerifyStatus() != null, PmsProduct::getVerifyStatus, query.getVerifyStatus());
         queryWrapper.eq(query.getPublishStatus() != null, PmsProduct::getPublishStatus, query.getPublishStatus());
+        queryWrapper.eq(query.getCategoryId() != null, PmsProduct::getCategoryId, query.getCategoryId());
 
         queryWrapper.orderByDesc(PmsProduct::getId);
         return baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
@@ -123,7 +132,16 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         PmsProductVo product = new PmsProductVo();
         BeanUtils.copyProperties(bo, product);
 
-        product.setQuantity(stockService.getStockByProductId(id));
+        // 根据 productId 查询对应的 SKU 列表，然后汇总库存
+        List<PmsSkuVo> skuList = skuService.listByProductId(id);
+        if (!CollectionUtils.isEmpty(skuList)) {
+            List<Long> skuIds = skuList.stream().map(PmsSkuVo::getId).collect(java.util.stream.Collectors.toList());
+            Map<Long, Integer> stockMap = stockService.getStockBySkuIds(skuIds);
+            int totalStock = stockMap.values().stream().mapToInt(Integer::intValue).sum();
+            product.setQuantity(totalStock);
+        } else {
+            product.setQuantity(0);
+        }
         return product;
     }
 
@@ -191,8 +209,19 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         // 查询图片的访问信息
         // List<InternalQofFileInfoVo> qofFileInfoVos = internalSysFilesService.getFileInfoByFileIdsAndPublic(imageIds);
 
-        // 获取指定商品的库存数量
-        Map<Long, Integer> stockByProductId = stockService.getStockByProductIds(ids);
+        // 获取指定商品的库存数量（根据 productId 查询对应的 SKU 列表，然后汇总库存）
+        Map<Long, Integer> stockByProductId = new HashMap<>();
+        for (Long productId : ids) {
+            List<PmsSkuVo> skuList = skuService.listByProductId(productId);
+            if (!CollectionUtils.isEmpty(skuList)) {
+                List<Long> skuIds = skuList.stream().map(PmsSkuVo::getId).collect(Collectors.toList());
+                Map<Long, Integer> stockMap = stockService.getStockBySkuIds(skuIds);
+                int totalStock = stockMap.values().stream().mapToInt(Integer::intValue).sum();
+                stockByProductId.put(productId, totalStock);
+            } else {
+                stockByProductId.put(productId, 0);
+            }
+        }
         Map<Long, PmsProductDisplayInfoVo> map = new HashMap<>();
         products.forEach(product -> {
             PmsProductDisplayInfoVo vo = new PmsProductDisplayInfoVo();

@@ -35,7 +35,7 @@ public class SaTokenConfigure {
                 // 指定 [拦截路由]
                 .addInclude("/**")    /* 拦截所有path */
                 // 指定 [放行路由]
-                .addExclude("/authentication/login", "/authentication/logout")
+                .addExclude("/authentication/login", "/authentication/logout", "/authentication/captcha")
                 // 指定[认证函数]: 每次请求执行
                 .setAuth(obj -> {
                     SaRouter.match("/**", StpUtil::checkLogin);

@@ -48,5 +48,10 @@ public class PmsProductUpdateDto implements Serializable {
      */
     private String albumPics;
 
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
+
 }
 

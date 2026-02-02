@@ -10,6 +10,7 @@ import cn.hutool.crypto.digest.BCrypt;
 import com.yz.mall.auth.dto.*;
 import com.yz.mall.auth.service.AuthSysUserService;
 import com.yz.mall.auth.service.AuthenticationService;
+import com.yz.mall.auth.utils.CaptchaUtil;
 import com.yz.mall.auth.utils.LoginLogUtil;
 import com.yz.mall.auth.vo.AuthUserInfoVo;
 import com.yz.mall.auth.vo.AuthUserIntegratedInfoDto;
@@ -30,7 +31,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 身份认证接口
@@ -59,6 +67,40 @@ public class AuthenticationController extends ApiController {
         this.authSysUserService = authSysUserService;
         this.authenticationService = authenticationService;
         this.sysLoginLogMapper = sysLoginLogMapper;
+    }
+
+    /**
+     * 生成验证码
+     */
+    @SaIgnore
+    @GetMapping("captcha")
+    public Result<Map<String, String>> generateCaptcha() {
+        try {
+            // 生成验证码
+            CaptchaUtil.CaptchaResult captchaResult = CaptchaUtil.generateCaptcha();
+            
+            // 生成验证码 ID
+            String captchaId = IdUtil.simpleUUID();
+            
+            // 将验证码存储到Redis，有效期5分钟
+            String cacheKey = RedisCacheKey.captcha(captchaId);
+            defaultRedisTemplate.opsForValue().set(cacheKey, captchaResult.getCode(), 3, TimeUnit.MINUTES);
+            
+            // 将图片转换为Base64
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(captchaResult.getImage(), "png", baos);
+            byte[] imageBytes = baos.toByteArray();
+            String imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
+            
+            Map<String, String> result = new HashMap<>();
+            result.put("captchaId", captchaId);
+            result.put("image", "data:image/png;base64," + imageBase64);
+            
+            return success(result);
+        } catch (IOException e) {
+            log.error("生成验证码失败", e);
+            return new Result<>(CodeEnum.BUSINESS_ERROR.get(), null, "生成验证码失败");
+        }
     }
 
     /**
@@ -93,6 +135,27 @@ public class AuthenticationController extends ApiController {
         }
 
         try {
+            // 验证验证码
+            if (StringUtils.hasText(loginDto.getCaptcha()) && StringUtils.hasText(loginDto.getCaptchaId())) {
+                String cacheKey = RedisCacheKey.captcha(loginDto.getCaptchaId());
+                Object cachedCode = defaultRedisTemplate.opsForValue().get(cacheKey);
+                log.info("验证码验证 - captchaId: {}, 输入的验证码: {}, Redis中的验证码: {}", 
+                    loginDto.getCaptchaId(), loginDto.getCaptcha(), cachedCode);
+                if (cachedCode == null || !cachedCode.toString().equalsIgnoreCase(loginDto.getCaptcha())) {
+                    log.warn("验证码验证失败 - captchaId: {}, 输入的验证码: {}, Redis中的验证码: {}", 
+                        loginDto.getCaptchaId(), loginDto.getCaptcha(), cachedCode);
+                    // 记录登录失败日志
+                    recordLoginLog(0L, username, loginIp, loginLocation, os, browser, 0, loginType);
+                    return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "验证码错误");
+                }
+                log.info("验证码验证成功 - captchaId: {}", loginDto.getCaptchaId());
+                // 验证成功后删除验证码
+                defaultRedisTemplate.delete(cacheKey);
+            } else {
+                log.warn("验证码参数不完整 - captcha: {}, captchaId: {}", 
+                    loginDto.getCaptcha(), loginDto.getCaptchaId());
+            }
+
             AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new AuthSysUserCheckLoginDto(loginDto.getAccount(), loginDto.getPassword()));
             if (loginInfo == null) {
                 // 记录登录失败日志

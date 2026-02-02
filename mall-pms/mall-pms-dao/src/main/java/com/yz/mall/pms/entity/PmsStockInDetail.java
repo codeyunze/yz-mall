@@ -25,6 +25,11 @@ public class PmsStockInDetail extends Model<PmsStockInDetail> {
     private Long id;
 
     /**
+     * 创建人
+     */
+    private Long createId;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
@@ -48,6 +53,11 @@ public class PmsStockInDetail extends Model<PmsStockInDetail> {
      * 关联商品Id
      */
     private Long productId;
+
+    /**
+     * 关联SKU Id
+     */
+    private Long skuId;
 
     /**
      * 入库编号

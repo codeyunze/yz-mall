@@ -60,4 +60,12 @@ public class RedisCacheKey {
     public static String dictionary(String key) {
         return "system:dictionary:" + key;
     }
+
+    /**
+     * 验证码缓存
+     * @param captchaId 验证码ID
+     */
+    public static String captcha(String captchaId) {
+        return "auth:captcha:" + captchaId;
+    }
 }

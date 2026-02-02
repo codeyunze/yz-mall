@@ -9,13 +9,13 @@
         order by pp.id desc
     </select>
 
-    <select id="selectStockByProductIds" resultType="com.yz.mall.pms.vo.PmsStockVo">
-        select ps.product_id, sum(ps.quantity) as quantity
+    <select id="selectStockBySkuIds" resultType="com.yz.mall.pms.vo.PmsStockVo">
+        select ps.sku_id, sum(ps.quantity) as quantity
         from pms_stock ps
-        where invalid = 0 and ps.product_id in
-        <foreach collection="productIds" item="productId" open="(" close=")" separator=",">
-            #{productId}
+        where invalid = 0 and ps.sku_id in
+        <foreach collection="skuIds" item="skuId" open="(" close=")" separator=",">
+            #{skuId}
         </foreach>
-        group by ps.product_id
+        group by ps.sku_id
     </select>
 </mapper>

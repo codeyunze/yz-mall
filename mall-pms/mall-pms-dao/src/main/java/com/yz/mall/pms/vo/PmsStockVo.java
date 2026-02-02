@@ -16,9 +16,9 @@ public class PmsStockVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 商品Id
+     * SKU Id
      */
-    private Long productId;
+    private Long skuId;
 
     /**
      * 商品库存数量

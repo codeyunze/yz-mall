@@ -131,7 +131,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             products.add(relationProduct);
 
             ExtendPmsStockDto stock = new ExtendPmsStockDto();
-            stock.setProductId(product.getProductId());
+            stock.setSkuId(product.getProductId());
             stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());
@@ -183,7 +183,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             products.add(relationProduct);
 
             ExtendPmsStockDto stock = new ExtendPmsStockDto();
-            stock.setProductId(product.getProductId());
+            stock.setSkuId(product.getProductId());
             stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());

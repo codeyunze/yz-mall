@@ -93,6 +93,11 @@ public class PmsProduct extends Model<PmsProduct> {
     private String albumPics;
 
     /**
+     * 商品分类ID
+     */
+    private Long categoryId;
+
+    /**
      * 获取主键值
      *
      * @return 主键值

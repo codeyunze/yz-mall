@@ -51,20 +51,20 @@ public interface PmsStockService extends IService<PmsStock> {
     Boolean add(ExtendPmsStockDto addStock);
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      *
-     * @param productId 商品id
-     * @return 商品剩余库存
+     * @param skuId SKU id
+     * @return SKU剩余库存
      */
-    Integer getStockByProductId(Long productId);
+    Integer getStockBySkuId(Long skuId);
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      *
-     * @param productIds 商品id
-     * @return 商品剩余库存
+     * @param skuIds SKU id
+     * @return SKU剩余库存
      */
-    Map<Long, Integer> getStockByProductIds(List<Long> productIds);
+    Map<Long, Integer> getStockBySkuIds(List<Long> skuIds);
 
 }
 
