@@ -5,6 +5,7 @@
 #   本地备份目录（可选）：BACKUP_ROOT，默认 ./backup_output
 #   SCP 目标：SCP_HOST, SCP_PORT(可选默认22), SCP_USER, SCP_REMOTE_DIR
 #   SSH 私钥：SCP_SSH_PRIVATE_KEY（能登录 SCP_USER@SCP_HOST 的私钥）
+#   阿里云镜像仓库（若镜像为私有）：ALIYUN_REGISTRY_USERNAME, ALIYUN_REGISTRY_PASSWORD
 
 name: MySQL Backup & SCP Upload
 
@@ -16,14 +17,16 @@ on:
 jobs:
   backup-and-upload:
     runs-on: ubuntu-latest
+    # 使用预先构建好的包含 mysql 客户端等依赖的镜像，加快执行速度
+    container:
+      image: registry.cn-guangzhou.aliyuncs.com/devyunze/mysql-operation:latest
+      # 如为私有仓库，需配置以下凭证（公有仓库可省略 credentials）
+      credentials:
+        username: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
+        password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install MySQL client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y default-mysql-client
 
       - name: Create backup directory
         run: mkdir -p "$BACKUP_ROOT"
@@ -72,6 +75,9 @@ jobs:
             echo "::error::未找到备份目录，请检查 BACKUP_ROOT 与 DB_NAME"
             exit 1
           fi
+
+          # 目标目录不存在时自动创建
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" "mkdir -p '${REMOTE_DIR}'"
 
           scp -i ~/.ssh/deploy_key -P "$SSH_PORT" -r "$LATEST" "${SSH_USER}@${SSH_HOST}:${REMOTE_DIR}/"
 
