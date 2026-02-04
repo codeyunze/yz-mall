@@ -261,6 +261,7 @@ public class SysMsgRetryServiceImpl extends ServiceImpl<SysMsgRetryMapper, SysMs
         if (exception == null) {
             return null;
         }
+        log.error("获取异常信息", exception);
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         exception.printStackTrace(pw);

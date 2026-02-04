@@ -67,8 +67,8 @@ public class PmsSkuController extends ApiController {
      */
     @SaCheckPermission("api:pms:sku:page")
     @PostMapping("page")
-    public Result<ResultTable<PmsSku>> page(@RequestBody @Valid PageFilter<PmsSkuQueryDto> filter) {
-        Page<PmsSku> page = this.service.page(filter);
+    public Result<ResultTable<PmsSkuVo>> page(@RequestBody @Valid PageFilter<PmsSkuQueryDto> filter) {
+        Page<PmsSkuVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 

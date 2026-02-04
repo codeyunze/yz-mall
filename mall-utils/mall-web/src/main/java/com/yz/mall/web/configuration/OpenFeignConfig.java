@@ -5,6 +5,7 @@ import com.yz.mall.base.HeaderConstants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -17,6 +18,7 @@ import java.util.*;
  * @author yunze
  * @date 2025/1/22 14:34
  */
+@Slf4j
 @Configuration
 public class OpenFeignConfig implements RequestInterceptor {
 
@@ -35,7 +37,7 @@ public class OpenFeignConfig implements RequestInterceptor {
         try {
             return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取请求头失败", e);
             return null;
         }
     }

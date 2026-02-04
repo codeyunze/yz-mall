@@ -97,9 +97,9 @@ public class PmsProductController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:pms:product:page")
+    @SaIgnore
     @GetMapping("get/{id}")
-    public Result<PmsProductVo> page(@PathVariable Long id) {
+    public Result<PmsProductVo> get(@PathVariable Long id) {
         return success(this.service.detail(id));
     }
 

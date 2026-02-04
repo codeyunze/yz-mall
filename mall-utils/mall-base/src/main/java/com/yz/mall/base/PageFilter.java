@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Data
 public class PageFilter<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

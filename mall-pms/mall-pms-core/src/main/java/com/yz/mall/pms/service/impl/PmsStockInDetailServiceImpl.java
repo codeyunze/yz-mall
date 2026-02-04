@@ -1,11 +1,13 @@
 package com.yz.mall.pms.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yz.mall.base.IdsDto;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockInDetailQueryDto;
@@ -22,6 +24,8 @@ import com.yz.mall.pms.vo.PmsProductSlimVo;
 import com.yz.mall.pms.vo.PmsSkuVo;
 import com.yz.mall.pms.vo.PmsStockInDetailVo;
 import com.yz.mall.serial.service.ExtendSerialService;
+import com.yz.mall.sys.service.ExtendSysUserService;
+import com.yz.mall.sys.vo.ExtendSysUserSlimVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,17 +49,24 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
 
     private final ExtendSerialService extendSerialService;
 
+    private final ExtendSysUserService extendSysUserService;
+
     private final PmsProductQueryService pmsProductQueryService;
 
     private final PmsSkuService pmsSkuService;
 
     private final PmsCategoryService pmsCategoryService;
 
-    public PmsStockInDetailServiceImpl(ExtendSerialService extendSerialService, PmsProductQueryService pmsProductQueryService, PmsSkuService pmsSkuService, PmsCategoryService pmsCategoryService) {
+    public PmsStockInDetailServiceImpl(ExtendSerialService extendSerialService
+            , PmsProductQueryService pmsProductQueryService
+            , PmsSkuService pmsSkuService
+            , PmsCategoryService pmsCategoryService
+            , ExtendSysUserService extendSysUserService) {
         this.extendSerialService = extendSerialService;
         this.pmsProductQueryService = pmsProductQueryService;
         this.pmsSkuService = pmsSkuService;
         this.pmsCategoryService = pmsCategoryService;
+        this.extendSysUserService = extendSysUserService;
     }
 
     @Transactional
@@ -69,6 +80,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         bo.setProductId(dto.getProductId());
         bo.setSkuId(dto.getSkuId());
         bo.setQuantity(dto.getQuantity());
+        bo.setCreateId(StpUtil.getLoginIdAsLong());
         baseMapper.insert(bo);
         return bo.getId();
     }
@@ -97,13 +109,15 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
             return new Page<>();
         }
 
-        // 提取商品ID和SKU ID
+        // 提取商品ID、SKU ID、userId
         List<Long> productIds = extractProductIds(stockInPage.getRecords());
         List<Long> skuIds = extractSkuIds(stockInPage.getRecords());
+        List<Long> userId = stockInPage.getRecords().stream().map(PmsStockInDetail::getCreateId).toList();
 
-        // 查询商品和SKU信息
+        // 查询商品和 SKU 信息
         List<PmsProductSlimVo> products = queryProducts(productIds);
         List<PmsSkuVo> skuList = querySkus(skuIds);
+        Map<Long, ExtendSysUserSlimVo> userMap = extendSysUserService.getUserSlimByIds(new IdsDto<>(userId));
 
         if (CollectionUtils.isEmpty(products) && CollectionUtils.isEmpty(skuList)) {
             return new Page<>();
@@ -113,7 +127,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         Map<Long, PmsCategory> categoryMap = queryCategories(products);
 
         // 组装返回结果
-        return buildResultPage(stockInPage, products, skuList, categoryMap);
+        return buildResultPage(stockInPage, products, skuList, categoryMap, userMap);
     }
 
     /**
@@ -131,7 +145,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         queryWrapper.eq(queryFilter.getSkuId() != null && queryFilter.getSkuId() != 0, 
                 PmsStockInDetail::getSkuId, queryFilter.getSkuId());
         
-        // SKU名称过滤
+        // SKU 名称过滤
         if (StringUtils.hasText(queryFilter.getSkuName())) {
             List<Long> skuIds = findSkuIdsByName(queryFilter.getSkuName());
             if (CollectionUtils.isEmpty(skuIds)) {
@@ -251,7 +265,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
      * 查询商品分类信息
      *
      * @param products 商品信息列表
-     * @return 分类ID到分类实体的映射
+     * @return 分类 ID到分类实体的映射
      */
     private Map<Long, PmsCategory> queryCategories(List<PmsProductSlimVo> products) {
         List<Long> categoryIds = products.stream()
@@ -278,15 +292,16 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
      *
      * @param stockInPage 入库明细分页数据
      * @param products 商品信息列表
-     * @param skuList SKU信息列表
+     * @param skuList SKU 信息列表
      * @param categoryMap 分类映射
-     * @return 入库明细VO分页数据
+     * @return 入库明细 VO分页数据
      */
     private Page<PmsStockInDetailVo> buildResultPage(
             Page<PmsStockInDetail> stockInPage,
             List<PmsProductSlimVo> products,
             List<PmsSkuVo> skuList,
-            Map<Long, PmsCategory> categoryMap) {
+            Map<Long, PmsCategory> categoryMap,
+            Map<Long, ExtendSysUserSlimVo> userMap) {
         
         Page<PmsStockInDetailVo> page = new Page<>();
         page.setTotal(stockInPage.getTotal());
@@ -297,9 +312,9 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         Map<Long, PmsSkuVo> skuMap = skuList.stream()
                 .collect(Collectors.toMap(PmsSkuVo::getId, t -> t));
         
-        // 组装VO数据
+        // 组装 VO数据
         List<PmsStockInDetailVo> voList = stockInPage.getRecords().stream()
-                .map(detail -> buildStockInDetailVo(detail, productMap, skuMap, categoryMap))
+                .map(detail -> buildStockInDetailVo(detail, productMap, skuMap, categoryMap, userMap))
                 .collect(Collectors.toList());
         
         page.setRecords(voList);
@@ -307,19 +322,20 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
     }
 
     /**
-     * 构建入库明细VO对象
+     * 构建入库明细 VO对象
      *
      * @param detail 入库明细实体
      * @param productMap 商品映射
-     * @param skuMap SKU映射
+     * @param skuMap SKU 映射
      * @param categoryMap 分类映射
-     * @return 入库明细VO
+     * @return 入库明细 VO
      */
     private PmsStockInDetailVo buildStockInDetailVo(
             PmsStockInDetail detail,
             Map<Long, PmsProductSlimVo> productMap,
             Map<Long, PmsSkuVo> skuMap,
-            Map<Long, PmsCategory> categoryMap) {
+            Map<Long, PmsCategory> categoryMap,
+            Map<Long, ExtendSysUserSlimVo> userMap) {
         
         PmsStockInDetailVo vo = new PmsStockInDetailVo();
         BeanUtils.copyProperties(detail, vo);
@@ -343,7 +359,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
             }
         }
         
-        // 设置SKU信息
+        // 设置 SKU信息
         if (detail.getSkuId() != null) {
             PmsSkuVo skuVo = skuMap.get(detail.getSkuId());
             if (skuVo != null) {
@@ -351,7 +367,11 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
                 vo.setSkuName(skuVo.getSkuName());
             }
         }
-        
+
+        if (detail.getCreateId() != null && userMap.containsKey(detail.getCreateId())) {
+            ExtendSysUserSlimVo user = userMap.get(detail.getCreateId());
+            vo.setCreateName(user.getUsername());
+        }
         return vo;
     }
 }
