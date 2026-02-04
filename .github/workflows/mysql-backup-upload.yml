@@ -1,0 +1,80 @@
+# 数据库备份 + SCP 上传到指定服务器
+#
+# 需在仓库 Settings -> Secrets and variables -> Actions 中配置：
+#   数据库：DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME
+#   本地备份目录（可选）：BACKUP_ROOT，默认 ./backup_output
+#   SCP 目标：SCP_HOST, SCP_PORT(可选默认22), SCP_USER, SCP_REMOTE_DIR
+#   SSH 私钥：SCP_SSH_PRIVATE_KEY（能登录 SCP_USER@SCP_HOST 的私钥）
+
+name: MySQL Backup & SCP Upload
+
+on:
+  workflow_dispatch:           # 支持手动触发
+  schedule:
+    - cron: '0 2 * * *'        # 可选：每天 UTC 02:00 执行（北京时间 10:00）
+
+jobs:
+  backup-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MySQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-mysql-client
+
+      - name: Create backup directory
+        run: mkdir -p "$BACKUP_ROOT"
+        env:
+          BACKUP_ROOT: ${{ secrets.BACKUP_ROOT || './backup_output' }}
+
+      - name: Run backup script
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          BACKUP_ROOT: ${{ secrets.BACKUP_ROOT || './backup_output' }}
+        run: |
+          SCRIPT_PATH="docs/script/mysql-backup-schema-data.sh"
+          if [ ! -f "$SCRIPT_PATH" ]; then
+            SCRIPT_PATH="yz-mall/docs/script/mysql-backup-schema-data.sh"
+          fi
+          chmod +x "$SCRIPT_PATH"
+          "$SCRIPT_PATH" \
+            -H "$DB_HOST" \
+            -P "$DB_PORT" \
+            -u "$DB_USER" \
+            -p "$DB_PASS" \
+            -d "$DB_NAME" \
+            -b "$BACKUP_ROOT"
+
+      - name: Setup SSH and upload via SCP
+        env:
+          SSH_HOST: ${{ secrets.SCP_HOST }}
+          SSH_PORT: ${{ secrets.SCP_PORT || '22' }}
+          SSH_USER: ${{ secrets.SCP_USER }}
+          REMOTE_DIR: ${{ secrets.SCP_REMOTE_DIR }}
+          BACKUP_ROOT: ${{ secrets.BACKUP_ROOT || './backup_output' }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SCP_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+          # 本次备份目录名为 ${DB_NAME}_YYYYMMDD_HHMMSS，取最新一个
+          LATEST=$(ls -td ${BACKUP_ROOT}/${DB_NAME}_* 2>/dev/null | head -1)
+          if [ -z "$LATEST" ]; then
+            echo "::error::未找到备份目录，请检查 BACKUP_ROOT 与 DB_NAME"
+            exit 1
+          fi
+
+          scp -i ~/.ssh/deploy_key -P "$SSH_PORT" -r "$LATEST" "${SSH_USER}@${SSH_HOST}:${REMOTE_DIR}/"
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
