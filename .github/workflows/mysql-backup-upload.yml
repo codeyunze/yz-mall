@@ -76,9 +76,6 @@ jobs:
             exit 1
           fi
 
-          # 目标目录不存在时自动创建
-          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" "mkdir -p '${REMOTE_DIR}'"
-
           scp -i ~/.ssh/deploy_key -P "$SSH_PORT" -r "$LATEST" "${SSH_USER}@${SSH_HOST}:${REMOTE_DIR}/"
 
       - name: Cleanup SSH key
