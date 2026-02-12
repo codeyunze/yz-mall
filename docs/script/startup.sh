@@ -1,10 +1,13 @@
 #!/bin/bash
 
 # -f / --force: 若服务已运行则直接停止，不提示确认
+# -d / --debug: 启用 Java 远程调试（端口为 app_port + 1000）
 FORCE_STOP=0
+ENABLE_DEBUG=0
 for arg in "$@"; do
     case "$arg" in
         -f|--force) FORCE_STOP=1 ;;
+        -d|--debug) ENABLE_DEBUG=1 ;;
     esac
 done
 
@@ -14,6 +17,8 @@ app_version="0.0.1-SNAPSHOT"
 app_port="30008"
 app_active=test
 java_opts="-Xms1536m -Xmx1536m -Xmn512m -Xss256K"
+# 调试参数：仅 -d/--debug 时生效
+[ "$ENABLE_DEBUG" -eq 1 ] && java_debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$((app_port + 1000))" || java_debug=""
 
 # ============ 日志管理配置 ============
 LOG_FILE="console.log"
@@ -151,7 +156,7 @@ check_and_handle_running
 clean_by_size
 
 # 启动应用
-nohup java -server -Duser.timezone=Asia/Shanghai -jar $java_opts ${app_name}-${app_version}.jar \
+nohup java -server -Duser.timezone=Asia/Shanghai -jar $java_opts $java_debug ${app_name}-${app_version}.jar \
     --spring.profiles.active=$app_active --server.port=$app_port --spring.application.name=$app_name \
     >> "$LOG_FILE" 2>&1 &
 
@@ -164,4 +169,5 @@ ROTATE_PID=$!
 echo "${app_name}-${app_version} 服务启动成功"
 echo "  日志文件: $LOG_FILE"
 echo "  日志备份: $BACKUP_DIR (超过 $MAX_SIZE 时自动备份，保留最近 $MAX_BACKUPS 个)"
+[ "$ENABLE_DEBUG" -eq 1 ] && echo "  调试端口: $((app_port + 1000)) (已启用 -d)"
 echo "  进程 PID: $JAVA_PID"
