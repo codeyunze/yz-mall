@@ -13,29 +13,6 @@ spring:
 #      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 
-  datasource:
-    druid:
-      web-stat-filter:
-        enabled: false
-        url-pattern: /*
-        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
-        session-stat-enable: true
-        session-stat-max-count: 1000
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        reset-enable: false
-        login-password: s8F3as09
-        login-username: root
-        allow: 127.0.0.1
-      filter:
-        # 开启 druiddatasource 的状态监控
-        stat:
-          enabled: false
-          db-type: mysql
-      # Spring 监控，利用aop 对指定接口的执行时间，jdbc数进行记录
-      aop-patterns: "com.yz.mall.*"
-
   cloud:
     openfeign:
       circuitbreaker:
@@ -51,7 +28,7 @@ management:
 xxl:
   job:
     admin:
-      addresses: http://192.168.3.237:30009/xxl-job-admin
+      addresses: http://${XXL_JOB_ADMIN_HOST}:30009/xxl-job-admin
 #      addresses: http://192.168.3.29:30009/xxl-job-admin
       accessToken: 123456789
       timeout: 3
@@ -73,7 +50,7 @@ yz:
         expire-after-access: 0
         
 rocketmq:
-  name-server: 192.168.3.237:9876
+  name-server: ${ROCKET_MQ_HOST}:9876
   producer:
     group: producer-mall-sys
   consumer:

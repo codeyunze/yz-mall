@@ -36,10 +36,4 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        // 清理 MDC，防止内存泄漏和线程复用污染
-        MDC.clear();
-    }
-
 }

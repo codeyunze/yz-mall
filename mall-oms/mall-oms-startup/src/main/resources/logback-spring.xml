@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
     <!--设置存储路径变量-->
-    <property name="LOG_HOME" value="./logs/oms/"/>
+    <property name="LOG_HOME" value="./logs/oms"/>
 
     <!--控制台输出appender-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -54,6 +54,6 @@
         <!--appender将会添加到这个loger-->
         <appender-ref ref="console"/>
         <appender-ref ref="timeFileOutput"/>
-<!--        <appender-ref ref="logstash"/>-->
+        <appender-ref ref="logstash"/>
     </root>
 </configuration>

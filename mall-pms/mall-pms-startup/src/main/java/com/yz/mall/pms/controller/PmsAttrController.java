@@ -67,8 +67,8 @@ public class PmsAttrController extends ApiController {
      */
     @SaCheckPermission("api:pms:attr:page")
     @PostMapping("page")
-    public Result<ResultTable<PmsAttr>> page(@RequestBody @Valid PageFilter<PmsAttrQueryDto> filter) {
-        Page<PmsAttr> page = this.service.page(filter);
+    public Result<ResultTable<PmsAttrVo>> page(@RequestBody @Valid PageFilter<PmsAttrQueryDto> filter) {
+        Page<PmsAttrVo> page = this.service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
