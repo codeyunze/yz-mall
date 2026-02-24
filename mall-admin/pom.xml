@@ -18,6 +18,7 @@
         <module>mall-sys-interface</module>
         <module>mall-sys-core</module>
         <module>mall-sys-feign</module>
+        <module>mall-backup-core</module>
         <module>mall-sys-startup</module>
     </modules>
 

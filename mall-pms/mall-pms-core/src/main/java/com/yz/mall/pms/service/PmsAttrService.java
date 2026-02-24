@@ -41,7 +41,7 @@ public interface PmsAttrService extends IService<PmsAttr> {
      * @param filter 过滤条件
      * @return 分页列表数据
      */
-    Page<PmsAttr> page(PageFilter<PmsAttrQueryDto> filter);
+    Page<PmsAttrVo> page(PageFilter<PmsAttrQueryDto> filter);
 
     /**
      * 详情查询

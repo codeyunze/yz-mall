@@ -68,4 +68,8 @@ public class PmsAttrVo implements Serializable {
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime updateTime;
 
+    /**
+     * 商品名称
+     */
+    private String productName;
 }

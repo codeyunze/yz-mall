@@ -26,6 +26,12 @@
 
         <dependency>
             <groupId>com.yz</groupId>
+            <artifactId>mall-backup-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
             <artifactId>mall-serial-core</artifactId>
             <version>${project.version}</version>
         </dependency>
