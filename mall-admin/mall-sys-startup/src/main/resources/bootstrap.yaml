@@ -12,7 +12,7 @@ spring:
         extension-configs:
           - data-id: datasource.yaml
           - data-id: sa-token.yaml
-          - data-id: rabbitmq.yaml
+#          - data-id: rabbitmq.yaml
           - data-id: file.yaml
           - data-id: xxl-job-admin.yaml
       discovery:
