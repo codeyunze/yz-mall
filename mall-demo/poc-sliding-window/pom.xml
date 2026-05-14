@@ -5,22 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.yz</groupId>
-        <artifactId>yz-mall</artifactId>
+        <artifactId>mall-demo</artifactId>
         <version>0.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>mall-demo</artifactId>
-    <packaging>pom</packaging>
-    <description>demo 服务</description>
 
-    <modules>
-        <module>mall-java</module>
-        <module>mall-demo-rocketmq</module>
-        <module>mall-springboot</module>
-        <module>mall-seata</module>
-        <module>mall-canal</module>
-        <module>poc-sliding-window</module>
-    </modules>
+    <artifactId>poc-sliding-window</artifactId>
+    <description>前置校验：可配置路径上的滑动窗口 VIN 过滤器（无业务接口、无转发）</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,32 +19,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yz</groupId>
-            <artifactId>mall-json</artifactId>
-            <version>${project.version}</version>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
@@ -67,6 +41,21 @@
                     <encoding>UTF-8</encoding>
                     <parameters>true</parameters>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.5.3</version>
+                <configuration>
+                    <mainClass>com.yz.mall.poc.sw.SwApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
