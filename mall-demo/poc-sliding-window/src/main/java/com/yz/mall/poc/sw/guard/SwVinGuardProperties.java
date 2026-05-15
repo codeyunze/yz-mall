@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.StringUtils;
 
 /**
  * 滑动窗口 VIN 校验过滤器：仅根据请求 URI（Ant 风格）决定是否做校验。

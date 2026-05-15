@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
- * 从 JSON 根节点解析滑动窗口所需字段（与 {@link com.yz.mall.poc.sw.dto.TestARequest} 字段名一致）。
+ * 从 JSON 根节点解析滑动窗口所需字段（与 {@link com.yz.mall.poc.sw.dto.TestARequest} 字段名一致；不含 clientId，clientId 由请求头提供）。
  */
 public final class VinJsonBodySupport {
 
@@ -20,28 +20,10 @@ public final class VinJsonBodySupport {
         if (body == null || body.isNull()) {
             throw new ResponseStatusException(BAD_REQUEST, "请求体不能为空");
         }
-        String clientId = readClientId(body.get("clientId"));
         List<String> vins = readVins(body.get("vins"));
         int maxDistinctVins = readPositiveInt(body.get("maxVinCount"), "maxVinCount");
         int windowSeconds = readPositiveInt(body.get("timeWindow"), "timeWindow");
-        return new VinPayload(clientId, vins, maxDistinctVins, windowSeconds);
-    }
-
-    private static String readClientId(JsonNode node) {
-        if (node == null || node.isNull()) {
-            throw new ResponseStatusException(BAD_REQUEST, "clientId 不能为空");
-        }
-        if (node.isTextual()) {
-            String t = node.asText();
-            if (t.isBlank()) {
-                throw new ResponseStatusException(BAD_REQUEST, "clientId 不能为空");
-            }
-            return t;
-        }
-        if (node.isNumber()) {
-            return node.asText();
-        }
-        throw new ResponseStatusException(BAD_REQUEST, "clientId 类型须为字符串或数字");
+        return new VinPayload(vins, maxDistinctVins, windowSeconds);
     }
 
     private static List<String> readVins(JsonNode node) {
@@ -93,24 +75,18 @@ public final class VinJsonBodySupport {
     }
 
     /**
-     * 过滤器从 JSON 解析出的滑动窗口入参。
+     * 过滤器从 JSON 解析出的滑动窗口入参（不含 clientId）。
      */
     public static final class VinPayload {
 
-        private final String clientId;
         private final List<String> vins;
         private final int maxVinCount;
         private final int timeWindow;
 
-        public VinPayload(String clientId, List<String> vins, int maxVinCount, int timeWindow) {
-            this.clientId = clientId;
+        public VinPayload(List<String> vins, int maxVinCount, int timeWindow) {
             this.vins = vins == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(vins));
             this.maxVinCount = maxVinCount;
             this.timeWindow = timeWindow;
-        }
-
-        public String getClientId() {
-            return clientId;
         }
 
         public List<String> getVins() {
