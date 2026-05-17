@@ -1,5 +1,6 @@
 package com.yz.mall.poc.sw.controller;
 
+import cn.hutool.json.JSONObject;
 import com.yz.mall.poc.sw.dto.TestARequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,14 +19,19 @@ public class TestController {
     @PostMapping("a")
     public String a(
             @RequestHeader String clientId,
+            @RequestHeader String vin,
             @RequestBody TestARequest req) {
-        return "success: clientId="
-                + clientId
-                + ", vinCount="
-                + req.getVins().size()
-                + ", maxVinCount="
-                + req.getMaxVinCount()
-                + ", timeWindow="
-                + req.getTimeWindow();
+        JSONObject result = new JSONObject();
+
+        JSONObject json = new JSONObject();
+        json.put("clientId", clientId);
+        json.put("vin", vin);
+        json.put("vinCount", req.getVins().size());
+        json.put("maxVinCount", req.getMaxVinCount());
+        json.put("timeWindow", req.getTimeWindow());
+
+        result.put("code", 0);
+        result.put("data", json);
+        return result.toStringPretty();
     }
 }

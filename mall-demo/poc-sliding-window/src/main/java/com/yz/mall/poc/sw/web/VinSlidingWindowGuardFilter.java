@@ -1,19 +1,17 @@
 package com.yz.mall.poc.sw.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yz.mall.poc.sw.guard.SwVinGuardProperties;
 import com.yz.mall.poc.sw.ratelimit.VinSlidingWindowGateService;
+import com.yz.mall.poc.sw.vo.ClientConfigVo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,32 +19,37 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UrlPathHelper;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * 滑动窗口操作 VIN 数量校验
  * <p>
- * 仅按配置的 URI 决定是否做校验；命中则解析 JSON 并校验
+ * 仅按配置的 URI 决定是否做校验；命中则解析 JSON 并校验。
+ * <p>
+ * Bean 由 {@link com.yz.mall.poc.sw.config.VinSlidingWindowGuardConfiguration} 以 {@code FilterRegistrationBean} 注册并设定顺序。
  */
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE + 50)
 public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
 
     private final SwVinGuardProperties guardProperties;
     private final VinSlidingWindowGateService vinGate;
     private final ObjectMapper objectMapper;
+    private final StringRedisTemplate stringRedisTemplate;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
     public VinSlidingWindowGuardFilter(
             SwVinGuardProperties guardProperties,
             VinSlidingWindowGateService vinGate,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            StringRedisTemplate stringRedisTemplate) {
         this.guardProperties = guardProperties;
         this.vinGate = vinGate;
         this.objectMapper = objectMapper;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     @Override
@@ -71,27 +74,36 @@ public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-
         CachedBodyHttpServletRequest wrapped = new CachedBodyHttpServletRequest(request);
 
         try {
+            // 第三方标识
             String clientId = wrapped.getHeader("clientId");
             if (!StringUtils.hasText(clientId)) {
                 throw new ResponseStatusException(BAD_REQUEST, "请求头clientId不能为空");
             }
-
-            byte[] raw = wrapped.getCachedBody();
-            if (raw.length == 0) {
-                throw new ResponseStatusException(BAD_REQUEST, "JSON 请求体不能为空（需含 vins、maxVinCount、timeWindow）");
+            // 车辆标识
+            String vin = wrapped.getHeader("vin");
+            if (!StringUtils.hasText(vin)) {
+                throw new ResponseStatusException(BAD_REQUEST, "请求头vin不能为空");
             }
-            JsonNode root = objectMapper.readTree(raw);
-            VinJsonBodySupport.VinPayload payload = VinJsonBodySupport.parse(root);
-            vinGate.assertWithinVinWindow(clientId.strip(), payload.getVins(), payload.getMaxVinCount(), payload.getTimeWindow());
+            // TODO: 2026/5/15 yunze 需要调整到缓存里面去查询
+            // 最大操控车限制数量
+            int maxVinCount = Integer.parseInt(wrapped.getHeader("maxVinCount"));
+            // 时间窗口（单位：秒）
+            int timeWindow = Integer.parseInt(wrapped.getHeader("timeWindow"));
+
+
+            // byte[] raw = wrapped.getCachedBody();
+            // if (raw.length == 0) {
+            //     throw new ResponseStatusException(BAD_REQUEST, "JSON 请求体不能为空（需含 vins、maxVinCount、timeWindow）");
+            // }
+            // JsonNode root = objectMapper.readTree(raw);
+            // VinJsonBodySupport.VinPayload payload = VinJsonBodySupport.parse(root);
+            // vinGate.assertWithinVinWindow(clientId.strip(), payload.getVins(), payload.getMaxVinCount(), payload.getTimeWindow());
+            vinGate.assertWithinVinWindow(clientId.strip(), Collections.singletonList(vin), maxVinCount, timeWindow);
         } catch (ResponseStatusException ex) {
             writeError(response, ex);
-            return;
-        } catch (JsonProcessingException ex) {
-            writeError(response, new ResponseStatusException(BAD_REQUEST, "JSON 不合法"));
             return;
         }
 
@@ -103,7 +115,7 @@ public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
         response.setStatus(ex.getStatusCode().value());
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(java.util.Map.of("message", ex.getReason() != null ? ex.getReason() : ex.getStatusCode().toString())));
+        response.getWriter().write(objectMapper.writeValueAsString(Map.of("message", ex.getReason() != null ? ex.getReason() : ex.getStatusCode().toString())));
     }
 
     /**
@@ -120,5 +132,17 @@ public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
 
     private String pathWithinApplication(HttpServletRequest request) {
         return urlPathHelper.getPathWithinApplication(request);
+    }
+
+    public ClientConfigVo getClientConfig(String clientId) {
+        String cacheValue = stringRedisTemplate.boundValueOps("config:clientId:" + clientId).get();
+        if (!StringUtils.hasText(cacheValue)) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(cacheValue, ClientConfigVo.class);
+        } catch (JsonProcessingException ex) {
+            return null;
+        }
     }
 }
