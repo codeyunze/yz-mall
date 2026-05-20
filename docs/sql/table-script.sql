@@ -264,6 +264,88 @@ CREATE UNIQUE INDEX uk_sys_role_menu ON sys_role_relation_menu (role_id, menu_id
 
 
 
+CREATE TABLE saas_tenant
+(
+    `id`              BIGINT       NOT NULL COMMENT '主键标识',
+    `create_time`     DATETIME              DEFAULT current_timestamp COMMENT '创建时间',
+    `update_time`     DATETIME              DEFAULT current_timestamp ON UPDATE current_timestamp COMMENT '更新时间',
+    `invalid`         BIGINT       NOT NULL DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `tenant_code`     VARCHAR(64)  NOT NULL COMMENT '租户编码，全局唯一',
+    `tenant_name`     VARCHAR(128) NOT NULL COMMENT '租户名称',
+    `contact_name`    VARCHAR(64) COMMENT '联系人',
+    `contact_phone`   VARCHAR(32) COMMENT '联系电话',
+    `expire_time`     DATETIME COMMENT '租户到期时间',
+    `tenant_status`   TINYINT      NOT NULL DEFAULT 1 COMMENT '租户状态：0停用，1启用，2初始化中',
+    `db_type`         VARCHAR(32)  NOT NULL DEFAULT 'mysql' COMMENT '数据库类型',
+    `db_host`         VARCHAR(128) NOT NULL COMMENT '数据库主机',
+    `db_port`         INT          NOT NULL DEFAULT 3306 COMMENT '数据库端口',
+    `db_name`         VARCHAR(128) NOT NULL COMMENT '数据库名',
+    `db_username`     VARCHAR(128) NOT NULL COMMENT '数据库用户名',
+    `db_password_enc` VARCHAR(512) NOT NULL COMMENT '数据库密码密文（加密存储）',
+    `db_params`       VARCHAR(512)          DEFAULT NULL COMMENT '连接附加参数',
+    `remark`          VARCHAR(500)          DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (`id`)
+) COMMENT = 'SaaS租户主表';
+
+CREATE UNIQUE INDEX uk_saas_tenant_code ON saas_tenant (`tenant_code`);
+CREATE INDEX idx_saas_tenant_status ON saas_tenant (`tenant_status`);
+CREATE INDEX idx_saas_tenant_expire_time ON saas_tenant (`expire_time`);
+
+
+CREATE TABLE saas_tenant_db_config_history
+(
+    `id`              BIGINT       NOT NULL COMMENT '主键标识',
+    `create_time`     DATETIME              DEFAULT current_timestamp COMMENT '创建时间',
+    `update_time`     DATETIME              DEFAULT current_timestamp ON UPDATE current_timestamp COMMENT '更新时间',
+    `invalid`         BIGINT       NOT NULL DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `tenant_id`       BIGINT       NOT NULL COMMENT '租户ID',
+    `db_type`         VARCHAR(32)  NOT NULL DEFAULT 'mysql' COMMENT '数据库类型',
+    `db_host`         VARCHAR(128) NOT NULL COMMENT '数据库主机',
+    `db_port`         INT          NOT NULL DEFAULT 3306 COMMENT '数据库端口',
+    `db_name`         VARCHAR(128) NOT NULL COMMENT '数据库名',
+    `db_username`     VARCHAR(128) NOT NULL COMMENT '数据库用户名',
+    `db_password_enc` VARCHAR(512) NOT NULL COMMENT '数据库密码密文（加密存储）',
+    `db_params`       VARCHAR(512)          DEFAULT NULL COMMENT '连接附加参数',
+    `is_current`      TINYINT      NOT NULL DEFAULT 1 COMMENT '是否当前生效：0否，1是',
+    `change_reason`   VARCHAR(255)          DEFAULT NULL COMMENT '变更原因',
+    PRIMARY KEY (`id`)
+) COMMENT = '租户数据库配置历史表';
+
+CREATE INDEX idx_tenant_db_config_history_tenant ON saas_tenant_db_config_history (`tenant_id`);
+CREATE INDEX idx_tenant_db_config_history_tenant_current ON saas_tenant_db_config_history (`tenant_id`, `is_current`);
+
+
+CREATE TABLE saas_tenant_init_task
+(
+    `id`           BIGINT      NOT NULL COMMENT '主键标识',
+    `create_time`  DATETIME             DEFAULT current_timestamp COMMENT '创建时间',
+    `update_time`  DATETIME             DEFAULT current_timestamp ON UPDATE current_timestamp COMMENT '更新时间',
+    `invalid`      BIGINT      NOT NULL DEFAULT 0 COMMENT '数据是否有效：0数据有效',
+    `tenant_id`    BIGINT      NOT NULL COMMENT '租户ID',
+    `task_no`      VARCHAR(64) NOT NULL COMMENT '任务编号',
+    `task_status`  TINYINT     NOT NULL DEFAULT 0 COMMENT '任务状态：0待执行，1执行中，2成功，3失败',
+    `step_code`    VARCHAR(64) NOT NULL COMMENT '当前步骤编码',
+    `error_msg`    VARCHAR(1000)        DEFAULT NULL COMMENT '失败信息',
+    `retry_count`  INT         NOT NULL DEFAULT 0 COMMENT '重试次数',
+    `finished_time` DATETIME            DEFAULT NULL COMMENT '完成时间',
+    PRIMARY KEY (`id`)
+) COMMENT = '租户初始化任务表';
+
+CREATE UNIQUE INDEX uk_saas_tenant_init_task_no ON saas_tenant_init_task (`task_no`);
+CREATE INDEX idx_saas_tenant_init_task_tenant ON saas_tenant_init_task (`tenant_id`);
+CREATE INDEX idx_saas_tenant_init_task_status ON saas_tenant_init_task (`task_status`);
+
+
+INSERT INTO sys_menu (id, parent_id, menu_type, title, name, path, component, sort, icon, show_link, auths)
+VALUES (1990000000000000001, 10, 0, '租户管理', 'SystemTenant', '/system/tenant/index', 'system/tenant/index', 15, 'ep:user-filled', 1, '');
+
+INSERT INTO sys_menu (id, parent_id, menu_type, title, name, path, component, sort, show_link, auths)
+VALUES (1990000000000000002, 1990000000000000001, 4, '租户列表权限', '', '', '', 1, 0, 'api:system:tenant:list');
+
+INSERT INTO sys_menu (id, parent_id, menu_type, title, name, path, component, sort, show_link, auths)
+VALUES (1990000000000000003, 1990000000000000001, 4, '租户编辑权限', '', '', '', 2, 0, 'api:system:tenant:edit');
+
+
 DROP TABLE IF EXISTS pms_stock_in_detail;
 CREATE TABLE pms_stock_in_detail
 (

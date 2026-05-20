@@ -1,0 +1,22 @@
+server:
+  port: 10001
+
+# 过滤器：URI 命中即做校验
+sw:
+  vin-guard:
+    enabled: true
+    Uris:
+      - /poc/test/**
+
+spring:
+  application:
+    name: poc-sliding-window
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASSWORD}
+      Jedis:
+        pool:
+          max-active: 20
