@@ -29,19 +29,20 @@ public class VinSlidingWindowGuardConfiguration {
         FilterRegistrationBean<VinSlidingWindowGuardFilter> reg = new FilterRegistrationBean<>(filter);
         reg.setOrder(Ordered.HIGHEST_PRECEDENCE + 50);
         // 拦截/poc/*路径下的请求
-        reg.addUrlPatterns("/poc/*");
+        // reg.addUrlPatterns("/poc/*");
         return reg;
     }
 
     @Bean
     public FilterRegistrationBean<ControlRangeFilter> controlRangeFilterRegistration(
+            SwVinGuardProperties guardProperties,
             StringRedisTemplate stringRedisTemplate,
             ObjectMapper objectMapper) {
-        ControlRangeFilter filter = new ControlRangeFilter(stringRedisTemplate, objectMapper);
+        ControlRangeFilter filter = new ControlRangeFilter(guardProperties, stringRedisTemplate, objectMapper);
         FilterRegistrationBean<ControlRangeFilter> reg = new FilterRegistrationBean<>(filter);
         reg.setOrder(Ordered.HIGHEST_PRECEDENCE + 51);
         // 拦截/poc/*路径下的请求
-        reg.addUrlPatterns("/poc/*");
+        // reg.addUrlPatterns("/poc/*");
         return reg;
     }
 }

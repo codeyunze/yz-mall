@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -88,10 +89,11 @@ public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
                 throw new ResponseStatusException(BAD_REQUEST, "请求头vin不能为空");
             }
             // TODO: 2026/5/15 yunze 需要调整到缓存里面去查询
+            ClientConfigVo clientConfig = getClientConfig(clientId);
             // 最大操控车限制数量
-            int maxVinCount = Integer.parseInt(wrapped.getHeader("maxVinCount"));
+            int maxVinCount = clientConfig.getMaxVinCount();
             // 时间窗口（单位：秒）
-            int timeWindow = Integer.parseInt(wrapped.getHeader("timeWindow"));
+            int timeWindow = clientConfig.getTimeWindow();
 
 
             // byte[] raw = wrapped.getCachedBody();
@@ -136,6 +138,7 @@ public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
 
     public ClientConfigVo getClientConfig(String clientId) {
         String cacheValue = stringRedisTemplate.boundValueOps("config:clientId:" + clientId).get();
+        stringRedisTemplate.boundValueOps("").getAndExpire(10, TimeUnit.MINUTES);
         if (!StringUtils.hasText(cacheValue)) {
             return null;
         }
