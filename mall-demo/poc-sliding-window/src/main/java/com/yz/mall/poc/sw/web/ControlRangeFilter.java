@@ -17,7 +17,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yz.mall.poc.sw.guard.SwVinGuardProperties;
+import com.yz.mall.poc.sw.guard.SwUserIdGuardProperties;
 import com.yz.mall.poc.sw.vo.ClientConfigVo;
 import com.yz.mall.poc.sw.vo.VehicleInfoVo;
 
@@ -32,13 +32,13 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class ControlRangeFilter extends OncePerRequestFilter {
 
-    private final SwVinGuardProperties guardProperties;
+    private final SwUserIdGuardProperties guardProperties;
     private final StringRedisTemplate stringRedisTemplate;
     private final ObjectMapper objectMapper;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
-    public ControlRangeFilter(SwVinGuardProperties guardProperties, StringRedisTemplate stringRedisTemplate, ObjectMapper objectMapper) {
+    public ControlRangeFilter(SwUserIdGuardProperties guardProperties, StringRedisTemplate stringRedisTemplate, ObjectMapper objectMapper) {
         this.guardProperties = guardProperties;
         this.stringRedisTemplate = stringRedisTemplate;
         this.objectMapper = objectMapper;
@@ -64,8 +64,8 @@ public class ControlRangeFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain) throws IOException, ServletException {
         CachedBodyHttpServletRequest wrapped = new CachedBodyHttpServletRequest(request);
 
-        String vin = wrapped.getHeader("vin");
-        if (!StringUtils.hasText(vin)) {
+        String userId = wrapped.getHeader("userId");
+        if (!StringUtils.hasText(userId)) {
             chain.doFilter(wrapped, response);
             return;
         }
@@ -79,7 +79,7 @@ public class ControlRangeFilter extends OncePerRequestFilter {
             return;
         }
         // 车辆信息
-        VehicleInfoVo vehicleInfo = getVehicleInfo(vin);
+        VehicleInfoVo vehicleInfo = getVehicleInfo(userId);
         if (vehicleInfo == null) {
             writeJsonError(response, FORBIDDEN.value(), "车辆信息不存在");
             return;
@@ -91,9 +91,9 @@ public class ControlRangeFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (clientConfig.getVins() != null && !clientConfig.getVins().isEmpty()) {
-            if (!clientConfig.getVins().contains(vin)) {
-                writeJsonError(response, FORBIDDEN.value(), "VIN 不在授权范围内");
+        if (clientConfig.getUserIds() != null && !clientConfig.getUserIds().isEmpty()) {
+            if (!clientConfig.getUserIds().contains(userId)) {
+                writeJsonError(response, FORBIDDEN.value(), "UserId 不在授权范围内");
                 return;
             }
             chain.doFilter(wrapped, response);
@@ -135,9 +135,9 @@ public class ControlRangeFilter extends OncePerRequestFilter {
         response.getWriter().write(objectMapper.writeValueAsString(map));
     }
 
-    private VehicleInfoVo getVehicleInfo(String vin) {
+    private VehicleInfoVo getVehicleInfo(String userId) {
         // 从redis缓存获取
-        String cacheKey = "vehicle-info:vin:" + vin;
+        String cacheKey = "vehicle-info:userId:" + userId;
         String cacheValue = stringRedisTemplate.boundValueOps(cacheKey).get();
         if (!StringUtils.hasText(cacheValue)) {
             return null;

@@ -11,7 +11,7 @@
 
 
     <artifactId>poc-sliding-window</artifactId>
-    <description>前置校验：可配置路径上的滑动窗口 VIN 过滤器（无业务接口、无转发）</description>
+    <description>前置校验：可配置路径上的滑动窗口 UserId 过滤器（无业务接口、无转发）</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

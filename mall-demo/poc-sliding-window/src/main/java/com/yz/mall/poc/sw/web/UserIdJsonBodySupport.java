@@ -12,26 +12,26 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 /**
  * 从 JSON 根节点解析滑动窗口所需字段（与 {@link com.yz.mall.poc.sw.dto.TestARequest} 字段名一致；不含 clientId，clientId 由请求头提供）。
  */
-public final class VinJsonBodySupport {
+public final class UserIdJsonBodySupport {
 
-    private VinJsonBodySupport() {}
+    private UserIdJsonBodySupport() {}
 
-    public static VinPayload parse(JsonNode body) {
+    public static UserIdPayload parse(JsonNode body) {
         if (body == null || body.isNull()) {
             throw new ResponseStatusException(BAD_REQUEST, "请求体不能为空");
         }
-        List<String> vins = readVins(body.get("vins"));
-        int maxDistinctVins = readPositiveInt(body.get("maxVinCount"), "maxVinCount");
+        List<String> userIds = readUserIds(body.get("userIds"));
+        int maxDistinctUserIds = readPositiveInt(body.get("maxUserIdCount"), "maxUserIdCount");
         int windowSeconds = readPositiveInt(body.get("timeWindow"), "timeWindow");
-        return new VinPayload(vins, maxDistinctVins, windowSeconds);
+        return new UserIdPayload(userIds, maxDistinctUserIds, windowSeconds);
     }
 
-    private static List<String> readVins(JsonNode node) {
+    private static List<String> readUserIds(JsonNode node) {
         if (node == null || node.isNull()) {
             return List.of();
         }
         if (!node.isArray()) {
-            throw new ResponseStatusException(BAD_REQUEST, "vins 须为 JSON 数组");
+            throw new ResponseStatusException(BAD_REQUEST, "userIds 须为 JSON 数组");
         }
         List<String> out = new ArrayList<>(node.size());
         for (JsonNode e : node) {
@@ -46,7 +46,7 @@ public final class VinJsonBodySupport {
             } else if (e.isNumber()) {
                 out.add(e.asText());
             } else {
-                throw new ResponseStatusException(BAD_REQUEST, "vins 元素须为字符串或数字");
+                throw new ResponseStatusException(BAD_REQUEST, "userIds 元素须为字符串或数字");
             }
         }
         return out;
@@ -77,24 +77,24 @@ public final class VinJsonBodySupport {
     /**
      * 过滤器从 JSON 解析出的滑动窗口入参（不含 clientId）。
      */
-    public static final class VinPayload {
+    public static final class UserIdPayload {
 
-        private final List<String> vins;
-        private final int maxVinCount;
+        private final List<String> userIds;
+        private final int maxUserIdCount;
         private final int timeWindow;
 
-        public VinPayload(List<String> vins, int maxVinCount, int timeWindow) {
-            this.vins = vins == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(vins));
-            this.maxVinCount = maxVinCount;
+        public UserIdPayload(List<String> userIds, int maxUserIdCount, int timeWindow) {
+            this.userIds = userIds == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(userIds));
+            this.maxUserIdCount = maxUserIdCount;
             this.timeWindow = timeWindow;
         }
 
-        public List<String> getVins() {
-            return vins;
+        public List<String> getUserIds() {
+            return userIds;
         }
 
-        public int getMaxVinCount() {
-            return maxVinCount;
+        public int getMaxUserIdCount() {
+            return maxUserIdCount;
         }
 
         public int getTimeWindow() {

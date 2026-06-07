@@ -19,15 +19,15 @@ public class TestController {
     @PostMapping("a")
     public String a(
             @RequestHeader String clientId,
-            @RequestHeader String vin,
+            @RequestHeader String userId,
             @RequestBody TestARequest req) {
         JSONObject result = new JSONObject();
 
         JSONObject json = new JSONObject();
         json.put("clientId", clientId);
-        json.put("vin", vin);
-        json.put("vinCount", req.getVins().size());
-        json.put("maxVinCount", req.getMaxVinCount());
+        json.put("userId", userId);
+        json.put("userIdCount", req.getUserIds().size());
+        json.put("maxUserIdCount", req.getMaxUserIdCount());
         json.put("timeWindow", req.getTimeWindow());
 
         result.put("code", 0);

@@ -13,7 +13,7 @@ public class ClientConfigVo {
 
     private String clientId;
 
-    private List<String> vins;
+    private List<String> userIds;
 
     private List<String> vehicleModes;
 
@@ -21,7 +21,7 @@ public class ClientConfigVo {
 
     private String factoryCode;
 
-    private Integer maxVinCount;
+    private Integer maxUserIdCount;
 
     private Integer timeWindow;
 }

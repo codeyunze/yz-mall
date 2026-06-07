@@ -9,26 +9,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TestARequest {
 
-    private final List<String> vins;
-    private final int maxVinCount;
+    private final List<String> userIds;
+    private final int maxUserIdCount;
     private final int timeWindow;
 
     @JsonCreator
     public TestARequest(
-            @JsonProperty("vins") List<String> vins,
-            @JsonProperty("maxVinCount") int maxVinCount,
+            @JsonProperty("userIds") List<String> userIds,
+            @JsonProperty("maxUserIdCount") int maxUserIdCount,
             @JsonProperty("timeWindow") int timeWindow) {
-        this.vins = vins == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(vins));
-        this.maxVinCount = maxVinCount;
+        this.userIds = userIds == null ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(userIds));
+        this.maxUserIdCount = maxUserIdCount;
         this.timeWindow = timeWindow;
     }
 
-    public List<String> getVins() {
-        return vins;
+    public List<String> getUserIds() {
+        return userIds;
     }
 
-    public int getMaxVinCount() {
-        return maxVinCount;
+    public int getMaxUserIdCount() {
+        return maxUserIdCount;
     }
 
     public int getTimeWindow() {

@@ -15,6 +15,7 @@
 
     <modules>
         <module>mall-java</module>
+        <module>mall-java-statemachine</module>
         <module>mall-demo-rocketmq</module>
         <module>mall-springboot</module>
         <module>mall-seata</module>

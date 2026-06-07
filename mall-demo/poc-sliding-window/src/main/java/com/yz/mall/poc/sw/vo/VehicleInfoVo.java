@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class VehicleInfoVo {
 
-    private String vin;
+    private String userId;
 
     private String vehicleModelCode;
 

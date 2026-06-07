@@ -2,8 +2,8 @@ package com.yz.mall.poc.sw.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yz.mall.poc.sw.guard.SwVinGuardProperties;
-import com.yz.mall.poc.sw.ratelimit.VinSlidingWindowGateService;
+import com.yz.mall.poc.sw.guard.SwUserIdGuardProperties;
+import com.yz.mall.poc.sw.ratelimit.UserIdSlidingWindowGateService;
 import com.yz.mall.poc.sw.vo.ClientConfigVo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,28 +27,28 @@ import java.util.concurrent.TimeUnit;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
- * 滑动窗口操作 VIN 数量校验
+ * 滑动窗口操作 UserId 数量校验
  * <p>
  * 仅按配置的 URI 决定是否做校验；命中则解析 JSON 并校验。
  * <p>
- * Bean 由 {@link com.yz.mall.poc.sw.config.VinSlidingWindowGuardConfiguration} 以 {@code FilterRegistrationBean} 注册并设定顺序。
+ * Bean 由 {@link com.yz.mall.poc.sw.config.UserIdSlidingWindowGuardConfiguration} 以 {@code FilterRegistrationBean} 注册并设定顺序。
  */
-public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
+public class UserIdSlidingWindowGuardFilter extends OncePerRequestFilter {
 
-    private final SwVinGuardProperties guardProperties;
-    private final VinSlidingWindowGateService vinGate;
+    private final SwUserIdGuardProperties guardProperties;
+    private final UserIdSlidingWindowGateService userIdGate;
     private final ObjectMapper objectMapper;
     private final StringRedisTemplate stringRedisTemplate;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
-    public VinSlidingWindowGuardFilter(
-            SwVinGuardProperties guardProperties,
-            VinSlidingWindowGateService vinGate,
+    public UserIdSlidingWindowGuardFilter(
+            SwUserIdGuardProperties guardProperties,
+            UserIdSlidingWindowGateService userIdGate,
             ObjectMapper objectMapper,
             StringRedisTemplate stringRedisTemplate) {
         this.guardProperties = guardProperties;
-        this.vinGate = vinGate;
+        this.userIdGate = userIdGate;
         this.objectMapper = objectMapper;
         this.stringRedisTemplate = stringRedisTemplate;
     }
@@ -83,27 +83,27 @@ public class VinSlidingWindowGuardFilter extends OncePerRequestFilter {
             if (!StringUtils.hasText(clientId)) {
                 throw new ResponseStatusException(BAD_REQUEST, "请求头clientId不能为空");
             }
-            // 车辆标识
-            String vin = wrapped.getHeader("vin");
-            if (!StringUtils.hasText(vin)) {
-                throw new ResponseStatusException(BAD_REQUEST, "请求头vin不能为空");
+            // 用户标识
+            String userId = wrapped.getHeader("userId");
+            if (!StringUtils.hasText(userId)) {
+                throw new ResponseStatusException(BAD_REQUEST, "请求头userId不能为空");
             }
             // TODO: 2026/5/15 yunze 需要调整到缓存里面去查询
             ClientConfigVo clientConfig = getClientConfig(clientId);
-            // 最大操控车限制数量
-            int maxVinCount = clientConfig.getMaxVinCount();
+            // 最大操控用户限制数量
+            int maxUserIdCount = clientConfig.getMaxUserIdCount();
             // 时间窗口（单位：秒）
             int timeWindow = clientConfig.getTimeWindow();
 
 
             // byte[] raw = wrapped.getCachedBody();
             // if (raw.length == 0) {
-            //     throw new ResponseStatusException(BAD_REQUEST, "JSON 请求体不能为空（需含 vins、maxVinCount、timeWindow）");
+            //     throw new ResponseStatusException(BAD_REQUEST, "JSON 请求体不能为空（需含 userIds、maxUserIdCount、timeWindow）");
             // }
             // JsonNode root = objectMapper.readTree(raw);
-            // VinJsonBodySupport.VinPayload payload = VinJsonBodySupport.parse(root);
-            // vinGate.assertWithinVinWindow(clientId.strip(), payload.getVins(), payload.getMaxVinCount(), payload.getTimeWindow());
-            vinGate.assertWithinVinWindow(clientId.strip(), Collections.singletonList(vin), maxVinCount, timeWindow);
+            // UserIdJsonBodySupport.UserIdPayload payload = UserIdJsonBodySupport.parse(root);
+            // userIdGate.assertWithinUserIdWindow(clientId.strip(), payload.getUserIds(), payload.getMaxUserIdCount(), payload.getTimeWindow());
+            userIdGate.assertWithinUserIdWindow(clientId.strip(), Collections.singletonList(userId), maxUserIdCount, timeWindow);
         } catch (ResponseStatusException ex) {
             writeError(response, ex);
             return;

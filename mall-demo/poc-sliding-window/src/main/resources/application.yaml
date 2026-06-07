@@ -3,7 +3,7 @@ server:
 
 # 过滤器：URI 命中即做校验
 sw:
-  vin-guard:
+  user-id-guard:
     enabled: true
     Uris:
       - /poc/test/**

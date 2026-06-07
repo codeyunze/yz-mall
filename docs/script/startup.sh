@@ -16,7 +16,7 @@ app_name="yz-unqid-startup"
 app_version="0.0.1-SNAPSHOT"
 app_port="30008"
 app_active=test
-java_opts="-Xms1536m -Xmx1536m -Xmn512m -Xss256K"
+java_opts="-Xms1536m -Xmx1536m -Xmn512m -Xss512K -XX:+UseG1GC -Xlog:gc*:file=./gc.log:time,uptime,level,tags:filecount=5,filesize=10M -XX:HeapDumpPath=./heapdump.hprof -XX:+HeapDumpOnOutOfMemoryError"
 # 调试参数：仅 -d/--debug 时生效
 [ "$ENABLE_DEBUG" -eq 1 ] && java_debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$((app_port + 1000))" || java_debug=""
 
