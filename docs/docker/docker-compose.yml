@@ -228,3 +228,50 @@ services:
       - "9100:9100"
     networks:
       - mall
+
+  # Kafka KRaft 单节点
+  # PLAINTEXT(9092)=容器内访问 | EXTERNAL(9094)=宿主机/IDE访问 | CONTROLLER(9093)=KRaft 控制器（必须保留）
+  kafka:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/kafka:3.9.2
+    container_name: kafka-single
+    hostname: kafka
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://192.168.3.237:9094
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - ./kafka/data:/var/lib/kafka/data
+      - ./kafka/logs:/opt/kafka/logs
+    restart: unless-stopped
+    networks:
+      - mall
+
+  kafka-ui:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/kafka-ui:v0.7.2
+    container_name: kafka-ui
+    ports:
+      - "18081:8080"
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      KAFKA_CLUSTERS_0_NAME: vm-237-kafka-3.9
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    networks:
+      - mall
