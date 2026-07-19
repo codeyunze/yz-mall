@@ -6,6 +6,9 @@
         select pp.id as product_id, pp.product_name, pp.titles, pp.product_price, 0 as quantity
         from pms_product pp
         where pp.invalid = 0 and pp.publish_status = 1 and pp.verify_status = 1
+        <if test="filter.productName != null and filter.productName != ''">
+            and pp.product_name like concat('%', #{filter.productName}, '%')
+        </if>
         order by pp.id desc
     </select>
 

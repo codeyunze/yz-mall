@@ -67,12 +67,18 @@ public class PmsAttrServiceImpl extends ServiceImpl<PmsAttrMapper, PmsAttr> impl
 
         queryWrapper.orderByDesc(PmsAttr::getId);
         Page<PmsAttr> page = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
+        // 转换Page<PmsAttr>为Page<PmsAttrVo>
+        Page<PmsAttrVo> voPage = new Page<>();
+
+        if (page.getTotal() <= 0) {
+            return voPage;
+        }
+
         // 从商品表中查询商品名称
         List<Long> productIds = page.getRecords().stream().map(PmsAttr::getRelatedId).distinct().collect(Collectors.toList());
         List<PmsProduct> products = pmsProductService.listByIds(productIds);
         Map<Long, String> productNameMap = products.stream().collect(Collectors.toMap(PmsProduct::getId, PmsProduct::getProductName));
-        // 转换Page<PmsAttr>为Page<PmsAttrVo>
-        Page<PmsAttrVo> voPage = new Page<>();
+
         voPage.setTotal(page.getTotal());
         List<PmsAttrVo> voList = page.getRecords().stream().map(item -> {
             PmsAttrVo vo = new PmsAttrVo();

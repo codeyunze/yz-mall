@@ -5,6 +5,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.base.PageFilter;
@@ -32,6 +33,7 @@ import com.yz.mall.sys.service.ExtendSysAreaService;
 // import com.yz.mall.sys.service.InternalSysFilesService;
 import com.yz.mall.sys.service.ExtendSysUserService;
 import com.yz.mall.sys.vo.ExtendQofFileInfoVo;
+import com.yz.mall.sys.vo.ExtendSysAreaVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,9 +112,15 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         List<ExtendPmsStockDto> deductStocks = new ArrayList<>();
 
         // 订单商品信息入库
-        List<Long> productIds = dto.getProducts().stream().map(ExtendOmsOrderProductDto::getProductId).collect(Collectors.toList());
+        List<Long> productIds = dto.getProducts().stream().map(ExtendOmsOrderProductDto::getProductId).filter(Objects::nonNull).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(productIds) || productIds.size() != dto.getProducts().size()) {
+            throw new BusinessException("商品信息无效，请重新选择商品后下单");
+        }
         List<ExtendPmsProductSlimVo> productsInfo = extendPmsProductService.getProductByProductIds(productIds);
-        Map<Long, ExtendPmsProductSlimVo> productMap = productsInfo.stream().collect(Collectors.toMap(ExtendPmsProductSlimVo::getId, t -> t));
+        if (CollectionUtils.isEmpty(productsInfo)) {
+            throw new BusinessException("商品不存在或已下架");
+        }
+        Map<Long, ExtendPmsProductSlimVo> productMap = productsInfo.stream().collect(Collectors.toMap(ExtendPmsProductSlimVo::getId, t -> t, (a, b) -> a));
 
         List<OmsOrderRelationProduct> products = new ArrayList<>();
 
@@ -120,18 +128,24 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (ExtendOmsOrderProductDto product : dto.getProducts()) {
+            ExtendPmsProductSlimVo productInfo = productMap.get(product.getProductId());
+            if (productInfo == null) {
+                throw new BusinessException("商品不存在或已下架：" + product.getProductId());
+            }
             // 订单下的商品信息
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(product, relationProduct);
             relationProduct.setProductQuantity(product.getProductQuantity());
             relationProduct.setOrderId(bo.getId());
-            relationProduct.setProductName(productMap.get(product.getProductId()).getProductName());
-            relationProduct.setProductPrice(productMap.get(product.getProductId()).getProductPrice());
-            relationProduct.setAlbumPics(productMap.get(product.getProductId()).getAlbumPics());
+            relationProduct.setProductName(productInfo.getProductName());
+            relationProduct.setProductPrice(productInfo.getProductPrice());
+            relationProduct.setAlbumPics(productInfo.getAlbumPics());
             products.add(relationProduct);
 
             ExtendPmsStockDto stock = new ExtendPmsStockDto();
-            stock.setSkuId(product.getProductId());
+            stock.setProductId(product.getProductId());
+            // 优先使用真实 skuId；未传时由库存服务按商品解析 SKU
+            stock.setSkuId(product.getSkuId() != null ? product.getSkuId() : product.getProductId());
             stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());
@@ -183,7 +197,8 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             products.add(relationProduct);
 
             ExtendPmsStockDto stock = new ExtendPmsStockDto();
-            stock.setSkuId(product.getProductId());
+            stock.setProductId(product.getProductId());
+            stock.setSkuId(product.getSkuId() != null ? product.getSkuId() : product.getProductId());
             stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());
@@ -234,9 +249,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         }
         OmsOrderDetailVo detailVo = new OmsOrderDetailVo();
         BeanUtils.copyProperties(omsOrder, detailVo);
-        detailVo.setReceiverProvinceName(internalSysAreaService.getById(detailVo.getReceiverProvince()).getName());
-        detailVo.setReceiverCityName(internalSysAreaService.getById(detailVo.getReceiverCity()).getName());
-        detailVo.setReceiverDistrictName(internalSysAreaService.getById(detailVo.getReceiverDistrict()).getName());
+        fillReceiverAreaNames(detailVo);
 
         // 查询订单商品信息
         List<OmsOrderProductVo> products = omsOrderRelationProductService.getOrderProductsByOrderId(omsOrder.getId());
@@ -247,7 +260,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             if (!StringUtils.hasText(product.getAlbumPics())) {
                 continue;
             }
-            fileIds.addAll(Arrays.stream(product.getAlbumPics().split(",")).map(Long::parseLong).collect(Collectors.toList()));
+            fileIds.addAll(Arrays.stream(product.getAlbumPics().split(",")).map(Long::parseLong).toList());
         }
 
         // 获取商品文件信息
@@ -261,6 +274,30 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             assembleProductImage(product, filesInfo);
         }
         return detailVo;
+    }
+
+    /**
+     * 填充收货省市区名称，地区不存在时跳过，避免空指针。
+     */
+    private void fillReceiverAreaNames(OmsOrderDetailVo detailVo) {
+        if (StringUtils.hasText(detailVo.getReceiverProvince())) {
+            ExtendSysAreaVo province = internalSysAreaService.getById(detailVo.getReceiverProvince());
+            if (province != null) {
+                detailVo.setReceiverProvinceName(province.getName());
+            }
+        }
+        if (StringUtils.hasText(detailVo.getReceiverCity())) {
+            ExtendSysAreaVo city = internalSysAreaService.getById(detailVo.getReceiverCity());
+            if (city != null) {
+                detailVo.setReceiverCityName(city.getName());
+            }
+        }
+        if (StringUtils.hasText(detailVo.getReceiverDistrict())) {
+            ExtendSysAreaVo district = internalSysAreaService.getById(detailVo.getReceiverDistrict());
+            if (district != null) {
+                detailVo.setReceiverDistrictName(district.getName());
+            }
+        }
     }
 
     /**
@@ -283,6 +320,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean cancelById(Long id) {
         long userId = StpUtil.getLoginIdAsLong();
@@ -293,10 +331,52 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         if (order == null) {
             throw new DataNotExistException("订单信息不存在，无法操作取消订单");
         }
-        order.setOrderStatus(OmsOrderStatusEnum.ORDER_CLOSED.getStatus());
-        order.setUpdateId(userId);
-        order.setUpdateTime(LocalDateTime.now());
-        return baseMapper.updateById(order) > 0;
+        if (!OmsOrderStatusEnum.PENDING_PAYMENT.getStatus().equals(order.getOrderStatus())) {
+            throw new BusinessException("仅待付款订单可取消");
+        }
+        if (order.getPayType() != null && order.getPayType() != 0) {
+            throw new BusinessException("订单已支付，请走退款流程");
+        }
+
+        int updated = baseMapper.update(null, new LambdaUpdateWrapper<OmsOrder>()
+                .eq(OmsOrder::getId, order.getId())
+                .eq(OmsOrder::getOrderStatus, OmsOrderStatusEnum.PENDING_PAYMENT.getStatus())
+                .set(OmsOrder::getOrderStatus, OmsOrderStatusEnum.ORDER_CLOSED.getStatus())
+                .set(OmsOrder::getUpdateId, userId)
+                .set(OmsOrder::getUpdateTime, LocalDateTime.now()));
+        if (updated <= 0) {
+            throw new BusinessException("订单状态已变更，请刷新后重试");
+        }
+
+        // 下单时已扣库存，取消后回补
+        restoreStock(order.getId());
+        return true;
+    }
+
+    /**
+     * 按订单商品行回补库存（订单行仅有 productId，由库存服务解析真实 SKU）
+     */
+    private void restoreStock(Long orderId) {
+        List<OmsOrderRelationProduct> products = omsOrderRelationProductService.list(
+                new LambdaQueryWrapper<OmsOrderRelationProduct>().eq(OmsOrderRelationProduct::getOrderId, orderId));
+        if (CollectionUtils.isEmpty(products)) {
+            return;
+        }
+        for (OmsOrderRelationProduct product : products) {
+            if (product.getProductId() == null || product.getProductQuantity() == null || product.getProductQuantity() <= 0) {
+                continue;
+            }
+            ExtendPmsStockDto stockDto = new ExtendPmsStockDto();
+            stockDto.setOrderId(orderId);
+            stockDto.setProductId(product.getProductId());
+            stockDto.setSkuId(product.getProductId());
+            stockDto.setQuantity(product.getProductQuantity());
+            stockDto.setRemark("取消订单回补库存，订单id=" + orderId);
+            Boolean added = extendPmsStockService.add(stockDto);
+            if (!Boolean.TRUE.equals(added)) {
+                throw new BusinessException("回补库存失败，商品id=" + product.getProductId());
+            }
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -317,6 +397,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         // 修改订单状态
         order.setPayType(payType);
         order.setOrderStatus(OmsOrderStatusEnum.PENDING_SHIPMENT.getStatus());
+        order.setPayTime(LocalDateTime.now());
         order.setUpdateId(userId);
         order.setUpdateTime(LocalDateTime.now());
 

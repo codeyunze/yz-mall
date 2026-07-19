@@ -1,5 +1,7 @@
 package com.yz.mall.oms.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +24,8 @@ public class ExtendOmsOrderByCartDto extends BaseOmsOrder implements Serializabl
     /**
      * 订单商品信息(在购物车里选择的商品)
      */
+    @Valid
+    @NotEmpty(message = "商品信息不能为空")
     @NotNull(message = "商品信息不能为空")
     private List<ExtendOmsOrderProductDto> products;
 }

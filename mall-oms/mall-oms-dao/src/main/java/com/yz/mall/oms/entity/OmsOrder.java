@@ -70,7 +70,7 @@ public class OmsOrder extends Model<OmsOrder> {
     private String orderCode;
 
     /**
-     * 订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单
+     * 订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单；7退款中；8已退款
      */
     private Integer orderStatus;
 
@@ -121,6 +121,8 @@ public class OmsOrder extends Model<OmsOrder> {
     /**
      * 支付时间
      */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime payTime;
 
     /**
@@ -168,7 +170,7 @@ public class OmsOrder extends Model<OmsOrder> {
     /**
      * 商家组织Id
      */
-    private String businessOrgId;
+    private Long businessOrgId;
 
     /**
      * 获取主键值

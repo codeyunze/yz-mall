@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +27,12 @@ public class ExtendPmsProductServiceImpl implements ExtendPmsProductService {
 
     @Override
     public List<ExtendPmsProductSlimVo> getProductByProductIds(List<Long> productIds) {
+        if (CollectionUtils.isEmpty(productIds)) {
+            return Collections.emptyList();
+        }
         Map<Long, PmsProductDisplayInfoVo> infoMap = pmsProductService.getProductDisplayInfoMap(productIds);
         if (CollectionUtils.isEmpty(infoMap)) {
-            return null;
+            return Collections.emptyList();
         }
         return infoMap.values().stream().map(t -> {
             ExtendPmsProductSlimVo vo = new ExtendPmsProductSlimVo();

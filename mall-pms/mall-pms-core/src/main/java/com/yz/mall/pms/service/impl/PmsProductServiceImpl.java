@@ -131,6 +131,9 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         PmsProduct bo = baseMapper.selectById(id);
         PmsProductVo product = new PmsProductVo();
         BeanUtils.copyProperties(bo, product);
+        // VO 的 id/createId 为 String，BeanUtils 无法从 Long 自动拷贝
+        product.setId(bo.getId() == null ? null : String.valueOf(bo.getId()));
+        product.setCreateId(bo.getCreateId() == null ? null : String.valueOf(bo.getCreateId()));
 
         // 根据 productId 查询对应的 SKU 列表，然后汇总库存
         List<PmsSkuVo> skuList = skuService.listByProductId(id);

@@ -15,12 +15,16 @@ public class ExtendOmsOrderProductDto implements Serializable {
 
     private final static long serialVersionUID = 1L;
 
-    // TODO: 2026/1/11 星期日 yunze 需要修改为skuId
     /**
      * 商品Id
      */
     @NotNull(message = "商品不能为空")
     private Long productId;
+
+    /**
+     * SKU Id（库存按 SKU 扣减；未传时由库存服务按商品解析）
+     */
+    private Long skuId;
 
     /**
      * 商品数量

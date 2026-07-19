@@ -86,7 +86,15 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean removeCartByProductIds(Long userId, List<ExtendPmsStockDto> products) {
-        Map<Long, ExtendPmsStockDto> productMap = products.stream().collect(Collectors.toMap(ExtendPmsStockDto::getSkuId, item -> item));
+        Map<Long, ExtendPmsStockDto> productMap = products.stream()
+                .filter(item -> item.getProductId() != null)
+                .collect(Collectors.toMap(ExtendPmsStockDto::getProductId, item -> item, (left, right) -> {
+                    left.setQuantity(left.getQuantity() + right.getQuantity());
+                    return left;
+                }));
+        if (CollectionUtils.isEmpty(productMap)) {
+            return true;
+        }
 
         LambdaQueryWrapper<PmsShopCart> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PmsShopCart::getUserId, userId);
@@ -96,11 +104,15 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         List<Long> delCartIds = new ArrayList<>();
         List<PmsShopCart> updateCarts = new ArrayList<>();
         for (PmsShopCart cart : carts) {
+            ExtendPmsStockDto stockDto = productMap.get(cart.getProductId());
+            if (stockDto == null) {
+                continue;
+            }
             // 需要扣除的数量比购物车多，就直接删除
-            if (productMap.get(cart.getProductId()).getQuantity() >= cart.getQuantity()) {
+            if (stockDto.getQuantity() >= cart.getQuantity()) {
                 delCartIds.add(cart.getId());
             } else {
-                cart.setQuantity(cart.getQuantity() - productMap.get(cart.getProductId()).getQuantity());
+                cart.setQuantity(cart.getQuantity() - stockDto.getQuantity());
                 updateCarts.add(cart);
             }
         }

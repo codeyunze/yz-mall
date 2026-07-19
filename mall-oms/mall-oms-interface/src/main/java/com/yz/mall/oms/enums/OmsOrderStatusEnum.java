@@ -3,7 +3,7 @@ package com.yz.mall.oms.enums;
 import lombok.Getter;
 
 /**
- * 订单状态枚举: 0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单
+ * 订单状态枚举: 0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单；7退款中；8已退款
  *
  * @author yunze
  * @date 2024/11/23 星期六 14:31
@@ -38,7 +38,15 @@ public enum OmsOrderStatusEnum {
     /**
      * 6无效订单
      */
-    ORDER_INVALID(6, "无效订单");
+    ORDER_INVALID(6, "无效订单"),
+    /**
+     * 7退款中
+     */
+    REFUNDING(7, "退款中"),
+    /**
+     * 8已退款
+     */
+    REFUNDED(8, "已退款");
 
     private final Integer status;
 

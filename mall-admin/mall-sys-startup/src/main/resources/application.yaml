@@ -1,15 +1,10 @@
 
 server:
-  port: 30004
+  port: 25002
 
 spring:
   application:
     name: mall-sys
-
-# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
-app:
-  logging:
-    mapper-package: com.yz.mall.sys.mapper
 # spring-cloud-alibaba 2023.X版本使用的nacos配置中心
 #  config:
 #    import:
@@ -17,13 +12,16 @@ app:
 #      - nacos:sa-token.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true
-
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
 
-
+# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
+app:
+  logging:
+    mapper-package: com.yz.mall.sys.mapper
+    
 management:
   endpoints:
     web:

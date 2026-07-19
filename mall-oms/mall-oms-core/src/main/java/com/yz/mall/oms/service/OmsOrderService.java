@@ -52,7 +52,7 @@ public interface OmsOrderService extends IService<OmsOrder> {
     OmsOrderDetailVo get(Long userId, OmsOrderQuerySlimDto query);
 
     /**
-     * 取消订单
+     * 取消待付款订单，并回补下单时已扣减的库存
      *
      * @param id 订单Id {@link OmsOrder#getId()}
      * @return true: 操作成功   false: 操作失败
