@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
+    <!--从 spring.application.name 读取服务名，日志目录与 Logstash 标签自动跟随，新模块只需配置服务名即可-->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="application"/>
     <!--设置存储路径变量-->
-    <property name="LOG_HOME" value="./logs/sys/"/>
+    <property name="LOG_HOME" value="./logs/${APP_NAME}/"/>
 
     <!--控制台输出appender-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <!--设置输出格式-->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符；%highlight/%green/%magenta/%cyan 为控制台着色-->
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan(%logger{50}) - %msg%n</pattern>
             <!--设置编码-->
             <charset>UTF-8</charset>
         </encoder>
@@ -43,11 +45,14 @@
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>yunze.com:4560</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"platform": "mall", "app_name": "mall-sys"}</customFields>
+            <customFields>{"platform": "mall", "app_name": "${APP_NAME}"}</customFields>
         </encoder>
     </appender>
 
-    <logger name="com.yz.mall.sys.mapper" level="DEBUG"/>
+    <!-- MyBatis Mapper SQL 日志包：由 app.logging.mapper-package 指定，默认 com.yz.mall（新模块只需改 application.yaml） -->
+    <springProperty scope="context" name="MAPPER_PACKAGE" source="app.logging.mapper-package" defaultValue="com.yz.mall"/>
+    <logger name="${MAPPER_PACKAGE}" level="DEBUG"/>
+    <!-- 公共组件 Mapper（各服务通用，无对应包时无影响） -->
     <logger name="io.github.codeyunze.mapper" level="DEBUG"/>
 
     <!--指定基础的日志输出级别-->

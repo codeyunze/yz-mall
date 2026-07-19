@@ -5,10 +5,15 @@ server:
 spring:
   application:
     name: mall-sys
+
+# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
+app:
+  logging:
+    mapper-package: com.yz.mall.sys.mapper
 # spring-cloud-alibaba 2023.X版本使用的nacos配置中心
 #  config:
 #    import:
-#      - nacos:datasource.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+#      - nacos:middleware.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:sa-token.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true
@@ -27,19 +32,11 @@ management:
 
 xxl:
   job:
-    admin:
-      addresses: http://${XXL_JOB_ADMIN_HOST}:30009/xxl-job-admin
-#      addresses: http://192.168.3.29:30009/xxl-job-admin
-      accessToken: 123456789
-      timeout: 3
     executor:
       appname: admin
-      address: http://${LOCAL_HOST}:31004/
-      ip: ${LOCAL_HOST}
+      address: http://127.0.0.1:31004/
+      ip: 127.0.0.1
       port: 31004
-      logpath: ./logs/sys
-      logretentiondays: 10
-      excludepackages: org.springframework,spring
 
 yz:
   mall:
@@ -50,7 +47,6 @@ yz:
         expire-after-access: 0
         
 rocketmq:
-  name-server: ${ROCKET_MQ_HOST}:9876
   producer:
     group: producer-mall-sys
   consumer:

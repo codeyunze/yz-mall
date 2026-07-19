@@ -10,10 +10,8 @@ spring:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
         file-extension: yaml
         extension-configs:
-          - data-id: datasource.yaml
+          - data-id: middleware.yaml
           - data-id: sa-token.yaml
-#          - data-id: rabbitmq.yaml
           - data-id: file.yaml
-          - data-id: xxl-job-admin.yaml
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8

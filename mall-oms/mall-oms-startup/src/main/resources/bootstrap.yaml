@@ -11,7 +11,7 @@ spring:
         import-check:
           enabled: false
         extension-configs:
-          - data-id: datasource.yaml
+          - data-id: middleware.yaml
           - data-id: sa-token.yaml
           - data-id: rabbitmq.yaml
         file-extension: yaml
@@ -19,7 +19,6 @@ spring:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
 
 rocketmq:
-  name-server: ${ROCKET_MQ_HOST}:9876
   producer:
     group: producer-mall-oms
   consumer:

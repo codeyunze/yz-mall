@@ -5,3 +5,8 @@ server:
 spring:
   application:
     name: mall-pms
+
+# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
+app:
+  logging:
+    mapper-package: com.yz.mall.pms.mapper
