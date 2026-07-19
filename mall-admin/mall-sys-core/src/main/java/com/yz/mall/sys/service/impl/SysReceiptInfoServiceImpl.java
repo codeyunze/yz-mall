@@ -19,6 +19,7 @@ import com.yz.mall.sys.service.SysReceiptInfoService;
 import com.yz.mall.sys.vo.SysReceiptInfoVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -39,15 +40,23 @@ public class SysReceiptInfoServiceImpl extends ServiceImpl<SysReceiptInfoMapper,
         this.sysAreaService = sysAreaService;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Long save(SysReceiptInfoAddDto dto) {
         SysReceiptInfo bo = new SysReceiptInfo();
         BeanUtils.copyProperties(dto, bo);
         bo.setId(IdUtil.getSnowflakeNextId());
+        if (bo.getIsDefault() == null) {
+            bo.setIsDefault(0);
+        }
+        if (Integer.valueOf(1).equals(bo.getIsDefault())) {
+            clearOtherDefaults(dto.getCreateId(), null);
+        }
         baseMapper.insert(bo);
         return bo.getId();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean update(SysReceiptInfoUpdateDto dto) {
         SysReceiptInfo receiptInfo = baseMapper.selectById(dto.getId());
@@ -61,10 +70,34 @@ public class SysReceiptInfoServiceImpl extends ServiceImpl<SysReceiptInfoMapper,
         SysReceiptInfo bo = new SysReceiptInfo();
         BeanUtils.copyProperties(dto, bo);
         bo.setUpdateTime(LocalDateTime.now());
+        if (bo.getIsDefault() == null) {
+            bo.setIsDefault(receiptInfo.getIsDefault());
+        }
+        if (Integer.valueOf(1).equals(bo.getIsDefault())) {
+            clearOtherDefaults(dto.getCreateId(), dto.getId());
+        }
         LambdaUpdateWrapper<SysReceiptInfo> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(SysReceiptInfo::getId, bo.getId());
         updateWrapper.eq(SysReceiptInfo::getCreateId, dto.getCreateId());
         return baseMapper.update(bo, updateWrapper) > 0;
+    }
+
+    /**
+     * 取消同用户下其他默认地址
+     */
+    private void clearOtherDefaults(Long userId, Long excludeId) {
+        if (userId == null) {
+            return;
+        }
+        LambdaUpdateWrapper<SysReceiptInfo> clearWrapper = new LambdaUpdateWrapper<>();
+        clearWrapper.eq(SysReceiptInfo::getCreateId, userId);
+        clearWrapper.eq(SysReceiptInfo::getIsDefault, 1);
+        if (excludeId != null) {
+            clearWrapper.ne(SysReceiptInfo::getId, excludeId);
+        }
+        clearWrapper.set(SysReceiptInfo::getIsDefault, 0);
+        clearWrapper.set(SysReceiptInfo::getUpdateTime, LocalDateTime.now());
+        baseMapper.update(null, clearWrapper);
     }
 
     @Override
@@ -82,6 +115,8 @@ public class SysReceiptInfoServiceImpl extends ServiceImpl<SysReceiptInfoMapper,
         queryWrapper.eq(SysReceiptInfo::getCreateId, filter.getFilter().getCreateId());
         queryWrapper.like(StringUtils.hasText(filter.getFilter().getReceiverName()), SysReceiptInfo::getReceiverName, filter.getFilter().getReceiverName());
         queryWrapper.eq(StringUtils.hasText(filter.getFilter().getReceiverPhone()), SysReceiptInfo::getReceiverPhone, filter.getFilter().getReceiverPhone());
+        // 默认地址优先
+        queryWrapper.orderByDesc(SysReceiptInfo::getIsDefault);
         queryWrapper.orderByDesc(SysReceiptInfo::getUpdateTime);
         Page<SysReceiptInfo> infoPage = baseMapper.selectPage(new Page<>(filter.getCurrent(), filter.getSize()), queryWrapper);
         if (infoPage.getTotal() == 0) {
@@ -100,4 +135,3 @@ public class SysReceiptInfoServiceImpl extends ServiceImpl<SysReceiptInfoMapper,
         return resultPage;
     }
 }
-

@@ -34,6 +34,11 @@ public class ExtendPmsCartDto implements Serializable {
     private Long productSkuId;
 
     /**
+     * 商品SKU id（与 productSkuId 同义，便于前端统一）
+     */
+    private Long skuId;
+
+    /**
      * 商品数量
      */
     private Integer quantity;

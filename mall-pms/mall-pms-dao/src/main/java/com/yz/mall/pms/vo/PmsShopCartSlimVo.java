@@ -28,7 +28,12 @@ public class PmsShopCartSlimVo implements Serializable {
     private Long productId;
 
     /**
-     * 商品sku主键id
+     * 商品SKU id
+     */
+    private Long skuId;
+
+    /**
+     * 商品sku主键id（兼容历史字段名）
      */
     private Long productSkuId;
 

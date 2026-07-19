@@ -50,6 +50,11 @@ public class PmsShopCart extends Model<PmsShopCart> {
     private Long productId;
 
     /**
+     * 商品SKU id
+     */
+    private Long skuId;
+
+    /**
      * 数量
      */
     private Integer quantity;

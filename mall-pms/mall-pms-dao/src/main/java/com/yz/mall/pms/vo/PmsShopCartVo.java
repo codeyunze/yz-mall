@@ -28,6 +28,11 @@ public class PmsShopCartVo implements Serializable {
     private Long productId;
 
     /**
+     * 商品SKU id
+     */
+    private Long skuId;
+
+    /**
      * 数量 {@link PmsShopCart#getQuantity()}
      */
     private Integer quantity;
@@ -38,7 +43,12 @@ public class PmsShopCartVo implements Serializable {
     private String productName;
 
     /**
-     * 商品价格
+     * SKU名称
+     */
+    private String skuName;
+
+    /**
+     * 商品价格（元）
      */
     private BigDecimal price;
 
