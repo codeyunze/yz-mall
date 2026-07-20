@@ -1,6 +1,7 @@
 package com.yz.mall.sys.service;
 
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksEndDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -27,4 +28,11 @@ public interface ExtendSysPendingTasksService {
      * @param taskId 结束任务Id
      */
     boolean endTask(@NotNull Long taskId);
+
+    /**
+     * 按业务主键 + 任务标识结束进行中的待办
+     *
+     * @param dto 业务主键与任务标识
+     */
+    boolean endTaskByBusiness(@Valid ExtendSysPendingTasksEndDto dto);
 }

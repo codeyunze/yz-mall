@@ -222,15 +222,17 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
             } else {
                 cart.setPrice(productInfo.getProductPrice());
                 cart.setAlbumPics(productInfo.getAlbumPics());
+            }
+            // SKU 无图或无 SKU 时：优先商品已解析预览图，再回退商品 albumPics
+            if (!StringUtils.hasText(cart.getPreviewAddress())) {
                 if (!CollectionUtils.isEmpty(productInfo.getProductImages())) {
                     cart.setPreviewAddress(productInfo.getProductImages().get(0));
                 } else {
                     cart.setPreviewAddress(resolveFirstPreviewUrl(productInfo.getAlbumPics()));
+                    if (!StringUtils.hasText(cart.getAlbumPics())) {
+                        cart.setAlbumPics(productInfo.getAlbumPics());
+                    }
                 }
-            }
-            // 无 SKU 图时回退商品图
-            if (!StringUtils.hasText(cart.getPreviewAddress()) && !CollectionUtils.isEmpty(productInfo.getProductImages())) {
-                cart.setPreviewAddress(productInfo.getProductImages().get(0));
             }
         });
 

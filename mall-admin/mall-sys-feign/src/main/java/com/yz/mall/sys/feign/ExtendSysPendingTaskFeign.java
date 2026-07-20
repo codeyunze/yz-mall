@@ -3,6 +3,7 @@ package com.yz.mall.sys.feign;
 import com.yz.mall.base.IdDto;
 import com.yz.mall.base.Result;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksEndDto;
 import com.yz.mall.web.configuration.OpenFeignConfig;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -36,4 +37,10 @@ public interface ExtendSysPendingTaskFeign {
      */
     @PostMapping("endTask")
     Result<Boolean> endTask(@RequestBody @Valid IdDto taskId);
+
+    /**
+     * 按业务主键结束待办
+     */
+    @PostMapping("endTaskByBusiness")
+    Result<Boolean> endTaskByBusiness(@RequestBody @Valid ExtendSysPendingTasksEndDto dto);
 }

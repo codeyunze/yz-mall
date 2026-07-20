@@ -209,8 +209,18 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
                 imageIds.add(Long.parseLong(imageId));
             }
         }
-        // 查询图片的访问信息
-        // List<InternalQofFileInfoVo> qofFileInfoVos = internalSysFilesService.getFileInfoByFileIdsAndPublic(imageIds);
+        // 批量解析商品图片预览地址（按文件逐个解析，避免顺序错配）
+        Map<Long, List<String>> productImagesMap = new HashMap<>();
+        for (Long imageId : imageIds) {
+            Long productId = imageIdToProductIdMap.get(imageId);
+            if (productId == null) {
+                continue;
+            }
+            List<String> urls = extendSysFilesService.getFilePreviewByFileIds(List.of(imageId));
+            if (!CollectionUtils.isEmpty(urls)) {
+                productImagesMap.computeIfAbsent(productId, k -> new ArrayList<>()).addAll(urls);
+            }
+        }
 
         // 获取指定商品的库存数量（根据 productId 查询对应的 SKU 列表，然后汇总库存）
         Map<Long, Integer> stockByProductId = new HashMap<>();
@@ -230,10 +240,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
             PmsProductDisplayInfoVo vo = new PmsProductDisplayInfoVo();
             BeanUtils.copyProperties(product, vo);
             vo.setQuantity(stockByProductId.get(product.getId()) != null ? stockByProductId.get(product.getId()) : 0);
-
-            // 组装产品的图片预览地址
-            // assembleProductImage(vo, qofFileInfoVos, imageIdToProductIdMap, product.getId());
-
+            vo.setProductImages(productImagesMap.getOrDefault(product.getId(), new ArrayList<>()));
             map.put(product.getId(), vo);
         });
         return map;

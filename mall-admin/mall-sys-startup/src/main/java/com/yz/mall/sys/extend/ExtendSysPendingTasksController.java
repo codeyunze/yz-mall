@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.yz.mall.base.IdDto;
 import com.yz.mall.base.Result;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksEndDto;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -55,5 +56,13 @@ public class ExtendSysPendingTasksController {
     public Result<Boolean> endTask(@RequestBody @Valid IdDto taskId) {
         boolean ended = extendSysPendingTasksService.endTask(taskId.getId());
         return Result.success(ended);
+    }
+
+    /**
+     * 按业务主键结束待办
+     */
+    @PostMapping("endTaskByBusiness")
+    public Result<Boolean> endTaskByBusiness(@RequestBody @Valid ExtendSysPendingTasksEndDto dto) {
+        return Result.success(extendSysPendingTasksService.endTaskByBusiness(dto));
     }
 }

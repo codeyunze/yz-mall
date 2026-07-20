@@ -1,6 +1,7 @@
 -- 申请退款 V1：退款申请表 + 订单状态 COMMENT 扩展（7退款中 / 8已退款）
 -- 执行前请确认目标库；本仓库 MCP 只读账号无法代执行 DDL。
 
+-- 订单退款申请表
 CREATE TABLE `oms_order_refund` (
   `id` bigint NOT NULL COMMENT '主键标识',
   `refund_no` varchar(32) NOT NULL COMMENT '退款单号',

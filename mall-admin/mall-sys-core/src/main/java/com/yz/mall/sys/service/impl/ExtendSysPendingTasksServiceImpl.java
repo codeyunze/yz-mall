@@ -2,6 +2,7 @@ package com.yz.mall.sys.service.impl;
 
 import com.yz.mall.base.IdDto;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksEndDto;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import com.yz.mall.sys.service.SysPendingTasksService;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,10 @@ public class ExtendSysPendingTasksServiceImpl implements ExtendSysPendingTasksSe
     @Override
     public boolean endTask(Long taskId) {
         return sysPendingTasksService.end(new IdDto(taskId));
+    }
+
+    @Override
+    public boolean endTaskByBusiness(ExtendSysPendingTasksEndDto dto) {
+        return sysPendingTasksService.endByBusiness(dto.getBusinessId(), dto.getTaskCode());
     }
 }

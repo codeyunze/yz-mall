@@ -88,6 +88,23 @@ public class SysPendingTasksServiceImpl extends ServiceImpl<SysPendingTasksMappe
     }
 
     @Override
+    public boolean endByBusiness(String businessId, String taskCode) {
+        if (!StringUtils.hasText(businessId) || !StringUtils.hasText(taskCode)) {
+            throw new BusinessException("业务主键或任务标识不能为空");
+        }
+        SysPendingTasks tasks = baseMapper.selectOne(new LambdaQueryWrapper<SysPendingTasks>()
+                .eq(SysPendingTasks::getBusinessId, businessId)
+                .eq(SysPendingTasks::getTaskCode, taskCode)
+                .eq(SysPendingTasks::getTaskStatus, 0)
+                .orderByDesc(SysPendingTasks::getId)
+                .last("limit 1"));
+        if (tasks == null) {
+            throw new BusinessException("待办任务不存在或已结束");
+        }
+        return end(new IdDto(tasks.getId()));
+    }
+
+    @Override
     public Page<SysPendingTasks> page(PageFilter<SysPendingTasksQueryDto> filter) {
         SysPendingTasksQueryDto queryFilter = filter.getFilter();
         LambdaQueryWrapper<SysPendingTasks> queryWrapper = new LambdaQueryWrapper<>();

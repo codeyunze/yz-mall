@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.exception.BusinessException;
 import com.yz.mall.base.exception.DataNotExistException;
+import com.yz.mall.oms.config.OmsOrderRefundQueueConfig;
 import com.yz.mall.oms.dto.OmsOrderRefundQueryDto;
 import com.yz.mall.oms.dto.OmsRefundApplyDto;
 import com.yz.mall.oms.dto.OmsRefundAuditDto;
@@ -26,6 +27,9 @@ import com.yz.mall.oms.vo.OmsOrderRefundVo;
 import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.service.ExtendPmsStockService;
 import com.yz.mall.serial.service.ExtendSerialService;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksEndDto;
+import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import com.yz.mall.sys.service.ExtendSysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,17 +54,20 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
     private final ExtendSerialService extendSerialService;
     private final ExtendSysUserService extendSysUserService;
     private final ExtendPmsStockService extendPmsStockService;
+    private final ExtendSysPendingTasksService extendSysPendingTasksService;
 
     public OmsOrderRefundServiceImpl(OmsOrderMapper omsOrderMapper
             , OmsOrderRelationProductService omsOrderRelationProductService
             , ExtendSerialService extendSerialService
             , ExtendSysUserService extendSysUserService
-            , ExtendPmsStockService extendPmsStockService) {
+            , ExtendPmsStockService extendPmsStockService
+            , ExtendSysPendingTasksService extendSysPendingTasksService) {
         this.omsOrderMapper = omsOrderMapper;
         this.omsOrderRelationProductService = omsOrderRelationProductService;
         this.extendSerialService = extendSerialService;
         this.extendSysUserService = extendSysUserService;
         this.extendPmsStockService = extendPmsStockService;
+        this.extendSysPendingTasksService = extendSysPendingTasksService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -104,6 +111,16 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
         refund.setReasonType(dto.getReasonType());
         refund.setReason(dto.getReason().trim());
         refund.setRefundStatus(OmsRefundStatusEnum.PENDING.getStatus());
+
+        // 接入统一待办（与商品上架审核同一模式；businessId=退款单id）
+        ExtendSysPendingTasksAddDto tasksAddDto = new ExtendSysPendingTasksAddDto();
+        tasksAddDto.setBusinessId(String.valueOf(refund.getId()));
+        tasksAddDto.setTaskCode(OmsOrderRefundQueueConfig.TASK_CODE);
+        tasksAddDto.setTaskNode("待审核");
+        tasksAddDto.setTaskTitle(buildRefundTaskTitle(order.getOrderCode(), refundNo));
+        tasksAddDto.setCreateId(userId);
+        extendSysPendingTasksService.startTask(tasksAddDto);
+
         if (!this.save(refund)) {
             throw new BusinessException("退款申请提交失败");
         }
@@ -118,6 +135,18 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
             throw new BusinessException("订单状态已变更，请刷新后重试");
         }
         return refund.getId();
+    }
+
+    /**
+     * 构建待办标题（不超过 36 字符）
+     */
+    private String buildRefundTaskTitle(String orderCode, String refundNo) {
+        String title = "订单" + (orderCode != null ? orderCode : "") + "退款审核";
+        if (title.length() <= 36) {
+            return title;
+        }
+        String shortTitle = "退款审核-" + (refundNo != null ? refundNo : "");
+        return shortTitle.length() <= 36 ? shortTitle : shortTitle.substring(0, 36);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -174,6 +203,12 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
             extendSysUserService.recharge(order.getUserId(), refund.getRefundAmount());
             restoreStock(order.getId());
         }
+
+        // 按 businessId 结束统一待办
+        ExtendSysPendingTasksEndDto endDto = new ExtendSysPendingTasksEndDto();
+        endDto.setBusinessId(String.valueOf(refund.getId()));
+        endDto.setTaskCode(OmsOrderRefundQueueConfig.TASK_CODE);
+        extendSysPendingTasksService.endTaskByBusiness(endDto);
         return true;
     }
 

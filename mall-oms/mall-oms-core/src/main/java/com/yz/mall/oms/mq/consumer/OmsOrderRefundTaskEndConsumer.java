@@ -1,10 +1,8 @@
-package com.yz.mall.sys.mq.consumer;
+package com.yz.mall.oms.mq.consumer;
 
-import com.yz.mall.base.exception.BusinessException;
 import com.yz.mall.sys.AbstractSysPendingTasksQueueConfig;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
 import com.yz.mall.sys.service.ExtendSysMsgRetryService;
-import com.yz.mall.sys.service.SysPendingTasksService;
 import com.yz.mall.rocketmq.utils.MsgConsumerHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -15,26 +13,22 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
 
 /**
- * 系统管理-待办任务开始-消息消费者
- *
- * @author yunze
- * @since 2025/9/9 22:49
+ * 退款审核待办结束消息消费者。
+ * <p>
+ * 退款业务已在审核接口完成，此处仅消费结束消息，避免 Topic 堆积。
  */
 @Slf4j
 @Component
 @RocketMQMessageListener(topic = AbstractSysPendingTasksQueueConfig.TOPIC_NAME
-        , consumerGroup = "consumer-mall-sys"
+        , consumerGroup = "consumer-mall-oms-refund-end"
         , selectorType = SelectorType.TAG
-        , selectorExpression = "pms_product_publish_start_key || oms_order_refund_start_key"
+        , selectorExpression = "oms_order_refund_end_key"
         , messageModel = MessageModel.CLUSTERING)
-public class SysPendingTaskStartConsumer implements RocketMQListener<MessageExt> {
+public class OmsOrderRefundTaskEndConsumer implements RocketMQListener<MessageExt> {
 
-    private final SysPendingTasksService sysPendingTasksService;
     private final ExtendSysMsgRetryService extendSysMsgRetryService;
 
-    public SysPendingTaskStartConsumer(SysPendingTasksService sysPendingTasksService,
-                                       ExtendSysMsgRetryService extendSysMsgRetryService) {
-        this.sysPendingTasksService = sysPendingTasksService;
+    public OmsOrderRefundTaskEndConsumer(ExtendSysMsgRetryService extendSysMsgRetryService) {
         this.extendSysMsgRetryService = extendSysMsgRetryService;
     }
 
@@ -42,15 +36,11 @@ public class SysPendingTaskStartConsumer implements RocketMQListener<MessageExt>
     public void onMessage(MessageExt messageExt) {
         MsgConsumerHelper.consumeMessage(
                 messageExt,
-                "consumer-mall-sys",
+                "consumer-mall-oms-refund-end",
                 extendSysMsgRetryService,
                 ExtendSysPendingTasksAddDto.class,
                 dto -> {
-                    Long id = sysPendingTasksService.save(dto);
-                    if (id == null) {
-                        throw new BusinessException("待办任务创建失败");
-                    }
-                    log.info("消费【待办任务开始】消息成功，taskId: {}", id);
+                    log.info("消费【退款待办结束】消息成功，businessId: {}, taskId: {}", dto.getBusinessId(), dto.getTaskId());
                     return dto.getBusinessId();
                 }
         );

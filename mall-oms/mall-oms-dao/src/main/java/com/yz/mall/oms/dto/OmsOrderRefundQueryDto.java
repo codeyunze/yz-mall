@@ -16,6 +16,11 @@ public class OmsOrderRefundQueryDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 退款单主键（待办跳转定位）
+     */
+    private Long id;
+
+    /**
      * 退款单号
      */
     private String refundNo;
