@@ -30,8 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +88,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
         PmsShopCart bo = new PmsShopCart();
         BeanUtils.copyProperties(dto, bo);
         bo.setQuantity(addQuantity);
+        bo.setChecked(1);
         bo.setId(IdUtil.getSnowflakeNextId());
         baseMapper.insert(bo);
         return bo.getId();
@@ -199,7 +198,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
             if (productInfo == null) {
                 cart.setProductStatus(ProductStatusEnum.DELISTING.get());
                 cart.setProductName("商品已失效");
-                cart.setPrice(BigDecimal.ZERO);
+                cart.setPrice(0L);
                 return;
             }
             if (!ProductPublishStatusEnum.PUBLISH.get().equals(productInfo.getPublishStatus())) {
@@ -213,7 +212,7 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
             if (sku != null) {
                 cart.setSkuName(sku.getSkuName());
                 if (sku.getPriceFee() != null) {
-                    cart.setPrice(BigDecimal.valueOf(sku.getPriceFee()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+                    cart.setPrice(sku.getPriceFee());
                 } else {
                     cart.setPrice(productInfo.getProductPrice());
                 }
@@ -285,18 +284,17 @@ public class PmsShopCartServiceImpl extends ServiceImpl<PmsShopCartMapper, PmsSh
             if (item.getProductSkuId() == null && item.getSkuId() != null) {
                 item.setProductSkuId(item.getSkuId());
             }
-            item.setDiscountAmount(BigDecimal.ZERO);
+            item.setDiscountAmount(0L);
             PmsSku sku = item.getSkuId() == null ? null : skuMap.get(item.getSkuId());
             if (sku != null && sku.getPriceFee() != null) {
-                BigDecimal price = BigDecimal.valueOf(sku.getPriceFee()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-                item.setRealAmount(price.subtract(item.getDiscountAmount()));
+                item.setRealAmount(sku.getPriceFee() - item.getDiscountAmount());
                 return;
             }
             PmsProductDisplayInfoVo vo = productDisplayInfoMap.get(item.getProductId());
             if (vo != null && vo.getProductPrice() != null) {
-                item.setRealAmount(vo.getProductPrice().subtract(item.getDiscountAmount()));
+                item.setRealAmount(vo.getProductPrice() - item.getDiscountAmount());
             } else {
-                item.setRealAmount(BigDecimal.ZERO);
+                item.setRealAmount(0L);
             }
         });
         return carts;

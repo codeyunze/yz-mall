@@ -6,7 +6,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -32,7 +31,7 @@ public class OmsOrderRefundVo implements Serializable {
 
     private Long businessOrgId;
 
-    private BigDecimal refundAmount;
+    private Long refundAmount;
 
     private Integer reasonType;
 

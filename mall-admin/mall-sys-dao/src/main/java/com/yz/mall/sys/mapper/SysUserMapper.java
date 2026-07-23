@@ -11,8 +11,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import java.math.BigDecimal;
-
 /**
  * 基础-用户(BaseUser)表数据库访问层
  *
@@ -35,19 +33,19 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * 扣减账户金额
      *
      * @param userId 扣减用户
-     * @param amount 扣减金额
+     * @param amount 扣减金额（单位：分）
      */
     @Update("update sys_user set balance = balance - #{amount} where invalid = 0 and id = #{userId} and balance >= #{amount}")
-    Integer deduct(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
+    Integer deduct(@Param("userId") Long userId, @Param("amount") Long amount);
 
     /**
      * 账户充值
      *
      * @param userId 充值用户
-     * @param amount 充值金额
+     * @param amount 充值金额（单位：分）
      */
     @Update("update sys_user set balance = balance + #{amount} where invalid = 0 and id = #{userId}")
-    Integer recharge(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
+    Integer recharge(@Param("userId") Long userId, @Param("amount") Long amount);
 
     /**
      * 分页查询

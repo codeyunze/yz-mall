@@ -1,4 +1,4 @@
-package com.yz.mall.pms.entity;
+package com.yz.mall.oms.entity;
 
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.TableLogic;
@@ -13,15 +13,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 商品SKU表(PmsSku)表实体类
- *
- * @author yunze
- * @since 2025-01-XX
+ * 订单退款明细
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("pms_sku")
-public class PmsSku extends Model<PmsSku> {
+@TableName("oms_order_refund_item")
+public class OmsOrderRefundItem extends Model<OmsOrderRefundItem> {
 
     /**
      * 主键标识
@@ -29,49 +26,39 @@ public class PmsSku extends Model<PmsSku> {
     private Long id;
 
     /**
-     * 商品信息Id
+     * 退款单Id
+     */
+    private Long refundId;
+
+    /**
+     * 订单Id
+     */
+    private Long orderId;
+
+    /**
+     * 订单行Id
+     */
+    private Long orderItemId;
+
+    /**
+     * 商品Id
      */
     private Long productId;
 
     /**
-     * SKU编码(商品编码)，唯一
+     * SKU Id
      */
-    private String skuCode;
+    private Long skuId;
 
     /**
-     * SKU名称
+     * 退款数量
      */
-    private String skuName;
+    private Integer quantity;
 
     /**
-     * 售价(单位分)
+     * 本行退款金额（分）
      */
-    private Long priceFee;
-
-    /**
-     * 市场价(单位分)
-     */
-    private Long marketPriceFee;
-
-    /**
-     * 状态（1:启用, 0:禁用, -1:删除）
-     */
-    private Integer status;
-
-    /**
-     * 商品图片id，限制为5张，以逗号分割
-     */
-    private String albumPics;
-
-    /**
-     * 销售属性JSON，如[{"name":"颜色","value":"红"}]
-     */
-    private String attrsJson;
-
-    /**
-     * 属性组合键，如颜色:红;尺码:XL
-     */
-    private String attrsKey;
+    private Long refundAmount;
 
     /**
      * 创建时间
@@ -93,16 +80,6 @@ public class PmsSku extends Model<PmsSku> {
     @TableLogic(value = "0", delval = "current_timestamp")
     private Long invalid;
 
-    /**
-     * 创建人
-     */
-    private Long createId;
-
-    /**
-     * 获取主键值
-     *
-     * @return 主键值
-     */
     @Override
     public Serializable pkVal() {
         return this.id;

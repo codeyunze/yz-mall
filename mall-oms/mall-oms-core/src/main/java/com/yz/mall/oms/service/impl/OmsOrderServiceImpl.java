@@ -24,9 +24,11 @@ import com.yz.mall.oms.vo.OmsOrderProductVo;
 import com.yz.mall.oms.vo.OmsOrderSlimVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.pms.dto.ExtendPmsProductSlimVo;
+import com.yz.mall.pms.dto.ExtendPmsSkuSlimVo;
 import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.service.ExtendPmsProductService;
 import com.yz.mall.pms.service.ExtendPmsShopCartService;
+import com.yz.mall.pms.service.ExtendPmsSkuService;
 import com.yz.mall.pms.service.ExtendPmsStockService;
 import com.yz.mall.serial.service.ExtendSerialService;
 import com.yz.mall.sys.service.ExtendSysAreaService;
@@ -40,7 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,6 +65,8 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
 
     private final ExtendPmsProductService extendPmsProductService;
 
+    private final ExtendPmsSkuService extendPmsSkuService;
+
     private final ExtendSysUserService extendSysUserService;
 
     // private final InternalSysFilesService internalSysFilesService;
@@ -75,6 +78,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             , ExtendPmsStockService extendPmsStockService
             , ExtendPmsShopCartService extendPmsShopCartService
             , ExtendPmsProductService extendPmsProductService
+            , ExtendPmsSkuService extendPmsSkuService
             , ExtendSysUserService extendSysUserService
             // , InternalSysFilesService internalSysFilesService
             , ExtendSysAreaService internalSysAreaService) {
@@ -83,6 +87,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         this.extendPmsStockService = extendPmsStockService;
         this.extendPmsShopCartService = extendPmsShopCartService;
         this.extendPmsProductService = extendPmsProductService;
+        this.extendPmsSkuService = extendPmsSkuService;
         this.extendSysUserService = extendSysUserService;
         // this.internalSysFilesService = internalSysFilesService;
         this.internalSysAreaService = internalSysAreaService;
@@ -102,60 +107,93 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         bo.setOrderCode(orderCode);
         // 订单状态为待付款
         bo.setOrderStatus(OmsOrderStatusEnum.PENDING_PAYMENT.getStatus());
+        bo.setRefundStatus(0);
         bo.setPayType(OmsPayTypeEnum.PENDING_PAY.getType());
-
-        // 去查询购物车里的商品信息（商品Id、商品数量、商品优惠金额、商品优惠后的实际价格）
-        // Map<Long, InternalPmsCartDto> cartProductMap = internalPmsShopCartService.getCartByIds(bo.getUserId(), dto.getProducts());
+        if (bo.getFreightAmount() == null) {
+            bo.setFreightAmount(0L);
+        }
 
         // TODO 2025/1/31 yunze 暂时先直接扣除商品库存，应该是锁定商品库存的，等支付订单之后再扣减库存
         // 扣减库存信息
         List<ExtendPmsStockDto> deductStocks = new ArrayList<>();
 
-        // 订单商品信息入库
-        List<Long> productIds = dto.getProducts().stream().map(ExtendOmsOrderProductDto::getProductId).filter(Objects::nonNull).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(productIds) || productIds.size() != dto.getProducts().size()) {
-            throw new BusinessException("商品信息无效，请重新选择商品后下单");
+        // 按 SKU 组装订单行（交易最小单位）；同一 SKU 合并数量
+        Map<Long, Integer> skuQtyMap = new LinkedHashMap<>();
+        Map<Long, Long> skuProductHintMap = new HashMap<>();
+        for (ExtendOmsOrderProductDto product : dto.getProducts()) {
+            if (product.getSkuId() == null) {
+                throw new BusinessException("请选择商品规格后再下单");
+            }
+            skuQtyMap.merge(product.getSkuId(), product.getProductQuantity(), Integer::sum);
+            if (product.getProductId() != null) {
+                skuProductHintMap.put(product.getSkuId(), product.getProductId());
+            }
         }
+        List<Long> skuIds = new ArrayList<>(skuQtyMap.keySet());
+        List<ExtendPmsSkuSlimVo> skuList = extendPmsSkuService.getSkuByIds(skuIds);
+        if (CollectionUtils.isEmpty(skuList) || skuList.size() != skuIds.size()) {
+            throw new BusinessException("商品规格不存在或已失效");
+        }
+        Map<Long, ExtendPmsSkuSlimVo> skuMap = skuList.stream().collect(Collectors.toMap(ExtendPmsSkuSlimVo::getId, t -> t, (a, b) -> a));
+
+        List<Long> productIds = skuList.stream().map(ExtendPmsSkuSlimVo::getProductId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
         List<ExtendPmsProductSlimVo> productsInfo = extendPmsProductService.getProductByProductIds(productIds);
-        if (CollectionUtils.isEmpty(productsInfo)) {
-            throw new BusinessException("商品不存在或已下架");
-        }
-        Map<Long, ExtendPmsProductSlimVo> productMap = productsInfo.stream().collect(Collectors.toMap(ExtendPmsProductSlimVo::getId, t -> t, (a, b) -> a));
+        Map<Long, ExtendPmsProductSlimVo> productMap = CollectionUtils.isEmpty(productsInfo)
+                ? Map.of()
+                : productsInfo.stream().collect(Collectors.toMap(ExtendPmsProductSlimVo::getId, t -> t, (a, b) -> a));
 
         List<OmsOrderRelationProduct> products = new ArrayList<>();
+        long totalAmount = 0L;
 
-        // 订单总金额
-        BigDecimal totalAmount = BigDecimal.ZERO;
-
-        for (ExtendOmsOrderProductDto product : dto.getProducts()) {
-            ExtendPmsProductSlimVo productInfo = productMap.get(product.getProductId());
-            if (productInfo == null) {
-                throw new BusinessException("商品不存在或已下架：" + product.getProductId());
+        for (Map.Entry<Long, Integer> entry : skuQtyMap.entrySet()) {
+            ExtendPmsSkuSlimVo sku = skuMap.get(entry.getKey());
+            if (sku == null) {
+                throw new BusinessException("商品规格不存在：" + entry.getKey());
             }
-            // 订单下的商品信息
+            Long hintProductId = skuProductHintMap.get(sku.getId());
+            if (hintProductId != null && !Objects.equals(hintProductId, sku.getProductId())) {
+                throw new BusinessException("商品与规格不匹配");
+            }
+            ExtendPmsProductSlimVo productInfo = productMap.get(sku.getProductId());
+            if (productInfo == null) {
+                throw new BusinessException("商品不存在或已下架：" + sku.getProductId());
+            }
+            if (sku.getPriceFee() == null) {
+                throw new BusinessException("商品规格未设置售价：" + sku.getSkuCode());
+            }
+
+            Integer quantity = entry.getValue();
+            long unitPrice = sku.getPriceFee();
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
-            BeanUtils.copyProperties(product, relationProduct);
-            relationProduct.setProductQuantity(product.getProductQuantity());
             relationProduct.setOrderId(bo.getId());
+            relationProduct.setProductId(sku.getProductId());
+            relationProduct.setSkuId(sku.getId());
+            relationProduct.setSkuCode(sku.getSkuCode());
+            relationProduct.setSkuName(sku.getSkuName());
+            relationProduct.setProductQuantity(quantity);
+            relationProduct.setRefundQuantity(0);
             relationProduct.setProductName(productInfo.getProductName());
-            relationProduct.setProductPrice(productInfo.getProductPrice());
-            relationProduct.setAlbumPics(productInfo.getAlbumPics());
+            relationProduct.setProductPrice(unitPrice);
+            relationProduct.setRealAmount(unitPrice);
+            relationProduct.setDiscountAmount(0L);
+            relationProduct.setProductAttributes(StringUtils.hasText(sku.getAttrsJson()) ? sku.getAttrsJson() : sku.getSkuName());
+            relationProduct.setAlbumPics(StringUtils.hasText(sku.getAlbumPics()) ? sku.getAlbumPics() : productInfo.getAlbumPics());
             products.add(relationProduct);
 
             ExtendPmsStockDto stock = new ExtendPmsStockDto();
-            stock.setProductId(product.getProductId());
-            // 优先使用真实 skuId；未传时由库存服务按商品解析 SKU
-            stock.setSkuId(product.getSkuId() != null ? product.getSkuId() : product.getProductId());
-            stock.setQuantity(product.getProductQuantity());
+            stock.setProductId(sku.getProductId());
+            stock.setSkuId(sku.getId());
+            stock.setQuantity(quantity);
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());
             deductStocks.add(stock);
 
-            totalAmount = totalAmount.add(relationProduct.getProductPrice().multiply(BigDecimal.valueOf(product.getProductQuantity())));
+            totalAmount += unitPrice * quantity;
         }
 
         bo.setTotalAmount(totalAmount);
-        bo.setPayAmount(totalAmount);
+        bo.setDiscountAmount(bo.getDiscountAmount() == null ? 0L : bo.getDiscountAmount());
+        bo.setPayAmount(totalAmount + bo.getFreightAmount() - bo.getDiscountAmount());
 
         // 扣除商品库存
         extendPmsStockService.deductBatch(deductStocks);
@@ -182,23 +220,29 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         bo.setOrderCode(orderCode);
         // 订单状态为待付款
         bo.setOrderStatus(OmsOrderStatusEnum.PENDING_PAYMENT.getStatus());
+        bo.setRefundStatus(0);
         bo.setPayType(OmsPayTypeEnum.PENDING_PAY.getType());
+        if (bo.getFreightAmount() == null) {
+            bo.setFreightAmount(0L);
+        }
 
         // TODO 2025/1/31 yunze 暂时先直接扣除商品库存，应该是锁定商品库存的
-        // 扣减库存信息
         List<ExtendPmsStockDto> deductStocks = new ArrayList<>();
-
-        // 订单商品信息入库
         List<OmsOrderRelationProduct> products = new ArrayList<>();
         for (ExtendOmsOrderProductDto product : dto.getProducts()) {
+            if (product.getSkuId() == null) {
+                throw new BusinessException("请选择商品规格后再下单");
+            }
             OmsOrderRelationProduct relationProduct = new OmsOrderRelationProduct();
             BeanUtils.copyProperties(product, relationProduct);
             relationProduct.setOrderId(bo.getId());
+            relationProduct.setSkuId(product.getSkuId());
+            relationProduct.setRefundQuantity(0);
             products.add(relationProduct);
 
             ExtendPmsStockDto stock = new ExtendPmsStockDto();
             stock.setProductId(product.getProductId());
-            stock.setSkuId(product.getSkuId() != null ? product.getSkuId() : product.getProductId());
+            stock.setSkuId(product.getSkuId());
             stock.setQuantity(product.getProductQuantity());
             stock.setRemark("订单扣减库存");
             stock.setOrderId(bo.getId());
@@ -354,7 +398,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     }
 
     /**
-     * 按订单商品行回补库存（订单行仅有 productId，由库存服务解析真实 SKU）
+     * 按订单商品行回补库存（按行内 skuId）
      */
     private void restoreStock(Long orderId) {
         List<OmsOrderRelationProduct> products = omsOrderRelationProductService.list(
@@ -363,18 +407,18 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
             return;
         }
         for (OmsOrderRelationProduct product : products) {
-            if (product.getProductId() == null || product.getProductQuantity() == null || product.getProductQuantity() <= 0) {
+            if (product.getSkuId() == null || product.getProductQuantity() == null || product.getProductQuantity() <= 0) {
                 continue;
             }
             ExtendPmsStockDto stockDto = new ExtendPmsStockDto();
             stockDto.setOrderId(orderId);
             stockDto.setProductId(product.getProductId());
-            stockDto.setSkuId(product.getProductId());
+            stockDto.setSkuId(product.getSkuId());
             stockDto.setQuantity(product.getProductQuantity());
             stockDto.setRemark("取消订单回补库存，订单id=" + orderId);
             Boolean added = extendPmsStockService.add(stockDto);
             if (!Boolean.TRUE.equals(added)) {
-                throw new BusinessException("回补库存失败，商品id=" + product.getProductId());
+                throw new BusinessException("回补库存失败，skuId=" + product.getSkuId());
             }
         }
     }

@@ -22,8 +22,9 @@ public class ExtendOmsOrderProductDto implements Serializable {
     private Long productId;
 
     /**
-     * SKU Id（库存按 SKU 扣减；未传时由库存服务按商品解析）
+     * SKU Id（交易最小单位，必填）
      */
+    @NotNull(message = "请选择商品规格")
     private Long skuId;
 
     /**

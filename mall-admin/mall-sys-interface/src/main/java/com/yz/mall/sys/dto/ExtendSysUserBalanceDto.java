@@ -4,7 +4,6 @@ import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 基础-用户(BaseUser)表更新数据模型类
@@ -24,13 +23,16 @@ public class ExtendSysUserBalanceDto implements Serializable {
     @NotNull(message = "用户标识不能为空")
     private Long userId;
 
+    /**
+     * 金额（单位：分）
+     */
     @NotNull(message = "金额不能为空")
-    private BigDecimal amount;
+    private Long amount;
 
     public ExtendSysUserBalanceDto() {
     }
 
-    public ExtendSysUserBalanceDto(Long userId, BigDecimal amount) {
+    public ExtendSysUserBalanceDto(Long userId, Long amount) {
         this.userId = userId;
         this.amount = amount;
     }

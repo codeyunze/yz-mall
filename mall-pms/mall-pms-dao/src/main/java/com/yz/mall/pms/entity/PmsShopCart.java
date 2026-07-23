@@ -55,9 +55,14 @@ public class PmsShopCart extends Model<PmsShopCart> {
     private Long skuId;
 
     /**
-     * 数量
+     * 数量 {@link PmsShopCart#getQuantity()}
      */
     private Integer quantity;
+
+    /**
+     * 是否勾选结算：0否；1是
+     */
+    private Integer checked;
 
     /**
      * 用户Id

@@ -4,7 +4,6 @@ import com.yz.mall.oms.entity.OmsOrderRelationProduct;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 订单商品详情信息
@@ -33,19 +32,39 @@ public class OmsOrderProductVo implements Serializable {
     private Long productId;
 
     /**
+     * 下单SKU Id
+     */
+    private Long skuId;
+
+    /**
+     * SKU编码快照
+     */
+    private String skuCode;
+
+    /**
+     * SKU名称快照
+     */
+    private String skuName;
+
+    /**
      * 购买商品数量
      */
     private Integer productQuantity;
 
     /**
-     * 商品优惠金额
+     * 已退款数量
      */
-    private BigDecimal discountAmount;
+    private Integer refundQuantity;
 
     /**
-     * 商品优惠后的实际价格
+     * 商品优惠金额（分）
      */
-    private BigDecimal realAmount;
+    private Long discountAmount;
+
+    /**
+     * 商品优惠后的实际单价（分）
+     */
+    private Long realAmount;
 
     /**
      * 商品属性;[{key:颜色,value:黑色},{key:内存,value:32G}]
@@ -58,9 +77,9 @@ public class OmsOrderProductVo implements Serializable {
     private String productName;
 
     /**
-     * 商品价格(下单时商品的价格)
+     * 商品价格(下单时单价，分)
      */
-    private BigDecimal productPrice;
+    private Long productPrice;
 
     /**
      * 商品备注信息

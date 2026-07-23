@@ -4,7 +4,6 @@ import com.yz.mall.pms.entity.PmsShopCart;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 购物车基础数据
@@ -43,13 +42,13 @@ public class PmsShopCartSlimVo implements Serializable {
     private Integer quantity;
 
     /**
-     * 商品优惠金额
+     * 商品优惠金额（单位：分）
      */
-    private BigDecimal discountAmount;
+    private Long discountAmount;
 
     /**
-     * 商品优惠后的实际价格
+     * 商品优惠后的实际价格（单位：分）
      */
-    private BigDecimal realAmount;
+    private Long realAmount;
 }
 

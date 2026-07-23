@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,8 @@ class SysUserServiceTest {
             SysUserVo mockUser = new SysUserVo();
             mockUser.setId(1000L + i);
             mockUser.setEmail("test" + i + "@example.com");
-            mockUser.setBalance(new BigDecimal("10" + i + ".00"));
+            // 余额单位：分；原 mock 为 "10"+i+".00" 元（如 i=0 → 100.00 元 = 10000 分）
+            mockUser.setBalance(Long.parseLong("10" + i + "00"));
             mockUser.setUsername("mockUser" + i);
             mockUser.setStatus(1);
             mockUser.setSex(i % 2 == 0 ? 1 : 0);

@@ -4,7 +4,6 @@ import com.yz.mall.pms.entity.PmsShopCart;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 购物车数据
@@ -38,6 +37,11 @@ public class PmsShopCartVo implements Serializable {
     private Integer quantity;
 
     /**
+     * 是否勾选结算：0否；1是
+     */
+    private Integer checked;
+
+    /**
      * 商品名称
      */
     private String productName;
@@ -48,9 +52,9 @@ public class PmsShopCartVo implements Serializable {
     private String skuName;
 
     /**
-     * 商品价格（元）
+     * 单价（分）
      */
-    private BigDecimal price;
+    private Long price;
 
     /**
      * 商品图片id，限制为5张，以逗号分割

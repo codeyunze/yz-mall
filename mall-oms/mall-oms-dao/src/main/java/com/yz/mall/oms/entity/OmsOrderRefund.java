@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -73,9 +72,9 @@ public class OmsOrderRefund extends Model<OmsOrderRefund> {
     private Long businessOrgId;
 
     /**
-     * 退款金额
+     * 退款金额（分）
      */
-    private BigDecimal refundAmount;
+    private Long refundAmount;
 
     /**
      * 原因类型

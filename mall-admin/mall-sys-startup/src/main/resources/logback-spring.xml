@@ -5,12 +5,15 @@
     <!--设置存储路径变量-->
     <property name="LOG_HOME" value="./logs/${APP_NAME}/"/>
 
+    <!-- 每次打日志刷新 SkyWalking trace_id/span_id，避免一直停在入口 Span 的 0 -->
+    <turboFilter class="com.yz.mall.base.trace.SkyWalkingMdcTurboFilter"/>
+
     <!--控制台输出appender-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <!--设置输出格式-->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符；%highlight/%green/%magenta/%cyan 为控制台着色-->
-            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan(%logger{50}) - %msg%n</pattern>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) [%X{trace_id}] [%X{span_id}] %cyan(%logger{50}) - %msg%n</pattern>
             <!--设置编码-->
             <charset>UTF-8</charset>
         </encoder>
@@ -35,7 +38,7 @@
         <!--输出格式-->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{70} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{trace_id}] [%X{span_id}] %logger{70} - %msg%n</pattern>
             <!--设置编码-->
             <charset>UTF-8</charset>
         </encoder>
@@ -46,6 +49,11 @@
         <destination>yunze.com:4560</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"platform": "mall", "app_name": "${APP_NAME}"}</customFields>
+            <!-- 显式带出 MDC，保证 ES/Kibana 可按 trace_id / span_id 检索 -->
+            <includeMdcKeyName>trace_id</includeMdcKeyName>
+            <includeMdcKeyName>span_id</includeMdcKeyName>
+            <includeMdcKeyName>segment_id</includeMdcKeyName>
+            <includeMdcKeyName>client_ip</includeMdcKeyName>
         </encoder>
     </appender>
 

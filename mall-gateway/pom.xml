@@ -85,6 +85,17 @@
             <artifactId>mall-redis</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-base</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-webflux</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

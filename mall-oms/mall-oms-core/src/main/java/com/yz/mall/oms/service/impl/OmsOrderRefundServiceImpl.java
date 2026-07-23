@@ -129,6 +129,7 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
                 .eq(OmsOrder::getId, order.getId())
                 .eq(OmsOrder::getOrderStatus, OmsOrderStatusEnum.PENDING_SHIPMENT.getStatus())
                 .set(OmsOrder::getOrderStatus, OmsOrderStatusEnum.REFUNDING.getStatus())
+                .set(OmsOrder::getRefundStatus, 1)
                 .set(OmsOrder::getUpdateId, userId)
                 .set(OmsOrder::getUpdateTime, LocalDateTime.now()));
         if (updated <= 0) {
@@ -193,6 +194,7 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
                 .eq(OmsOrder::getId, order.getId())
                 .eq(OmsOrder::getOrderStatus, OmsOrderStatusEnum.REFUNDING.getStatus())
                 .set(OmsOrder::getOrderStatus, targetOrderStatus)
+                .set(OmsOrder::getRefundStatus, pass ? 3 : 0)
                 .set(OmsOrder::getUpdateId, auditUserId)
                 .set(OmsOrder::getUpdateTime, now));
         if (orderUpdated <= 0) {
@@ -213,7 +215,7 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
     }
 
     /**
-     * 按订单商品行回补库存（V1 订单行仅有 productId，由库存服务解析真实 SKU）
+     * 按订单商品行回补库存（按行内 skuId）
      */
     private void restoreStock(Long orderId) {
         List<OmsOrderRelationProduct> products = omsOrderRelationProductService.list(
@@ -222,18 +224,18 @@ public class OmsOrderRefundServiceImpl extends ServiceImpl<OmsOrderRefundMapper,
             return;
         }
         for (OmsOrderRelationProduct product : products) {
-            if (product.getProductId() == null || product.getProductQuantity() == null || product.getProductQuantity() <= 0) {
+            if (product.getSkuId() == null || product.getProductQuantity() == null || product.getProductQuantity() <= 0) {
                 continue;
             }
             ExtendPmsStockDto stockDto = new ExtendPmsStockDto();
             stockDto.setOrderId(orderId);
             stockDto.setProductId(product.getProductId());
-            stockDto.setSkuId(product.getProductId());
+            stockDto.setSkuId(product.getSkuId());
             stockDto.setQuantity(product.getProductQuantity());
             stockDto.setRemark("订单退款回补库存，订单id=" + orderId);
             Boolean added = extendPmsStockService.add(stockDto);
             if (!Boolean.TRUE.equals(added)) {
-                throw new BusinessException("回补库存失败，商品id=" + product.getProductId());
+                throw new BusinessException("回补库存失败，skuId=" + product.getSkuId());
             }
         }
     }

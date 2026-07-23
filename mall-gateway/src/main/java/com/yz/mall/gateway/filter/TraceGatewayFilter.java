@@ -1,8 +1,11 @@
 package com.yz.mall.gateway.filter;
 
 import cn.hutool.core.util.IdUtil;
+import com.yz.mall.base.trace.SkyWalkingTraceMdc;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
+import org.apache.skywalking.apm.toolkit.trace.TraceContext;
+import org.apache.skywalking.apm.toolkit.webflux.WebFluxSkyWalkingOperators;
+import org.apache.skywalking.apm.toolkit.webflux.WebFluxSkyWalkingTraceContext;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -10,14 +13,14 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import reactor.util.context.Context;
 
 import java.util.Objects;
 
 /**
- * 自定义全局网关过滤器
+ * 网关全局过滤器：将 SkyWalking trace/span 与客户端 IP 写入请求头与 MDC。
  * <p>
- * 设置 trace-id 和 client-ip 到请求头，并设置到 MDC 中用于日志追踪
+ * 网关为 WebFlux 模型，异步回调里 {@link TraceContext} 常为 N/A，必须用
+ * {@link WebFluxSkyWalkingTraceContext} 从 exchange 取与下游一致的 TID，避免雪花号与业务模块对不上。
  *
  * @author yunze
  * @date 2025/1/2 12:42
@@ -31,66 +34,98 @@ public class TraceGatewayFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        // 获取原始请求
         ServerHttpRequest request = exchange.getRequest();
-
-        // 构建新的请求构建器，基于现有请求
         ServerHttpRequest.Builder builder = request.mutate();
 
-        // 获取或生成 traceId
-        String traceIdValue = request.getHeaders().getFirst(TRACE_ID_HEADER);
-        if (traceIdValue == null || traceIdValue.isEmpty()) {
-            traceIdValue = IdUtil.getSnowflakeNextIdStr();
-            builder.header(TRACE_ID_HEADER, traceIdValue);
-        }
-
-        // 获取真实IP地址
         String realIpValue = request.getHeaders().getFirst(REAL_IP_HEADER);
         if (realIpValue == null || realIpValue.isEmpty()) {
             realIpValue = Objects.requireNonNull(request.getRemoteAddress()).getHostString();
             builder.header(REAL_IP_HEADER, realIpValue);
         }
 
-        // 构建新的请求对象
-        ServerHttpRequest modifiedRequest = builder.build();
-        ServerWebExchange modifiedExchange = exchange.mutate().request(modifiedRequest).build();
-
-        // 使用 final 变量，以便在 lambda 中使用
-        final String traceId = traceIdValue;
-        final String realIp = realIpValue;
-
-        // 立即设置 MDC，确保后续过滤器可以获取到 MDC 值
-        try {
-            MDC.put("trace_id", traceId);
-            MDC.put("client_ip", realIp);
-        } catch (Exception e) {
-            log.warn("设置 MDC 失败", e);
+        // 仅无 Agent 本地开发时才用 header/雪花兜底；有 Agent 时绝不把雪花写死为“权威” TID
+        String headerTraceId = request.getHeaders().getFirst(TRACE_ID_HEADER);
+        String skyWalkingTid = resolveSkyWalkingTraceId(exchange);
+        String noAgentFallback = skyWalkingTid == null
+                ? (headerTraceId != null && !headerTraceId.isEmpty() ? headerTraceId : IdUtil.getSnowflakeNextIdStr())
+                : null;
+        String initialTid = skyWalkingTid != null ? skyWalkingTid : noAgentFallback;
+        if (initialTid != null) {
+            builder.header(TRACE_ID_HEADER, initialTid);
         }
 
-        // 在响应式链中保持 MDC，并在完成后清理
+        ServerWebExchange modifiedExchange = exchange.mutate().request(builder.build()).build();
+        final String fallbackTid = initialTid;
+        final String realIp = realIpValue;
+
+        bindMdc(modifiedExchange, fallbackTid, realIp);
+
         return chain.filter(modifiedExchange)
-                .doOnEach(signal -> {
-                    // 在每个信号时确保 MDC 已设置（防止线程切换导致 MDC 丢失）
-                    try {
-                        MDC.put("trace_id", traceId);
-                        MDC.put("client_ip", realIp);
-                    } catch (Exception e) {
-                        log.warn("设置 MDC 失败", e);
-                    }
-                })
+                .doOnEach(signal -> WebFluxSkyWalkingOperators.continueTracing(modifiedExchange,
+                        () -> bindMdc(modifiedExchange, fallbackTid, realIp)))
+                .doOnSuccess(v -> writeTraceHeader(modifiedExchange, fallbackTid))
+                .doOnError(e -> writeTraceHeader(modifiedExchange, fallbackTid))
                 .doFinally(signalType -> {
-                    // 无论成功还是失败，都清理 MDC
                     try {
-                        MDC.clear();
+                        SkyWalkingTraceMdc.clear();
                     } catch (Exception e) {
                         log.warn("清理MDC失败", e);
                     }
-                })
-                .contextWrite(Context.of("trace_id", traceId, "client_ip", realIp));
+                });
+    }
+
+    /**
+     * 优先线程上下文，其次 exchange 上的 WebFlux 助手（异步回调必须走这个）。
+     */
+    private static String resolveSkyWalkingTraceId(ServerWebExchange exchange) {
+        String tid = SkyWalkingTraceMdc.currentTraceIdOrNull();
+        if (tid != null) {
+            return tid;
+        }
+        tid = WebFluxSkyWalkingTraceContext.traceId(exchange);
+        return SkyWalkingTraceMdc.isUnavailable(tid) ? null : tid;
+    }
+
+    private static String resolveSkyWalkingSpanId(ServerWebExchange exchange) {
+        int spanId = TraceContext.spanId();
+        if (spanId >= 0) {
+            return Integer.toString(spanId);
+        }
+        spanId = WebFluxSkyWalkingTraceContext.spanId(exchange);
+        return spanId < 0 ? null : Integer.toString(spanId);
+    }
+
+    private static void bindMdc(ServerWebExchange exchange, String fallbackTid, String realIp) {
+        try {
+            // 每次刷新都优先 live SkyWalking TID，避免早期雪花号污染后续日志
+            String tid = resolveSkyWalkingTraceId(exchange);
+            if (tid == null) {
+                tid = fallbackTid;
+            }
+            SkyWalkingTraceMdc.putTraceAndSpan(tid, resolveSkyWalkingSpanId(exchange));
+            SkyWalkingTraceMdc.putClientIp(realIp);
+        } catch (Exception e) {
+            log.warn("设置 MDC 失败", e);
+        }
+    }
+
+    private static void writeTraceHeader(ServerWebExchange exchange, String fallbackTid) {
+        try {
+            String tid = resolveSkyWalkingTraceId(exchange);
+            if (tid == null) {
+                tid = fallbackTid;
+            }
+            if (tid != null && !exchange.getResponse().isCommitted()) {
+                exchange.getResponse().getHeaders().set(TRACE_ID_HEADER, tid);
+            }
+        } catch (Exception e) {
+            log.warn("回写 trace 响应头失败", e);
+        }
     }
 
     @Override
     public int getOrder() {
-        return 0;
+        // 与 SkyWalking Gateway 插件示例一致，保证进入 filter 时 TraceContext 可用
+        return -100;
     }
 }

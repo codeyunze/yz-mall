@@ -1,6 +1,7 @@
 package com.yz.mall.pms.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,6 +15,8 @@ import com.yz.mall.pms.dto.PmsStockInDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockOutDetailAddDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
+import com.yz.mall.pms.entity.PmsStockLog;
+import com.yz.mall.pms.mapper.PmsStockLogMapper;
 import com.yz.mall.pms.mapper.PmsStockMapper;
 import com.yz.mall.pms.entity.PmsSku;
 import com.yz.mall.pms.service.PmsSkuService;
@@ -51,12 +54,16 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
 
     private final PmsSkuService skuService;
 
+    private final PmsStockLogMapper pmsStockLogMapper;
+
     public PmsStockServiceImpl(PmsStockOutDetailService pmsStockOutDetailService
             , PmsStockInDetailService pmsStockInDetailService
-            , PmsSkuService skuService) {
+            , PmsSkuService skuService
+            , PmsStockLogMapper pmsStockLogMapper) {
         this.pmsStockOutDetailService = pmsStockOutDetailService;
         this.pmsStockInDetailService = pmsStockInDetailService;
         this.skuService = skuService;
+        this.pmsStockLogMapper = pmsStockLogMapper;
     }
 
     @DS("slave")
@@ -151,7 +158,10 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
                 log.info("SKU{}库存不足", skuId);
                 throw new BusinessException("SKU" + skuId + "库存不足");
             }
-            stock.setQuantity(stock.getQuantity() - needQuantity);
+            int beforeQty = stock.getQuantity() == null ? 0 : stock.getQuantity();
+            stock.setQuantity(beforeQty - needQuantity);
+            saveStockLog(stock, 2, needQuantity, beforeQty, stock.getQuantity(),
+                    productStocks.stream().filter(p -> skuId.equals(p.getSkuId())).findFirst().orElse(null));
         }
 
         if (CollectionUtils.isEmpty(stocks)) {
@@ -172,6 +182,26 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
         if (!pmsStockOutDetailService.outBatch(productStocks)) {
             throw new BusinessException("商品库存扣除失败");
         }
+    }
+
+    /**
+     * 记录库存变更流水
+     */
+    private void saveStockLog(PmsStock stock, int changeType, int changeQty, int beforeQty, int afterQty, ExtendPmsStockDto biz) {
+        PmsStockLog logEntity = new PmsStockLog();
+        logEntity.setId(IdUtil.getSnowflakeNextId());
+        logEntity.setSkuId(stock.getSkuId());
+        logEntity.setProductId(stock.getProductId());
+        logEntity.setWarehouseId(stock.getWarehouseId() == null ? 0L : stock.getWarehouseId());
+        logEntity.setChangeType(changeType);
+        logEntity.setChangeQty(changeQty);
+        logEntity.setBeforeQty(beforeQty);
+        logEntity.setAfterQty(afterQty);
+        if (biz != null) {
+            logEntity.setOrderId(biz.getOrderId());
+            logEntity.setRemark(biz.getRemark());
+        }
+        pmsStockLogMapper.insert(logEntity);
     }
 
     /**
@@ -276,19 +306,24 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
         // TODO: 2024/6/16 星期日 yunze 加锁
         // 订单退款等场景可能只传 productId（skuId 暂用 productId），需解析真实 SKU
         resolveSkuIdForAddIfNeeded(addStock);
-        PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getId, PmsStock::getQuantity).eq(PmsStock::getSkuId, addStock.getSkuId()));
+        PmsStock stock = baseMapper.selectOne(new LambdaQueryWrapper<PmsStock>().select(PmsStock::getId, PmsStock::getSkuId, PmsStock::getProductId, PmsStock::getWarehouseId, PmsStock::getQuantity).eq(PmsStock::getSkuId, addStock.getSkuId()));
+        int beforeQty = 0;
         if (stock == null || stock.getId() == null) {
             stock = new PmsStock();
             stock.setSkuId(addStock.getSkuId());
+            stock.setProductId(addStock.getProductId());
+            stock.setWarehouseId(0L);
             stock.setQuantity(addStock.getQuantity());
             stock.setCreateId(StpUtil.getLoginIdAsLong());
         } else {
-            stock.setQuantity(stock.getQuantity() + addStock.getQuantity());
+            beforeQty = stock.getQuantity() == null ? 0 : stock.getQuantity();
+            stock.setQuantity(beforeQty + addStock.getQuantity());
             stock.setUpdateId(StpUtil.getLoginIdAsLong());
         }
         if (!super.saveOrUpdate(stock)) {
             return false;
         }
+        saveStockLog(stock, 5, addStock.getQuantity(), beforeQty, stock.getQuantity(), addStock);
 
         // 根据 skuId 获取对应的 productId
         Long productId = addStock.getProductId();

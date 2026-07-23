@@ -13,15 +13,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 商品SKU表(PmsSku)表实体类
- *
- * @author yunze
- * @since 2025-01-XX
+ * 商品库存变更流水
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("pms_sku")
-public class PmsSku extends Model<PmsSku> {
+@TableName("pms_stock_log")
+public class PmsStockLog extends Model<PmsStockLog> {
 
     /**
      * 主键标识
@@ -29,49 +26,54 @@ public class PmsSku extends Model<PmsSku> {
     private Long id;
 
     /**
-     * 商品信息Id
+     * SKU Id
+     */
+    private Long skuId;
+
+    /**
+     * 商品Id（冗余）
      */
     private Long productId;
 
     /**
-     * SKU编码(商品编码)，唯一
+     * 仓库Id，0默认仓
      */
-    private String skuCode;
+    private Long warehouseId;
 
     /**
-     * SKU名称
+     * 变更类型：1入库；2出库扣减；3锁库；4解锁；5回补
      */
-    private String skuName;
+    private Integer changeType;
 
     /**
-     * 售价(单位分)
+     * 变更数量（正数）
      */
-    private Long priceFee;
+    private Integer changeQty;
 
     /**
-     * 市场价(单位分)
+     * 变更前可售数量
      */
-    private Long marketPriceFee;
+    private Integer beforeQty;
 
     /**
-     * 状态（1:启用, 0:禁用, -1:删除）
+     * 变更后可售数量
      */
-    private Integer status;
+    private Integer afterQty;
 
     /**
-     * 商品图片id，限制为5张，以逗号分割
+     * 业务单号
      */
-    private String albumPics;
+    private String bizNo;
 
     /**
-     * 销售属性JSON，如[{"name":"颜色","value":"红"}]
+     * 关联订单Id
      */
-    private String attrsJson;
+    private Long orderId;
 
     /**
-     * 属性组合键，如颜色:红;尺码:XL
+     * 备注
      */
-    private String attrsKey;
+    private String remark;
 
     /**
      * 创建时间
@@ -93,16 +95,6 @@ public class PmsSku extends Model<PmsSku> {
     @TableLogic(value = "0", delval = "current_timestamp")
     private Long invalid;
 
-    /**
-     * 创建人
-     */
-    private Long createId;
-
-    /**
-     * 获取主键值
-     *
-     * @return 主键值
-     */
     @Override
     public Serializable pkVal() {
         return this.id;

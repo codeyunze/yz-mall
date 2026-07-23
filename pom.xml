@@ -41,6 +41,8 @@
         <logback.version>1.5.18</logback.version>
         <resilience4j.version>2.2.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
+        <!-- SkyWalking OAP/UI 可为 10.x；Java Agent Toolkit 在 Maven Central 仍为 9.x 线，与 Agent 字节码增强兼容 -->
+        <skywalking.version>9.6.0</skywalking.version>
         <prometheus.version>1.11.5</prometheus.version>
         <caffeine.version>3.1.8</caffeine.version>
     </properties>
@@ -219,6 +221,24 @@
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash-logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-trace</artifactId>
+                <version>${skywalking.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-webflux</artifactId>
+                <version>${skywalking.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-logback-1.x</artifactId>
+                <version>${skywalking.version}</version>
             </dependency>
 
             <dependency>

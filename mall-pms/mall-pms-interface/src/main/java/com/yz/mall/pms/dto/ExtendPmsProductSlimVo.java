@@ -3,7 +3,6 @@ package com.yz.mall.pms.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 商品信息
@@ -27,9 +26,9 @@ public class ExtendPmsProductSlimVo implements Serializable {
     private String productName;
 
     /**
-     * 商品价格
+     * 商品价格（单位：分）
      */
-    private BigDecimal productPrice;
+    private Long productPrice;
 
     /**
      * 商品标签

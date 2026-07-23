@@ -12,7 +12,6 @@ import com.yz.mall.sys.vo.SysTreeMenuVo;
 import com.yz.mall.sys.vo.SysUserVo;
 import jakarta.validation.Valid;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -91,16 +90,16 @@ public interface SysUserService extends IService<SysUser> {
      * 扣减账户金额
      *
      * @param userId 扣减用户
-     * @param amount 扣减金额
+     * @param amount 扣减金额（单位：分）
      */
-    void deduct(Long userId, BigDecimal amount);
+    void deduct(Long userId, Long amount);
 
     /**
      * 账户充值
      *
      * @param userId 充值用户
-     * @param amount 充值金额
+     * @param amount 充值金额（单位：分）
      */
-    void recharge(Long userId, BigDecimal amount);
+    void recharge(Long userId, Long amount);
 }
 

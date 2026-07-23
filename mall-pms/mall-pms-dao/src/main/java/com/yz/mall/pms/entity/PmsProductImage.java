@@ -13,15 +13,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 商品SKU表(PmsSku)表实体类
- *
- * @author yunze
- * @since 2025-01-XX
+ * 商品/SKU图片表
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("pms_sku")
-public class PmsSku extends Model<PmsSku> {
+@TableName("pms_product_image")
+public class PmsProductImage extends Model<PmsProductImage> {
 
     /**
      * 主键标识
@@ -29,49 +26,29 @@ public class PmsSku extends Model<PmsSku> {
     private Long id;
 
     /**
-     * 商品信息Id
+     * 业务类型：0=SPU；1=SKU
      */
-    private Long productId;
+    private Integer bizType;
 
     /**
-     * SKU编码(商品编码)，唯一
+     * 业务Id（product_id 或 sku_id）
      */
-    private String skuCode;
+    private Long bizId;
 
     /**
-     * SKU名称
+     * 文件服务文件Id
      */
-    private String skuName;
+    private Long fileId;
 
     /**
-     * 售价(单位分)
+     * 排序，数值越小越靠前
      */
-    private Long priceFee;
+    private Integer sort;
 
     /**
-     * 市场价(单位分)
+     * 是否主图：0否；1是
      */
-    private Long marketPriceFee;
-
-    /**
-     * 状态（1:启用, 0:禁用, -1:删除）
-     */
-    private Integer status;
-
-    /**
-     * 商品图片id，限制为5张，以逗号分割
-     */
-    private String albumPics;
-
-    /**
-     * 销售属性JSON，如[{"name":"颜色","value":"红"}]
-     */
-    private String attrsJson;
-
-    /**
-     * 属性组合键，如颜色:红;尺码:XL
-     */
-    private String attrsKey;
+    private Integer isMain;
 
     /**
      * 创建时间
@@ -93,16 +70,6 @@ public class PmsSku extends Model<PmsSku> {
     @TableLogic(value = "0", delval = "current_timestamp")
     private Long invalid;
 
-    /**
-     * 创建人
-     */
-    private Long createId;
-
-    /**
-     * 获取主键值
-     *
-     * @return 主键值
-     */
     @Override
     public Serializable pkVal() {
         return this.id;

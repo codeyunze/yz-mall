@@ -14,7 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,12 +35,12 @@ public class ExtendSysUserServiceImpl implements ExtendSysUserService {
     }
 
     @Override
-    public void deduct(Long userId, BigDecimal amount) {
+    public void deduct(Long userId, Long amount) {
         this.service.deduct(userId, amount);
     }
 
     @Override
-    public void recharge(Long userId, BigDecimal amount) {
+    public void recharge(Long userId, Long amount) {
         this.service.recharge(userId, amount);
     }
 

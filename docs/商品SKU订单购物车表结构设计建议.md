@@ -326,6 +326,35 @@ erDiagram
 
 ---
 
+## 10. 落地记录（2026-07-20）
+
+已按本文 P0/P1 完成首轮改造，产物如下：
+
+| 项 | 说明 |
+|---|---|
+| DDL | `docs/sql/p0_product_sku_order_cart_refactor.sql`（需人工执行） |
+| 订单行 | 实体/VO/Mapper 增加 `skuId/skuCode/skuName/refundQuantity`；下单按 SKU 计价落库 |
+| 下单 | `OmsOrderServiceImpl.generateOrder` 强制 SKU，金额取 `priceFee/100`；取消/退款按行 `skuId` 回补 |
+| 跨服务 | 新增 `ExtendPmsSkuService`（interface/core/feign/controller） |
+| 购物车 | 实体增加 `checked`；加购默认勾选；DDL 强制 `sku_id NOT NULL` |
+| 库存 | 实体增加 `warehouseId`；批量扣减/回补写 `pms_stock_log` |
+| 新建表实体 | `PmsProductImage`、`PmsStockLog`、`OmsOrderRefundItem` |
+| 订单头 | `freightAmount`、`refundStatus`；退款申请/审核同步售后状态 |
+| 金额策略 | **已落地**：全链路「分」；DDL 见 `amount_unify_to_fen.sql`；前端 `fenToYuan` 展示 |
+
+**上线前必须**：在目标库执行上述 SQL；核对 `oms_order_relation_product.sku_id IS NULL` 无残留后再做应用发布。
+
+---
+
+### 金额单位（已落地）
+
+- **存储与计算**：全链路使用「分」`bigint`/`Long`（含商品价、SKU 价、订单金额、退款金额、用户余额）
+- **前端展示**：统一用 `fenToYuan`（`src/utils/money.ts`）换算为元
+- **管理端录入**：表单按「元」输入，提交前 `yuanToFen` / `Math.round(x*100)`
+- DDL：`docs/sql/amount_unify_to_fen.sql`
+
+---
+
 ## 附录 A：P0 字段变更清单（评审用）
 
 ### A1. `oms_order_relation_product`（或更名 `oms_order_item`）

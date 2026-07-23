@@ -4,7 +4,8 @@
 
 
     <select id="selectOrderProductByOrderIds" resultType="com.yz.mall.oms.vo.OmsOrderProductVo">
-        select oorp.id, oorp.order_id, oorp.product_id, oorp.product_quantity, oorp.discount_amount
+        select oorp.id, oorp.order_id, oorp.product_id, oorp.sku_id, oorp.sku_code, oorp.sku_name
+             , oorp.product_quantity, oorp.refund_quantity, oorp.discount_amount
              , oorp.real_amount, oorp.product_attributes, oorp.product_name, oorp.product_price
              , oorp.remark, oorp.album_pics
         from oms_order_relation_product oorp

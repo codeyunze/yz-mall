@@ -67,6 +67,11 @@ public class PmsStock extends Model<PmsStock> {
     private Long skuId;
 
     /**
+     * 仓库Id，0表示默认仓
+     */
+    private Long warehouseId;
+
+    /**
      * 商品库存数量
      */
     private Integer quantity;
