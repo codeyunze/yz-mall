@@ -1,14 +1,17 @@
 package com.yz.mall.web.interceptor;
 
 import com.yz.mall.base.HeaderConstants;
-import com.yz.mall.base.trace.SkyWalkingTraceMdc;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.skywalking.apm.toolkit.trace.TraceContext;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
- * 请求头拦截器：写入 SkyWalking trace/span 与客户端 IP 到 MDC，供日志与 Logstash 采集。
+ * 请求头拦截器：写入客户端 IP 到 MDC，并回写 SkyWalking traceId 到响应头。
+ * <p>
+ * 日志中的 TID / Span 由 Agent + {@code TraceIdMDCPatternLogbackLayout} / Logstash Provider 注入，无需再手写 MDC。
  *
  * @author yunze
  * @since 2025/11/7 12:22
@@ -16,25 +19,29 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class RequestHeaderInterceptor implements HandlerInterceptor {
 
+    private static final String CLIENT_IP = "client_ip";
+    private static final String SW_NA = "N/A";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        // 优先 SkyWalking TraceContext；无 Agent 时回退请求头 x-trace-id
-        String headerTraceId = request.getHeader(HeaderConstants.TRACE_ID_HEADER);
-        String traceId = SkyWalkingTraceMdc.putTrace(headerTraceId);
-        if (traceId != null) {
-            response.setHeader(HeaderConstants.TRACE_ID_HEADER, traceId);
+        String tid = TraceContext.traceId();
+        if (tid == null || tid.isEmpty() || SW_NA.equals(tid)) {
+            tid = request.getHeader(HeaderConstants.TRACE_ID_HEADER);
+        }
+        if (tid != null && !tid.isEmpty()) {
+            response.setHeader(HeaderConstants.TRACE_ID_HEADER, tid);
         }
 
         String ip = request.getHeader(HeaderConstants.USER_IP_HEADER);
         if (ip == null || ip.isEmpty()) {
             ip = request.getRemoteAddr();
         }
-        SkyWalkingTraceMdc.putClientIp(ip);
+        MDC.put(CLIENT_IP, ip);
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        SkyWalkingTraceMdc.clear();
+        MDC.remove(CLIENT_IP);
     }
 }

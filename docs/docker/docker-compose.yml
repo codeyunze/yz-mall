@@ -42,9 +42,12 @@ services:
     container_name: 'dev-kibana-8.19.0'
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      # Kibana 官方镜像常不带完整 tzdata；只设 TZ 时 date 会显示成 UTC 且缩写异常（如 Asia）
       - TZ=Asia/Shanghai
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+      # 从 Linux 宿主机注入 zoneinfo，让 TZ=Asia/Shanghai 能真正解析到 +0800
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
     ports:
       - '5601:5601'
     depends_on:

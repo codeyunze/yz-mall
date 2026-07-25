@@ -74,9 +74,10 @@ public class PmsStockServiceImpl extends ServiceImpl<PmsStockMapper, PmsStock> i
             return page;
         }
 
-        List<Long> productIds = page.getRecords().stream().map(PmsProductStockVo::getProductId).collect(Collectors.toList());
+        List<Long> productIds = page.getRecords().stream().map(PmsProductStockVo::getProductId).toList();
         // 根据 productId 查询对应的 SKU 列表，然后查询库存并汇总
         Map<Long, Integer> productStockMap = new HashMap<>();
+        // TODO: 2026/7/24 星期五 yunze 循环查询数据库需要优化
         for (Long productId : productIds) {
             List<PmsSkuVo> skuList = skuService.listByProductId(productId);
             if (!CollectionUtils.isEmpty(skuList)) {
