@@ -10,3 +10,9 @@ spring:
 app:
   logging:
     mapper-package: com.yz.mall.pms.mapper
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:  '*'

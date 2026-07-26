@@ -6,11 +6,12 @@ services:
   redis:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis:7.4.5
     container_name: 'dev-redis-7.4.5'
-    command: redis-server --requirepass "12345678"
+    command: redis-server --requirepass "12345678" --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - /etc/localtime:/etc/localtime
     ports:
       - '6379:6379'
+    mem_limit: 640m
     restart: unless-stopped
     networks:
       - mall
@@ -226,6 +227,14 @@ services:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/node-exporter:v1.10.2
     container_name: 'dev-node-exporter-1.10.2'
     hostname: node-exporter
+    command:
+      - '--collector.pressure'
+      - '--collector.cpu'           # CPU 采集（默认已开启，显式声明更清晰）
+      - '--collector.meminfo'       # 内存采集（默认已开启）
+      - '--collector.loadavg'       # 负载采集（默认已开启）
+      - '--collector.filesystem'    # 文件系统采集（默认已开启）
+      - '--collector.diskstats'     # 磁盘采集（默认已开启）
+      - '--collector.netdev'        # 网络采集（默认已开启）
     restart: always
     ports:
       - "9100:9100"

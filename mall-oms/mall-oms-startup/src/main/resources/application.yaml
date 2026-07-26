@@ -16,6 +16,12 @@ app:
   logging:
     mapper-package: com.yz.mall.oms.mapper
     
+management:
+  endpoints:
+    web:
+      exposure:
+        include:  '*'
+    
 resilience4j:
   timelimiter:
     configs:

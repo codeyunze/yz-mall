@@ -11,3 +11,8 @@ app:
   logging:
     mapper-package: com.yz.mall.sys.mapper
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:  '*'

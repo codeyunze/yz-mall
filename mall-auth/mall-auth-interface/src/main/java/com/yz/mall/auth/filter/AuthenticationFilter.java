@@ -14,15 +14,14 @@ import java.io.IOException;
  * @date 2024/8/5 23:25
  */
 @Slf4j
-@Order(99)
+@Order(0)
 @Component
 public class AuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        log.info("99-登录认证过滤器");
         String authorization = ((HttpServletRequest) servletRequest).getHeader("Authorization");
-
+        log.info("99-登录认证过滤器: {}", authorization);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
