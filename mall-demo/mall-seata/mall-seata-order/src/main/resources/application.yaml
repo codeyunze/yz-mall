@@ -6,10 +6,10 @@ spring:
     name: mall-seata-order
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
-app:
-  logging:
-    mapper-package: com.yz.mall.so.mapper
+logging:
+  mapper-package: com.yz.mall.so.mapper
 
+app:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: ${MYSQL_USERNAME}

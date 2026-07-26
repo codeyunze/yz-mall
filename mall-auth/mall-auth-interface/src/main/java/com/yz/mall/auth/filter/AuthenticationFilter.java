@@ -2,6 +2,7 @@ package com.yz.mall.auth.filter;
 
 import jakarta.servlet.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.RequestFacade;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,10 @@ public class AuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        if ("/actuator/prometheus".equals(((RequestFacade) servletRequest).getRequestURI())) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
         String authorization = ((HttpServletRequest) servletRequest).getHeader("Authorization");
         log.info("99-登录认证过滤器: {}", authorization);
         filterChain.doFilter(servletRequest, servletResponse);

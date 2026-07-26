@@ -13,10 +13,10 @@ spring:
     name: poc-sliding-window
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
-app:
-  logging:
-    mapper-package: com.yz.mall.poc.sw.mapper
+logging:
+  mapper-package: com.yz.mall.poc.sw.mapper
 
+app:
   data:
     redis:
       host: localhost

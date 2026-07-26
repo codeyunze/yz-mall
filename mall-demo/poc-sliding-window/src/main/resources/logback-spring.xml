@@ -49,8 +49,8 @@
         </encoder>
     </appender>
 
-    <!-- MyBatis Mapper SQL 日志包：由 app.logging.mapper-package 指定，默认 com.yz.mall（新模块只需改 application.yaml） -->
-    <springProperty scope="context" name="MAPPER_PACKAGE" source="app.logging.mapper-package" defaultValue="com.yz.mall"/>
+    <!-- MyBatis Mapper SQL 日志包：由 logging.mapper-package 指定，默认 com.yz.mall（新模块只需改 application.yaml） -->
+    <springProperty scope="context" name="MAPPER_PACKAGE" source="logging.mapper-package" defaultValue="com.yz.mall"/>
     <logger name="${MAPPER_PACKAGE}" level="DEBUG"/>
     <!-- 公共组件 Mapper（各服务通用，无对应包时无影响） -->
     <logger name="io.github.codeyunze.mapper" level="DEBUG"/>

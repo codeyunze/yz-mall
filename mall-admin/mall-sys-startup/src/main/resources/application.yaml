@@ -18,9 +18,17 @@ spring:
         enabled: true
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
-app:
-  logging:
-    mapper-package: com.yz.mall.sys.mapper
+logging:
+  mapper-package: com.yz.mall.sys.mapper
+  level:
+    # Spring Data Redis / Lettuce：能看到 SET/GET 等协议命令
+    io.lettuce.core.protocol: DEBUG
+    # 可选：看 RedisTemplate 调用层
+    org.springframework.data.redis.core: DEBUG
+    # Redisson 分布式锁等
+    org.redisson: DEBUG
+    # 若用 @Cacheable
+    org.springframework.cache: TRACE
     
 management:
   endpoints:
@@ -31,9 +39,9 @@ management:
 xxl:
   job:
     executor:
-      appname: admin
-      address: http://127.0.0.1:31004/
-      ip: 127.0.0.1
+      appname: ${spring.application.name}
+      address: http://192.168.3.20:31004/
+      ip: 192.168.3.20
       port: 31004
 
 yz:

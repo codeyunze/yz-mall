@@ -7,9 +7,8 @@ spring:
     name: mall-gateway
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取；网关一般无本地 Mapper，可按需调整）
-app:
-  logging:
-    mapper-package: com.yz.mall.sys.mapper
+logging:
+  mapper-package: com.yz.mall.sys.mapper
 
 management:
   endpoints:

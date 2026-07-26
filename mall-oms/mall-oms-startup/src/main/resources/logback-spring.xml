@@ -50,7 +50,7 @@
         </encoder>
     </appender>
 
-    <springProperty scope="context" name="MAPPER_PACKAGE" source="app.logging.mapper-package" defaultValue="com.yz.mall"/>
+    <springProperty scope="context" name="MAPPER_PACKAGE" source="logging.mapper-package" defaultValue="com.yz.mall"/>
     <logger name="${MAPPER_PACKAGE}" level="DEBUG"/>
     <logger name="io.github.codeyunze.mapper" level="DEBUG"/>
 

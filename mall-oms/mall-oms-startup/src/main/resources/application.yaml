@@ -12,10 +12,10 @@ spring:
         connection-timeout: 2000
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
-app:
-  logging:
-    mapper-package: com.yz.mall.oms.mapper
-    
+logging:
+  mapper-package: com.yz.mall.oms.mapper
+
+
 management:
   endpoints:
     web:
