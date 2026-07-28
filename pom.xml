@@ -45,6 +45,8 @@
         <skywalking.version>9.6.0</skywalking.version>
         <prometheus.version>1.11.5</prometheus.version>
         <caffeine.version>3.1.8</caffeine.version>
+        <!-- Spring Boot 3.x 使用带 -x 后缀的 Dynamic TP 版本，见官方 nacos-cloud 文档 -->
+        <dynamictp.version>1.2.2-x</dynamictp.version>
     </properties>
 
     <dependencies>
@@ -171,6 +173,12 @@
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
                 <version>${prometheus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.dynamictp</groupId>
+                <artifactId>dynamic-tp-spring-cloud-starter-nacos</artifactId>
+                <version>${dynamictp.version}</version>
             </dependency>
 
             <dependency>

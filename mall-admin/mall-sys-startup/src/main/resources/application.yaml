@@ -20,21 +20,18 @@ spring:
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
 logging:
   mapper-package: com.yz.mall.sys.mapper
-  level:
-    # Spring Data Redis / Lettuce：能看到 SET/GET 等协议命令
-    io.lettuce.core.protocol: DEBUG
-    # 可选：看 RedisTemplate 调用层
-    org.springframework.data.redis.core: DEBUG
-    # Redisson 分布式锁等
-    org.redisson: DEBUG
-    # 若用 @Cacheable
-    org.springframework.cache: TRACE
     
 management:
   endpoints:
     web:
       exposure:
-        include:  '*'
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
 
 xxl:
   job:

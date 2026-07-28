@@ -13,5 +13,9 @@ spring:
           - data-id: middleware.yaml
           - data-id: sa-token.yaml
           - data-id: file.yaml
+          # Dynamic TP（refresh 必须 true，否则 Nacos 热更新不生效）
+          # 配置样例：docs/nacos/mall-sys-dtp.yaml
+          - data-id: mall-sys.yaml
+            refresh: true
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8

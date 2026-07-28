@@ -1,0 +1,24 @@
+# 上传到 Nacos：Data ID = mall-sys-dtp.yaml，Group = DEFAULT_GROUP
+# Namespace 与 mall-sys 一致；修改后应自动刷新（bootstrap 已配置 refresh: true）
+# 官方说明：https://dynamictp.cn/guide/configcenter/nacos-cloud.html
+
+dynamictp:
+  enabled: true
+  enabledCollect: true
+  collectorTypes: micrometer
+  monitorInterval: 5
+  executors:
+    - threadPoolName: mallSysDemoExecutor
+      threadPoolAliasName: mall-sys演示线程池
+      executorType: common
+      corePoolSize: 2
+      maximumPoolSize: 4
+      queueCapacity: 100
+      queueType: VariableLinkedBlockingQueue
+      rejectedHandlerType: CallerRunsPolicy
+      keepAliveTime: 60
+      threadNamePrefix: dynamic-
+      allowCoreThreadTimeOut: false
+      waitForTasksToCompleteOnShutdown: true
+      awaitTerminationSeconds: 5
+      notifyEnabled: false

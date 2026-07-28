@@ -9,6 +9,7 @@
 | [系统架构设计.md](./系统架构设计.md) | 规划向设计稿（含后续扩展服务路线图，部分版本信息可能滞后） |
 | [商品SKU订单购物车表结构设计建议.md](./商品SKU订单购物车表结构设计建议.md) | 基于存量表与真实电商模型的商品/SKU/库存/购物车/订单改造建议（含落地记录） |
 | [日志系统设计方案.md](./日志系统设计方案.md) | 日志总线（Kafka）、运行/入站/出站三类日志、ES + SigNoz 多下游演进（替换 SkyWalking） |
+| [技术文档/mall-sys-DynamicTP接入说明.md](./技术文档/mall-sys-DynamicTP接入说明.md) | mall-sys 接入 Dynamic TP（Nacos 热更新 + Prometheus/Grafana） |
 | [sql/amount_unify_to_fen.sql](./sql/amount_unify_to_fen.sql) | 金额字段统一为分（bigint）：商品/订单/退款/用户余额 |
 | [../README.md](../README.md) | 根 README：端口、分层示意图、权限与运维备注 |
 
