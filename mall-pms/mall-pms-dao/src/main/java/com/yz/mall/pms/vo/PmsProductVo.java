@@ -6,7 +6,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -43,9 +42,9 @@ public class PmsProductVo implements Serializable {
     private String productName;
 
     /**
-     * 商品价格
+     * 商品价格（单位：分）
      */
-    private BigDecimal productPrice;
+    private Long productPrice;
 
     /**
      * 商品标签
@@ -76,5 +75,10 @@ public class PmsProductVo implements Serializable {
      * 商品剩余库存数量
      */
     private Integer quantity;
+
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
 }
 

@@ -50,6 +50,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         bo.setId(IdUtil.getSnowflakeNextId());
         bo.setMenuType(dto.getMenuType().get());
         baseMapper.insert(bo);
+
+        // 清理角色的按钮和接口缓存
+        refreshPermission.refreshButtonPermissionCache();
+        refreshPermission.refreshApiPermissionCache();
         return bo.getId();
     }
 

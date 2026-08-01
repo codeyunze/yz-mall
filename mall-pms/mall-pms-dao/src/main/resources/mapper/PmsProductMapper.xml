@@ -7,9 +7,7 @@
         from pms_product pp
         where pp.invalid = 0 and pp.publish_status = 1 and pp.verify_status = 1
         <if test="filter.lastProductId != null and filter.lastProductId != ''">and pp.id &lt; #{filter.lastProductId}</if>
-        <if test="filter.queryInfo != null and filter.queryInfo != ''">
-          and (pp.name like concat('%', #{filter.queryInfo}, '%') or pp.titles like concat('%', #{filter.queryInfo}, '%'))
-        </if>
+        <if test="filter.queryInfo != null and filter.queryInfo != ''">and pp.product_name like concat('%', #{filter.queryInfo}, '%')</if>
         order by pp.id desc
         limit 20
     </select>

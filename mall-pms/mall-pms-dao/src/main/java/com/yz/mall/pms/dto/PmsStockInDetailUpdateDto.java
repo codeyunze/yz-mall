@@ -26,7 +26,7 @@ public class PmsStockInDetailUpdateDto implements Serializable {
     /**
      * 关联商品Id
      */
-    private Long productId;
+    private Long skuId;
 
     /**
      * 入库编号

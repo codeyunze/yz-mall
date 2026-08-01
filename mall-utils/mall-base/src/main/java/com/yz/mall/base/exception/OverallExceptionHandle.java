@@ -27,6 +27,12 @@ public class OverallExceptionHandle {
 
     private static final Logger log = LoggerFactory.getLogger(OverallExceptionHandle.class);
 
+    @ExceptionHandler(OtherException.class)
+    Result<?> otherExceptionHandle(OtherException e) {
+        log.error(e.getMessage(), e);
+        return new Result<>(e.getCode(), null, e.getMessage());
+    }
+
     /**
      * 业务异常问题处理
      */

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import jakarta.annotation.Resource;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +33,7 @@ class SysUserMapperTest extends BaseMapperTest {
         testUser.setPhone("13800138000");
         testUser.setEmail("test@example.com");
         testUser.setPassword("password123");
-        testUser.setBalance(new BigDecimal("100.00"));
+        testUser.setBalance(100L);
         testUser.setUsername("testUser");
         testUser.setStatus(1);
         testUser.setSex(1);
@@ -66,14 +65,13 @@ class SysUserMapperTest extends BaseMapperTest {
         assert userVo != null;
 
         Long userId = userVo.getId();
-        BigDecimal balance = userVo.getBalance();
 
-        userMapper.deduct(userId, new BigDecimal("10.00"));
+        userMapper.deduct(userId, 10L);
         BaseUserVo after = userMapper.get(phone);
         Assertions.assertNotNull(after);
-        Assertions.assertEquals(balance.subtract(new BigDecimal("10.00")), after.getBalance());
+        Assertions.assertEquals(userVo.getBalance() - 10L, after.getBalance());
 
-        log.info("用户余额应该为：{}，实际为：{}", balance.subtract(new BigDecimal("10.00")), after.getBalance());
+        log.info("用户余额应该为：{}，实际为：{}", userVo.getBalance() - 10L, after.getBalance());
     }
 
     @Test

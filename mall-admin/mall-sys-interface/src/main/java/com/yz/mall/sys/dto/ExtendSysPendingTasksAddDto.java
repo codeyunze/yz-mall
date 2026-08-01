@@ -18,6 +18,12 @@ public class ExtendSysPendingTasksAddDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 待办任务Id
+     * @ignore
+     */
+    private Long taskId;
+
+    /**
      * 任务标题
      */
     @NotBlank(message = "任务标题不能为空")

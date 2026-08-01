@@ -70,7 +70,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         return baseMapper.updateById(role) > 0;
     }
 
-    @DS("slave")
+    // @DS("slave")
     @Override
     public Page<SysRole> page(PageFilter<SysRoleQueryDto> filter) {
         LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();

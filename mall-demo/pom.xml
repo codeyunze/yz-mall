@@ -15,10 +15,14 @@
 
     <modules>
         <module>mall-java</module>
-        <module>mall-rocketmq</module>
+        <module>mall-java-statemachine</module>
+        <module>mall-demo-rocketmq</module>
         <module>mall-springboot</module>
         <module>mall-seata</module>
         <module>mall-canal</module>
+        <module>poc-sliding-window</module>
+        <module>mall-kafka</module>
+        <module>mall-jaeger</module>
     </modules>
 
     <properties>

@@ -76,7 +76,7 @@ public class PmsProductController extends ApiController {
     /**
      * 删除
      *
-     * @param id 删除数据主键ID
+     * @param id 删除数据主键 ID
      */
     @SaCheckPermission("api:pms:product:edit")
     @DeleteMapping("delete/{id}")
@@ -97,9 +97,9 @@ public class PmsProductController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:pms:product:page")
+    @SaIgnore
     @GetMapping("get/{id}")
-    public Result<PmsProductVo> page(@PathVariable Long id) {
+    public Result<PmsProductVo> get(@PathVariable Long id) {
         return success(this.service.detail(id));
     }
 

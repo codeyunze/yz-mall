@@ -62,9 +62,17 @@ public class RedisCacheKey {
     }
 
     /**
+     * 验证码缓存
+     * @param captchaId 验证码ID
+     */
+    public static String captcha(String captchaId) {
+        return "auth:captcha:" + captchaId;
+    }
+
+    /**
      * 接口权限映射缓存
      * 存储格式：key = "permission:api-mapping:服务名:URI", value = 权限标识
-     * 
+     *
      * @param serviceName 服务名称，如：mall-sys, mall-oms
      * @param uri 接口URI，如：/sys/dictionary/add
      * @return Redis key
@@ -75,7 +83,7 @@ public class RedisCacheKey {
 
     /**
      * 获取服务所有接口权限映射的匹配模式
-     * 
+     *
      * @param serviceName 服务名称
      * @return Redis key 匹配模式
      */

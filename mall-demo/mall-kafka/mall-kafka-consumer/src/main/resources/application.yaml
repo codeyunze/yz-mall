@@ -1,0 +1,23 @@
+server:
+  port: 10102
+
+spring:
+  application:
+    name: mall-kafka-consumer
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:192.168.3.237:9094}
+    consumer:
+      group-id: mall-kafka-order-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.yz.mall.demo.kafka.common
+        spring.json.value.default.type: com.yz.mall.demo.kafka.common.OrderEventMessage
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

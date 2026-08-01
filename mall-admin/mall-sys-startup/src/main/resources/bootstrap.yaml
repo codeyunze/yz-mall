@@ -3,16 +3,19 @@ spring:
     compatibility-verifier:
       enabled: false
     nacos:
-      server-addr: yunze.com:8848
+      server-addr: ${NACOS_HOST}:8848
       username: nacos
       password: ${NACOS_PASSWORD}
       config:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
         file-extension: yaml
         extension-configs:
-          - data-id: datasource.yaml
+          - data-id: middleware.yaml
           - data-id: sa-token.yaml
-          - data-id: rabbitmq.yaml
           - data-id: file.yaml
+          # Dynamic TP（refresh 必须 true，否则 Nacos 热更新不生效）
+          # 配置样例：docs/nacos/mall-sys-dtp.yaml
+          - data-id: mall-sys.yaml
+            refresh: true
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8

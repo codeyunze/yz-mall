@@ -14,7 +14,7 @@ public enum CodeEnum {
     /**
      * 成功
      */
-    SUCCESS(0, "成功"),
+    SUCCESS(200, "成功"),
     /**
      * 业务异常
      */
@@ -22,7 +22,7 @@ public enum CodeEnum {
     /**
      * 请求没有携带token
      */
-    ERROR_TOKEN_NULL(50000, "请登录系统操作"),
+    ERROR_TOKEN_NULL(50000, "请登录系统"),
     /**
      * 非法token
      */
@@ -30,11 +30,19 @@ public enum CodeEnum {
     /**
      * token已经过期
      */
-    ERROR_TOKEN_EXPIRED(50002, "令牌过期"),
+    ERROR_TOKEN_EXPIRED(50002, "登录已过期"),
     /**
      * 权限异常
      */
     AUTHENTICATION_ERROR(50003, "没有操作权限"),
+    /**
+     * 账号在另一地方登录，被挤下线
+     */
+    ERROR_SQUEEZING_LINE(50004, "账号在另一地方登录"),
+    /**
+     * 账号被踢下线
+     */
+    ERROR_ELIMINATE(50005, "账号被踢下线"),
     /**
      * 系统异常
      */

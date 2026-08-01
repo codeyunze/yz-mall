@@ -53,8 +53,8 @@ public class ExtendPmsStockServiceImpl implements ExtendPmsStockService {
     }
 
     @Override
-    public Integer getStockByProductId(Long productId) {
-        Result<Integer> result = feign.getStockByProductId(productId);
+    public Integer getStockBySkuId(Long skuId) {
+        Result<Integer> result = feign.getStockBySkuId(skuId);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }

@@ -3,15 +3,18 @@ package com.yz.mall.sys.extend;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.yz.mall.base.ApiController;
+import com.yz.mall.base.IdsDto;
 import com.yz.mall.base.Result;
 import com.yz.mall.sys.dto.ExtendSysUserAddDto;
 import com.yz.mall.sys.dto.ExtendSysUserBalanceDto;
 import com.yz.mall.sys.service.ExtendSysUserService;
 import com.yz.mall.sys.vo.ExtendLoginInfoVo;
+import com.yz.mall.sys.vo.ExtendSysUserSlimVo;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 内部暴露接口：用户信息
@@ -79,6 +82,17 @@ public class ExtendSysUserController extends ApiController {
     @GetMapping("getUserInfo/{id}")
     public Result<ExtendLoginInfoVo> getUserInfo(@PathVariable Long id) {
         return success(this.service.getUserInfoById(id));
+    }
+
+    /**
+     * 获取用户基础信息
+     *
+     * @param idsDto 用户 Id
+     * @return 用户信息
+     */
+    @PostMapping("getUserSlimByIds")
+    public Result<Map<Long, ExtendSysUserSlimVo>> getUserSlimByIds(@RequestBody IdsDto<Long> idsDto) {
+        return success(service.getUserSlimByIds(idsDto));
     }
 }
 

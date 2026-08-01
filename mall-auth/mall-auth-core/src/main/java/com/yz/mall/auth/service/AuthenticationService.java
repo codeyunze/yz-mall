@@ -6,6 +6,7 @@ import cn.dev33.satoken.temp.SaTempUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.yz.mall.auth.dto.AuthCheckPermissionDto;
 import com.yz.mall.auth.dto.AuthRolePermissionQueryDto;
+import com.yz.mall.auth.vo.AuthUserInfoVo;
 import com.yz.mall.auth.vo.AuthUserIntegratedInfoDto;
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.base.enums.MenuTypeEnum;
@@ -60,7 +61,7 @@ public class AuthenticationService {
     /**
      * 获取登录用户信息
      *
-     * @param userId 用户Id
+     * @param userId 用户 Id
      * @return 用户信息
      */
     public AuthUserIntegratedInfoDto getUserInfo(Long userId) {
@@ -80,11 +81,14 @@ public class AuthenticationService {
         vo.setBtnPermissions(getPermissionByRoleIds(roles));
         // vo.setAvatar(loginInfo.getAvatar());
 
+        AuthUserInfoVo userInfoById = authSysUserService.getUserInfoById(userId);
+
         BoundHashOperations<String, Object, Object> operations = defaultRedisTemplate.boundHashOps(RedisCacheKey.loginInfo(vo.getUserId()));
         operations.put("refreshToken", vo.getRefreshToken());
         operations.put("userId", vo.getUserId());
-        operations.put("username", vo.getUsername());
-        operations.put("nickname", vo.getNickname());
+        operations.put("phone", userInfoById.getPhone());
+        operations.put("username", userInfoById.getUsername());
+        operations.put("nickname", userInfoById.getUsername());
         operations.put("accessToken", vo.getAccessToken());
         operations.expire(86400, TimeUnit.SECONDS);
         return vo;

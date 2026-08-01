@@ -8,6 +8,7 @@ import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.service.PmsStockService;
 import com.yz.mall.pms.vo.PmsProductStockVo;
+import com.yz.mall.pms.vo.PmsSkuStockVo;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
@@ -44,6 +45,16 @@ public class PmsStockController extends ApiController {
         return success(page.getRecords(), page.getTotal());
     }
 
+    /**
+     * 查询商品下各 SKU 库存明细
+     *
+     * @param productId 商品 id
+     */
+    @SaCheckPermission("api:pms:stock:page")
+    @GetMapping("sku/{productId}")
+    public Result<List<PmsSkuStockVo>> listSkuStockByProductId(@PathVariable Long productId) {
+        return success(this.service.listSkuStockByProductId(productId));
+    }
 
     /**
      * 详情查询

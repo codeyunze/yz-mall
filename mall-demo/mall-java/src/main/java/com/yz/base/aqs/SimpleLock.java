@@ -1,5 +1,7 @@
 package com.yz.base.aqs;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -8,6 +10,7 @@ import java.util.concurrent.locks.Lock;
  * @author yunze
  * @since 2025/10/9 00:35
  */
+@Slf4j
 public class SimpleLock implements Lock {
 
     // 同步器实例，实际的锁逻辑由它实现
@@ -58,7 +61,7 @@ public class SimpleLock implements Lock {
                 System.out.println("线程1获取到锁，执行中...");
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("线程中断异常", e);
             } finally {
                 System.out.println("线程1释放锁");
                 lock.unlock();

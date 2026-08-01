@@ -66,5 +66,10 @@ public class SysReceiptInfoVo {
      */
     private String receiverEmail;
 
+    /**
+     * 是否默认地址：0否；1是
+     */
+    private Integer isDefault;
+
 }
 

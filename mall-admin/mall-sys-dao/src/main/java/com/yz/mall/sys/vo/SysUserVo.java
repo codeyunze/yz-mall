@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -43,9 +42,9 @@ public class SysUserVo extends Model<SysUserVo> {
     private String email;
 
     /**
-     * 账户余额
+     * 账户余额（单位：分）
      */
-    private BigDecimal balance;
+    private Long balance;
 
     /**
      * 昵称

@@ -25,6 +25,16 @@ public class PmsStockInDetailVo implements Serializable {
     private Long id;
 
     /**
+     * 创建人
+     */
+    private Long createId;
+
+    /**
+     * 创建人名称
+     */
+    private String createName;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
@@ -32,7 +42,7 @@ public class PmsStockInDetailVo implements Serializable {
     private LocalDateTime createTime;
 
     /**
-     * 关联商品Id
+     * 关联商品 Id
      */
     private Long productId;
 
@@ -47,7 +57,7 @@ public class PmsStockInDetailVo implements Serializable {
     private Integer quantity;
 
     /**
-     * 关联供应商Id
+     * 关联供应商 Id
      */
     private Long supplierId;
 
@@ -70,5 +80,30 @@ public class PmsStockInDetailVo implements Serializable {
      * 商品图片id，限制为5张，以逗号分割
      */
     private String albumPics;
+
+    /**
+     * 关联SKU Id
+     */
+    private Long skuId;
+
+    /**
+     * SKU编码
+     */
+    private String skuCode;
+
+    /**
+     * SKU名称
+     */
+    private String skuName;
+
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
+
+    /**
+     * 商品分类名称
+     */
+    private String categoryName;
 }
 

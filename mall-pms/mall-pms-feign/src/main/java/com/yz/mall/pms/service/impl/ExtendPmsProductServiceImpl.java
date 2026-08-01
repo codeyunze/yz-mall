@@ -31,6 +31,6 @@ public class ExtendPmsProductServiceImpl implements ExtendPmsProductService {
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new BusinessException(result.getMsg());
         }
-        return result.getData();
+        return result.getData() == null ? List.of() : result.getData();
     }
 }

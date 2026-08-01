@@ -37,6 +37,8 @@ target
 out
 *.iml
 .DS_Store
+.stignore
+.stfolder/
 
 # Web files
 .vite

@@ -25,21 +25,21 @@ public interface PmsStockMapper extends BaseMapper<PmsStock> {
     /**
      * 扣减库存
      *
-     * @param productId 商品信息
+     * @param skuId SKU信息
      * @param quantity  扣减数量
      * @return 是否扣减成功
      */
-    @Update("update pms_stock set quantity = quantity - #{quantity} where invalid = 0 and product_id = #{productId} and quantity >= #{quantity}")
-    boolean deduct(@Param("productId") Long productId, @Param("quantity") Integer quantity);
+    @Update("update pms_stock set quantity = quantity - #{quantity} where invalid = 0 and sku_id = #{skuId} and quantity >= #{quantity}")
+    boolean deduct(@Param("skuId") Long skuId, @Param("quantity") Integer quantity);
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      *
-     * @param productId 商品id
-     * @return 商品剩余库存
+     * @param skuId SKU id
+     * @return SKU剩余库存
      */
-    @Select("select quantity from pms_stock where invalid = 0 and product_id = #{productId}")
-    Integer getStockByProductId(@Param("productId") Long productId);
+    @Select("select quantity from pms_stock where invalid = 0 and sku_id = #{skuId}")
+    Integer getStockBySkuId(@Param("skuId") Long skuId);
 
     /**
      * 分页查询
@@ -51,12 +51,42 @@ public interface PmsStockMapper extends BaseMapper<PmsStock> {
     Page<PmsProductStockVo> selectPageByFilter(Page<Object> page, @Param("filter") PmsStockQueryDto filter);
 
     /**
-     * 查询指定商品的库存数量
+     * 查询指定SKU的库存数量
      *
-     * @param productIds 需要查询的商品Id
-     * @return 商品库存列表数据
+     * @param skuIds 需要查询的SKU Id
+     * @return SKU库存列表数据
      */
-    List<PmsStockVo> selectStockByProductIds(@Param("productIds") List<Long> productIds);
+    List<PmsStockVo> selectStockBySkuIds(@Param("skuIds") List<Long> skuIds);
+
+    /**
+     * 锁定库存
+     *
+     * @param skuId SKU id
+     * @param quantity  锁定数量
+     * @return 是否锁定成功
+     */
+    @Update("update pms_stock set quantity = quantity - #{quantity}, locked_quantity = locked_quantity + #{quantity} where invalid = 0 and sku_id = #{skuId} and quantity >= #{quantity}")
+    boolean lockStock(@Param("skuId") Long skuId, @Param("quantity") Integer quantity);
+
+    /**
+     * 释放锁定的库存
+     *
+     * @param skuId SKU id
+     * @param quantity  释放数量
+     * @return 是否释放成功
+     */
+    @Update("update pms_stock set quantity = quantity + #{quantity}, locked_quantity = locked_quantity - #{quantity} where invalid = 0 and sku_id = #{skuId} and locked_quantity >= #{quantity}")
+    boolean unlockStock(@Param("skuId") Long skuId, @Param("quantity") Integer quantity);
+
+    /**
+     * 扣减锁定的库存
+     *
+     * @param skuId SKU id
+     * @param quantity  扣减数量
+     * @return 是否扣减成功
+     */
+    @Update("update pms_stock set locked_quantity = locked_quantity - #{quantity} where invalid = 0 and sku_id = #{skuId} and locked_quantity >= #{quantity}")
+    boolean deductLockedStock(@Param("skuId") Long skuId, @Param("quantity") Integer quantity);
 
 }
 

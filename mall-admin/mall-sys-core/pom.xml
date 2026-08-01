@@ -27,6 +27,12 @@
 
         <dependency>
             <groupId>com.yz</groupId>
+            <artifactId>mall-rocketmq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
             <artifactId>mall-auth-interface</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -41,11 +47,6 @@
             <groupId>com.yz</groupId>
             <artifactId>mall-redis</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-job-core</artifactId>
         </dependency>
 
         <dependency>
@@ -76,6 +77,16 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.codeyunze</groupId>
+            <artifactId>qof-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dromara.dynamictp</groupId>
+            <artifactId>dynamic-tp-spring-cloud-starter-nacos</artifactId>
         </dependency>
     </dependencies>
 </project>

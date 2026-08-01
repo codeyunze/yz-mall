@@ -43,6 +43,15 @@ public interface SysPendingTasksService extends IService<SysPendingTasks> {
     boolean end(@Valid IdDto dto);
 
     /**
+     * 按业务主键 + 任务标识结束进行中的待办
+     *
+     * @param businessId 关联业务主键
+     * @param taskCode 任务标识
+     * @return 是否操作成功
+     */
+    boolean endByBusiness(String businessId, String taskCode);
+
+    /**
      * 分页查询
      *
      * @param filter 过滤条件

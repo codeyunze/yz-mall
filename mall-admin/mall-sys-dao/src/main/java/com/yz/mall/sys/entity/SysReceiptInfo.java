@@ -1,6 +1,7 @@
 package com.yz.mall.sys.entity;
 
 import cn.hutool.core.date.DatePattern;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -83,6 +84,12 @@ public class SysReceiptInfo extends Model<SysReceiptInfo> {
      * 收货人邮件
      */
     private String receiverEmail;
+
+    /**
+     * 是否默认地址：0否；1是
+     */
+    @TableField("is_default")
+    private Integer isDefault;
 
     /**
      * 获取主键值

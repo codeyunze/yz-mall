@@ -1,6 +1,7 @@
 package com.yz.mall.sys.service;
 
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksEndDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,6 +14,8 @@ public interface ExtendSysPendingTasksService {
 
     /**
      * 开始任务
+     * 模式一: service实现类引入的是core包，则是待办数据直接入库
+     * 模式二: service实现类引入的是feign包，则通过feign发送rocketmq消息，由core包消费消息，待办数据入库
      *
      * @param taskInfo 任务信息
      * @return 任务Id
@@ -25,4 +28,11 @@ public interface ExtendSysPendingTasksService {
      * @param taskId 结束任务Id
      */
     boolean endTask(@NotNull Long taskId);
+
+    /**
+     * 按业务主键 + 任务标识结束进行中的待办
+     *
+     * @param dto 业务主键与任务标识
+     */
+    boolean endTaskByBusiness(@Valid ExtendSysPendingTasksEndDto dto);
 }

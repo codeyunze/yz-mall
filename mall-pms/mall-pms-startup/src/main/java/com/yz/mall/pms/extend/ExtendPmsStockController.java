@@ -46,10 +46,10 @@ public class ExtendPmsStockController {
     }
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      */
-    @GetMapping("get/{productId}")
-    public Result<Integer> getStockByProductId(@PathVariable Long productId) {
-        return Result.success(extendPmsStockService.getStockByProductId(productId));
+    @GetMapping("get/{skuId}")
+    public Result<Integer> getStockBySkuId(@PathVariable Long skuId) {
+        return Result.success(extendPmsStockService.getStockBySkuId(skuId));
     }
 }

@@ -10,7 +10,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -59,19 +58,39 @@ public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
     private Long productId;
 
     /**
+     * 下单SKU Id（快照关联）
+     */
+    private Long skuId;
+
+    /**
+     * SKU编码快照
+     */
+    private String skuCode;
+
+    /**
+     * SKU名称快照
+     */
+    private String skuName;
+
+    /**
      * 购买商品数量
      */
     private Integer productQuantity;
 
     /**
-     * 商品优惠金额
+     * 已退款数量
      */
-    private BigDecimal discountAmount;
+    private Integer refundQuantity;
 
     /**
-     * 商品优惠后的实际价格
+     * 商品优惠金额（分）
      */
-    private BigDecimal realAmount;
+    private Long discountAmount;
+
+    /**
+     * 商品优惠后的实际单价（分）
+     */
+    private Long realAmount;
 
     /**
      * 商品属性;[{key:颜色,value:黑色},{key:内存,value:32G}]
@@ -84,9 +103,9 @@ public class OmsOrderRelationProduct extends Model<OmsOrderRelationProduct> {
     private String productName;
 
     /**
-     * 商品价格(下单时商品的价格)
+     * 商品价格(下单时单价，分)
      */
-    private BigDecimal productPrice;
+    private Long productPrice;
 
     /**
      * 商品备注信息

@@ -18,7 +18,7 @@ public class PmsStockInDetailQueryDto implements Serializable {
     /**
      * 关联商品Id
      */
-    private Long productId;
+    private Long skuId;
 
     /**
      * 入库编号
@@ -29,6 +29,16 @@ public class PmsStockInDetailQueryDto implements Serializable {
      * 关联供应商Id
      */
     private Long supplierId;
+
+    /**
+     * SKU名称（模糊查询）
+     */
+    private String skuName;
+
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
 
 }
 

@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -70,9 +69,14 @@ public class OmsOrder extends Model<OmsOrder> {
     private String orderCode;
 
     /**
-     * 订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单
+     * 订单状态：0待付款；1待发货；2已发货；3待收货；4已完成；5已关闭/已取消；6无效订单；7退款中；8已退款
      */
     private Integer orderStatus;
+
+    /**
+     * 售后状态：0无售后；1售后中；2部分退款；3全额退款
+     */
+    private Integer refundStatus;
 
     /**
      * 订单类型：0正常订单；1秒杀订单
@@ -104,23 +108,30 @@ public class OmsOrder extends Model<OmsOrder> {
     private Integer payType;
 
     /**
-     * 订单总金额
+     * 订单总金额（分）
      */
-    private BigDecimal totalAmount;
+    private Long totalAmount;
 
     /**
-     * 优惠金额
+     * 优惠金额（分）
      */
-    private BigDecimal discountAmount;
+    private Long discountAmount;
 
     /**
-     * 订单实际应付金额
+     * 运费金额（分）
      */
-    private BigDecimal payAmount;
+    private Long freightAmount;
+
+    /**
+     * 订单实际应付金额（分）
+     */
+    private Long payAmount;
 
     /**
      * 支付时间
      */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime payTime;
 
     /**
@@ -168,7 +179,7 @@ public class OmsOrder extends Model<OmsOrder> {
     /**
      * 商家组织Id
      */
-    private String businessOrgId;
+    private Long businessOrgId;
 
     /**
      * 获取主键值

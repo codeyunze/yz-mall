@@ -35,5 +35,10 @@ public class PmsProductQueryDto implements Serializable {
      */
     private Integer verifyStatus;
 
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
+
 }
 

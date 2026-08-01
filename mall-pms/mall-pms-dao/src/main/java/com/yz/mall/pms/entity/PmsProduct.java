@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -63,9 +62,9 @@ public class PmsProduct extends Model<PmsProduct> {
     private String productName;
 
     /**
-     * 商品价格
+     * 商品价格（单位：分）
      */
-    private BigDecimal productPrice;
+    private Long productPrice;
 
     /**
      * 商品标签
@@ -91,6 +90,11 @@ public class PmsProduct extends Model<PmsProduct> {
      * 商品图片id，限制为5张，以逗号分割
      */
     private String albumPics;
+
+    /**
+     * 商品分类ID
+     */
+    private Long categoryId;
 
     /**
      * 获取主键值

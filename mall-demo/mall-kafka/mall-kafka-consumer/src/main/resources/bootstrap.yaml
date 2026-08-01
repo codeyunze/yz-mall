@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      server-addr: yunze.com:8848
+      username: nacos
+      password: ${NACOS_PASSWORD}
+      config:
+        import-check:
+          enabled: false
+        file-extension: yaml
+      discovery:
+        namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8

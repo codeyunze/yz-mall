@@ -6,6 +6,7 @@ import com.yz.mall.pms.dto.ExtendPmsStockDto;
 import com.yz.mall.pms.dto.PmsStockQueryDto;
 import com.yz.mall.pms.entity.PmsStock;
 import com.yz.mall.pms.vo.PmsProductStockVo;
+import com.yz.mall.pms.vo.PmsSkuStockVo;
 import com.yz.mall.base.PageFilter;
 
 import java.util.List;
@@ -51,20 +52,28 @@ public interface PmsStockService extends IService<PmsStock> {
     Boolean add(ExtendPmsStockDto addStock);
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      *
-     * @param productId 商品id
-     * @return 商品剩余库存
+     * @param skuId SKU id
+     * @return SKU剩余库存
      */
-    Integer getStockByProductId(Long productId);
+    Integer getStockBySkuId(Long skuId);
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      *
-     * @param productIds 商品id
-     * @return 商品剩余库存
+     * @param skuIds SKU id
+     * @return SKU剩余库存
      */
-    Map<Long, Integer> getStockByProductIds(List<Long> productIds);
+    Map<Long, Integer> getStockBySkuIds(List<Long> skuIds);
+
+    /**
+     * 查询商品下各 SKU 的库存明细
+     *
+     * @param productId 商品 id
+     * @return SKU 库存列表
+     */
+    List<PmsSkuStockVo> listSkuStockByProductId(Long productId);
 
 }
 

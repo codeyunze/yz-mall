@@ -1,5 +1,5 @@
 server:
-  port: 30006
+  port: 25003
 
 spring:
   application:
@@ -10,6 +10,18 @@ spring:
         enabled: false
       httpclient:
         connection-timeout: 2000
+
+# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
+logging:
+  mapper-package: com.yz.mall.oms.mapper
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:  '*'
+    
 resilience4j:
   timelimiter:
     configs:

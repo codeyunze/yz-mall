@@ -6,11 +6,15 @@ services:
   redis:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/redis:7.4.5
     container_name: 'dev-redis-7.4.5'
-    command: redis-server --requirepass "12345678"
+    command: redis-server --requirepass "12345678" --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - /etc/localtime:/etc/localtime
     ports:
       - '6379:6379'
+    mem_limit: 640m
+    restart: unless-stopped
+    networks:
+      - mall
 
   elasticsearch:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/elasticsearch:8.19.0
@@ -30,6 +34,7 @@ services:
     # 可选：设置重启策略（除非手动停止，否则在容器意外退出时都会自动重启）
     restart: unless-stopped
     mem_limit: 1536m
+    restart: unless-stopped
     networks:
       - mall
 
@@ -38,14 +43,18 @@ services:
     container_name: 'dev-kibana-8.19.0'
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      # Kibana 官方镜像常不带完整 tzdata；只设 TZ 时 date 会显示成 UTC 且缩写异常（如 Asia）
       - TZ=Asia/Shanghai
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+      # 从 Linux 宿主机注入 zoneinfo，让 TZ=Asia/Shanghai 能真正解析到 +0800
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
     ports:
       - '5601:5601'
     depends_on:
       - elasticsearch
     mem_limit: 1536m
+    restart: unless-stopped
     networks:
       - mall
 
@@ -70,6 +79,7 @@ services:
       options:
         max-size: "30m"
         max-file: "3"
+    restart: unless-stopped
     networks:
       - mall
 
@@ -84,35 +94,45 @@ services:
       - '9849:9849'
     env_file:
       - ./nacos/config.env
+    restart: unless-stopped
     networks:
       - mall
   
   namesrv:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
-    container_name: rocketmq-namesrv
+    container_name: dev-rocketmq-namesrv-5.3.3
     ports:
       - "9876:9876"
     command: "sh mqnamesrv"
+    restart: unless-stopped
+    networks:
+      - mall
   
   broker:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq:5.3.3
-    container_name: rocketmq-broker
-    environment:
-      - NAMESRV_ADDR=namesrv:9876
+    container_name: dev-rocketmq-broker-5.3.3
+    volumes:
+      - ./rocketmq/broker.conf:/home/rocketmq/rocketmq-5.3.3/conf/broker.conf
     ports:
       - "10911:10911"
       - "10909:10909"
     depends_on:
       - namesrv
-    command: "sh mqbroker -n namesrv:9876"
+    command: "sh mqbroker -n namesrv:9876 -c /home/rocketmq/rocketmq-5.3.3/conf/broker.conf"
+    restart: unless-stopped
+    networks:
+      - mall
   
   rocketmq-dashboard:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/rocketmq-dashboard:2.1.0
-    container_name: rocketmq-dashboard-2.1
+    container_name: dev-rocketmq-dashboard-2.1
     environment:
       - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876
     ports:
       - "8082:8082"
+    restart: unless-stopped
+    networks:
+      - mall
 
   prometheus:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/prometheus:v3.7.3
@@ -122,6 +142,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - '9090:9090'
+    restart: unless-stopped
     networks:
       - mall
 
@@ -138,6 +159,7 @@ services:
       - ./grafana/config.monitoring
     depends_on:
       - prometheus
+    restart: unless-stopped
     networks:
       - mall
 
@@ -152,6 +174,9 @@ services:
         --spring.datasource.username=xxl_job_dev
         --spring.datasource.password=123456
         --xxl.job.accessToken=123456789
+    restart: unless-stopped
+    networks:
+      - mall
 
   seata-server:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/seata-server:1.6.1
@@ -167,6 +192,7 @@ services:
       - ./seata/application.yml/:/seata-server/resources/application.yml
     depends_on:
       - nacos
+    restart: unless-stopped
     networks:
       - mall
 
@@ -180,6 +206,7 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - '9121:9121'
+    restart: unless-stopped
     networks:
       - mall
 
@@ -192,6 +219,7 @@ services:
     command: --config.my-cnf=/etc/mysql/my.cnf
     ports:
       - '9104:9104'
+    restart: unless-stopped
     networks:
       - mall
       
@@ -199,6 +227,63 @@ services:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/node-exporter:v1.10.2
     container_name: 'dev-node-exporter-1.10.2'
     hostname: node-exporter
+    command:
+      - '--collector.pressure'
+      - '--collector.cpu'           # CPU 采集（默认已开启，显式声明更清晰）
+      - '--collector.meminfo'       # 内存采集（默认已开启）
+      - '--collector.loadavg'       # 负载采集（默认已开启）
+      - '--collector.filesystem'    # 文件系统采集（默认已开启）
+      - '--collector.diskstats'     # 磁盘采集（默认已开启）
+      - '--collector.netdev'        # 网络采集（默认已开启）
     restart: always
     ports:
       - "9100:9100"
+    networks:
+      - mall
+
+  # Kafka KRaft 单节点
+  # PLAINTEXT(9092)=容器内访问 | EXTERNAL(9094)=宿主机/IDE访问 | CONTROLLER(9093)=KRaft 控制器（必须保留）
+  kafka:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/kafka:3.9.2
+    container_name: kafka-single
+    hostname: kafka
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://192.168.3.237:9094
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - ./kafka/data:/var/lib/kafka/data
+      - ./kafka/logs:/opt/kafka/logs
+    restart: unless-stopped
+    networks:
+      - mall
+
+  kafka-ui:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/kafka-ui:v0.7.2
+    container_name: kafka-ui
+    ports:
+      - "18081:8080"
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      KAFKA_CLUSTERS_0_NAME: vm-237-kafka-3.9
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    networks:
+      - mall

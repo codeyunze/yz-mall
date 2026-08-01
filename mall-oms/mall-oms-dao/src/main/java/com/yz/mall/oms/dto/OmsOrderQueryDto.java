@@ -3,7 +3,6 @@ package com.yz.mall.oms.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -55,9 +54,9 @@ public class OmsOrderQueryDto implements Serializable {
     private Integer payType;
 
     /**
-     * 订单实际应付金额
+     * 订单实际应付金额（分）
      */
-    private BigDecimal payAmount;
+    private Long payAmount;
 
     /**
      * 收货人手机号

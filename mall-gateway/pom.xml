@@ -64,29 +64,37 @@
         </dependency>
 
         <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
 
-        <!-- Sa-Token 权限认证（Reactor响应式集成），用于网关响应式环境
-             注意：sa-token-reactor-spring-boot-starter 在 1.35.0+ 版本已支持 Spring Boot 3
-             当前版本 1.43.0 完全兼容 Spring Boot 3 -->
+        <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc -->
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
         </dependency>
 
-        <!-- Sa-Token Redis 集成（兼容 Spring Boot 3） -->
+        <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-redis-jackson</artifactId>
         </dependency>
 
-        <!-- Redis 工具模块 -->
         <dependency>
             <groupId>com.yz</groupId>
             <artifactId>mall-redis</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.yz</groupId>
+            <artifactId>mall-base</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <!-- 认证接口模块，用于获取权限加载逻辑 -->
@@ -109,8 +117,22 @@
             <artifactId>mall-json</artifactId>
             <version>${project.version}</version>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-webflux</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-trace</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-logback-1.x</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

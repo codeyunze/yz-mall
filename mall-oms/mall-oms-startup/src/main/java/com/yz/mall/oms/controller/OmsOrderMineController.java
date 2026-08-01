@@ -10,9 +10,13 @@ import com.yz.mall.oms.dto.ExtendOmsOrderByCartDto;
 import com.yz.mall.oms.dto.ExtendOmsOrderDto;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
+import com.yz.mall.oms.dto.OmsOrderRefundQueryDto;
+import com.yz.mall.oms.dto.OmsRefundApplyDto;
 import com.yz.mall.oms.entity.OmsOrder;
+import com.yz.mall.oms.service.OmsOrderRefundService;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.oms.vo.OmsOrderDetailVo;
+import com.yz.mall.oms.vo.OmsOrderRefundVo;
 import com.yz.mall.oms.vo.OmsOrderSlimVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
 import com.yz.mall.base.PageFilter;
@@ -36,8 +40,11 @@ public class OmsOrderMineController extends ApiController {
      */
     private final OmsOrderService service;
 
-    public OmsOrderMineController(OmsOrderService service) {
+    private final OmsOrderRefundService refundService;
+
+    public OmsOrderMineController(OmsOrderService service, OmsOrderRefundService refundService) {
         this.service = service;
+        this.refundService = refundService;
     }
 
     /**
@@ -92,5 +99,27 @@ public class OmsOrderMineController extends ApiController {
         boolean cancelled = this.service.cancelById(id);
         return cancelled ? success(true) : new Result<>(CodeEnum.BUSINESS_ERROR.get(), false, "订单取消失败");
     }
-}
 
+    /**
+     * 申请退款（仅待发货）
+     */
+    @SaCheckPermission("api:oms:order:add")
+    @PostMapping("refund/apply")
+    public Result<Long> applyRefund(@RequestBody @Valid OmsRefundApplyDto dto) {
+        return success(this.refundService.apply(StpUtil.getLoginIdAsLong(), dto));
+    }
+
+    /**
+     * 我的退款单分页
+     */
+    @SaCheckPermission("api:oms:order:add")
+    @PostMapping("refund/page")
+    public Result<ResultTable<OmsOrderRefundVo>> mineRefundPage(@RequestBody PageFilter<OmsOrderRefundQueryDto> filter) {
+        if (filter.getFilter() == null) {
+            filter.setFilter(new OmsOrderRefundQueryDto());
+        }
+        filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());
+        Page<OmsOrderRefundVo> page = this.refundService.page(filter);
+        return success(page.getRecords(), page.getTotal());
+    }
+}

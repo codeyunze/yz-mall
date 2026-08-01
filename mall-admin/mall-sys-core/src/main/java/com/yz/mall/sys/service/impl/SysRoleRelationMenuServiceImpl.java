@@ -186,6 +186,9 @@ public class SysRoleRelationMenuServiceImpl extends ServiceImpl<SysRoleRelationM
 
         // 新增新分配的角色&菜单关联信息
         if (CollectionUtils.isEmpty(bindMenuIds)) {
+            // 清理角色的按钮和接口缓存
+            refreshPermission.refreshButtonPermissionCache();
+            refreshPermission.refreshApiPermissionCache();
             return true;
         }
         List<SysRoleRelationMenu> addInfos = new ArrayList<>();

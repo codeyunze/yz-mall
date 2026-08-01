@@ -76,7 +76,6 @@ public class SysMenuController extends ApiController {
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.recursionRemoveById(id));
-        // return success(this.service.removeById(id));
     }
 
     /**

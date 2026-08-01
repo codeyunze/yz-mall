@@ -37,7 +37,7 @@ public class ExtendPmsStockServiceImpl implements ExtendPmsStockService {
     }
 
     @Override
-    public Integer getStockByProductId(Long productId) {
-        return pmsStockService.getStockByProductId(productId);
+    public Integer getStockBySkuId(Long skuId) {
+        return pmsStockService.getStockBySkuId(skuId);
     }
 }

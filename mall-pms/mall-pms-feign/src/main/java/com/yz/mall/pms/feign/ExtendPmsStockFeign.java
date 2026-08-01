@@ -39,8 +39,8 @@ public interface ExtendPmsStockFeign {
     Result<Boolean> add(@RequestBody @Valid ExtendPmsStockDto dto);
 
     /**
-     * 获取指定商品的库存
+     * 获取指定SKU的库存
      */
-    @GetMapping("get/{productId}")
-    Result<Integer> getStockByProductId(@PathVariable Long productId);
+    @GetMapping("get/{skuId}")
+    Result<Integer> getStockBySkuId(@PathVariable Long skuId);
 }

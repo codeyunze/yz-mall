@@ -35,14 +35,18 @@
         <hutool.version>5.8.39</hutool.version>
         <redisson.version>3.50.0</redisson.version>
         <sa-token.version>1.43.0</sa-token.version>
-        <xxl-job.version>3.1.1</xxl-job.version>
+        <xxl-job.version>3.4.2</xxl-job.version>
         <jackson.version>2.19.2</jackson.version>
-<!--        <qof.version>0.0.6</qof.version>-->
+        <qof.version>17.0.4</qof.version>
         <logback.version>1.5.18</logback.version>
         <resilience4j.version>2.2.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
+        <!-- SkyWalking OAP/UI 可为 10.x；Java Agent Toolkit 在 Maven Central 仍为 9.x 线，与 Agent 字节码增强兼容 -->
+        <skywalking.version>9.6.0</skywalking.version>
         <prometheus.version>1.11.5</prometheus.version>
         <caffeine.version>3.1.8</caffeine.version>
+        <!-- Spring Boot 3.x 使用带 -x 后缀的 Dynamic TP 版本，见官方 nacos-cloud 文档 -->
+        <dynamictp.version>1.2.2-x</dynamictp.version>
     </properties>
 
     <dependencies>
@@ -151,9 +155,7 @@
                 <version>${sa-token.version}</version>
             </dependency>
 
-            <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc
-                 注意：sa-token-reactor-spring-boot-starter 在 1.35.0+ 版本已支持 Spring Boot 3
-                 当前版本 1.43.0 完全兼容 Spring Boot 3，无需使用专门的 spring-boot3 版本 -->
+            <!-- Sa-Token 权限认证（Reactor响应式集成），在线文档：https://sa-token.cc -->
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
@@ -171,6 +173,12 @@
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
                 <version>${prometheus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara.dynamictp</groupId>
+                <artifactId>dynamic-tp-spring-cloud-starter-nacos</artifactId>
+                <version>${dynamictp.version}</version>
             </dependency>
 
             <dependency>
@@ -223,11 +231,35 @@
                 <version>${logstash-logback.version}</version>
             </dependency>
 
-            <!--<dependency>
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-trace</artifactId>
+                <version>${skywalking.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-webflux</artifactId>
+                <version>${skywalking.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-logback-1.x</artifactId>
+                <version>${skywalking.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.github.codeyunze</groupId>
-                <artifactId>qof-core-slim</artifactId>
+                <artifactId>qof-core</artifactId>
                 <version>${qof.version}</version>
-            </dependency>-->
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.codeyunze</groupId>
+                <artifactId>qof-web</artifactId>
+                <version>${qof.version}</version>
+            </dependency>
 
 
             <dependency>
@@ -259,6 +291,19 @@
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>${caffeine.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>2.3.4</version>
+            </dependency>
+
+            <!-- RocketMQ Client 版本管理，确保与 rocketmq-spring-boot-starter 2.3.4 兼容 -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>5.3.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
