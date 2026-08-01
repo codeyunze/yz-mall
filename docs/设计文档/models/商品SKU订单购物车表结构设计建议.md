@@ -332,7 +332,7 @@ erDiagram
 
 | 项 | 说明 |
 |---|---|
-| DDL | `docs/sql/p0_product_sku_order_cart_refactor.sql`（需人工执行） |
+| DDL | `../../script/sql/p0_product_sku_order_cart_refactor.sql`（需人工执行） |
 | 订单行 | 实体/VO/Mapper 增加 `skuId/skuCode/skuName/refundQuantity`；下单按 SKU 计价落库 |
 | 下单 | `OmsOrderServiceImpl.generateOrder` 强制 SKU，金额取 `priceFee/100`；取消/退款按行 `skuId` 回补 |
 | 跨服务 | 新增 `ExtendPmsSkuService`（interface/core/feign/controller） |
@@ -351,7 +351,7 @@ erDiagram
 - **存储与计算**：全链路使用「分」`bigint`/`Long`（含商品价、SKU 价、订单金额、退款金额、用户余额）
 - **前端展示**：统一用 `fenToYuan`（`src/utils/money.ts`）换算为元
 - **管理端录入**：表单按「元」输入，提交前 `yuanToFen` / `Math.round(x*100)`
-- DDL：`docs/sql/amount_unify_to_fen.sql`
+- DDL：`../../script/sql/amount_unify_to_fen.sql`
 
 ---
 

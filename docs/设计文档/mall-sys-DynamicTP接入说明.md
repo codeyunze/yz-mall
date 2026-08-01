@@ -5,15 +5,20 @@
 - [Nacos Cloud 接入](https://dynamictp.cn/guide/configcenter/nacos-cloud.html)
 - [Prometheus + Grafana](https://dynamictp.cn/guide/monitor/prometheus_grafana.html)
 
-## 1. 已完成的代码侧改动
+## 业务 @Async 线程池
 
-| 项 | 说明 |
-|---|---|
-| 依赖 | `dynamic-tp-spring-cloud-starter-nacos`（Boot3 版本 `1.2.2-x`） |
-| 启动类 | `@EnableDynamicTp` |
-| Nacos | `bootstrap.yaml` 增加 `mall-sys-dtp.yaml`（`refresh: true`） |
-| Demo | `GET/POST /sys/dtp/demo/**`（`@SaIgnore`） |
-| Actuator | 已开启 prometheus 导出 |
+Bean 名：`mallSysAsyncExecutor`（`MallSysAsyncConfig.ASYNC_EXECUTOR`）
+
+```java
+@Async // 默认走 mallSysAsyncExecutor
+public void doBiz() { ... }
+
+@Async(MallSysAsyncConfig.ASYNC_EXECUTOR) // 显式指定
+public void doBiz() { ... }
+```
+
+Nacos 中该池必须配置 `autoCreate: false`，由代码 `@Bean` + `@DynamicTp` 创建，Dynamic TP 只负责热更新与监控。
+
 
 ## 2. Nacos 配置
 
@@ -22,7 +27,7 @@
    - Data ID：`mall-sys-dtp.yaml`  
    - Group：`DEFAULT_GROUP`  
    - 格式：YAML  
-3. 内容复制仓库内样例：[mall-sys-dtp.yaml](../nacos/mall-sys-dtp.yaml)
+3. 内容复制仓库内样例：[mall-sys-dtp.yaml](../example/mall-sys-dtp.yaml)
 
 验证热更新：把 `corePoolSize` / `maximumPoolSize` 改大或改小，发布配置后调用：
 

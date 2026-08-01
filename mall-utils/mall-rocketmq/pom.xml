@@ -52,6 +52,13 @@
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
+            <exclusions>
+                <!-- 旧版 javax.annotation.Resource 无 lookup()，与 Spring 6 / Jakarta 冲突导致启动失败 -->
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>annotations-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

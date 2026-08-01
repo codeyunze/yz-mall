@@ -83,5 +83,10 @@
             <groupId>io.github.codeyunze</groupId>
             <artifactId>qof-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.dromara.dynamictp</groupId>
+            <artifactId>dynamic-tp-spring-cloud-starter-nacos</artifactId>
+        </dependency>
     </dependencies>
 </project>

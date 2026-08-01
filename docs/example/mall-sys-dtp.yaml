@@ -22,3 +22,19 @@ dynamictp:
       waitForTasksToCompleteOnShutdown: true
       awaitTerminationSeconds: 5
       notifyEnabled: false
+
+    # @Async 业务异步线程池（与 MallSysAsyncConfig 中 @Bean 同名，必须 autoCreate: false）
+    - threadPoolName: mallSysAsyncExecutor
+      threadPoolAliasName: mall-sys业务异步线程池
+      autoCreate: false
+      corePoolSize: 4
+      maximumPoolSize: 8
+      queueCapacity: 200
+      queueType: VariableLinkedBlockingQueue
+      rejectedHandlerType: CallerRunsPolicy
+      keepAliveTime: 60
+      threadNamePrefix: mall-sys-async-
+      allowCoreThreadTimeOut: false
+      waitForTasksToCompleteOnShutdown: true
+      awaitTerminationSeconds: 30
+      notifyEnabled: false

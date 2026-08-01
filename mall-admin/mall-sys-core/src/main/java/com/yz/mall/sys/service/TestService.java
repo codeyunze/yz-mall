@@ -3,6 +3,8 @@ package com.yz.mall.sys.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yz.mall.sys.entity.Test;
 
+import java.util.concurrent.CompletableFuture;
+
 
 /**
  * (Test)表服务接口
@@ -12,5 +14,6 @@ import com.yz.mall.sys.entity.Test;
  */
 public interface TestService extends IService<Test> {
 
+    public CompletableFuture<String> taskA() throws InterruptedException;
 }
 

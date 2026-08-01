@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
+
+import static com.yz.mall.sys.SysCoreConfig.ASYNC_EXECUTOR;
 
 /**
  * SaaS-租户主表(SaasTenant)服务实现类
@@ -220,6 +224,15 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
         }
     }
 
+    @Async(ASYNC_EXECUTOR)
+    @Override
+    public CompletableFuture<String> taskB() throws InterruptedException {
+        // 随机睡眠1000~5000毫秒
+        long sleepTime = (long) (Math.random() * 4000 + 1000);
+        Thread.sleep(sleepTime);
+        return CompletableFuture.completedFuture("taskB: " + sleepTime);
+    }
+
     @Override
     public List<SaasTenantDatasource> listDatasource(Long tenantId) {
         LambdaQueryWrapper<SaasTenantDatasource> wrapper = new LambdaQueryWrapper<>();
@@ -292,7 +305,7 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
     /**
      * 保存租户数据库配置历史快照
      *
-     * @param tenant 租户信息
+     * @param datasource
      * @param reason 变更原因
      */
     private void saveHistory(SaasTenantDatasource datasource, String reason) {
@@ -333,7 +346,7 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
     /**
      * 创建租户数据库
      *
-     * @param tenant 租户信息
+     * @param datasource 租户信息
      * @throws SQLException 数据库连接或执行异常
      */
     private void createDatabase(SaasTenantDatasource datasource) throws SQLException {
@@ -353,7 +366,7 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
     /**
      * 执行租户数据库初始化脚本
      *
-     * @param tenant 租户信息
+     * @param datasource 租户信息
      * @throws SQLException 数据库连接或执行异常
      */
     private void executeInitScript(SaasTenantDatasource datasource) throws SQLException {
@@ -368,7 +381,7 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
     /**
      * 构建租户数据库 JDBC 连接串
      *
-     * @param tenant 租户信息
+     * @param datasource 租户信息
      * @return JDBC URL
      */
     private String buildTenantJdbcUrl(SaasTenantDatasource datasource) {

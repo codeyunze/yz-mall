@@ -12,6 +12,7 @@ import com.yz.mall.sys.entity.SaasTenantDatasource;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * SaaS-租户主表(SaasTenant)服务接口
@@ -78,4 +79,6 @@ public interface SaasTenantService extends IService<SaasTenant> {
      * @return 是否执行成功
      */
     boolean initDatabase(Long tenantId, String serviceCode);
+
+    public CompletableFuture<String> taskB() throws InterruptedException;
 }

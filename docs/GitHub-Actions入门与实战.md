@@ -176,7 +176,7 @@ on:
 
 - **Checkout**：拉取仓库（拿到备份脚本）。
 - **Install MySQL client**：在 Runner 上装 `mysql`/`mysqldump`。
-- **Run backup script**：用 Secrets 调用 `docs/script/mysql-backup-schema-data.sh`，生成带时间戳的备份目录。
+- **Run backup script**：用 Secrets 调用 `script/shell/mysql-backup-schema-data.sh`，生成带时间戳的备份目录。
 - **Setup SSH and upload**：用私钥通过 SCP 把该目录上传到 `SCP_USER@SCP_HOST:SCP_REMOTE_DIR/`。
 
 通过这个文件可以直观看到：**事件 → 多步 Job → 使用 Secrets、run、uses** 的完整用法。
