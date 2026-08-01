@@ -3,7 +3,6 @@ package com.yz.mall.sys.support;
 import org.slf4j.MDC;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -17,6 +16,8 @@ import java.util.concurrent.Future;
  * Dynamic TP 会把 Spring 内部 {@code ThreadPoolExecutor} 替换为 {@code ThreadPoolExecutorProxy}，
  * 导致写在内部执行器上的 {@link TaskDecorator} 失效；因此必须在本类的 {@code execute}/{@code submit}
  * 中捕获上下文，再交给底层池执行。
+ * <p>
+ * 不再覆盖已废弃的 {@code submitListenable}；Spring 6 起应使用 {@link #execute} / {@link #submit}。
  */
 public class ContextPropagatingTaskExecutor extends ThreadPoolTaskExecutor {
 
@@ -33,16 +34,6 @@ public class ContextPropagatingTaskExecutor extends ThreadPoolTaskExecutor {
     @Override
     public <T> Future<T> submit(Callable<T> task) {
         return super.submit(wrap(task));
-    }
-
-    @Override
-    public ListenableFuture<?> submitListenable(Runnable task) {
-        return super.submitListenable(wrap(task));
-    }
-
-    @Override
-    public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
-        return super.submitListenable(wrap(task));
     }
 
     private Runnable wrap(Runnable task) {
