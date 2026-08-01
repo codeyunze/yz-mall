@@ -1,6 +1,6 @@
 
 server:
-  port: 30004
+  port: 25002
 
 spring:
   application:
@@ -8,38 +8,38 @@ spring:
 # spring-cloud-alibaba 2023.X版本使用的nacos配置中心
 #  config:
 #    import:
-#      - nacos:datasource.yaml?group=DEFAULT_GROUP&refreshEnabled=true
+#      - nacos:middleware.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:sa-token.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:rabbitmq.yaml?group=DEFAULT_GROUP&refreshEnabled=true
 #      - nacos:file.yaml?group=DEFAULT_GROUP&refreshEnabled=true
-
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
 
-
+# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
+logging:
+  mapper-package: com.yz.mall.sys.mapper
+    
 management:
   endpoints:
     web:
       exposure:
-        include:  '*'
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
 
 xxl:
   job:
-    admin:
-      addresses: http://${XXL_JOB_ADMIN_HOST}:30009/xxl-job-admin
-#      addresses: http://192.168.3.29:30009/xxl-job-admin
-      accessToken: 123456789
-      timeout: 3
     executor:
-      appname: admin
-      address: http://${LOCAL_HOST}:31004/
-      ip: ${LOCAL_HOST}
+      appname: ${spring.application.name}
+      address: http://192.168.3.20:31004/
+      ip: 192.168.3.20
       port: 31004
-      logpath: ./logs/sys
-      logretentiondays: 10
-      excludepackages: org.springframework,spring
 
 yz:
   mall:
@@ -50,7 +50,6 @@ yz:
         expire-after-access: 0
         
 rocketmq:
-  name-server: ${ROCKET_MQ_HOST}:9876
   producer:
     group: producer-mall-sys
   consumer:

@@ -64,6 +64,16 @@ public class PmsSku extends Model<PmsSku> {
     private String albumPics;
 
     /**
+     * 销售属性JSON，如[{"name":"颜色","value":"红"}]
+     */
+    private String attrsJson;
+
+    /**
+     * 属性组合键，如颜色:红;尺码:XL
+     */
+    private String attrsKey;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)

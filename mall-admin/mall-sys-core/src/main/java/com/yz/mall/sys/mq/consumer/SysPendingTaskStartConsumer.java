@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @RocketMQMessageListener(topic = AbstractSysPendingTasksQueueConfig.TOPIC_NAME
         , consumerGroup = "consumer-mall-sys"
         , selectorType = SelectorType.TAG
-        , selectorExpression = "pms_product_publish_start_key"
+        , selectorExpression = "pms_product_publish_start_key || oms_order_refund_start_key"
         , messageModel = MessageModel.CLUSTERING)
 public class SysPendingTaskStartConsumer implements RocketMQListener<MessageExt> {
 

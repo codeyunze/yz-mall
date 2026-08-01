@@ -58,6 +58,11 @@ public class SysReceiptInfoAddDto implements Serializable {
     private String receiverEmail;
 
     /**
+     * 是否默认地址：0否；1是
+     */
+    private Integer isDefault;
+
+    /**
      * 创建人
      */
     private Long createId;

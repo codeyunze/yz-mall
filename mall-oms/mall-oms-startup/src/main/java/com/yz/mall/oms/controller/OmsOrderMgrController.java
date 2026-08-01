@@ -11,10 +11,15 @@ import com.yz.mall.base.ResultTable;
 import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.oms.dto.OmsOrderQueryDto;
 import com.yz.mall.oms.dto.OmsOrderQuerySlimDto;
+import com.yz.mall.oms.dto.OmsOrderRefundQueryDto;
+import com.yz.mall.oms.dto.OmsRefundAuditDto;
 import com.yz.mall.oms.entity.OmsOrder;
+import com.yz.mall.oms.service.OmsOrderRefundService;
 import com.yz.mall.oms.service.OmsOrderService;
 import com.yz.mall.oms.vo.OmsOrderDetailVo;
+import com.yz.mall.oms.vo.OmsOrderRefundVo;
 import com.yz.mall.oms.vo.OmsOrderVo;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -34,8 +39,11 @@ public class OmsOrderMgrController extends ApiController {
      */
     private final OmsOrderService service;
 
-    public OmsOrderMgrController(OmsOrderService service) {
+    private final OmsOrderRefundService refundService;
+
+    public OmsOrderMgrController(OmsOrderService service, OmsOrderRefundService refundService) {
         this.service = service;
+        this.refundService = refundService;
     }
 
     /**
@@ -71,5 +79,23 @@ public class OmsOrderMgrController extends ApiController {
         boolean cancelled = this.service.cancelById(id);
         return cancelled ? success(true) : new Result<>(CodeEnum.BUSINESS_ERROR.get(), false, "订单取消失败");
     }
-}
 
+    /**
+     * 退款审核列表
+     */
+    @SaCheckPermission("api:oms:order:add")
+    @PostMapping("refund/page")
+    public Result<ResultTable<OmsOrderRefundVo>> refundPage(@RequestBody PageFilter<OmsOrderRefundQueryDto> filter) {
+        Page<OmsOrderRefundVo> page = this.refundService.page(filter);
+        return success(page.getRecords(), page.getTotal());
+    }
+
+    /**
+     * 审核退款（通过/拒绝）
+     */
+    @SaCheckPermission("api:oms:order:add")
+    @PostMapping("refund/audit")
+    public Result<Boolean> auditRefund(@RequestBody @Valid OmsRefundAuditDto dto) {
+        return success(this.refundService.audit(StpUtil.getLoginIdAsLong(), dto));
+    }
+}

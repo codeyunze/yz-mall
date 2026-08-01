@@ -63,9 +63,9 @@ public class SysUser extends Model<SysUser> {
     private String password;
 
     /**
-     * 账户余额
+     * 账户余额（单位：分）
      */
-    private BigDecimal balance;
+    private Long balance;
 
     /**
      * 昵称

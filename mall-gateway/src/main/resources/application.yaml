@@ -1,8 +1,17 @@
 
 server:
-  port: 30001
+  port: 25001
 
 spring:
   application:
     name: mall-gateway
 
+# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取；网关一般无本地 Mapper，可按需调整）
+logging:
+  mapper-package: com.yz.mall.sys.mapper
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:  '*'

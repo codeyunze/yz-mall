@@ -6,7 +6,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 商品表(PmsProduct)表新增数据模型类
@@ -27,10 +26,10 @@ public class PmsProductAddDto implements Serializable {
     private String productName;
 
     /**
-     * 商品价格
+     * 商品价格（单位：分）
      */
     @NotNull(message = "商品价格不能为空")
-    private BigDecimal productPrice;
+    private Long productPrice;
 
     /**
      * 商品标签

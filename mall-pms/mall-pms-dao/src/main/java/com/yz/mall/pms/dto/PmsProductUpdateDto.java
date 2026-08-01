@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 商品表(PmsProduct)表更新数据模型类
@@ -29,9 +28,9 @@ public class PmsProductUpdateDto implements Serializable {
     private String productName;
 
     /**
-     * 商品价格
+     * 商品价格（单位：分）
      */
-    private BigDecimal price;
+    private Long productPrice;
 
     /**
      * 商品标签

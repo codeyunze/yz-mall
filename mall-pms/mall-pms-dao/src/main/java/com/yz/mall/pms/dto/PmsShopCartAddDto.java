@@ -23,6 +23,12 @@ public class PmsShopCartAddDto implements Serializable {
     private Long productId;
 
     /**
+     * 商品SKU id
+     */
+    @NotNull(message = "商品SKU不能为空")
+    private Long skuId;
+
+    /**
      * 数量
      */
     private Integer quantity = 1;

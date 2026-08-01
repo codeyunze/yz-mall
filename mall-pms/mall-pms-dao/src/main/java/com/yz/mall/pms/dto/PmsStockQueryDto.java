@@ -19,5 +19,10 @@ public class PmsStockQueryDto implements Serializable {
      * SKU信息Id
      */
     private String skuId;
+
+    /**
+     * 商品名称
+     */
+    private String productName;
 }
 

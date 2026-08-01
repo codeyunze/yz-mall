@@ -7,6 +7,7 @@ import com.yz.mall.base.exception.FeignException;
 import com.yz.mall.json.JacksonUtil;
 import com.yz.mall.sys.AbstractSysPendingTasksQueueConfig;
 import com.yz.mall.sys.dto.ExtendSysPendingTasksAddDto;
+import com.yz.mall.sys.dto.ExtendSysPendingTasksEndDto;
 import com.yz.mall.sys.feign.ExtendSysPendingTaskFeign;
 import com.yz.mall.sys.service.ExtendSysPendingTasksService;
 import com.yz.mall.base.IdDto;
@@ -64,6 +65,15 @@ public class ExtendSysPendingTasksServiceImpl implements ExtendSysPendingTasksSe
     @Override
     public boolean endTask(Long taskId) {
         Result<Boolean> result = extendSysPendingTaskFeign.endTask(new IdDto(taskId));
+        if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
+            throw new FeignException(result.getCode(), result.getMsg());
+        }
+        return result.getData();
+    }
+
+    @Override
+    public boolean endTaskByBusiness(ExtendSysPendingTasksEndDto dto) {
+        Result<Boolean> result = extendSysPendingTaskFeign.endTaskByBusiness(dto);
         if (!CodeEnum.SUCCESS.get().equals(result.getCode())) {
             throw new FeignException(result.getCode(), result.getMsg());
         }

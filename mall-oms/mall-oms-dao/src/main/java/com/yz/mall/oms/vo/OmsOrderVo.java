@@ -8,7 +8,6 @@ import com.yz.mall.oms.entity.OmsOrder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -42,19 +41,19 @@ public class OmsOrderVo extends Model<OmsOrderVo> {
     private Integer orderType;
 
     /**
-     * 订单总金额
+     * 订单总金额（分）
      */
-    private BigDecimal totalAmount;
+    private Long totalAmount;
 
     /**
-     * 优惠金额
+     * 优惠金额（分）
      */
-    private BigDecimal discountAmount;
+    private Long discountAmount;
 
     /**
-     * 订单实际应付金额
+     * 订单实际应付金额（分）
      */
-    private BigDecimal payAmount;
+    private Long payAmount;
 
     /**
      * 收货人姓名

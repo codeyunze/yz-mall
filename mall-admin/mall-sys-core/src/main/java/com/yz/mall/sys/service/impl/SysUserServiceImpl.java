@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -158,10 +157,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deduct(Long userId, BigDecimal amount) {
+    public void deduct(Long userId, Long amount) {
         // TODO: 2024/6/27 星期四 yunze 加锁
         SysUser user = baseMapper.selectById(userId);
-        if (user.getBalance().compareTo(amount) < 0) {
+        if (user.getBalance() < amount) {
             throw new BusinessException("账户余额不足");
         }
         // 扣减余额
@@ -172,7 +171,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public void recharge(Long userId, BigDecimal amount) {
+    public void recharge(Long userId, Long amount) {
         Integer recharged = baseMapper.recharge(userId, amount);
         if (recharged == 0) {
             throw new BusinessException("账户充值失败");

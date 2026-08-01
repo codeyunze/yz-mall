@@ -16,7 +16,7 @@
 
     <!-- 购物车基础查询语句 -->
     <sql id="query">
-        select psc.id, psc.product_id, psc.quantity
+        select psc.id, psc.product_id as productId, psc.sku_id as skuId, psc.sku_id as productSkuId, psc.quantity
         from pms_shop_cart psc
         where psc.invalid = 0
     </sql>

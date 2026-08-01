@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yz.mall.oms.mapper.OmsOrderRefundMapper">
+
+    <select id="selectPageByFilter" resultType="com.yz.mall.oms.vo.OmsOrderRefundVo">
+        select r.id, r.refund_no, r.order_id, r.order_code, r.user_id, r.business_org_id
+             , r.refund_amount, r.reason_type, r.reason, r.refund_status
+             , r.audit_user_id, r.audit_time, r.audit_remark, r.create_time
+        from oms_order_refund r
+        where r.invalid = 0
+        <if test="filter.id != null">and r.id = #{filter.id}</if>
+        <if test="filter.refundNo != null and filter.refundNo != ''">and r.refund_no = #{filter.refundNo}</if>
+        <if test="filter.orderCode != null and filter.orderCode != ''">and r.order_code = #{filter.orderCode}</if>
+        <if test="filter.orderId != null">and r.order_id = #{filter.orderId}</if>
+        <if test="filter.userId != null">and r.user_id = #{filter.userId}</if>
+        <if test="filter.refundStatus != null">and r.refund_status = #{filter.refundStatus}</if>
+        order by r.id desc
+    </select>
+</mapper>
