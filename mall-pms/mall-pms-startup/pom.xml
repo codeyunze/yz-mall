@@ -22,6 +22,13 @@
             <groupId>com.yz</groupId>
             <artifactId>mall-pms-core</artifactId>
             <version>${project.version}</version>
+            <!-- 仅 pms 启动包去掉 Druid，改用 Spring Boot 默认 HikariCP；其他服务不受影响 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>druid-spring-boot-3-starter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

@@ -19,6 +19,7 @@ management:
     tags:
       # Grafana JVM 仪表盘按 application 标签筛选，须与 spring.application.name 一致
       application: ${spring.application.name}
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true

@@ -1,8 +1,8 @@
 package com.yz.mall.sys.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -77,24 +77,21 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
         wrapper.eq(SaasTenantDatasource::getDsStatus, 1);
         List<SaasTenantDatasource> datasourceList = datasourceMapper.selectList(wrapper);
         for (SaasTenantDatasource datasource : datasourceList) {
-            DruidDataSource dataSource = new DruidDataSource();
+            HikariDataSource dataSource = new HikariDataSource();
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setInitialSize(5);
-            dataSource.setMinIdle(5);
-            dataSource.setMaxActive(20);
-            dataSource.setMaxWait(60000);
-            dataSource.setTimeBetweenEvictionRunsMillis(60000);
-            dataSource.setMinEvictableIdleTimeMillis(300000);
-            dataSource.setValidationQuery("select 1 from dual");
-            dataSource.setTestWhileIdle(true);
-            dataSource.setTestOnBorrow(false);
-            dataSource.setTestOnReturn(false);
-            dataSource.setPoolPreparedStatements(true);
-            dataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
-
+            dataSource.setMinimumIdle(5);
+            dataSource.setMaximumPoolSize(20);
+            // 从池中获取连接的最大等待（对应原 Druid maxWait）
+            dataSource.setConnectionTimeout(60000);
+            // 空闲连接存活时间（对应原 minEvictableIdleTimeMillis）
+            dataSource.setIdleTimeout(300000);
+            dataSource.setMaxLifetime(1800000);
+            dataSource.setKeepaliveTime(60000);
+            dataSource.setConnectionTestQuery("SELECT 1");
+            dataSource.setPoolName("tenant-" + datasource.getTenantCode());
             dataSource.setUsername(datasource.getDbUsername());
             dataSource.setPassword(datasource.getDbPasswordEnc());
-            dataSource.setUrl("jdbc:mysql://" + datasource.getDbHost() + ":" + datasource.getDbPort() + "/" + datasource.getDbName() + "?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true");
+            dataSource.setJdbcUrl("jdbc:mysql://" + datasource.getDbHost() + ":" + datasource.getDbPort() + "/" + datasource.getDbName() + "?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true");
 
             dynamicRoutingDataSource.addDataSource(datasource.getTenantCode(), dataSource);
 

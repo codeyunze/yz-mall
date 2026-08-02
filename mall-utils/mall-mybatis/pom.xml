@@ -41,10 +41,10 @@
             <scope>runtime</scope>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-3-starter</artifactId>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>cn.hutool</groupId>

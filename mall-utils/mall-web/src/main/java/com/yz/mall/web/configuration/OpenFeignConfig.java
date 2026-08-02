@@ -4,8 +4,11 @@ package com.yz.mall.web.configuration;
 import com.yz.mall.base.HeaderConstants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -24,6 +27,24 @@ import java.util.*;
 @Slf4j
 @Configuration
 public class OpenFeignConfig implements RequestInterceptor {
+
+    @Resource
+    private feign.Client client;
+
+    @PostConstruct
+    public void printFeignClient() {
+        Object target = client;
+        // 有 LoadBalancer 时拆一层
+        if (target.getClass().getName().contains("LoadBalancer")) {
+            try {
+                var field = target.getClass().getDeclaredField("delegate");
+                field.setAccessible(true);
+                target = field.get(target);
+            } catch (Exception ignored) {
+            }
+        }
+        log.info("Feign Client = {}", target.getClass().getName());
+    }
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
