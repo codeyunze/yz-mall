@@ -152,8 +152,8 @@ public class AuthenticationController extends ApiController {
                 // 验证成功后删除验证码
                 defaultRedisTemplate.delete(cacheKey);
             } else {
-                log.warn("验证码参数不完整 - captcha: {}, captchaId: {}", 
-                    loginDto.getCaptcha(), loginDto.getCaptchaId());
+                log.warn("验证码参数不完整 - captcha: {}, captchaId: {}", loginDto.getCaptcha(), loginDto.getCaptchaId());
+                return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "验证码参数不完整");
             }
 
             AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new AuthSysUserCheckLoginDto(loginDto.getAccount(), loginDto.getPassword()));

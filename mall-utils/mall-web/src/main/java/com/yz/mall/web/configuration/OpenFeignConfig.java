@@ -13,7 +13,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.*;
 
 /**
- * openfeign请求时，携带header信息
+ * OpenFeign 请求拦截：透传必要 header。
+ * <p>
+ * 底层 HTTP 客户端由 mall-web 引入的 {@code feign-hc5} 自动切换为 Apache HttpClient 5；
+ * 可通过配置 {@code spring.cloud.openfeign.httpclient.hc5.enabled=false} 关闭。
  *
  * @author yunze
  * @date 2025/1/22 14:34

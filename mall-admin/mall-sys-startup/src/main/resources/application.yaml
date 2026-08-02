@@ -16,6 +16,27 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+      httpclient:
+        hc5:
+          enabled: true
+        max-connections: 200
+        max-connections-per-route: 20
+        connection-timeout: 2000
+  datasource:
+    druid:
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin123
+        allow: 192.168.3.20
+      web-stat-filter:
+        enabled: true
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取）
 logging:
