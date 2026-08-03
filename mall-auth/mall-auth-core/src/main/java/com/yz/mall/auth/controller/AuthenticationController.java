@@ -136,25 +136,27 @@ public class AuthenticationController extends ApiController {
 
         try {
             // 验证验证码
-            if (StringUtils.hasText(loginDto.getCaptcha()) && StringUtils.hasText(loginDto.getCaptchaId())) {
-                String cacheKey = RedisCacheKey.captcha(loginDto.getCaptchaId());
-                Object cachedCode = defaultRedisTemplate.opsForValue().get(cacheKey);
-                log.info("验证码验证 - captchaId: {}, 输入的验证码: {}, Redis中的验证码: {}", 
-                    loginDto.getCaptchaId(), loginDto.getCaptcha(), cachedCode);
-                if (cachedCode == null || !cachedCode.toString().equalsIgnoreCase(loginDto.getCaptcha())) {
-                    log.warn("验证码验证失败 - captchaId: {}, 输入的验证码: {}, Redis中的验证码: {}", 
-                        loginDto.getCaptchaId(), loginDto.getCaptcha(), cachedCode);
-                    // 记录登录失败日志
-                    recordLoginLog(0L, username, loginIp, loginLocation, os, browser, 0, loginType);
-                    return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "验证码错误");
-                }
-                log.info("验证码验证成功 - captchaId: {}", loginDto.getCaptchaId());
-                // 验证成功后删除验证码
-                defaultRedisTemplate.delete(cacheKey);
-            } else {
-                log.warn("验证码参数不完整 - captcha: {}, captchaId: {}", loginDto.getCaptcha(), loginDto.getCaptchaId());
+            if (!StringUtils.hasText(loginDto.getCaptcha()) || !StringUtils.hasText(loginDto.getCaptchaId())) {
+                log.error("验证码参数不完整 - captcha: {}, captchaId: {}", loginDto.getCaptcha(), loginDto.getCaptchaId());
+                recordLoginLog(0L, username, loginIp, loginLocation, os, browser, 0, loginType);
                 return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "验证码参数不完整");
             }
+
+            // 获取图片验证码缓存key
+            String cacheKey = RedisCacheKey.captcha(loginDto.getCaptchaId());
+            Object cachedCode = defaultRedisTemplate.opsForValue().get(cacheKey);
+            log.info("验证码验证 - captchaId: {}, 输入的验证码: {}, Redis中的验证码: {}",
+                    loginDto.getCaptchaId(), loginDto.getCaptcha(), cachedCode);
+            if (cachedCode == null || !cachedCode.toString().equalsIgnoreCase(loginDto.getCaptcha())) {
+                log.warn("验证码验证失败 - captchaId: {}, 输入的验证码: {}, Redis中的验证码: {}",
+                        loginDto.getCaptchaId(), loginDto.getCaptcha(), cachedCode);
+                // 记录登录失败日志
+                recordLoginLog(0L, username, loginIp, loginLocation, os, browser, 0, loginType);
+                return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, "验证码错误");
+            }
+            log.info("验证码验证成功 - captchaId: {}", loginDto.getCaptchaId());
+            // 验证成功后删除验证码
+            defaultRedisTemplate.delete(cacheKey);
 
             AuthUserBaseInfoDto loginInfo = authSysUserService.checkLogin(new AuthSysUserCheckLoginDto(loginDto.getAccount(), loginDto.getPassword()));
             if (loginInfo == null) {
