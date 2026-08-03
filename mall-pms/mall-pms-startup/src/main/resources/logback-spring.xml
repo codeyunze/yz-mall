@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
+    <!-- 关闭 Status 控制台输出，避免 Logstash 启动首连超时刷 |-WARN；不影响业务日志与自动重连上报 -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
     <!--从 spring.application.name 读取服务名，日志目录与 Logstash 标签自动跟随，新模块只需配置服务名即可-->
     <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="application"/>
     <property name="LOG_HOME" value="./logs/${APP_NAME}/"/>
@@ -33,6 +35,8 @@
 
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>192.168.3.237:4560</destination>
+        <!-- 启动期默认 5s 易超时，拉长首连等待 -->
+        <connectionTimeout>30000</connectionTimeout>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"platform": "mall", "app_name": "${APP_NAME}"}</customFields>
             <includeMdcKeyName>client_ip</includeMdcKeyName>
