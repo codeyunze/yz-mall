@@ -1,0 +1,32 @@
+server:
+  port: 25005
+
+spring:
+  application:
+    name: tw-vehicle
+
+logging:
+  mapper-package: com.yz.mall.tw.vehicle.mapper
+
+tw:
+  vehicle:
+    max-auth-users: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+rocketmq:
+  producer:
+    group: producer-tw-vehicle
+  consumer:
+    group: consumer-tw-vehicle

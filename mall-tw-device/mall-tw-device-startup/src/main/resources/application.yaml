@@ -1,0 +1,28 @@
+server:
+  port: 25006
+
+spring:
+  application:
+    name: tw-device
+
+logging:
+  mapper-package: com.yz.mall.tw.device.mapper
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+rocketmq:
+  producer:
+    group: producer-${spring.application.name}
+  consumer:
+    group: consumer-${spring.application.name}

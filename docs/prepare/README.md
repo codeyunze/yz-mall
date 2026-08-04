@@ -10,7 +10,10 @@
 | [系统架构设计.md](./系统架构设计.md) | 技术栈、微服务划分、EMQX/双 MQ、数据与安全架构 | 架构设计 |
 | [功能模块规划.md](./功能模块规划.md) | 业务域拆分、功能清单、功能架构图、核心流程 | 功能规划 |
 | [开发优先级.md](./开发优先级.md) | MVP 优先路线：先跑通「车能上线、能看位置、能下控」 | 排期 |
-| [功能模块设计-车辆档案.md](./功能模块设计-车辆档案.md) | 车辆建档/查询/车主绑定：目标、表结构、接口、角色权限 | 功能模块设计 |
+| [功能模块设计-车辆档案.md](./功能模块设计-车辆档案.md) | 车辆建档/查询/车主绑定与授权：目标、表结构、接口、角色权限 | 功能模块设计 |
+| [功能模块设计-终端管理.md](./功能模块设计-终端管理.md) | 终端注册/绑车/凭证重置/启停：目标、表结构、接口、角色权限 | 功能模块设计 |
+| [功能模块设计-遥测与轨迹.md](./功能模块设计-遥测与轨迹.md) | GPS 消费/最新位置/轨迹查询/地图支撑 | 功能模块设计 |
+| [功能模块设计-远程控制.md](./功能模块设计-远程控制.md) | 指令下发/状态机/幂等/超时/ACK 闭环 | 功能模块设计 |
 
 ## 一句话目标
 
@@ -20,12 +23,12 @@
 
 ```
 yz-mall（已有）                    Titan Watch 增量（本目录设计）
-├── mall-gateway                  ├── tsp-vehicle   车辆档案
-├── mall-auth                     ├── tsp-device    终端/证书/MQTT 凭证
-├── mall-admin (sys)              ├── tsp-access   EMQX 接入与鉴权桥接
-├── mall-file / mall-serial       ├── tsp-telemetry 遥测接入与查询
-└── mall-utils                    ├── tsp-command  远程控制
-                                  └── tsp-alarm    告警（第二阶段）
+├── mall-gateway                  ├── tw-vehicle   车辆档案
+├── mall-auth                     ├── tw-device    终端/MQTT 凭证
+├── mall-admin (sys)              ├── tw-access   EMQX 接入与鉴权桥接
+├── mall-file / mall-serial       ├── tw-telemetry 遥测接入与查询
+└── mall-utils                    ├── tw-command  远程控制
+                                  └── tw-alarm    告警（第二阶段）
 ```
 
-管理端在现有 `yz-mall-web-admin-pc` 上增加「车联网」菜单与页面即可，无需新建独立前端工程。
+管理端在现有 `yz-mall-web-admin-pc` 上增加「Titan Watch」菜单与页面即可，无需新建独立前端工程。

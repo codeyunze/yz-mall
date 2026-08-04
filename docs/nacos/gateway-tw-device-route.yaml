@@ -1,0 +1,13 @@
+﻿# 合并到 Nacos Data ID = gateway.yaml（与现有路由并列）
+# /tw/** 可同时覆盖 vehicle + device；若已按前缀拆分可保留本条
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: tw-device
+          uri: lb://tw-device
+          predicates:
+            - Path=/tw/device/**,/extend/tw/device/**
+          filters:
+            - StripPrefix=0

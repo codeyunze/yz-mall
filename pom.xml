@@ -17,6 +17,8 @@
         <module>mall-gateway</module>
         <module>mall-pms</module>
         <module>mall-oms</module>
+        <module>mall-tw-vehicle</module>
+        <module>mall-tw-device</module>
     </modules>
 
     <properties>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.yz</groupId>
+        <artifactId>yz-mall</artifactId>
+        <version>0.0.7-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>mall-tw-device</artifactId>
+    <packaging>pom</packaging>
+    <description>Titan Watch 终端管理服务</description>
+
+    <modules>
+        <module>mall-tw-device-dao</module>
+        <module>mall-tw-device-interface</module>
+        <module>mall-tw-device-core</module>
+        <module>mall-tw-device-feign</module>
+        <module>mall-tw-device-startup</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+</project>

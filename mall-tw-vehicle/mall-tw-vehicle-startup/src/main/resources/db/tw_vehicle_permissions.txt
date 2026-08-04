@@ -1,0 +1,16 @@
+-- 车辆档案菜单与 API 权限（按需在 mall-sys 执行；parent_id 请按实际菜单树调整）
+-- 权限码与 Controller @SaCheckPermission 对齐
+
+-- 示例：仅插入 permission 资源码（具体表结构以 sys_permission / sys_menu 为准，此处给出权限码清单便于配置）
+-- api:tw:vehicle:page
+-- api:tw:vehicle:detail
+-- api:tw:vehicle:add
+-- api:tw:vehicle:edit
+-- api:tw:vehicle:status
+-- api:tw:vehicle:delete
+-- api:tw:vehicle:owner:bind
+-- api:tw:vehicle:owner:unbind
+-- api:tw:vehicle:owner:transfer
+-- api:tw:vehicle:auth:grant
+-- api:tw:vehicle:auth:revoke
+-- api:tw:vehicle:auth:list
