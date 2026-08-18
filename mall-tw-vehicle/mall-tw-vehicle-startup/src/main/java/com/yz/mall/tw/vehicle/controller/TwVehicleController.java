@@ -1,6 +1,5 @@
 package com.yz.mall.tw.vehicle.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
@@ -54,7 +53,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:tw:vehicle:page")
     @PostMapping("page")
     public Result<ResultTable<TwVehiclePageVo>> page(@RequestBody @Valid PageFilter<TwVehicleQueryDto> filter) {
         Page<TwVehiclePageVo> page = vehicleService.pageVehicles(filter);
@@ -64,7 +62,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 详情
      */
-    @SaCheckPermission("api:tw:vehicle:detail")
     @GetMapping("{id}")
     public Result<TwVehicleDetailVo> detail(@PathVariable Long id) {
         return success(vehicleService.detail(id));
@@ -73,7 +70,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 新建
      */
-    @SaCheckPermission("api:tw:vehicle:add")
     @PostMapping
     public Result<Long> add(@RequestBody @Valid TwVehicleAddDto dto) {
         return success(vehicleService.add(dto));
@@ -82,7 +78,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 编辑
      */
-    @SaCheckPermission("api:tw:vehicle:edit")
     @PutMapping
     public Result<Boolean> edit(@RequestBody @Valid TwVehicleUpdateDto dto) {
         return success(vehicleService.edit(dto));
@@ -91,7 +86,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 启用/停用
      */
-    @SaCheckPermission("api:tw:vehicle:status")
     @PutMapping("status")
     public Result<Boolean> status(@RequestBody @Valid TwVehicleStatusDto dto) {
         return success(vehicleService.changeStatus(dto));
@@ -100,7 +94,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 逻辑删除
      */
-    @SaCheckPermission("api:tw:vehicle:delete")
     @DeleteMapping("{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(vehicleService.deleteVehicle(id));
@@ -109,7 +102,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 绑定车主
      */
-    @SaCheckPermission("api:tw:vehicle:owner:bind")
     @PostMapping("owner/bind")
     public Result<Long> bindOwner(@RequestBody @Valid TwVehicleOwnerBindDto dto) {
         return success(ownerService.bind(dto));
@@ -118,7 +110,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 解绑车主
      */
-    @SaCheckPermission("api:tw:vehicle:owner:unbind")
     @PostMapping("owner/unbind")
     public Result<Boolean> unbindOwner(@RequestBody @Valid TwVehicleOwnerUnbindDto dto) {
         return success(ownerService.unbind(dto));
@@ -127,7 +118,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 过户
      */
-    @SaCheckPermission("api:tw:vehicle:owner:transfer")
     @PostMapping("owner/transfer")
     public Result<Long> transferOwner(@RequestBody @Valid TwVehicleOwnerTransferDto dto) {
         return success(ownerService.transfer(dto));
@@ -136,7 +126,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 授权用户
      */
-    @SaCheckPermission("api:tw:vehicle:auth:grant")
     @PostMapping("auth/grant")
     public Result<Long> grantAuth(@RequestBody @Valid TwVehicleAuthGrantDto dto) {
         return success(authService.grant(dto));
@@ -145,7 +134,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 撤销授权
      */
-    @SaCheckPermission("api:tw:vehicle:auth:revoke")
     @PostMapping("auth/revoke")
     public Result<Boolean> revokeAuth(@RequestBody @Valid TwVehicleAuthRevokeDto dto) {
         return success(authService.revoke(dto));
@@ -154,7 +142,6 @@ public class TwVehicleController extends ApiController {
     /**
      * 授权用户列表
      */
-    @SaCheckPermission("api:tw:vehicle:auth:list")
     @GetMapping("{vehicleId}/auth/list")
     public Result<List<TwVehicleAuthVo>> listAuth(@PathVariable Long vehicleId,
                                                   @RequestParam(defaultValue = "false") boolean includeHistory) {

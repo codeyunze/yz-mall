@@ -19,13 +19,9 @@ public class TwVehicleUpdateDto {
      */
     private String plateNo;
     /**
-     * 车型编码
+     * 车型编码（变更时强校验启用车型，并冗余 seriesCode/modelName）
      */
     private String modelCode;
-    /**
-     * 车型名称
-     */
-    private String modelName;
     /**
      * 颜色
      */

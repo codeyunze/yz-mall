@@ -23,9 +23,11 @@ import com.yz.mall.tw.vehicle.dto.TwVehicleStatusDto;
 import com.yz.mall.tw.vehicle.dto.TwVehicleUpdateDto;
 import com.yz.mall.tw.vehicle.entity.TwVehicle;
 import com.yz.mall.tw.vehicle.entity.TwVehicleAuth;
+import com.yz.mall.tw.vehicle.entity.TwVehicleModel;
 import com.yz.mall.tw.vehicle.entity.TwVehicleOwner;
 import com.yz.mall.tw.vehicle.mapper.TwVehicleMapper;
 import com.yz.mall.tw.vehicle.service.TwVehicleAuthService;
+import com.yz.mall.tw.vehicle.service.TwVehicleModelService;
 import com.yz.mall.tw.vehicle.service.TwVehicleOwnerService;
 import com.yz.mall.tw.vehicle.service.TwVehicleService;
 import com.yz.mall.tw.vehicle.support.TwVehicleRealtimeSupport;
@@ -54,15 +56,18 @@ public class TwVehicleServiceImpl extends ServiceImpl<TwVehicleMapper, TwVehicle
 
     private final TwVehicleOwnerService ownerService;
     private final TwVehicleAuthService authService;
+    private final TwVehicleModelService modelService;
     private final ExtendSysUserService extendSysUserService;
     private final TwVehicleRealtimeSupport realtimeSupport;
     private final ObjectProvider<ExtendTwDeviceService> extendTwDeviceService;
 
     public TwVehicleServiceImpl(@Lazy TwVehicleOwnerService ownerService, @Lazy TwVehicleAuthService authService,
-                                ExtendSysUserService extendSysUserService, TwVehicleRealtimeSupport realtimeSupport,
+                                TwVehicleModelService modelService, ExtendSysUserService extendSysUserService,
+                                TwVehicleRealtimeSupport realtimeSupport,
                                 ObjectProvider<ExtendTwDeviceService> extendTwDeviceService) {
         this.ownerService = ownerService;
         this.authService = authService;
+        this.modelService = modelService;
         this.extendSysUserService = extendSysUserService;
         this.realtimeSupport = realtimeSupport;
         this.extendTwDeviceService = extendTwDeviceService;
@@ -76,10 +81,14 @@ public class TwVehicleServiceImpl extends ServiceImpl<TwVehicleMapper, TwVehicle
         if (exists > 0) {
             throw new BusinessException("VIN 已建档");
         }
+        TwVehicleModel model = modelService.requireEnabledByCode(dto.getModelCode());
         TwVehicle entity = new TwVehicle();
         BeanUtil.copyProperties(dto, entity);
         entity.setId(IdUtil.getSnowflakeNextId());
         entity.setVin(vin);
+        entity.setModelCode(model.getModelCode());
+        entity.setModelName(model.getModelName());
+        entity.setSeriesCode(model.getSeriesCode());
         entity.setStatus(dto.getStatus() == null ? TwVehicleConstants.STATUS_ENABLED : dto.getStatus());
         entity.setCreateId(currentUserId());
         entity.setUpdateId(entity.getCreateId());
@@ -94,11 +103,11 @@ public class TwVehicleServiceImpl extends ServiceImpl<TwVehicleMapper, TwVehicle
         if (dto.getPlateNo() != null) {
             entity.setPlateNo(dto.getPlateNo());
         }
-        if (dto.getModelCode() != null) {
-            entity.setModelCode(dto.getModelCode());
-        }
-        if (dto.getModelName() != null) {
-            entity.setModelName(dto.getModelName());
+        if (StrUtil.isNotBlank(dto.getModelCode())) {
+            TwVehicleModel model = modelService.requireEnabledByCode(dto.getModelCode());
+            entity.setModelCode(model.getModelCode());
+            entity.setModelName(model.getModelName());
+            entity.setSeriesCode(model.getSeriesCode());
         }
         if (dto.getColor() != null) {
             entity.setColor(dto.getColor());
@@ -176,6 +185,12 @@ public class TwVehicleServiceImpl extends ServiceImpl<TwVehicleMapper, TwVehicle
         }
         if (StrUtil.isNotBlank(query.getPlateNo())) {
             wrapper.like(TwVehicle::getPlateNo, query.getPlateNo().trim());
+        }
+        if (StrUtil.isNotBlank(query.getSeriesCode())) {
+            wrapper.eq(TwVehicle::getSeriesCode, query.getSeriesCode().trim().toUpperCase());
+        }
+        if (StrUtil.isNotBlank(query.getModelCode())) {
+            wrapper.eq(TwVehicle::getModelCode, query.getModelCode().trim().toUpperCase());
         }
         if (query.getStatus() != null) {
             wrapper.eq(TwVehicle::getStatus, query.getStatus());

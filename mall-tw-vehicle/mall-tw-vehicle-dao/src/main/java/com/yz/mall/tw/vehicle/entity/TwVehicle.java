@@ -29,11 +29,15 @@ public class TwVehicle extends Model<TwVehicle> {
      */
     private String vin;
     /**
+     * 车系编码冗余（来自车型主数据）
+     */
+    private String seriesCode;
+    /**
      * 车牌号
      */
     private String plateNo;
     /**
-     * 车型编码
+     * 车型编码，关联 tw_vehicle_model.model_code
      */
     private String modelCode;
     /**

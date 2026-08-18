@@ -17,6 +17,14 @@ public class TwVehicleQueryDto {
      */
     private String plateNo;
     /**
+     * 车系编码
+     */
+    private String seriesCode;
+    /**
+     * 车型编码
+     */
+    private String modelCode;
+    /**
      * 启用状态：0停用 1启用
      */
     private Integer status;

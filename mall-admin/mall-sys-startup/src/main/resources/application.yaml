@@ -69,7 +69,11 @@ yz:
         maximum-size: 10000
         expire-after-write: 3600
         expire-after-access: 0
-        
+      open:
+        # 平台 SM2 公钥/私钥：仅环境变量或配置中心，禁止硬编码入库
+        server-public-key: ${SYS_OPEN_SERVER_PUBLIC_KEY:}
+        server-private-key: ${SYS_OPEN_SERVER_PRIVATE_KEY:}
+
 rocketmq:
   producer:
     group: producer-mall-sys

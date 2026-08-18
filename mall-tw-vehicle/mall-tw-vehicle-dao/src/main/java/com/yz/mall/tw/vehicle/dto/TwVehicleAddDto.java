@@ -23,14 +23,10 @@ public class TwVehicleAddDto {
      */
     private String plateNo;
     /**
-     * 车型编码
+     * 车型编码（关联 tw_vehicle_model.model_code，必填）
      */
     @NotBlank(message = "车型编码不能为空")
     private String modelCode;
-    /**
-     * 车型名称
-     */
-    private String modelName;
     /**
      * 颜色
      */

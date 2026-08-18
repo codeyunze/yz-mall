@@ -14,6 +14,7 @@ public class TwVehiclePageVo {
 
     private Long id;
     private String vin;
+    private String seriesCode;
     private String plateNo;
     private String modelCode;
     private String modelName;

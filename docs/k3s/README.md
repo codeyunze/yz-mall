@@ -20,6 +20,7 @@
 | 文档 | 说明 |
 |---|---|
 | [常用命令.md](./常用命令.md) | 服务启停、集群巡检、工作负载、日志、存储、镜像与排障等常用命令 |
+| [通用部署操作.md](./通用部署操作.md) | k3s 部署中间件与 Spring Cloud 微服务的通用步骤、约定与排障 |
 | [部署RustFS.md](./部署RustFS.md) | 在 k3s 上部署 RustFS：镜像转存、local-path、Helm、验证与排障 |
 | [中间件迁移方案.md](./中间件迁移方案.md) | docs/docker/docker-compose.yml 迁到 k3s 的清单、批次与约束 |
 

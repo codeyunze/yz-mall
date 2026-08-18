@@ -4,9 +4,10 @@
 CREATE TABLE IF NOT EXISTS `tw_vehicle` (
   `id` bigint NOT NULL COMMENT '主键标识',
   `vin` varchar(32) NOT NULL COMMENT '车架号VIN，业务唯一键',
+  `series_code` varchar(64) DEFAULT NULL COMMENT '车系编码冗余',
   `plate_no` varchar(16) DEFAULT NULL COMMENT '车牌号',
-  `model_code` varchar(64) DEFAULT NULL COMMENT '车型编码（字典 tw_vehicle_model）',
-  `model_name` varchar(64) DEFAULT NULL COMMENT '车型名称（冗余展示，可选）',
+  `model_code` varchar(64) DEFAULT NULL COMMENT '车型编码，关联 tw_vehicle_model.model_code',
+  `model_name` varchar(64) DEFAULT NULL COMMENT '车型名称（冗余展示）',
   `color` varchar(32) DEFAULT NULL COMMENT '车身颜色',
   `status` tinyint NOT NULL DEFAULT 1 COMMENT '启用状态：0停用 1启用',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
@@ -19,6 +20,8 @@ CREATE TABLE IF NOT EXISTS `tw_vehicle` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_vin_invalid` (`vin`, `invalid`),
   KEY `idx_plate_no` (`plate_no`),
+  KEY `idx_model_code` (`model_code`),
+  KEY `idx_series_code` (`series_code`),
   KEY `idx_status_ctime` (`status`, `create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='车辆档案';
 
