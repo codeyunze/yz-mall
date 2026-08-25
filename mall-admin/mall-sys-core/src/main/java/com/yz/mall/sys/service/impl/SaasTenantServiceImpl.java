@@ -20,6 +20,7 @@ import com.yz.mall.sys.mapper.SaasTenantDatasourceHistoryMapper;
 import com.yz.mall.sys.mapper.SaasTenantDatasourceMapper;
 import com.yz.mall.sys.mapper.SaasTenantInitTaskMapper;
 import com.yz.mall.sys.mapper.SaasTenantMapper;
+import com.yz.mall.sys.service.SaasTenantSchemaMigrateService;
 import com.yz.mall.sys.service.SaasTenantService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +72,9 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
     @Resource
     private DynamicRoutingDataSource dynamicRoutingDataSource;
 
+    @Resource
+    private SaasTenantSchemaMigrateService schemaMigrateService;
+
     @PostConstruct
     public void loadAllDB() {
         LambdaQueryWrapper<SaasTenantDatasource> wrapper = new LambdaQueryWrapper<>();
@@ -97,6 +101,8 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
 
             log.info("======加载动态数据库完成：mysqlSchema={}", datasource.getDbName());
         }
+        // 动态数据源加载完成后，对所有启用租户库执行 pending schema 迁移脚本
+        schemaMigrateService.migrateAllOnStartup();
     }
 
     @Override
@@ -200,6 +206,12 @@ public class SaasTenantServiceImpl extends ServiceImpl<SaasTenantMapper, SaasTen
             task.setStepCode("INIT_SCHEMA");
             updateTask(task);
             executeInitScript(datasource);
+
+            task.setStepCode("MIGRATE_SCHEMA");
+            updateTask(task);
+            if (!schemaMigrateService.migrateForDatasource(datasource)) {
+                throw new IllegalStateException("租户 schema 增量迁移失败");
+            }
 
             task.setTaskStatus(2);
             task.setStepCode("SUCCESS");
