@@ -12,6 +12,11 @@
 | [技术文档/mall-sys-DynamicTP接入说明.md](设计文档/mall-sys-DynamicTP接入说明.md) | mall-sys 接入 Dynamic TP（Nacos 热更新 + Prometheus/Grafana） |
 | [sql/amount_unify_to_fen.sql](script/sql/amount_unify_to_fen.sql) | 金额字段统一为分（bigint）：商品/订单/退款/用户余额 |
 | [../README.md](../README.md) | 根 README：端口、分层示意图、权限与运维备注 |
+| [k3s/README.md](k3s/README.md) | k3s 运维说明（环境信息与文档索引） |
+| [k3s/常用命令.md](k3s/常用命令.md) | k3s / kubectl 日常巡检、发布、日志、存储与排障命令 |
+| [k3s/通用部署操作.md](k3s/通用部署操作.md) | k3s 部署中间件与 Spring Cloud 微服务的通用操作 |
+| [k3s/部署RustFS.md](k3s/部署RustFS.md) | k3s 部署 RustFS 中间件（镜像、存储、Helm、验证与排障） |
+| [k3s/中间件迁移方案.md](k3s/中间件迁移方案.md) | docker-compose 中间件迁移到 k3s 的分批方案与资源约束 |
 
 ## 脚本说明
 

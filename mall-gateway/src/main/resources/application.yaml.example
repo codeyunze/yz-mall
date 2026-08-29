@@ -1,0 +1,55 @@
+
+server:
+  port: 25001
+
+spring:
+  application:
+    name: mall-gateway
+  cloud:
+    gateway:
+      routes:
+        # 默认 lb://mall-sys；请求头含 userId 时由 SysUserIdRouteFilter 动态改写：
+        # userId >= 10 → mall-sys-a，userId < 10 → mall-sys-b，无 userId → mall-sys
+        - id: mall-sys
+          uri: lb://mall-sys
+          predicates:
+            - Path=/sys/**,/authentication/**,/serial/**,/file/**
+        - id: mall-oms
+          uri: lb://mall-oms
+          predicates:
+            - Path=/oms/**
+        - id: mall-pms
+          uri: lb://mall-pms
+          predicates:
+            - Path=/pms/**
+        - id: mall-seata-order
+          uri: lb://mall-seata-order
+          predicates:
+            - Path=/seataOrder/**
+        - id: mall-seata-stock
+          uri: lb://mall-seata-stock
+          predicates:
+            - Path=/seataStock/**
+        - id: mall-seata-user
+          uri: lb://mall-seata-user
+          predicates:
+            - Path=/seataUser/**
+
+
+# MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取；网关一般无本地 Mapper，可按需调整）
+logging:
+  mapper-package: com.yz.mall.sys.mapper
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      # Grafana JVM 仪表盘按 application 标签筛选，须与 spring.application.name 一致
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true

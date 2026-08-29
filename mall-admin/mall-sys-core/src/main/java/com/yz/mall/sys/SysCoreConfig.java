@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 @EnableAsync
 @EnableCaching
 @Configuration
-@EnableConfigurationProperties(SysProperties.class)
+@EnableConfigurationProperties({SysProperties.class, SysOpenCryptoProperties.class})
 @ComponentScan({"com.yz.mall.sys"})
 @MapperScan("com.yz.mall.sys.mapper")
 public class SysCoreConfig {

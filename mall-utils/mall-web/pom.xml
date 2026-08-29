@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>mall-utils</artifactId>
-        <version>0.0.6-SNAPSHOT</version>
+        <version>0.0.7-SNAPSHOT</version>
     </parent>
 
 
@@ -43,6 +43,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- OpenFeign 底层客户端：Apache HttpClient 5（连接池复用；版本由 spring-cloud-dependencies 管理） -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-hc5</artifactId>
         </dependency>
 
         <dependency>

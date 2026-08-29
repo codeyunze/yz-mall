@@ -1,0 +1,34 @@
+-- 车辆档案菜单与 API 权限（按需在 mall-sys 执行；parent_id 请按实际菜单树调整）
+-- 权限码与 Controller @SaCheckPermission 对齐
+
+-- 车辆档案
+-- api:tw:vehicle:page
+-- api:tw:vehicle:detail
+-- api:tw:vehicle:add
+-- api:tw:vehicle:edit
+-- api:tw:vehicle:status
+-- api:tw:vehicle:delete
+-- api:tw:vehicle:owner:bind
+-- api:tw:vehicle:owner:unbind
+-- api:tw:vehicle:owner:transfer
+-- api:tw:vehicle:auth:grant
+-- api:tw:vehicle:auth:revoke
+-- api:tw:vehicle:auth:list
+
+-- 车系
+-- api:tw:series:page
+-- api:tw:series:detail
+-- api:tw:series:add
+-- api:tw:series:edit
+-- api:tw:series:status
+-- api:tw:series:delete
+-- api:tw:series:options
+
+-- 车型
+-- api:tw:model:page
+-- api:tw:model:detail
+-- api:tw:model:add
+-- api:tw:model:edit
+-- api:tw:model:status
+-- api:tw:model:delete
+-- api:tw:model:options

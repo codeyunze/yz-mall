@@ -1,0 +1,13 @@
+# 合并到 Nacos Data ID = gateway.yaml（与现有路由并列）
+# 服务名须与 spring.application.name=tw-vehicle 一致
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: tw-vehicle
+          uri: lb://tw-vehicle
+          predicates:
+            - Path=/tw/**,/extend/tw/**
+          filters:
+            - StripPrefix=0

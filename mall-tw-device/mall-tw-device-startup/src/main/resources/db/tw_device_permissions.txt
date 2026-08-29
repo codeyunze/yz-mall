@@ -1,0 +1,10 @@
+-- 终端管理权限码清单（录入 mall-sys）
+-- api:tw:device:page
+-- api:tw:device:detail
+-- api:tw:device:add
+-- api:tw:device:edit
+-- api:tw:device:status
+-- api:tw:device:delete
+-- api:tw:device:bind
+-- api:tw:device:unbind
+-- api:tw:device:cred:reset

@@ -4,6 +4,8 @@ package com.yz.mall.web.configuration;
 import com.yz.mall.base.HeaderConstants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +15,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.*;
 
 /**
- * openfeign请求时，携带header信息
+ * OpenFeign 请求拦截：透传必要 header。
+ * <p>
+ * 底层 HTTP 客户端由 mall-web 引入的 {@code feign-hc5} 自动切换为 Apache HttpClient 5；
+ * 可通过配置 {@code spring.cloud.openfeign.httpclient.hc5.enabled=false} 关闭。
  *
  * @author yunze
  * @date 2025/1/22 14:34
@@ -21,6 +26,24 @@ import java.util.*;
 @Slf4j
 @Configuration
 public class OpenFeignConfig implements RequestInterceptor {
+
+    @Resource
+    private feign.Client client;
+
+    @PostConstruct
+    public void printFeignClient() {
+        Object target = client;
+        // 有 LoadBalancer 时拆一层
+        if (target.getClass().getName().contains("LoadBalancer")) {
+            try {
+                var field = target.getClass().getDeclaredField("delegate");
+                field.setAccessible(true);
+                target = field.get(target);
+            } catch (Exception ignored) {
+            }
+        }
+        log.info("Feign Client = {}", target.getClass().getName());
+    }
 
     @Override
     public void apply(RequestTemplate requestTemplate) {

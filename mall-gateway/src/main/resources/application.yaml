@@ -14,4 +14,12 @@ management:
   endpoints:
     web:
       exposure:
-        include:  '*'
+        include: '*'
+  metrics:
+    tags:
+      # Grafana JVM 仪表盘按 application 标签筛选，须与 spring.application.name 一致
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true

@@ -283,8 +283,7 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
             return new java.util.HashMap<>();
         }
         
-        return categories.stream()
-                .collect(Collectors.toMap(PmsCategory::getId, t -> t));
+        return categories.stream().collect(Collectors.toMap(PmsCategory::getId, t -> t));
     }
 
     /**
@@ -307,10 +306,8 @@ public class PmsStockInDetailServiceImpl extends ServiceImpl<PmsStockInDetailMap
         page.setTotal(stockInPage.getTotal());
         
         // 构建映射表
-        Map<Long, PmsProductSlimVo> productMap = products.stream()
-                .collect(Collectors.toMap(PmsProductSlimVo::getId, t -> t));
-        Map<Long, PmsSkuVo> skuMap = skuList.stream()
-                .collect(Collectors.toMap(PmsSkuVo::getId, t -> t));
+        Map<Long, PmsProductSlimVo> productMap = products.stream().collect(Collectors.toMap(PmsProductSlimVo::getId, t -> t));
+        Map<Long, PmsSkuVo> skuMap = skuList.stream().collect(Collectors.toMap(PmsSkuVo::getId, t -> t));
         
         // 组装 VO数据
         List<PmsStockInDetailVo> voList = stockInPage.getRecords().stream()
