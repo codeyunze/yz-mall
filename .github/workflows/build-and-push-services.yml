@@ -81,6 +81,10 @@ jobs:
           cp "${JAR}" .docker-build/app.jar
           echo "Using jar: ${JAR}"
 
+      - name: Set image version tag
+        id: version
+        run: echo "tag=$(TZ=Asia/Shanghai date +%Y%m%d%H%M)" >> "${GITHUB_OUTPUT}"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -98,8 +102,11 @@ jobs:
           context: .docker-build
           file: ./Dockerfile
           push: true
+          # ACR 不支持 Buildx 默认附带的 OCI attestation（empty.v1+json），需关闭
+          provenance: false
+          sbom: false
           tags: |
             ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.module.outputs.name }}:latest
-            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.module.outputs.name }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.module.outputs.name }}:${{ steps.version.outputs.tag }}
           cache-from: type=gha,scope=docker-${{ steps.module.outputs.name }}
           cache-to: type=gha,mode=max,scope=docker-${{ steps.module.outputs.name }}
