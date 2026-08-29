@@ -32,4 +32,4 @@ VOLUME ["/app/logs"]
 EXPOSE 8080
 
 # exec 保证容器收到 SIGTERM 时能转发给 Java 进程，便于优雅停机
-ENTRYPOINT ["sh", "-c", "exec java -Xms${JVM_XMS} -Xmx${JVM_XMX} -Xmn${JVM_XMN} ${JVM_GC_OPTS} ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java -Xms${JVM_XMS} -Xmx${JVM_XMX} ${JVM_GC_OPTS} ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar"]
