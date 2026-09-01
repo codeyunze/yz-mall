@@ -18,7 +18,7 @@ ENV TZ=Asia/Shanghai \
 
 COPY app.jar /app/app.jar
 
-RUN apk add --no-cache tzdata \
+RUN apk add --no-cache tzdata curl busybox-extras \
     && addgroup -S app \
     && adduser -S -G app app \
     && mkdir -p /app/logs \
