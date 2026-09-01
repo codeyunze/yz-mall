@@ -6,10 +6,10 @@
 
 | 项 | 说明 |
 |---|---|
-| 主机 | `ubuntu@111.223.116.29`（`VM-0-5-ubuntu`） |
-| 发行版 | Ubuntu 24.04 |
+| 主机 | master `ubuntu@111.229.156.123`；worker `101.43.84.238`（内网 `10.0.4.12`） |
+| 发行版 | Ubuntu 24.04 / OpenCloudOS 9（worker） |
 | k3s 版本 | `v1.32.1+k3s1` |
-| 角色 | 单节点 control-plane / master |
+| 角色 | 1 master + 1 worker（可扩展） |
 | 默认存储类 | `local-path`（WaitForFirstConsumer） |
 | Ingress | Traefik（k3s 自带） |
 
@@ -20,9 +20,14 @@
 | 文档 | 说明 |
 |---|---|
 | [常用命令.md](./常用命令.md) | 服务启停、集群巡检、工作负载、日志、存储、镜像与排障等常用命令 |
-| [通用部署操作.md](./通用部署操作.md) | k3s 部署中间件与 Spring Cloud 微服务的通用步骤、约定与排障 |
+| [通用部署操作.md](./通用部署操作.md) | 新手向：目录结构、配置落点、Redis/mall-sys 分步部署教程 |
+| [apps/](./apps/) | K8s YAML 模板目录（与通用部署操作配套） |
 | [部署RustFS.md](./部署RustFS.md) | 在 k3s 上部署 RustFS：镜像转存、local-path、Helm、验证与排障 |
 | [中间件迁移方案.md](./中间件迁移方案.md) | docs/docker/docker-compose.yml 迁到 k3s 的清单、批次与约束 |
+| [k3s集群基础配置.md](./k3s集群基础配置.md) | **master 配置、Worker 加入全流程、镜像/Kuboard、排障**（主文档） |
+| [Kuboard接入k3s.md](./Kuboard接入k3s.md) | → 已合并至《k3s集群基础配置》§5 |
+| [镜像替换操作.md](./镜像替换操作.md) | → 已合并至《k3s集群基础配置》§2、§3、§4 |
+| [wiki/跨节点访问Nacos超时.md](./wiki/跨节点访问Nacos超时.md) | 案例：worker→Nacos ClusterIP 超时（flannel FDB 缺失） |
 
 ## 使用前提
 

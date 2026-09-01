@@ -24,9 +24,3 @@ management:
     metrics:
       export:
         enabled: true
-
-rocketmq:
-  producer:
-    group: producer-tw-vehicle
-  consumer:
-    group: consumer-tw-vehicle

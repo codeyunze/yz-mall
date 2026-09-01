@@ -14,9 +14,10 @@
 | [../README.md](../README.md) | 根 README：端口、分层示意图、权限与运维备注 |
 | [k3s/README.md](k3s/README.md) | k3s 运维说明（环境信息与文档索引） |
 | [k3s/常用命令.md](k3s/常用命令.md) | k3s / kubectl 日常巡检、发布、日志、存储与排障命令 |
-| [k3s/通用部署操作.md](k3s/通用部署操作.md) | k3s 部署中间件与 Spring Cloud 微服务的通用操作 |
+| [k3s/通用部署操作.md](k3s/通用部署操作.md) | k3s 新手分步部署手册（含 apps 目录与 Redis/mall-sys 示例） |
 | [k3s/部署RustFS.md](k3s/部署RustFS.md) | k3s 部署 RustFS 中间件（镜像、存储、Helm、验证与排障） |
 | [k3s/中间件迁移方案.md](k3s/中间件迁移方案.md) | docker-compose 中间件迁移到 k3s 的分批方案与资源约束 |
+| [k3s/Kuboard接入k3s.md](k3s/Kuboard接入k3s.md) | 在 Kuboard 中添加 111.229.156.123 的 k3s 集群 |
 
 ## 脚本说明
 
