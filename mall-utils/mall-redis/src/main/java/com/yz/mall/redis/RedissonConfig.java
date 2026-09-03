@@ -1,5 +1,6 @@
 package com.yz.mall.redis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.config.Config;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -9,16 +10,16 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
+ * Redisson 客户端配置。
+ *
  * @author yunze
  * @date 2024/7/1 星期一 22:12
  */
+@Slf4j
 @Configuration
 public class RedissonConfig {
-
-    Logger log = Logger.getLogger(this.getClass().getName());
 
     private final RedisProperties redisProperties;
 
@@ -26,35 +27,38 @@ public class RedissonConfig {
         this.redisProperties = redisProperties;
     }
 
+    /**
+     * 创建 Redisson 客户端。
+     *
+     * @return Redisson 实例
+     */
     @Bean
     public Redisson redisson() {
         Config config = new Config();
+        boolean passwordConfigured = StringUtils.hasText(redisProperties.getPassword());
         // 判断是否配置的是redis集群
         if (redisProperties.getCluster() != null) {
-            log.info("加载redisson集群模式");
             // 获取redis集群的所有redis节点信息
             List<String> nodes = redisProperties.getCluster().getNodes();
             List<String> clusterNodes = new ArrayList<>(nodes.size());
             for (String node : nodes) {
                 clusterNodes.add("redis://" + node);
             }
-
+            log.info(">>>>>>>>>>> redisson config init. mode=cluster, nodes={}, passwordConfigured={}", nodes, passwordConfigured);
             config.useClusterServers().addNodeAddress(clusterNodes.toArray(new String[0]));
-
-            if (StringUtils.hasText(redisProperties.getPassword())) {
+            if (passwordConfigured) {
                 // 设置redis访问密码
-                config.useClusterServers().setPassword(redisProperties.getPassword());
+                config.setPassword(redisProperties.getPassword());
             }
         } else {
-            log.info("加载redisson单机模式");
-
-            config.useSingleServer().setAddress("redis://" + redisProperties.getHost() + ":" + redisProperties.getPort()).setDatabase(redisProperties.getDatabase());
-
-            if (StringUtils.hasText(redisProperties.getPassword())) {
-                config.useSingleServer().setPassword(redisProperties.getPassword());
+            String address = "redis://" + redisProperties.getHost() + ":" + redisProperties.getPort();
+            log.info(">>>>>>>>>>> redisson config init. mode=single, address={}, database={}, passwordConfigured={}",
+                    address, redisProperties.getDatabase(), passwordConfigured);
+            config.useSingleServer().setAddress(address).setDatabase(redisProperties.getDatabase());
+            if (passwordConfigured) {
+                config.setPassword(redisProperties.getPassword());
             }
         }
-
         return (Redisson) Redisson.create(config);
     }
 
