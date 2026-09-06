@@ -34,17 +34,17 @@
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <dynamic-datasource.version>4.3.1</dynamic-datasource.version>
         <hutool.version>5.8.47</hutool.version>
-        <redisson.version>4.6.1</redisson.version>
+        <redisson.version>4.7.0</redisson.version>
         <sa-token.version>1.43.0</sa-token.version>
         <xxl-job.version>3.4.2</xxl-job.version>
         <!-- 覆盖 Boot 自带 Jackson；import 顺序必须在 spring-boot-dependencies 之前 -->
-        <jackson.version>2.22.1</jackson.version>
+        <jackson.version>2.22.2</jackson.version>
         <qof.version>17.0.4</qof.version>
-        <logback.version>1.5.18</logback.version>
-        <resilience4j.version>2.2.0</resilience4j.version>
+        <logback.version>1.5.38</logback.version>
+        <resilience4j.version>2.4.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
         <!-- SkyWalking OAP/UI 可为 10.x；Java Agent Toolkit 在 Maven Central 仍为 9.x 线，与 Agent 字节码增强兼容 -->
-        <skywalking.version>9.6.0</skywalking.version>
+        <!-- <skywalking.version>9.6.0</skywalking.version> -->
         <!-- Elastic APM：业务 API（traceId 等）；Java Agent 由启动参数 -javaagent 挂载，版本可独立升级 -->
         <elastic-apm.version>1.52.0</elastic-apm.version>
         <prometheus.version>1.11.5</prometheus.version>
@@ -224,7 +224,7 @@
                 <version>${logstash-logback.version}</version>
             </dependency>
 
-            <dependency>
+            <!-- <dependency>
                 <groupId>org.apache.skywalking</groupId>
                 <artifactId>apm-toolkit-trace</artifactId>
                 <version>${skywalking.version}</version>
@@ -240,7 +240,7 @@
                 <groupId>org.apache.skywalking</groupId>
                 <artifactId>apm-toolkit-logback-1.x</artifactId>
                 <version>${skywalking.version}</version>
-            </dependency>
+            </dependency> -->
 
             <dependency>
                 <groupId>co.elastic.apm</groupId>
