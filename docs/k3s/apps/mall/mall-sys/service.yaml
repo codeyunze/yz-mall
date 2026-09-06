@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mall-sys
+  namespace: mall
+  labels:
+    app.kubernetes.io/name: mall-sys
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: mall-sys
+  ports:
+    - name: http
+      port: 25002
+      targetPort: 25002

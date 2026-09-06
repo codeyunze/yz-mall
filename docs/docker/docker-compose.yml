@@ -17,7 +17,7 @@ services:
       - mall
 
   elasticsearch:
-    image: registry.cn-guangzhou.aliyuncs.com/devyunze/elasticsearch:8.19.0
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/elasticsearch:8.19.21
     container_name: 'dev-elasticsearch-8.19.0'
     environment:
       - discovery.type=single-node
@@ -27,12 +27,12 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
     volumes:
+      # ES 索引与元数据持久化（重建容器不丢数据）
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
       - /etc/localtime:/etc/localtime:ro
     ports:
       - '9200:9200'
       - '9300:9300'
-    # 可选：设置重启策略（除非手动停止，否则在容器意外退出时都会自动重启）
-    restart: unless-stopped
     mem_limit: 1536m
     restart: unless-stopped
     networks:
@@ -42,10 +42,12 @@ services:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/kibana:8.19.0
     container_name: 'dev-kibana-8.19.0'
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       # Kibana 官方镜像常不带完整 tzdata；只设 TZ 时 date 会显示成 UTC 且缩写异常（如 Asia）
       - TZ=Asia/Shanghai
     volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      # Kibana 内部状态/索引模式等持久化（重建容器不丢）
+      - ./kibana/data:/usr/share/kibana/data
       # 从 Linux 宿主机注入 zoneinfo，让 TZ=Asia/Shanghai 能真正解析到 +0800
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
@@ -59,7 +61,7 @@ services:
       - mall
 
   logstash:
-    image: registry.cn-guangzhou.aliyuncs.com/devyunze/logstash:8.19.0
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/logstash:8.19.21
     container_name: 'dev-logstash-8.19.0'
     ports:
       - '4560:4560'

@@ -19,15 +19,11 @@ import org.springframework.stereotype.Service;
 
 /**
  * 内部暴露service实现类: 任务待办。
- * <p>
- * 依赖 {@link RocketMQTemplate}，仅在已配置 {@code rocketmq.name-server} 并完成 MQ 自动装配时生效；
- * 未使用 RocketMQ 的消费方（如 tw-vehicle）可跳过该 Bean，避免启动失败。
  *
  * @author yunze
  * @date 2025/1/22 13:46
  */
 @Service
-@ConditionalOnBean(RocketMQTemplate.class)
 public class ExtendSysPendingTasksServiceImpl implements ExtendSysPendingTasksService {
 
     private final ExtendSysPendingTaskFeign extendSysPendingTaskFeign;
