@@ -10,9 +10,7 @@
 name: MySQL Backup & SCP Upload
 
 on:
-  workflow_dispatch:           # 支持手动触发
-  schedule:
-    - cron: '0 2 * * *'        # 可选：每天 UTC 02:00 执行（北京时间 10:00）
+  workflow_dispatch:           # 仅手动触发
 
 jobs:
   backup-and-upload:
