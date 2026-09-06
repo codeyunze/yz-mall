@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mall-tw-vehicle
+  namespace: mall-business
+  labels:
+    app.kubernetes.io/name: mall-tw-vehicle
+    app.kubernetes.io/part-of: yz-mall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mall-tw-vehicle
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mall-tw-vehicle
+        app.kubernetes.io/part-of: yz-mall
+    spec:
+      # 临时：worker↔master Pod 网段（flannel/VXLAN 8472）不通时，与 Nacos 同节点。网络修好后删除本行。
+      nodeName: vm-master-01
+      imagePullSecrets:
+        - name: acr-gz
+      containers:
+        - name: mall-tw-vehicle
+          image: registry.cn-guangzhou.aliyuncs.com/devyunze/mall-tw-vehicle-startup:202608300018
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: JAVA_OPTS
+              value: "-Dserver.port=8080 -Djava.net.preferIPv4Stack=true"
+            - name: NACOS_HOST
+              # 当前为 nacos Service ClusterIP（kubectl -n mall-middleware get svc nacos）。
+              # DNS 名 nacos.mall-middleware.svc.cluster.local 在本镜像 Java 客户端上会 UnknownHostException，故先用 IP。
+              value: "10.43.242.61"
+            - name: NACOS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nacos-secret
+                  key: password
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: TZ
+              value: Asia/Shanghai
+            - name: JVM_XMS
+              value: 256m
+            - name: JVM_XMX
+              value: 512m
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 20

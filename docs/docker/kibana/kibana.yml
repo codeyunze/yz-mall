@@ -1,0 +1,7 @@
+# Kibana 开发环境配置（挂载到容器 /usr/share/kibana/config/kibana.yml）
+# Docker 镜像默认值需显式保留，否则自定义 yml 会覆盖掉镜像内置默认
+
+server.host: "0.0.0.0"
+server.shutdownTimeout: "5s"
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+monitoring.ui.container.elasticsearch.enabled: true

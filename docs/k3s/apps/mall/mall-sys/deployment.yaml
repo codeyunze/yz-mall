@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mall-sys
+  namespace: mall
+  labels:
+    app.kubernetes.io/name: mall-sys
+    app.kubernetes.io/part-of: yz-mall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mall-sys
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mall-sys
+        app.kubernetes.io/part-of: yz-mall
+    spec:
+      imagePullSecrets:
+        - name: acr-gz
+      containers:
+        - name: mall-sys
+          image: registry.cn-guangzhou.aliyuncs.com/devyunze/mall-sys:请改成实际tag
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 25002
+              name: http
+          env:
+            - name: NACOS_HOST
+              value: nacos.mall-middleware.svc.cluster.local
+            - name: NACOS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nacos-secret
+                  key: password
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: TZ
+              value: Asia/Shanghai
+            - name: JVM_XMS
+              value: 512m
+            - name: JVM_XMX
+              value: 1024m
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          readinessProbe:
+            tcpSocket:
+              port: 25002
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 25002
+            initialDelaySeconds: 120
+            periodSeconds: 20
