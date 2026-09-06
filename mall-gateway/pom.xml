@@ -97,19 +97,10 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- Elastic APM API：回写 x-trace-id（Agent 由启动参数 -javaagent 挂载） -->
         <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-webflux</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-trace</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-logback-1.x</artifactId>
+            <groupId>co.elastic.apm</groupId>
+            <artifactId>apm-agent-api</artifactId>
         </dependency>
     </dependencies>
 

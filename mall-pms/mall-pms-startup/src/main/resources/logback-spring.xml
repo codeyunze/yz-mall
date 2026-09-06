@@ -6,13 +6,11 @@
     <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="application"/>
     <property name="LOG_HOME" value="./logs/${APP_NAME}/"/>
 
-    <!--控制台：仅保留 TID（SW_CTX 与 TID 重复且过长，检索用 Logstash/OAP 即可）-->
+    <!-- 控制台：trace.id 由 Elastic APM Agent log correlation 注入 MDC（默认开启） -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder>
             <charset>UTF-8</charset>
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan([%X{tid}]) %logger{72} - %msg%n</pattern>
-            </layout>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan([%X{trace.id}]) %logger{72} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -25,32 +23,26 @@
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder>
             <charset>UTF-8</charset>
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{tid}] %logger{72} - %msg%n</pattern>
-            </layout>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{trace.id}] %logger{72} - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <!--
+      Logstash → ES 与 APM 关联：需顶层 trace.id / transaction.id / service.name（与 Agent service_name 一致）。
+      APM Server 只收 trace/metric；日志仍走本 appender。
+    -->
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>192.168.3.237:4560</destination>
-        <!-- 启动期默认 5s 易超时，拉长首连等待 -->
         <connectionTimeout>30000</connectionTimeout>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"platform": "mall", "app_name": "${APP_NAME}"}</customFields>
+            <customFields>{"platform":"mall","app_name":"${APP_NAME}","service.name":"${elastic.apm.service_name:-${APP_NAME}}"}</customFields>
             <includeMdcKeyName>client_ip</includeMdcKeyName>
-            <provider class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.logstash.TraceIdJsonProvider"/>
-            <provider class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.logstash.SkyWalkingContextJsonProvider"/>
-        </encoder>
-    </appender>
-
-    <!-- SkyWalking：日志上报 OAP（需挂载 Java Agent） -->
-    <appender name="skywalking" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender">
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{tid}] [%thread] %-5level %logger{50} - %msg%n</pattern>
-            </layout>
+            <includeMdcKeyName>trace.id</includeMdcKeyName>
+            <includeMdcKeyName>transaction.id</includeMdcKeyName>
+            <includeMdcKeyName>span.id</includeMdcKeyName>
+            <includeMdcKeyName>error.id</includeMdcKeyName>
         </encoder>
     </appender>
 
@@ -62,6 +54,5 @@
         <appender-ref ref="console"/>
         <appender-ref ref="timeFileOutput"/>
         <appender-ref ref="logstash"/>
-        <appender-ref ref="skywalking"/>
     </root>
 </configuration>

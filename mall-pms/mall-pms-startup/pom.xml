@@ -106,6 +106,12 @@
             <artifactId>mall-job</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Elastic APM API（Agent 由启动参数 -javaagent 挂载）；traceId 回写依赖 mall-web -->
+        <dependency>
+            <groupId>co.elastic.apm</groupId>
+            <artifactId>apm-agent-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -56,16 +56,16 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-        <!-- SkyWalking 日志上报 OAP / Logstash TID 关联 -->
+        <!-- SkyWalking 日志 toolkit：其它模块 logback 仍可能引用；mall-admin 已切 Elastic APM -->
         <dependency>
             <groupId>org.apache.skywalking</groupId>
             <artifactId>apm-toolkit-logback-1.x</artifactId>
         </dependency>
 
-        <!-- TraceContext：回写 x-trace-id 响应头 -->
+        <!-- Elastic APM API：回写 x-trace-id（需启动时挂载 elastic-apm-agent） -->
         <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-trace</artifactId>
+            <groupId>co.elastic.apm</groupId>
+            <artifactId>apm-agent-api</artifactId>
         </dependency>
     </dependencies>
 
