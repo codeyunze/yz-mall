@@ -44,7 +44,7 @@
         <resilience4j.version>2.4.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
         <!-- SkyWalking OAP/UI 可为 10.x；Java Agent Toolkit 在 Maven Central 仍为 9.x 线，与 Agent 字节码增强兼容 -->
-        <!-- <skywalking.version>9.6.0</skywalking.version> -->
+        <skywalking.version>9.6.0</skywalking.version>
         <!-- Elastic APM：业务 API（traceId 等）；Java Agent 由启动参数 -javaagent 挂载，版本可独立升级 -->
         <elastic-apm.version>1.52.0</elastic-apm.version>
         <prometheus.version>1.11.5</prometheus.version>
@@ -224,7 +224,7 @@
                 <version>${logstash-logback.version}</version>
             </dependency>
 
-            <!-- <dependency>
+            <dependency>
                 <groupId>org.apache.skywalking</groupId>
                 <artifactId>apm-toolkit-trace</artifactId>
                 <version>${skywalking.version}</version>
@@ -240,7 +240,7 @@
                 <groupId>org.apache.skywalking</groupId>
                 <artifactId>apm-toolkit-logback-1.x</artifactId>
                 <version>${skywalking.version}</version>
-            </dependency> -->
+            </dependency>
 
             <dependency>
                 <groupId>co.elastic.apm</groupId>

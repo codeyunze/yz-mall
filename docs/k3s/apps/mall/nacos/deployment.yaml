@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacos
+  namespace: mall
+  labels:
+    app.kubernetes.io/name: nacos
+    app.kubernetes.io/part-of: yz-mall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nacos
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nacos
+        app.kubernetes.io/part-of: yz-mall
+    spec:
+      imagePullSecrets:
+        - name: acr-gz
+      containers:
+        - name: nacos
+          image: registry.cn-guangzhou.aliyuncs.com/devyunze/nacos-server:v2.5.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8848
+              name: http
+            - containerPort: 9848
+              name: grpc
+          env:
+            - name: MODE
+              value: standalone
+            - name: NACOS_AUTH_ENABLE
+              value: "true"
+            - name: JVM_XMS
+              value: 256m
+            - name: JVM_XMX
+              value: 512m
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 640Mi
+          volumeMounts:
+            - name: nacos-application-properties
+              mountPath: /home/nacos/conf/application.properties
+              subPath: application.properties
+      volumes:
+        - name: nacos-application-properties
+          configMap:
+            name: nacos-application-properties

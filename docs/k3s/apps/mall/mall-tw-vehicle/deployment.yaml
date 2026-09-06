@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mall-tw-vehicle
-  namespace: mall-business
+  namespace: mall
   labels:
     app.kubernetes.io/name: mall-tw-vehicle
     app.kubernetes.io/part-of: yz-mall
@@ -17,13 +17,11 @@ spec:
         app.kubernetes.io/name: mall-tw-vehicle
         app.kubernetes.io/part-of: yz-mall
     spec:
-      # 临时：worker↔master Pod 网段（flannel/VXLAN 8472）不通时，与 Nacos 同节点。网络修好后删除本行。
-      nodeName: vm-master-01
       imagePullSecrets:
         - name: acr-gz
       containers:
         - name: mall-tw-vehicle
-          image: registry.cn-guangzhou.aliyuncs.com/devyunze/mall-tw-vehicle-startup:202608300018
+          image: registry.cn-guangzhou.aliyuncs.com/devyunze/mall-tw-vehicle-startup:202609012347
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -31,10 +29,8 @@ spec:
           env:
             - name: JAVA_OPTS
               value: "-Dserver.port=8080 -Djava.net.preferIPv4Stack=true"
-            - name: NACOS_HOST
-              # 当前为 nacos Service ClusterIP（kubectl -n mall-middleware get svc nacos）。
-              # DNS 名 nacos.mall-middleware.svc.cluster.local 在本镜像 Java 客户端上会 UnknownHostException，故先用 IP。
-              value: "10.43.242.61"
+            - name: SPRING_CLOUD_NACOS_SERVER_ADDR
+              value: nacos.mall.svc.cluster.local:8848
             - name: NACOS_PASSWORD
               valueFrom:
                 secretKeyRef:

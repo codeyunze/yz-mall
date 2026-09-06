@@ -28,7 +28,7 @@ spec:
               name: http
           env:
             - name: NACOS_HOST
-              value: nacos.mall-middleware.svc.cluster.local
+              value: nacos.mall.svc.cluster.local
             - name: NACOS_PASSWORD
               valueFrom:
                 secretKeyRef:
