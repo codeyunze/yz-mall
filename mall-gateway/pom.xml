@@ -123,8 +123,14 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.yz.mall.gateway.GatewayApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

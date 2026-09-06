@@ -8,6 +8,7 @@ apps/
 │   ├── namespace.yaml
 │   ├── nacos/
 │   ├── redis/
+│   ├── mall-gateway/
 │   ├── mall-sys/
 │   └── mall-tw-vehicle/
 └── mall-middleware/         # 历史目录；Nacos/Redis 已迁到 mall，仅作参考
