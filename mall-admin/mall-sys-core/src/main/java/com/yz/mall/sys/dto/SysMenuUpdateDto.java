@@ -43,7 +43,7 @@ public class SysMenuUpdateDto implements Serializable {
     /**
      * 路由名称
      */
-    @Length(max = 100, message = "路由名称超过100个字符")
+    @Length(max = 1000, message = "路由名称超过1000个字符")
     private String name;
 
     /**
@@ -108,7 +108,7 @@ public class SysMenuUpdateDto implements Serializable {
     /**
      * 链接地址(嵌入iframe链接地址)
      */
-    @Length(max = 100, message = "链接地址超过100个字符")
+    @Length(max = 1000, message = "链接地址超过1000个字符")
     private String frameSrc;
 
     /**

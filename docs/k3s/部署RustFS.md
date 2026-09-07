@@ -1,8 +1,28 @@
 # 在 k3s 上部署 RustFS 中间件
 
-本文记录在 yz-mall 运维环境（单节点 k3s）上部署 **RustFS**（对象存储兼容中间件）的操作步骤、镜像依赖与排障经验，以当前已落地环境为准。
+本文记录在 yz-mall 运维环境（单节点 k3s）上部署 **RustFS**（对象存储兼容中间件）的操作步骤。
 
-## 1. 环境与目标形态
+> **推荐落点（当前）：** 命名空间 `mall`，纯 YAML 清单见 [`apps/mall/rustfs/`](./apps/mall/rustfs/)，镜像 `registry.cn-guangzhou.aliyuncs.com/devyunze/rustfs:1.0.0-rc.5`。  
+> 下文保留早期「独立命名空间 `rustfs` + Helm」经验，排障（local-path / ACR）仍适用。
+
+## 0. 在 `mall` 命名空间部署（推荐）
+
+```bash
+# 密钥（勿提交仓库）
+sudo k3s kubectl -n mall create secret generic rustfs-secret \
+  --from-literal=access-key='你的AccessKey' \
+  --from-literal=secret-key='你的SecretKey'
+
+cd docs/k3s/apps/mall/rustfs
+sudo k3s kubectl apply -f pvc.yaml -f configmap.yaml -f deployment.yaml -f service.yaml
+sudo k3s kubectl -n mall rollout status deploy/rustfs
+sudo k3s kubectl -n mall get pods,svc,pvc -l app.kubernetes.io/name=rustfs -o wide
+```
+
+集群内：`rustfs.mall.svc.cluster.local:9000`（API）/ `:9001`（Console）。  
+详细步骤与验证见 [`apps/mall/rustfs/README.md`](./apps/mall/rustfs/README.md)。
+
+## 1. 环境与目标形态（历史：独立 NS + Helm）
 
 | 项 | 值（参考） |
 |---|---|
@@ -11,7 +31,7 @@
 | 存储类 | `local-path`（默认，`WaitForFirstConsumer`） |
 | Helm Release | `rustfs` / 命名空间 `rustfs` |
 | Chart | `rustfs-0.12.0`（`app.kubernetes.io/version` 标注为 `1.0.0-beta.12`） |
-| 业务镜像 | `registry.cn-guangzhou.aliyuncs.com/devyunze/rustfs:1.0.0-rc.2` |
+| 业务镜像 | `registry.cn-guangzhou.aliyuncs.com/devyunze/rustfs:1.0.0-rc.5`（历史文档曾用 rc.2） |
 | Service | `rustfs-svc`，类型 `LoadBalancer`，端口 `9000`（API）/ `9001`（Console） |
 | 数据卷 | PVC `rustfs-data` 20Gi、`rustfs-logs` 2Gi |
 

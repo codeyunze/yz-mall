@@ -5,7 +5,7 @@
 
     <groupId>com.yz</groupId>
     <artifactId>yz-mall</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <name>yz-mall</name>
     <description>yz-mall</description>
     <packaging>pom</packaging>
@@ -17,8 +17,7 @@
         <module>mall-gateway</module>
         <module>mall-pms</module>
         <module>mall-oms</module>
-        <module>mall-tw-vehicle</module>
-        <module>mall-tw-device</module>
+        <module>mall-tw</module>
     </modules>
 
     <properties>
@@ -41,7 +40,7 @@
         <jackson.version>2.22.2</jackson.version>
         <qof.version>17.0.4</qof.version>
         <logback.version>1.5.38</logback.version>
-        <resilience4j.version>2.4.0</resilience4j.version>
+        <resilience4j.version>2.2.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
         <!-- SkyWalking OAP/UI 可为 10.x；Java Agent Toolkit 在 Maven Central 仍为 9.x 线，与 Agent 字节码增强兼容 -->
         <skywalking.version>9.6.0</skywalking.version>

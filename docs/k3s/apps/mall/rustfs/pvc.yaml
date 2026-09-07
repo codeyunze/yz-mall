@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rustfs-data
+  namespace: mall
+  labels:
+    app.kubernetes.io/name: rustfs
+    app.kubernetes.io/part-of: yz-mall
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rustfs-logs
+  namespace: mall
+  labels:
+    app.kubernetes.io/name: rustfs
+    app.kubernetes.io/part-of: yz-mall
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi
