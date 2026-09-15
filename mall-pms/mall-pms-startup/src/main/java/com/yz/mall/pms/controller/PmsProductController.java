@@ -40,7 +40,7 @@ public class PmsProductController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:pms:product:edit")
+    // @SaCheckPermission("api:pms:product:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid PmsProductAddDto dto) {
         return success(this.service.save(dto));
@@ -49,7 +49,7 @@ public class PmsProductController extends ApiController {
     /**
      * 更新
      */
-    @SaCheckPermission("api:pms:product:edit")
+    // @SaCheckPermission("api:pms:product:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid PmsProductUpdateDto dto) {
         return success(this.service.update(dto));
@@ -58,7 +58,7 @@ public class PmsProductController extends ApiController {
     /**
      * 商品上架
      */
-    @SaCheckPermission("api:pms:product:edit")
+    // @SaCheckPermission("api:pms:product:edit")
     @PostMapping("publish/{id}")
     public Result<Boolean> publish(@PathVariable Long id) {
         return success(this.service.publish(id));
@@ -67,7 +67,7 @@ public class PmsProductController extends ApiController {
     /**
      * 商品下架
      */
-    @SaCheckPermission("api:pms:product:edit")
+    // @SaCheckPermission("api:pms:product:edit")
     @PostMapping("delisting/{id}")
     public Result<Boolean> delisting(@PathVariable Long id) {
         return success(this.service.delisting(id));
@@ -78,7 +78,7 @@ public class PmsProductController extends ApiController {
      *
      * @param id 删除数据主键 ID
      */
-    @SaCheckPermission("api:pms:product:edit")
+    // @SaCheckPermission("api:pms:product:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -87,7 +87,7 @@ public class PmsProductController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:product:page")
+    // @SaCheckPermission("api:pms:product:page")
     @PostMapping("page")
     public Result<ResultTable<PmsProduct>> page(@RequestBody @Valid PageFilter<PmsProductQueryDto> filter) {
         Page<PmsProduct> page = this.service.page(filter);

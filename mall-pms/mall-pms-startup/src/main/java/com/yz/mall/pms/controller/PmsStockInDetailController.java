@@ -54,7 +54,7 @@ public class PmsStockInDetailController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:stock:in:page")
+    // @SaCheckPermission("api:pms:stock:in:page")
     @PostMapping("page")
     public Result<ResultTable<PmsStockInDetailVo>> page(@RequestBody @Valid PageFilter<PmsStockInDetailQueryDto> filter) {
         Page<PmsStockInDetailVo> page = this.service.page(filter);

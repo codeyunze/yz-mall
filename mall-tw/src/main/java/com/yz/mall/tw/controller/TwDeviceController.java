@@ -41,56 +41,56 @@ public class TwDeviceController extends ApiController {
         this.deviceService = deviceService;
     }
 
-    @SaCheckPermission("api:tw:device:page")
+    // @SaCheckPermission("api:tw:device:page")
     @PostMapping("page")
     public Result<ResultTable<TwDevicePageVo>> page(@RequestBody @Valid PageFilter<TwDeviceQueryDto> filter) {
         Page<TwDevicePageVo> page = deviceService.pageDevices(filter);
         return success(page.getRecords(), page.getTotal());
     }
 
-    @SaCheckPermission("api:tw:device:detail")
+    // @SaCheckPermission("api:tw:device:detail")
     @GetMapping("{id}")
     public Result<TwDeviceDetailVo> detail(@PathVariable Long id) {
         return success(deviceService.detail(id));
     }
 
-    @SaCheckPermission("api:tw:device:add")
+    // @SaCheckPermission("api:tw:device:add")
     @PostMapping
     public Result<TwDeviceCreateVo> add(@RequestBody TwDeviceAddDto dto) {
         return success(deviceService.register(dto));
     }
 
-    @SaCheckPermission("api:tw:device:edit")
+    // @SaCheckPermission("api:tw:device:edit")
     @PutMapping
     public Result<Boolean> edit(@RequestBody @Valid TwDeviceUpdateDto dto) {
         return success(deviceService.edit(dto));
     }
 
-    @SaCheckPermission("api:tw:device:status")
+    // @SaCheckPermission("api:tw:device:status")
     @PutMapping("status")
     public Result<Boolean> status(@RequestBody @Valid TwDeviceStatusDto dto) {
         return success(deviceService.changeStatus(dto));
     }
 
-    @SaCheckPermission("api:tw:device:delete")
+    // @SaCheckPermission("api:tw:device:delete")
     @DeleteMapping("{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(deviceService.deleteDevice(id));
     }
 
-    @SaCheckPermission("api:tw:device:bind")
+    // @SaCheckPermission("api:tw:device:bind")
     @PostMapping("bind")
     public Result<Long> bind(@RequestBody TwDeviceBindDto dto) {
         return success(deviceService.bind(dto));
     }
 
-    @SaCheckPermission("api:tw:device:unbind")
+    // @SaCheckPermission("api:tw:device:unbind")
     @PostMapping("unbind")
     public Result<Boolean> unbind(@RequestBody TwDeviceUnbindDto dto) {
         return success(deviceService.unbind(dto));
     }
 
-    @SaCheckPermission("api:tw:device:cred:reset")
+    // @SaCheckPermission("api:tw:device:cred:reset")
     @PostMapping("cred/reset")
     public Result<TwDeviceCredResetVo> resetCred(@RequestBody TwDeviceCredResetDto dto) {
         return success(deviceService.resetCredential(dto));

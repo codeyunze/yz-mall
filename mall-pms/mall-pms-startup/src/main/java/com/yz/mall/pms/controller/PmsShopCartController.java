@@ -36,7 +36,7 @@ public class PmsShopCartController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:pms:cart:edit")
+    // @SaCheckPermission("api:pms:cart:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid PmsShopCartAddDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
@@ -55,7 +55,7 @@ public class PmsShopCartController extends ApiController {
      * 删除
      *
      */
-    @SaCheckPermission("api:pms:cart:edit")
+    // @SaCheckPermission("api:pms:cart:edit")
     @DeleteMapping("delete")
     public Result<Boolean> delete(@RequestBody IdsDto dto) {
         long userId = StpUtil.getLoginIdAsLong();
@@ -65,7 +65,7 @@ public class PmsShopCartController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:cart:edit")
+    // @SaCheckPermission("api:pms:cart:edit")
     @PostMapping("page")
     public Result<ResultTable<PmsShopCartVo>> page(@RequestBody @Valid PageFilter<PmsShopCartQueryDto> filter) {
         filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());

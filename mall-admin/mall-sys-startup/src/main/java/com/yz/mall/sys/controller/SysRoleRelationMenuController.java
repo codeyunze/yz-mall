@@ -36,7 +36,7 @@ public class SysRoleRelationMenuController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:system:roleRelationMenu:list")
+    // @SaCheckPermission("api:system:roleRelationMenu:list")
     @PostMapping("list")
     public Result<List<SysRoleRelationMenu>> list(@RequestBody @Valid SysRoleRelationMenuQueryDto filter) {
         return success(this.service.list(filter));
@@ -48,7 +48,7 @@ public class SysRoleRelationMenuController extends ApiController {
      * @param roleId 角色Id
      * @return 角色所拥有的菜单
      */
-    @SaCheckPermission("api:system:roleRelationMenu:getRoleMenus")
+    // @SaCheckPermission("api:system:roleRelationMenu:getRoleMenus")
     @GetMapping("getRoleMenus/{roleId}")
     public Result<List<String>> getRoleMenus(@PathVariable Long roleId) {
         return success(this.service.getMenuIdsByRoleId(roleId));
@@ -60,7 +60,7 @@ public class SysRoleRelationMenuController extends ApiController {
      * @apiNote 为指定的角色绑定菜单
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:roleRelationMenu:bind")
+    // @SaCheckPermission("api:system:roleRelationMenu:bind")
     @PostMapping("bind")
     public Result<Boolean> bind(@RequestBody @Valid SysRoleRelationMenuBindDto dto) {
         return success(this.service.bind(dto));

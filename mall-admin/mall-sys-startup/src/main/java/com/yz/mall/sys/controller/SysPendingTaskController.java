@@ -36,7 +36,7 @@ public class SysPendingTaskController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:system:task:edit")
+    // @SaCheckPermission("api:system:task:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid ExtendSysPendingTasksAddDto dto) {
         dto.setCreateId(StpUtil.getLoginIdAsLong());
@@ -46,7 +46,7 @@ public class SysPendingTaskController extends ApiController {
     /**
      * 更新标题
      */
-    @SaCheckPermission("api:system:task:edit")
+    // @SaCheckPermission("api:system:task:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysPendingTasksUpdateDto dto) {
         return success(this.service.update(dto));
@@ -55,7 +55,7 @@ public class SysPendingTaskController extends ApiController {
     /**
      * 结束任务
      */
-    @SaCheckPermission("api:system:task:edit")
+    // @SaCheckPermission("api:system:task:edit")
     @PostMapping("end")
     public Result<Boolean> end(@RequestBody @Valid IdDto dto) {
         return success(this.service.end(dto));
@@ -66,7 +66,7 @@ public class SysPendingTaskController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
-    @SaCheckPermission("api:system:task:edit")
+    // @SaCheckPermission("api:system:task:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -75,7 +75,7 @@ public class SysPendingTaskController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:system:task:page")
+    // @SaCheckPermission("api:system:task:page")
     @PostMapping("page")
     public Result<ResultTable<SysPendingTasks>> page(@RequestBody @Valid PageFilter<SysPendingTasksQueryDto> filter) {
         Page<SysPendingTasks> page = this.service.page(filter);
@@ -85,7 +85,7 @@ public class SysPendingTaskController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:system:task:page")
+    // @SaCheckPermission("api:system:task:page")
     @GetMapping("get/{id}")
     public Result<SysPendingTasks> page(@PathVariable String id) {
         return success(this.service.getById(id));

@@ -40,7 +40,7 @@ public class SysReceiptInfoController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:system:receipt:edit")
+    // @SaCheckPermission("api:system:receipt:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysReceiptInfoAddDto dto) {
         dto.setCreateId(StpUtil.getLoginIdAsLong());
@@ -51,7 +51,7 @@ public class SysReceiptInfoController extends ApiController {
      * 更新
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:receipt:edit")
+    // @SaCheckPermission("api:system:receipt:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysReceiptInfoUpdateDto dto) {
         dto.setCreateId(StpUtil.getLoginIdAsLong());
@@ -63,7 +63,7 @@ public class SysReceiptInfoController extends ApiController {
      *
      * @param id 删除数据主键ID
      */
-    @SaCheckPermission("api:system:receipt:edit")
+    // @SaCheckPermission("api:system:receipt:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id, StpUtil.getLoginIdAsLong()));
@@ -72,7 +72,7 @@ public class SysReceiptInfoController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:system:receipt:edit")
+    // @SaCheckPermission("api:system:receipt:edit")
     @PostMapping("page")
     public Result<ResultTable<SysReceiptInfoVo>> page(@RequestBody @Valid PageFilter<SysReceiptInfoQueryDto> filter) {
         filter.getFilter().setCreateId(StpUtil.getLoginIdAsLong());

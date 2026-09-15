@@ -36,7 +36,7 @@ public class PmsAttrController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:pms:attr:edit")
+    // @SaCheckPermission("api:pms:attr:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid PmsAttrAddDto dto) {
         return success(this.service.save(dto));
@@ -45,7 +45,7 @@ public class PmsAttrController extends ApiController {
     /**
      * 更新
      */
-    @SaCheckPermission("api:pms:attr:edit")
+    // @SaCheckPermission("api:pms:attr:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid PmsAttrUpdateDto dto) {
         return success(this.service.update(dto));
@@ -56,7 +56,7 @@ public class PmsAttrController extends ApiController {
      *
      * @param id 删除数据主键 ID
      */
-    @SaCheckPermission("api:pms:attr:edit")
+    // @SaCheckPermission("api:pms:attr:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -65,7 +65,7 @@ public class PmsAttrController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:attr:page")
+    // @SaCheckPermission("api:pms:attr:page")
     @PostMapping("page")
     public Result<ResultTable<PmsAttrVo>> page(@RequestBody @Valid PageFilter<PmsAttrQueryDto> filter) {
         Page<PmsAttrVo> page = this.service.page(filter);
@@ -75,7 +75,7 @@ public class PmsAttrController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:pms:attr:page")
+    // @SaCheckPermission("api:pms:attr:page")
     @GetMapping("get/{id}")
     public Result<PmsAttrVo> get(@PathVariable Long id) {
         return success(this.service.detail(id));
@@ -84,7 +84,7 @@ public class PmsAttrController extends ApiController {
     /**
      * 根据关联ID查询属性列表
      */
-    @SaCheckPermission("api:pms:attr:page")
+    // @SaCheckPermission("api:pms:attr:page")
     @GetMapping("list/{relatedId}")
     public Result<List<PmsAttrVo>> listByRelatedId(@PathVariable Long relatedId) {
         return success(this.service.listByRelatedId(relatedId));

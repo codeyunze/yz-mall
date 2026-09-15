@@ -37,7 +37,7 @@ public class PmsStockOutDetailController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:stock:out:page")
+    // @SaCheckPermission("api:pms:stock:out:page")
     @PostMapping("page")
     public Result<ResultTable<PmsStockOutDetailVo>> page(@RequestBody @Valid PageFilter<PmsStockOutDetailQueryDto> filter) {
         Page<PmsStockOutDetailVo> page = this.service.page(filter);
@@ -47,7 +47,7 @@ public class PmsStockOutDetailController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:pms:stock:out:get")
+    // @SaCheckPermission("api:pms:stock:out:get")
     @GetMapping("get/{id}")
     public Result<PmsStockOutDetail> page(@PathVariable String id) {
         return success(this.service.getById(id));

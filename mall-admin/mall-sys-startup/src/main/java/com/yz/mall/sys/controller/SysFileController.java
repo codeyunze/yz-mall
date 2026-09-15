@@ -60,7 +60,7 @@ public class SysFileController extends ApiController {
      * 文件上传接口
      * 转发到qof-web的FileController.upload方法
      */
-    @SaCheckPermission("api:system:file:edit")
+    // @SaCheckPermission("api:system:file:edit")
     @PostMapping("/upload")
     public Result<Long> upload(@RequestParam("uploadfile") MultipartFile file,
                                @Valid QofFileUploadDto fileUploadDto) {
@@ -155,7 +155,7 @@ public class SysFileController extends ApiController {
      * 删除文件（删除物理文件和数据库记录）
      * 转发到qof-web的FileController.delete方法
      */
-    @SaCheckPermission("api:system:file:edit")
+    // @SaCheckPermission("api:system:file:edit")
     @DeleteMapping("/delete/{fileId}")
     public Result<Boolean> delete(@PathVariable Long fileId) {
         try {
@@ -188,7 +188,7 @@ public class SysFileController extends ApiController {
     /**
      * 更新文件信息
      */
-    @SaCheckPermission("api:system:file:edit")
+    // @SaCheckPermission("api:system:file:edit")
     @PostMapping("/update")
     public Result<Boolean> update(@RequestBody @Valid SysFileUpdateDto dto) {
         boolean updated = service.update(dto);
@@ -198,7 +198,7 @@ public class SysFileController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:system:file:list")
+    // @SaCheckPermission("api:system:file:list")
     @PostMapping("/page")
     public Result<ResultTable<SysFileVo>> page(@RequestBody @Valid PageFilter<SysFileQueryDto> filter) {
         var page = service.page(filter);

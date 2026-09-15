@@ -38,7 +38,7 @@ public class PmsStockController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:stock:page")
+    // @SaCheckPermission("api:pms:stock:page")
     @PostMapping("page")
     public Result<ResultTable<PmsProductStockVo>> page(@RequestBody @Valid PageFilter<PmsStockQueryDto> filter) {
         Page<PmsProductStockVo> page = this.service.page(filter);
@@ -50,7 +50,7 @@ public class PmsStockController extends ApiController {
      *
      * @param productId 商品 id
      */
-    @SaCheckPermission("api:pms:stock:page")
+    // @SaCheckPermission("api:pms:stock:page")
     @GetMapping("sku/{productId}")
     public Result<List<PmsSkuStockVo>> listSkuStockByProductId(@PathVariable Long productId) {
         return success(this.service.listSkuStockByProductId(productId));
@@ -59,7 +59,7 @@ public class PmsStockController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:pms:stock:page")
+    // @SaCheckPermission("api:pms:stock:page")
     @GetMapping("get/{id}")
     public Result<PmsStock> page(@PathVariable String id) {
         return success(this.service.getById(id));
@@ -69,7 +69,7 @@ public class PmsStockController extends ApiController {
     /**
      * 扣减商品库存
      */
-    @SaCheckPermission("api:pms:stock:deduct")
+    // @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deduct")
     public Result<Boolean> deduct(@RequestBody @Valid ExtendPmsStockDto dto) {
         return success(this.service.deduct(dto));
@@ -79,7 +79,7 @@ public class PmsStockController extends ApiController {
     /**
      * 扣减商品库存
      */
-    @SaCheckPermission("api:pms:stock:deduct")
+    // @SaCheckPermission("api:pms:stock:deduct")
     @PostMapping("deducts")
     public Result<Object> deducts(@RequestBody @Valid List<ExtendPmsStockDto> productStocks) {
         this.service.deduct(productStocks);
@@ -90,7 +90,7 @@ public class PmsStockController extends ApiController {
     /**
      * 增加商品库存
      */
-    @SaCheckPermission("api:pms:stock:add")
+    // @SaCheckPermission("api:pms:stock:add")
     @PostMapping("add")
     public Result<Boolean> add(@RequestBody @Valid ExtendPmsStockDto dto) {
         return success(this.service.add(dto));

@@ -41,7 +41,7 @@ public class SysDictionaryController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:system:dictionary:update")
+    // @SaCheckPermission("api:system:dictionary:update")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysDictionaryAddDto dto) {
         return success(this.service.save(dto));
@@ -50,7 +50,7 @@ public class SysDictionaryController extends ApiController {
     /**
      * 更新
      */
-    @SaCheckPermission("api:system:dictionary:update")
+    // @SaCheckPermission("api:system:dictionary:update")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysDictionaryUpdateDto dto) {
         boolean updated = this.service.update(dto);
@@ -62,7 +62,7 @@ public class SysDictionaryController extends ApiController {
      *
      * @param id 删除数据主键 ID
      */
-    @SaCheckPermission("api:system:dictionary:update")
+    // @SaCheckPermission("api:system:dictionary:update")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeWithChildrenById(id));

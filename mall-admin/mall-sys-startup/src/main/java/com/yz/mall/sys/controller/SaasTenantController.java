@@ -40,7 +40,7 @@ public class SaasTenantController extends ApiController {
      * 新增租户
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:tenant:edit")
+    // @SaCheckPermission("api:system:tenant:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SaasTenantAddDto dto) {
         return success(this.service.save(dto));
@@ -50,7 +50,7 @@ public class SaasTenantController extends ApiController {
      * 更新租户
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:tenant:edit")
+    // @SaCheckPermission("api:system:tenant:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SaasTenantUpdateDto dto) {
         return success(this.service.update(dto));
@@ -62,7 +62,7 @@ public class SaasTenantController extends ApiController {
      * @param id 租户主键ID
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:tenant:edit")
+    // @SaCheckPermission("api:system:tenant:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -74,7 +74,7 @@ public class SaasTenantController extends ApiController {
      * @param id 租户主键ID
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:tenant:edit")
+    // @SaCheckPermission("api:system:tenant:edit")
     @PostMapping("initDb/{id}")
     public Result<Boolean> initDb(@PathVariable Long id,
                                   @RequestParam(required = false) String serviceCode) {
@@ -84,7 +84,7 @@ public class SaasTenantController extends ApiController {
     /**
      * 分页查询租户
      */
-    @SaCheckPermission("api:system:tenant:list")
+    // @SaCheckPermission("api:system:tenant:list")
     @PostMapping("page")
     public Result<ResultTable<SaasTenant>> page(@RequestBody @Valid PageFilter<SaasTenantQueryDto> filter) {
         Page<SaasTenant> page = this.service.page(filter);
@@ -94,7 +94,7 @@ public class SaasTenantController extends ApiController {
     /**
      * 列表查询租户
      */
-    @SaCheckPermission("api:system:tenant:list")
+    // @SaCheckPermission("api:system:tenant:list")
     @PostMapping("list")
     public Result<List<SaasTenant>> list(@RequestBody @Valid SaasTenantQueryDto filter) {
         return success(this.service.list(filter));
@@ -105,7 +105,7 @@ public class SaasTenantController extends ApiController {
      *
      * @param id 租户主键ID
      */
-    @SaCheckPermission("api:system:tenant:list")
+    // @SaCheckPermission("api:system:tenant:list")
     @GetMapping("get/{id}")
     public Result<SaasTenant> get(@PathVariable Long id,
                                   @RequestParam(required = false) String serviceCode) {
@@ -116,7 +116,7 @@ public class SaasTenantController extends ApiController {
     /**
      * 查询租户数据源列表
      */
-    @SaCheckPermission("api:system:tenant:list")
+    // @SaCheckPermission("api:system:tenant:list")
     @GetMapping("datasource/list/{tenantId}")
     public Result<List<SaasTenantDatasource>> listDatasource(@PathVariable Long tenantId) {
         return success(service.listDatasource(tenantId));
@@ -126,7 +126,7 @@ public class SaasTenantController extends ApiController {
      * 保存或更新租户数据源
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:tenant:edit")
+    // @SaCheckPermission("api:system:tenant:edit")
     @PostMapping("datasource/saveOrUpdate")
     public Result<Long> saveOrUpdateDatasource(@RequestBody @Valid SaasTenantDatasourceSaveDto dto) {
         return success(service.saveOrUpdateDatasource(dto));
@@ -136,7 +136,7 @@ public class SaasTenantController extends ApiController {
      * 删除租户数据源
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:tenant:edit")
+    // @SaCheckPermission("api:system:tenant:edit")
     @DeleteMapping("datasource/delete/{id}")
     public Result<Boolean> deleteDatasource(@PathVariable Long id) {
         return success(service.removeDatasource(id));
