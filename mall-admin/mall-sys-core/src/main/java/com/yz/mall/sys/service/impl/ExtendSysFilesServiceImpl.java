@@ -1,9 +1,8 @@
 package com.yz.mall.sys.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.yz.mall.sys.SysProperties;
 import com.yz.mall.sys.service.ExtendSysFilesService;
-import io.github.codeyunze.core.QofClientFactory;
+import io.github.codeyunze.config.QofProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,28 +17,18 @@ import java.util.List;
 public class ExtendSysFilesServiceImpl implements ExtendSysFilesService {
 
 
-    private final QofClientFactory qofClientFactory;
+    private final QofProperties qofProperties;
 
-    private final SysProperties sysProperties;
-
-    public ExtendSysFilesServiceImpl(QofClientFactory qofClientFactory, SysProperties sysProperties) {
-        this.qofClientFactory = qofClientFactory;
-        this.sysProperties = sysProperties;
-
+    public ExtendSysFilesServiceImpl(QofProperties qofProperties) {
+        this.qofProperties = qofProperties;
     }
 
     @Override
     public List<String> getFilePreviewByFileIds(List<Long> fileIds) {
-        List<String> preview = qofClientFactory.buildClient(sysProperties.getStorage().getMode()).getFilePreviewByFileIds(fileIds);
-        if (preview == null || preview.isEmpty()) {
-            return new ArrayList<>();
-        }
         String tokenValue = StpUtil.getTokenInfo().getTokenValue();
-        List<String> result = new ArrayList<>();
-        preview.forEach(f -> {
-            if (f != null) {
-                result.add(f + "?token=" + tokenValue);
-            }
+        List<String> result = new ArrayList<>(fileIds.size());
+        fileIds.forEach(fileId -> {
+            result.add(qofProperties.getPreviewAddress() + "/" + fileId + "?token=" + tokenValue);
         });
         return result;
     }

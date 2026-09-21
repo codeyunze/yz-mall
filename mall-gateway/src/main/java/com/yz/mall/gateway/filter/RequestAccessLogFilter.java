@@ -1,8 +1,10 @@
 package com.yz.mall.gateway.filter;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.yz.mall.gateway.config.GatewayAccessLogProperties;
 import com.yz.mall.gateway.kafka.GatewayAccessLogKafkaProducer;
 import com.yz.mall.gateway.kafka.GatewayAccessLogMessage;
+import com.yz.mall.json.JacksonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -38,6 +40,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -61,6 +64,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
             "refresh_token", "password", "secret", "satoken", "x-sa-token");
     private static final Pattern JSON_SECRET = Pattern.compile("(?i)(\"(?:password|token|secret|authorization)\"\\s*:\\s*\")[^\"]*");
     private static final Pattern FORM_SECRET = Pattern.compile("(?i)((?:password|token|secret)=)[^&]*");
+    private static final Pattern RESPONSE_CODE = Pattern.compile("\"code\"\\s*:\\s*(-?\\d+)");
 
     private final GatewayAccessLogProperties properties;
     private final ObjectProvider<GatewayAccessLogKafkaProducer> kafkaProducer;
@@ -92,7 +96,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
             String responseBody = resolveResponseBody(response, responseBodyBytes.get(), responseSkipReason.get());
             GatewayAccessLogMessage message = buildMessage(request, path, requestBody, response, responseBody, status, costMs);
             if (log.isInfoEnabled()) {
-                log.info("网关请求 method={} uri={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} responseHeaders={} responseContentType={} responseBody={} cost={}ms",
+                log.info("网关请求 method={} uri={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} responseCode={} responseHeaders={} responseContentType={} responseBody={} cost={}ms",
                         message.getMethod(),
                         message.getUri(),
                         message.getPath(),
@@ -103,6 +107,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
                         message.getContentType(),
                         message.getBody(),
                         message.getStatus() == null ? "-" : message.getStatus(),
+                        message.getResponseCode() == null ? "-" : message.getResponseCode(),
                         message.getResponseHeaders(),
                         message.getResponseContentType(),
                         message.getResponseBody(),
@@ -140,6 +145,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
         message.setResponseHeaders(formatHeaders(response.getHeaders()));
         message.setResponseContentType(response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
         message.setResponseBody(responseBody);
+        message.setResponseCode(parseResponseCode(responseBody));
         message.setStatus(status == null ? null : status.value());
         message.setCostMs(costMs);
         return message;
@@ -216,6 +222,29 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
             return skipReason;
         }
         return formatBody(bytes, resolveCharset(response.getHeaders().getContentType()));
+    }
+
+    /**
+     * 从统一响应体 {@code {"code":0,...}} 取出业务码；非 JSON 或解析失败返回 null。
+     *
+     * @param responseBody 已格式化的响应体文本
+     */
+    private Integer parseResponseCode(String responseBody) {
+        if (responseBody == null || !responseBody.startsWith("{")) {
+            return null;
+        }
+        try {
+            JsonNode codeNode = JacksonUtil.getObjectMapper().readTree(responseBody).get("code");
+            if (codeNode != null && codeNode.isNumber()) {
+                return codeNode.intValue();
+            }
+        } catch (Exception ignored) {
+            Matcher matcher = RESPONSE_CODE.matcher(responseBody);
+            if (matcher.find()) {
+                return Integer.valueOf(matcher.group(1));
+            }
+        }
+        return null;
     }
 
     /**

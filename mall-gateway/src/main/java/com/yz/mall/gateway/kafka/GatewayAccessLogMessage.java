@@ -72,6 +72,10 @@ public class GatewayAccessLogMessage {
      */
     private String responseBody;
     /**
+     * 业务响应码（从 Result.code 解析）
+     */
+    private Integer responseCode;
+    /**
      * HTTP 状态码
      */
     private Integer status;
