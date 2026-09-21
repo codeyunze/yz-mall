@@ -1,6 +1,6 @@
 
 server:
-  port: 25002
+  port: 5002
 
 spring:
   application:
@@ -58,9 +58,9 @@ xxl:
   job:
     executor:
       appname: ${spring.application.name}
-      address: http://192.168.3.20:31004/
+      address: http://192.168.3.20:1${server.port}
       ip: 192.168.3.20
-      port: 31004
+      port: 1${server.port}
 
 yz:
   mall:

@@ -40,7 +40,7 @@ public class SysMenuController extends ApiController {
      * 新增
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:menu:edit")
+    // @SaCheckPermission("api:system:menu:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysMenuAddDto dto) {
         return success(this.service.save(dto));
@@ -50,7 +50,7 @@ public class SysMenuController extends ApiController {
      * 更新
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:menu:edit")
+    // @SaCheckPermission("api:system:menu:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysMenuUpdateDto dto) {
         boolean updated = this.service.update(dto);
@@ -60,7 +60,7 @@ public class SysMenuController extends ApiController {
     /**
      * 查询所有菜单的简略信息
      */
-    @SaCheckPermission("api:system:menu:list")
+    // @SaCheckPermission("api:system:menu:list")
     @PostMapping("listSlim")
     public Result<List<SysMenuSlimVo>> listSlim() {
         return success(this.service.listSlim());
@@ -72,7 +72,7 @@ public class SysMenuController extends ApiController {
      * @param id 删除数据主键ID
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:menu:edit")
+    // @SaCheckPermission("api:system:menu:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.recursionRemoveById(id));
@@ -81,7 +81,7 @@ public class SysMenuController extends ApiController {
     /**
      * 菜单列表信息查询
      */
-    @SaCheckPermission("api:system:menu:list")
+    // @SaCheckPermission("api:system:menu:list")
     @PostMapping("list")
     public Result<List<SysMenu>> list(@RequestBody @Valid SysMenuQueryDto filter) {
         return success(this.service.list(filter));
@@ -90,7 +90,7 @@ public class SysMenuController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:system:menu:list")
+    // @SaCheckPermission("api:system:menu:list")
     @GetMapping("get/{id}")
     public Result<SysMenu> page(@PathVariable String id) {
         return success(this.service.getById(id));

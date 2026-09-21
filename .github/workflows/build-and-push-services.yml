@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -31,6 +32,7 @@ jobs:
     env:
       REGISTRY: registry.cn-guangzhou.aliyuncs.com
       NAMESPACE: devyunze
+      GHCR_REGISTRY: ghcr.io
 
     steps:
       - name: Checkout
@@ -59,11 +61,16 @@ jobs:
             exit 1
           fi
           MODULE_NAME="$(basename "${MODULE_DIR}")"
+          # 推到当前仓库的 GHCR：ghcr.io/<owner>/<repo>/<服务名>（名须全小写）
+          REPO_LC="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
+          NAME_LC="$(echo "${MODULE_NAME}" | tr '[:upper:]' '[:lower:]')"
           {
             echo "dir=${MODULE_DIR}"
             echo "name=${MODULE_NAME}"
+            echo "ghcr_image=${GHCR_REGISTRY}/${REPO_LC}/${NAME_LC}"
           } >> "${GITHUB_OUTPUT}"
           echo "Resolved ${SERVICE} -> ${MODULE_DIR} (${MODULE_NAME})"
+          echo "GHCR image: ${GHCR_REGISTRY}/${REPO_LC}/${NAME_LC}"
 
       - name: Build ${{ steps.module.outputs.name }} jar with Maven
         run: mvn -B -DskipTests=true -pl ":${{ steps.module.outputs.name }}" -am package
@@ -95,6 +102,13 @@ jobs:
           username: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
           password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
@@ -105,8 +119,14 @@ jobs:
           # ACR 不支持 Buildx 默认附带的 OCI attestation（empty.v1+json），需关闭
           provenance: false
           sbom: false
+          # 关联到当前 GitHub 仓库 Packages
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.module.outputs.name }}:latest
             ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.module.outputs.name }}:${{ steps.version.outputs.tag }}
+            ${{ steps.module.outputs.ghcr_image }}:latest
+            ${{ steps.module.outputs.ghcr_image }}:${{ steps.version.outputs.tag }}
           cache-from: type=gha,scope=docker-${{ steps.module.outputs.name }}
           cache-to: type=gha,mode=max,scope=docker-${{ steps.module.outputs.name }}

@@ -36,7 +36,7 @@ public class PmsSkuController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:pms:sku:edit")
+    // @SaCheckPermission("api:pms:sku:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid PmsSkuAddDto dto) {
         return success(this.service.save(dto));
@@ -45,7 +45,7 @@ public class PmsSkuController extends ApiController {
     /**
      * 更新
      */
-    @SaCheckPermission("api:pms:sku:edit")
+    // @SaCheckPermission("api:pms:sku:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid PmsSkuUpdateDto dto) {
         return success(this.service.update(dto));
@@ -56,7 +56,7 @@ public class PmsSkuController extends ApiController {
      *
      * @param id 删除数据主键 ID
      */
-    @SaCheckPermission("api:pms:sku:edit")
+    // @SaCheckPermission("api:pms:sku:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -65,7 +65,7 @@ public class PmsSkuController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:sku:page")
+    // @SaCheckPermission("api:pms:sku:page")
     @PostMapping("page")
     public Result<ResultTable<PmsSkuVo>> page(@RequestBody @Valid PageFilter<PmsSkuQueryDto> filter) {
         Page<PmsSkuVo> page = this.service.page(filter);
@@ -75,7 +75,7 @@ public class PmsSkuController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:pms:sku:page")
+    // @SaCheckPermission("api:pms:sku:page")
     @GetMapping("get/{id}")
     public Result<PmsSkuVo> get(@PathVariable Long id) {
         return success(this.service.detail(id));
@@ -84,7 +84,7 @@ public class PmsSkuController extends ApiController {
     /**
      * 根据商品ID查询SKU列表
      */
-    @SaCheckPermission("api:pms:sku:page")
+    // @SaCheckPermission("api:pms:sku:page")
     @GetMapping("list/{productId}")
     public Result<List<PmsSkuVo>> listByProductId(@PathVariable Long productId) {
         return success(this.service.listByProductId(productId));

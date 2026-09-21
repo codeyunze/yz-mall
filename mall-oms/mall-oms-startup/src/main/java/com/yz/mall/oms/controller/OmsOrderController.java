@@ -34,7 +34,7 @@ public class OmsOrderController extends ApiController {
      * @param query 订单编号或订单Id
      * @return 订单详细信息
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("get")
     public Result<OmsOrderDetailVo> get(@RequestBody OmsOrderQuerySlimDto query) {
         return success(this.service.get(StpUtil.getLoginIdAsLong(), query));

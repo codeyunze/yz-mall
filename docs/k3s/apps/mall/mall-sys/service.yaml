@@ -11,5 +11,5 @@ spec:
     app.kubernetes.io/name: mall-sys
   ports:
     - name: http
-      port: 25002
-      targetPort: 25002
+      port: 5002
+      targetPort: 5002

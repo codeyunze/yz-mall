@@ -1,0 +1,15 @@
+{
+  "index_patterns": ["log-gateway-access*"],
+  "priority": 200,
+  "template": {
+    "settings": {
+      "index": {
+        "lifecycle": {
+          "name": "mall-logs-3d"
+        },
+        "number_of_shards": "1",
+        "number_of_replicas": "0"
+      }
+    }
+  }
+}

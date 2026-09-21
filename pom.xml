@@ -5,7 +5,7 @@
 
     <groupId>com.yz</groupId>
     <artifactId>yz-mall</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <name>yz-mall</name>
     <description>yz-mall</description>
     <packaging>pom</packaging>
@@ -17,8 +17,7 @@
         <module>mall-gateway</module>
         <module>mall-pms</module>
         <module>mall-oms</module>
-        <module>mall-tw-vehicle</module>
-        <module>mall-tw-device</module>
+        <module>mall-tw</module>
     </modules>
 
     <properties>
@@ -34,17 +33,19 @@
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <dynamic-datasource.version>4.3.1</dynamic-datasource.version>
         <hutool.version>5.8.47</hutool.version>
-        <redisson.version>4.6.1</redisson.version>
+        <redisson.version>4.7.0</redisson.version>
         <sa-token.version>1.43.0</sa-token.version>
         <xxl-job.version>3.4.2</xxl-job.version>
         <!-- 覆盖 Boot 自带 Jackson；import 顺序必须在 spring-boot-dependencies 之前 -->
-        <jackson.version>2.22.1</jackson.version>
-        <qof.version>17.0.4</qof.version>
-        <logback.version>1.5.18</logback.version>
+        <jackson.version>2.22.2</jackson.version>
+        <qof.version>17.3.2-SNAPSHOT</qof.version>
+        <logback.version>1.5.38</logback.version>
         <resilience4j.version>2.2.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
         <!-- SkyWalking OAP/UI 可为 10.x；Java Agent Toolkit 在 Maven Central 仍为 9.x 线，与 Agent 字节码增强兼容 -->
         <skywalking.version>9.6.0</skywalking.version>
+        <!-- Elastic APM：业务 API（traceId 等）；Java Agent 由启动参数 -javaagent 挂载，版本可独立升级 -->
+        <elastic-apm.version>1.52.0</elastic-apm.version>
         <prometheus.version>1.11.5</prometheus.version>
         <caffeine.version>3.1.8</caffeine.version>
         <!-- Spring Boot 3.x 使用带 -x 后缀的 Dynamic TP 版本，见官方 nacos-cloud 文档 -->
@@ -241,17 +242,28 @@
             </dependency>
 
             <dependency>
+                <groupId>co.elastic.apm</groupId>
+                <artifactId>apm-agent-api</artifactId>
+                <version>${elastic-apm.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.github.codeyunze</groupId>
-                <artifactId>qof-core</artifactId>
+                <artifactId>qof-spring-boot-starter-web</artifactId>
                 <version>${qof.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.codeyunze</groupId>
-                <artifactId>qof-web</artifactId>
+                <artifactId>qof-storage-cos</artifactId>
                 <version>${qof.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.github.codeyunze</groupId>
+                <artifactId>qof-persistence-mysql</artifactId>
+                <version>${qof.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.junit.vintage</groupId>

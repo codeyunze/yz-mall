@@ -5,6 +5,34 @@ server:
 spring:
   application:
     name: mall-gateway
+  kafka:
+    # Docker EXTERNAL 端口 9094；容器内互访用 kafka:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:192.168.3.237:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 1
+      retries: 3
+    admin:
+      fail-fast: true
+
+# 网关：请求体缓存（供下游重复读）+ 访问日志
+yz:
+  gateway:
+    request-body-cache:
+      enabled: true
+      max-body-bytes: 1048576
+    access-log:
+      enabled: true
+      mask-sensitive: false
+      max-body-log-length: 8192
+      skip-paths:
+        - /actuator/**
+      kafka:
+        enabled: true
+        topic: log-gateway-access
+        partitions: 1
+        replicas: 1
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取；网关一般无本地 Mapper，可按需调整）
 logging:

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>mall-admin</artifactId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.8-SNAPSHOT</version>
     </parent>
 
 
@@ -102,7 +102,22 @@
 
         <dependency>
             <groupId>io.github.codeyunze</groupId>
-            <artifactId>qof-web</artifactId>
+            <artifactId>qof-spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- 17.3.2 起 starter-web 不再传递元数据实现，文件功能必须显式引入 -->
+        <dependency>
+            <groupId>io.github.codeyunze</groupId>
+            <artifactId>qof-persistence-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.codeyunze</groupId>
+            <artifactId>qof-storage-cos</artifactId>
+        </dependency>
+
+        <!-- Elastic APM API（Agent 由启动参数 -javaagent 挂载） -->
+        <dependency>
+            <groupId>co.elastic.apm</groupId>
+            <artifactId>apm-agent-api</artifactId>
         </dependency>
     </dependencies>
 

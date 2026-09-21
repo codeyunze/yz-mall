@@ -171,13 +171,15 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
             if (!StringUtils.hasText(albumPics)) {
                 continue;
             }
-            for (String imageId : albumPics.split(",")) {
-                List<String> filePreviewByFileIds = extendSysFilesService.getFilePreviewByFileIds(List.of(Long.parseLong(imageId)));
-                if (CollectionUtils.isEmpty(displayInfoVo.getProductImages())) {
-                    displayInfoVo.setProductImages(new ArrayList<>());
-                }
-                displayInfoVo.getProductImages().addAll(filePreviewByFileIds);
+            List<String> fileIds = Arrays.asList(albumPics.split(","));
+            if (CollectionUtils.isEmpty(fileIds)) {
+                continue;
             }
+            List<String> previewByFileIds = extendSysFilesService.getFilePreviewByFileIds(fileIds.stream().map(Long::parseLong).collect(Collectors.toList()));
+            if (CollectionUtils.isEmpty(previewByFileIds)) {
+                continue;
+            }
+            displayInfoVo.getProductImages().addAll(previewByFileIds);
         }
         return displayInfoVos;
     }

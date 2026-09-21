@@ -28,6 +28,7 @@
 | [Kuboard接入k3s.md](./Kuboard接入k3s.md) | → 已合并至《k3s集群基础配置》§5 |
 | [镜像替换操作.md](./镜像替换操作.md) | → 已合并至《k3s集群基础配置》§2、§3、§4 |
 | [wiki/跨节点访问Nacos超时.md](./wiki/跨节点访问Nacos超时.md) | 案例：worker→Nacos ClusterIP 超时（flannel FDB 缺失） |
+| [wiki/命名空间迁移-nacos-redis到mall.md](./wiki/命名空间迁移-nacos-redis到mall.md) | Nacos/Redis/mall-tw-vehicle 迁到 mall |
 
 ## 使用前提
 

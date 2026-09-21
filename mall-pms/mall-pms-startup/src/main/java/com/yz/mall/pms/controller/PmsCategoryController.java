@@ -36,7 +36,7 @@ public class PmsCategoryController extends ApiController {
     /**
      * 新增
      */
-    @SaCheckPermission("api:pms:category:edit")
+    // @SaCheckPermission("api:pms:category:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid PmsCategoryAddDto dto) {
         return success(this.service.save(dto));
@@ -45,7 +45,7 @@ public class PmsCategoryController extends ApiController {
     /**
      * 更新
      */
-    @SaCheckPermission("api:pms:category:edit")
+    // @SaCheckPermission("api:pms:category:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid PmsCategoryUpdateDto dto) {
         return success(this.service.update(dto));
@@ -56,7 +56,7 @@ public class PmsCategoryController extends ApiController {
      *
      * @param id 删除数据主键 ID
      */
-    @SaCheckPermission("api:pms:category:edit")
+    // @SaCheckPermission("api:pms:category:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -65,7 +65,7 @@ public class PmsCategoryController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:pms:category:page")
+    // @SaCheckPermission("api:pms:category:page")
     @PostMapping("page")
     public Result<ResultTable<PmsCategory>> page(@RequestBody @Valid PageFilter<PmsCategoryQueryDto> filter) {
         Page<PmsCategory> page = this.service.page(filter);
@@ -75,7 +75,7 @@ public class PmsCategoryController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:pms:category:page")
+    // @SaCheckPermission("api:pms:category:page")
     @GetMapping("get/{id}")
     public Result<PmsCategoryVo> detail(@PathVariable Long id) {
         return success(this.service.detail(id));
@@ -84,7 +84,7 @@ public class PmsCategoryController extends ApiController {
     /**
      * 查询所有分类（树形结构）
      */
-    @SaCheckPermission("api:pms:category:page")
+    // @SaCheckPermission("api:pms:category:page")
     @GetMapping("tree")
     public Result<List<PmsCategoryVo>> tree() {
         return success(this.service.tree());
@@ -95,7 +95,7 @@ public class PmsCategoryController extends ApiController {
      *
      * @param parentId 父分类ID，0表示查询顶级分类
      */
-    @SaCheckPermission("api:pms:category:page")
+    // @SaCheckPermission("api:pms:category:page")
     @GetMapping("list")
     public Result<List<PmsCategoryVo>> listByParentId(@RequestParam(required = false, defaultValue = "0") Long parentId) {
         return success(this.service.listByParentId(parentId));

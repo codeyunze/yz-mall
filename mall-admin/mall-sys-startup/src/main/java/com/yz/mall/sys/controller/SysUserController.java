@@ -63,7 +63,7 @@ public class SysUserController {
      * @param userId 用户Id
      * @return 用户所拥有的角色
      */
-    @SaCheckPermission("api:system:user:getUserRoles")
+    // @SaCheckPermission("api:system:user:getUserRoles")
     @GetMapping("getUserRoles/{userId}")
     public Result<List<String>> getUserRoles(@PathVariable Long userId) {
         List<Long> roles = userService.getUserRoles(userId);
@@ -79,7 +79,7 @@ public class SysUserController {
      * @param dto 用户Id和用户密码
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:user:resetPassword")
+    // @SaCheckPermission("api:system:user:resetPassword")
     @PostMapping("resetPassword")
     public Result<Boolean> resetPassword(@RequestBody @Valid SysUserResetPasswordDto dto) {
         return Result.success(this.userService.resetPassword(dto));
@@ -89,7 +89,7 @@ public class SysUserController {
      * 更新
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:user:edit")
+    // @SaCheckPermission("api:system:user:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysUserUpdateDto dto) {
         return Result.success(this.userService.update(dto));
@@ -102,7 +102,7 @@ public class SysUserController {
      * @return 是否切换成功
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:user:switch")
+    // @SaCheckPermission("api:system:user:switch")
     @PostMapping("switch/{id}")
     public Result<Boolean> switchRole(@PathVariable Long id) {
         boolean updated = userService.updateUserStatusById(id);

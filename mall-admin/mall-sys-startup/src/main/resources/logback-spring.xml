@@ -6,13 +6,11 @@
     <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="application"/>
     <property name="LOG_HOME" value="./logs/${APP_NAME}/"/>
 
-    <!--控制台：仅保留 TID（SW_CTX 与 TID 重复且过长，检索用 Logstash/OAP 即可）-->
+    <!-- 控制台：trace.id 由 Elastic APM Agent log correlation 注入 MDC（默认开启） -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder>
             <charset>UTF-8</charset>
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan([%X{tid}]) %logger{72} - %msg%n</pattern>
-            </layout>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan([%X{trace.id}]) %logger{72} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -25,32 +23,31 @@
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder>
             <charset>UTF-8</charset>
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{tid}] %logger{72} - %msg%n</pattern>
-            </layout>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{trace.id}] %logger{72} - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <!--
+      Logstash → ES：日志能进 ES，但 APM 事务页要能点开「Logs」，文档还必须满足关联条件：
+      1) 顶层有 trace.id / transaction.id（Agent 写入 MDC，此处 include）
+      2) 顶层有 service.name，且与 -Delastic.apm.service_name 完全一致
+      3) Kibana APM/Observability 的日志索引配置要覆盖你 Logstash 写入的 index（默认常看 logs-*）
+      APM Server(8200) 只收 trace/metric；日志仍走本 appender，不会自动进 APM。
+    -->
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>192.168.3.237:4560</destination>
         <!-- 启动期默认 5s 易超时，拉长首连等待 -->
         <connectionTimeout>30000</connectionTimeout>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"platform": "mall", "app_name": "${APP_NAME}"}</customFields>
+            <!-- service.name 优先取 Agent 启动参数，否则回退 spring.application.name -->
+            <customFields>{"platform":"mall","app_name":"${APP_NAME}","service.name":"${elastic.apm.service_name:-${APP_NAME}}"}</customFields>
             <includeMdcKeyName>client_ip</includeMdcKeyName>
-            <provider class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.logstash.TraceIdJsonProvider"/>
-            <provider class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.logstash.SkyWalkingContextJsonProvider"/>
-        </encoder>
-    </appender>
-
-    <!-- SkyWalking：日志上报 OAP（需挂载 Java Agent） -->
-    <appender name="skywalking" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender">
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{tid}] [%thread] %-5level %logger{50} - %msg%n</pattern>
-            </layout>
+            <includeMdcKeyName>trace.id</includeMdcKeyName>
+            <includeMdcKeyName>transaction.id</includeMdcKeyName>
+            <includeMdcKeyName>span.id</includeMdcKeyName>
+            <includeMdcKeyName>error.id</includeMdcKeyName>
         </encoder>
     </appender>
 
@@ -62,6 +59,5 @@
         <appender-ref ref="console"/>
         <appender-ref ref="timeFileOutput"/>
         <appender-ref ref="logstash"/>
-        <appender-ref ref="skywalking"/>
     </root>
 </configuration>

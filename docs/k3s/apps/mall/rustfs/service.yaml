@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rustfs
+  namespace: mall
+  labels:
+    app.kubernetes.io/name: rustfs
+    app.kubernetes.io/part-of: yz-mall
+spec:
+  # 集群内：rustfs.mall.svc.cluster.local:9000 / :9001
+  # 对外：LoadBalancer（k3s 单节点通常落到节点 IP）
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: rustfs
+  ports:
+    - name: api
+      port: 9000
+      targetPort: api
+    - name: console
+      port: 9001
+      targetPort: console

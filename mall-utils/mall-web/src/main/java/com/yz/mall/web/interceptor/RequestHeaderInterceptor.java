@@ -1,17 +1,18 @@
 package com.yz.mall.web.interceptor;
 
+import co.elastic.apm.api.ElasticApm;
 import com.yz.mall.base.HeaderConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
- * 请求头拦截器：写入客户端 IP 到 MDC，并回写 SkyWalking traceId 到响应头。
+ * 请求头拦截器：写入客户端 IP 到 MDC，并回写 Elastic APM traceId 到响应头。
  * <p>
- * 日志中的 TID / Span 由 Agent + {@code TraceIdMDCPatternLogbackLayout} / Logstash Provider 注入，无需再手写 MDC。
+ * Agent log correlation 通常会注入 {@code trace.id}/{@code transaction.id}；
+ * {@code span.id} 在部分场景不会自动进 MDC，此处兜底写入以便 Logstash/ES 关联。
  *
  * @author yunze
  * @since 2025/11/7 12:22
@@ -20,16 +21,24 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class RequestHeaderInterceptor implements HandlerInterceptor {
 
     private static final String CLIENT_IP = "client_ip";
-    private static final String SW_NA = "N/A";
+    private static final String SPAN_ID = "span.id";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String tid = TraceContext.traceId();
-        if (tid == null || tid.isEmpty() || SW_NA.equals(tid)) {
+        String tid = ElasticApm.currentTransaction().getTraceId();
+        if (tid == null || tid.isEmpty()) {
+            tid = MDC.get("trace.id");
+        }
+        if (tid == null || tid.isEmpty()) {
             tid = request.getHeader(HeaderConstants.TRACE_ID_HEADER);
         }
         if (tid != null && !tid.isEmpty()) {
             response.setHeader(HeaderConstants.TRACE_ID_HEADER, tid);
+        }
+
+        String spanId = ElasticApm.currentSpan().getId();
+        if (spanId != null && !spanId.isEmpty()) {
+            MDC.put(SPAN_ID, spanId);
         }
 
         String ip = request.getHeader(HeaderConstants.USER_IP_HEADER);
@@ -43,5 +52,6 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         MDC.remove(CLIENT_IP);
+        MDC.remove(SPAN_ID);
     }
 }

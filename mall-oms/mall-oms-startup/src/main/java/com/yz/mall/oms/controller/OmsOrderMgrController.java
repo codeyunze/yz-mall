@@ -49,7 +49,7 @@ public class OmsOrderMgrController extends ApiController {
     /**
      * 单位管理员查询管辖的订单信息
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("/page")
     public Result<ResultTable<OmsOrderVo>> mgrPage(@RequestBody PageFilter<OmsOrderQueryDto> filter) {
         // filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());
@@ -62,7 +62,7 @@ public class OmsOrderMgrController extends ApiController {
      * 订单详细信息查询
      * @return 订单详细信息
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("get")
     public Result<OmsOrderDetailVo> get(@RequestBody OmsOrderQuerySlimDto query) {
         return success(this.service.get(StpUtil.getLoginIdAsLong(), query));
@@ -73,7 +73,7 @@ public class OmsOrderMgrController extends ApiController {
      *
      * @param id 订单Id {@link OmsOrder#getId()}
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("cancel/{id}")
     public Result<Boolean> cancel(@PathVariable Long id) {
         boolean cancelled = this.service.cancelById(id);
@@ -83,7 +83,7 @@ public class OmsOrderMgrController extends ApiController {
     /**
      * 退款审核列表
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("refund/page")
     public Result<ResultTable<OmsOrderRefundVo>> refundPage(@RequestBody PageFilter<OmsOrderRefundQueryDto> filter) {
         Page<OmsOrderRefundVo> page = this.refundService.page(filter);
@@ -93,7 +93,7 @@ public class OmsOrderMgrController extends ApiController {
     /**
      * 审核退款（通过/拒绝）
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("refund/audit")
     public Result<Boolean> auditRefund(@RequestBody @Valid OmsRefundAuditDto dto) {
         return success(this.refundService.audit(StpUtil.getLoginIdAsLong(), dto));

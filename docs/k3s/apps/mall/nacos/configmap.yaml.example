@@ -1,0 +1,12 @@
+# 从集群导出 ConfigMap 后放入，勿把 DB 密码明文提交 Git
+# kubectl -n mall create configmap nacos-application-properties --from-file=application.properties
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nacos-application-properties
+  namespace: mall
+data:
+  application.properties: |
+    # 请用实际 application.properties 内容替换；密码走环境变量或密封配置
+    server.port=8848
+    server.servlet.contextPath=/nacos

@@ -34,7 +34,36 @@ spring:
           uri: lb://mall-seata-user
           predicates:
             - Path=/seataUser/**
+  kafka:
+    # Docker EXTERNAL 端口 9094；容器内互访用 kafka:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:192.168.3.237:9094}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 1
+      retries: 3
+    admin:
+      fail-fast: false
 
+# 网关：请求体缓存（供下游重复读）+ 访问日志
+yz:
+  gateway:
+    request-body-cache:
+      enabled: true
+      # 读取并缓存 Body 的上限（字节）；multipart / 超大文件会跳过
+      max-body-bytes: 1048576
+    access-log:
+      enabled: true
+      # 关闭后会打印 Authorization、satoken 等明文，仅排查问题时使用
+      mask-sensitive: true
+      max-body-log-length: 8192
+      skip-paths:
+        - /actuator/**
+      kafka:
+        enabled: true
+        topic: log-gateway-access
+        partitions: 1
+        replicas: 1
 
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取；网关一般无本地 Mapper，可按需调整）
 logging:

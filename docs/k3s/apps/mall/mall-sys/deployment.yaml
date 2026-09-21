@@ -24,11 +24,11 @@ spec:
           image: registry.cn-guangzhou.aliyuncs.com/devyunze/mall-sys:请改成实际tag
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 25002
+            - containerPort: 5002
               name: http
           env:
             - name: NACOS_HOST
-              value: nacos.mall-middleware.svc.cluster.local
+              value: nacos.mall.svc.cluster.local
             - name: NACOS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -51,12 +51,12 @@ spec:
               memory: 1Gi
           readinessProbe:
             tcpSocket:
-              port: 25002
+              port: 5002
             initialDelaySeconds: 60
             periodSeconds: 10
             failureThreshold: 6
           livenessProbe:
             tcpSocket:
-              port: 25002
+              port: 5002
             initialDelaySeconds: 120
             periodSeconds: 20

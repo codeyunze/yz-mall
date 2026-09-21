@@ -32,7 +32,7 @@ public class SysUserRelationRoleController extends ApiController {
      * 给用户或组织分配角色
      * @apiNote 用户组织信息与角色信息绑定
      */
-    @SaCheckPermission("api:system:userRelationRole:bind")
+    // @SaCheckPermission("api:system:userRelationRole:bind")
     @PostMapping("bind")
     public Result<Boolean> bind(@RequestBody @Valid SysUserRelationRoleBindDto dto) {
         return success(this.service.bind(dto));

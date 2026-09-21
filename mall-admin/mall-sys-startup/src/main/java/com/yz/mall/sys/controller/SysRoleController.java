@@ -40,7 +40,7 @@ public class SysRoleController extends ApiController {
      * 新增
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:role:edit")
+    // @SaCheckPermission("api:system:role:edit")
     @PostMapping("add")
     public Result<Long> insert(@RequestBody @Valid SysRoleAddDto dto) {
         return success(this.service.save(dto));
@@ -50,7 +50,7 @@ public class SysRoleController extends ApiController {
      * 更新
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:role:edit")
+    // @SaCheckPermission("api:system:role:edit")
     @PostMapping("update")
     public Result<Boolean> update(@RequestBody @Valid SysRoleUpdateDto dto) {
         return success(this.service.update(dto));
@@ -63,7 +63,7 @@ public class SysRoleController extends ApiController {
      * @return 是否切换成功
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:role:edit")
+    // @SaCheckPermission("api:system:role:edit")
     @PostMapping("switch/{id}")
     public Result<Boolean> switchRole(@PathVariable Long id) {
         boolean updated = service.updateRoleStatusById(id);
@@ -76,7 +76,7 @@ public class SysRoleController extends ApiController {
      * @param id 删除数据主键ID
      */
     @RepeatSubmit
-    @SaCheckPermission("api:system:role:edit")
+    // @SaCheckPermission("api:system:role:edit")
     @DeleteMapping("delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id) {
         return success(this.service.removeById(id));
@@ -85,7 +85,7 @@ public class SysRoleController extends ApiController {
     /**
      * 分页查询
      */
-    @SaCheckPermission("api:system:role:list")
+    // @SaCheckPermission("api:system:role:list")
     @PostMapping("page")
     public Result<ResultTable<SysRole>> page(@RequestBody @Valid PageFilter<SysRoleQueryDto> filter) {
         Page<SysRole> page = this.service.page(filter);
@@ -95,7 +95,7 @@ public class SysRoleController extends ApiController {
     /**
      * 列表查询
      */
-    @SaCheckPermission("api:system:role:list")
+    // @SaCheckPermission("api:system:role:list")
     @PostMapping("list")
     public Result<List<SysRole>> list(@RequestBody @Valid SysRoleQueryDto filter) {
         return success(service.list(filter));
@@ -104,7 +104,7 @@ public class SysRoleController extends ApiController {
     /**
      * 详情查询
      */
-    @SaCheckPermission("api:system:role:list")
+    // @SaCheckPermission("api:system:role:list")
     @GetMapping("get/{id}")
     public Result<SysRole> page(@PathVariable String id) {
         return success(this.service.getById(id));

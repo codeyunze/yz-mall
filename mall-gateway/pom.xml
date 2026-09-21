@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.yz</groupId>
         <artifactId>yz-mall</artifactId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>mall-gateway</artifactId>
@@ -98,18 +98,14 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-webflux</artifactId>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!-- Elastic APM API：回写 x-trace-id（Agent 由启动参数 -javaagent 挂载） -->
         <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-trace</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-logback-1.x</artifactId>
+            <groupId>co.elastic.apm</groupId>
+            <artifactId>apm-agent-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -132,8 +128,14 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.yz.mall.gateway.GatewayApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

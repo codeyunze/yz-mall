@@ -50,7 +50,7 @@ public class OmsOrderMineController extends ApiController {
     /**
      * 根据购物车选择信息生成订单
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("generate")
     public Result<OmsOrderSlimVo> generateOrder(@RequestBody @Valid ExtendOmsOrderByCartDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
@@ -60,7 +60,7 @@ public class OmsOrderMineController extends ApiController {
     /**
      * 单个商品直接生成订单
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("add")
     public Result<Long> add(@RequestBody @Valid ExtendOmsOrderDto dto) {
         dto.setUserId(StpUtil.getLoginIdAsLong());
@@ -70,7 +70,7 @@ public class OmsOrderMineController extends ApiController {
     /**
      * 用户分页查询自己的订单信息
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("/page")
     public Result<ResultTable<OmsOrderVo>> minePage(@RequestBody PageFilter<OmsOrderQueryDto> filter) {
         filter.getFilter().setUserId(StpUtil.getLoginIdAsLong());
@@ -82,7 +82,7 @@ public class OmsOrderMineController extends ApiController {
      * 订单详细信息查询
      * @return 订单详细信息
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("get")
     public Result<OmsOrderDetailVo> get(@RequestBody OmsOrderQuerySlimDto query) {
         return success(this.service.get(StpUtil.getLoginIdAsLong(), query));
@@ -93,7 +93,7 @@ public class OmsOrderMineController extends ApiController {
      *
      * @param id 订单Id {@link OmsOrder#getId()}
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("cancel/{id}")
     public Result<Boolean> cancel(@PathVariable Long id) {
         boolean cancelled = this.service.cancelById(id);
@@ -103,7 +103,7 @@ public class OmsOrderMineController extends ApiController {
     /**
      * 申请退款（仅待发货）
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("refund/apply")
     public Result<Long> applyRefund(@RequestBody @Valid OmsRefundApplyDto dto) {
         return success(this.refundService.apply(StpUtil.getLoginIdAsLong(), dto));
@@ -112,7 +112,7 @@ public class OmsOrderMineController extends ApiController {
     /**
      * 我的退款单分页
      */
-    @SaCheckPermission("api:oms:order:add")
+    // @SaCheckPermission("api:oms:order:add")
     @PostMapping("refund/page")
     public Result<ResultTable<OmsOrderRefundVo>> mineRefundPage(@RequestBody PageFilter<OmsOrderRefundQueryDto> filter) {
         if (filter.getFilter() == null) {
