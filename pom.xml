@@ -38,7 +38,7 @@
         <xxl-job.version>3.4.2</xxl-job.version>
         <!-- 覆盖 Boot 自带 Jackson；import 顺序必须在 spring-boot-dependencies 之前 -->
         <jackson.version>2.22.2</jackson.version>
-        <qof.version>17.0.4</qof.version>
+        <qof.version>17.3.2-SNAPSHOT</qof.version>
         <logback.version>1.5.38</logback.version>
         <resilience4j.version>2.2.0</resilience4j.version>
         <logstash-logback.version>6.6</logstash-logback.version>
@@ -249,16 +249,21 @@
 
             <dependency>
                 <groupId>io.github.codeyunze</groupId>
-                <artifactId>qof-core</artifactId>
+                <artifactId>qof-spring-boot-starter-web</artifactId>
                 <version>${qof.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.codeyunze</groupId>
-                <artifactId>qof-web</artifactId>
+                <artifactId>qof-storage-cos</artifactId>
                 <version>${qof.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.github.codeyunze</groupId>
+                <artifactId>qof-persistence-mysql</artifactId>
+                <version>${qof.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.junit.vintage</groupId>

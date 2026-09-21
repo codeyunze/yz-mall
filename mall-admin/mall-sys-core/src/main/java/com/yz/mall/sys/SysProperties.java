@@ -1,5 +1,6 @@
 package com.yz.mall.sys;
 
+import io.github.codeyunze.enums.QofStorageModeEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -22,6 +23,11 @@ public class SysProperties {
      * 超级管理员角色
      */
     private String superAdminRoleId = "1858098107289014272";
+
+    /**
+     * 对象存储模式
+     */
+    private QofStorageModeEnum storage = QofStorageModeEnum.LOCAL;
 
     /**
      * Caffeine缓存配置

@@ -82,12 +82,7 @@
         <dependency>
             <groupId>io.github.codeyunze</groupId>
             <artifactId>qof-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>druid</artifactId>
-                    <groupId>com.alibaba</groupId>
-                </exclusion>
-            </exclusions>
+            <version>${qof.version}</version>
         </dependency>
 
         <dependency>

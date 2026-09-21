@@ -289,3 +289,18 @@ services:
     restart: unless-stopped
     networks:
       - mall
+
+  mongodb:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/mongo:8.3.11
+    container_name: 'dev-mongodb-8.3.11'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: "0!xMPj2XL^0!xMPj2XL^"
+      TZ: Asia/Shanghai
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongodb/data:/data/db
+    restart: unless-stopped
+    networks:
+      - mall

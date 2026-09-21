@@ -102,7 +102,16 @@
 
         <dependency>
             <groupId>io.github.codeyunze</groupId>
-            <artifactId>qof-web</artifactId>
+            <artifactId>qof-spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- 17.3.2 起 starter-web 不再传递元数据实现，文件功能必须显式引入 -->
+        <dependency>
+            <groupId>io.github.codeyunze</groupId>
+            <artifactId>qof-persistence-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.codeyunze</groupId>
+            <artifactId>qof-storage-cos</artifactId>
         </dependency>
 
         <!-- Elastic APM API（Agent 由启动参数 -javaagent 挂载） -->
