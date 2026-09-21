@@ -37,4 +37,35 @@ public class GatewayAccessLogProperties {
      * 不打印访问日志的路径（Ant 模式）
      */
     private List<String> skipPaths = new ArrayList<>(List.of("/actuator/**"));
+
+    /**
+     * 访问日志 Kafka 投递
+     */
+    private Kafka kafka = new Kafka();
+
+    /**
+     * 访问日志 Kafka 投递开关与 Topic。
+     */
+    @Data
+    public static class Kafka {
+        /**
+         * 是否将访问日志写入 Kafka，默认开启
+         */
+        private boolean enabled = true;
+
+        /**
+         * 访问日志 Topic
+         */
+        private String topic = "log-gateway-access";
+
+        /**
+         * Topic 分区数（单节点 Kafka 用 1 即可）
+         */
+        private int partitions = 1;
+
+        /**
+         * Topic 副本数，必须 ≤ Broker 数；Docker 单节点为 1
+         */
+        private int replicas = 1;
+    }
 }

@@ -1,37 +1,50 @@
 package com.yz.mall.gateway.filter;
 
 import com.yz.mall.gateway.config.GatewayAccessLogProperties;
+import com.yz.mall.gateway.kafka.GatewayAccessLogKafkaProducer;
+import com.yz.mall.gateway.kafka.GatewayAccessLogMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 /**
- * 网关全局访问日志：打印每个请求的 URI、查询参数、Header、Cookie、Body，以及整段链路耗时。
+ * 网关全局访问日志：打印请求 URI、参数、Header、Cookie、Body，以及响应头、响应体和耗时。
  * <p>
- * Body 来自前置 {@link CacheRequestBodyFilter} 写入的 {@link CachedRequestBody}，本 Filter 不消费请求流。
+ * 请求 Body 来自前置 {@link CacheRequestBodyFilter}；响应 Body 在回写客户端时旁路拷贝，不打断原流。
+ * Kafka 投递交给 {@link GatewayAccessLogKafkaProducer}，失败不影响转发。
  *
  * @author yunze
  * @date 2026/9/21
@@ -42,6 +55,7 @@ import java.util.regex.Pattern;
 public class RequestAccessLogFilter implements GlobalFilter, Ordered {
 
     private static final String MASK = "***";
+    private static final String TRACE_ID_HEADER = "x-trace-id";
     private static final Set<String> SENSITIVE_KEYS = Set.of(
             "authorization", "cookie", "set-cookie", "token", "access_token",
             "refresh_token", "password", "secret", "satoken", "x-sa-token");
@@ -49,11 +63,12 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
     private static final Pattern FORM_SECRET = Pattern.compile("(?i)((?:password|token|secret)=)[^&]*");
 
     private final GatewayAccessLogProperties properties;
+    private final ObjectProvider<GatewayAccessLogKafkaProducer> kafkaProducer;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        if (!properties.isEnabled() || !log.isInfoEnabled()) {
+        if (!properties.isEnabled()) {
             return chain.filter(exchange);
         }
         ServerHttpRequest request = exchange.getRequest();
@@ -61,23 +76,41 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
         if (shouldSkip(path)) {
             return chain.filter(exchange);
         }
+        GatewayAccessLogKafkaProducer producer = kafkaProducer.getIfAvailable();
+        if (!log.isInfoEnabled() && producer == null) {
+            return chain.filter(exchange);
+        }
         long startNanos = System.nanoTime();
-        String body = resolveBody(exchange, request);
-        return chain.filter(exchange).doFinally(signalType -> {
+        String requestBody = resolveBody(exchange, request);
+        AtomicReference<byte[]> responseBodyBytes = new AtomicReference<>(new byte[0]);
+        AtomicReference<String> responseSkipReason = new AtomicReference<>();
+        ServerWebExchange mutated = exchange.mutate().response(decorateResponse(exchange.getResponse(), responseBodyBytes, responseSkipReason)).build();
+        return chain.filter(mutated).doFinally(signalType -> {
             long costMs = (System.nanoTime() - startNanos) / 1_000_000L;
-            HttpStatusCode status = exchange.getResponse().getStatusCode();
-            log.info("网关请求 method={} uri={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} cost={}ms",
-                    request.getMethod(),
-                    request.getURI(),
-                    path,
-                    formatParams(request.getQueryParams()),
-                    formatHeaders(request.getHeaders()),
-                    formatCookies(request.getCookies()),
-                    formatRemote(request),
-                    request.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE),
-                    body,
-                    status == null ? "-" : status.value(),
-                    costMs);
+            ServerHttpResponse response = mutated.getResponse();
+            HttpStatusCode status = response.getStatusCode();
+            String responseBody = resolveResponseBody(response, responseBodyBytes.get(), responseSkipReason.get());
+            GatewayAccessLogMessage message = buildMessage(request, path, requestBody, response, responseBody, status, costMs);
+            if (log.isInfoEnabled()) {
+                log.info("网关请求 method={} uri={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} responseHeaders={} responseContentType={} responseBody={} cost={}ms",
+                        message.getMethod(),
+                        message.getUri(),
+                        message.getPath(),
+                        message.getQuery(),
+                        message.getHeaders(),
+                        message.getCookies(),
+                        message.getRemote(),
+                        message.getContentType(),
+                        message.getBody(),
+                        message.getStatus() == null ? "-" : message.getStatus(),
+                        message.getResponseHeaders(),
+                        message.getResponseContentType(),
+                        message.getResponseBody(),
+                        message.getCostMs());
+            }
+            if (producer != null) {
+                producer.send(message);
+            }
         });
     }
 
@@ -85,6 +118,104 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
     public int getOrder() {
         // 紧随 CacheRequestBodyFilter（-95），日志里能读到已缓存 Body 以及 x-real-ip / x-trace-id
         return -90;
+    }
+
+    /**
+     * 组装访问日志消息，控制台与 Kafka 共用同一份数据。
+     */
+    private GatewayAccessLogMessage buildMessage(ServerHttpRequest request, String path, String requestBody,
+            ServerHttpResponse response, String responseBody, HttpStatusCode status, long costMs) {
+        GatewayAccessLogMessage message = new GatewayAccessLogMessage();
+        message.setRequestTime(LocalDateTime.now());
+        message.setTraceId(request.getHeaders().getFirst(TRACE_ID_HEADER));
+        message.setMethod(request.getMethod() == null ? null : request.getMethod().name());
+        message.setUri(request.getURI().toString());
+        message.setPath(path);
+        message.setQuery(formatParams(request.getQueryParams()));
+        message.setHeaders(formatHeaders(request.getHeaders()));
+        message.setCookies(formatCookies(request.getCookies()));
+        message.setRemote(formatRemote(request));
+        message.setContentType(request.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
+        message.setBody(requestBody);
+        message.setResponseHeaders(formatHeaders(response.getHeaders()));
+        message.setResponseContentType(response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
+        message.setResponseBody(responseBody);
+        message.setStatus(status == null ? null : status.value());
+        message.setCostMs(costMs);
+        return message;
+    }
+
+    /**
+     * 包装响应：先 join 响应体再回写，保证日志能拿到完整 JSON；文件/压缩包仍跳过。
+     */
+    private ServerHttpResponse decorateResponse(ServerHttpResponse response, AtomicReference<byte[]> captured, AtomicReference<String> skipReason) {
+        int limit = Math.max(properties.getMaxBodyLogLength(), 1);
+        return new ServerHttpResponseDecorator(response) {
+            @Override
+            public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
+                if (!shouldCaptureResponse(getDelegate())) {
+                    skipReason.set(responseSkipReason(getDelegate()));
+                    return super.writeWith(body);
+                }
+                return DataBufferUtils.join(body)
+                        .defaultIfEmpty(bufferFactory().wrap(new byte[0]))
+                        .flatMap(joined -> {
+                            byte[] all = new byte[joined.readableByteCount()];
+                            joined.read(all);
+                            DataBufferUtils.release(joined);
+                            captured.set(all.length <= limit ? all : Arrays.copyOf(all, limit));
+                            return super.writeWith(Mono.just(bufferFactory().wrap(all)));
+                        });
+            }
+
+            @Override
+            public Mono<Void> writeAndFlushWith(Publisher<? extends Publisher<? extends DataBuffer>> body) {
+                return writeWith(Flux.from(body).flatMapSequential(p -> p));
+            }
+        };
+    }
+
+    private boolean shouldCaptureResponse(ServerHttpResponse response) {
+        HttpHeaders headers = response.getHeaders();
+        MediaType contentType = headers.getContentType();
+        if (contentType != null && isBinary(contentType)) {
+            return false;
+        }
+        String encoding = headers.getFirst(HttpHeaders.CONTENT_ENCODING);
+        if (encoding != null && !encoding.isEmpty() && !"identity".equalsIgnoreCase(encoding)) {
+            return false;
+        }
+        String disposition = headers.getFirst(HttpHeaders.CONTENT_DISPOSITION);
+        return disposition == null || !disposition.toLowerCase(Locale.ROOT).contains("attachment");
+    }
+
+    private boolean isBinary(MediaType contentType) {
+        String type = contentType.getType();
+        return "image".equalsIgnoreCase(type)
+                || "audio".equalsIgnoreCase(type)
+                || "video".equalsIgnoreCase(type)
+                || MediaType.MULTIPART_FORM_DATA.includes(contentType)
+                || MediaType.APPLICATION_OCTET_STREAM.includes(contentType);
+    }
+
+    private String responseSkipReason(ServerHttpResponse response) {
+        HttpHeaders headers = response.getHeaders();
+        MediaType contentType = headers.getContentType();
+        if (contentType != null && isBinary(contentType)) {
+            return "[skipped, contentType=" + contentType + "]";
+        }
+        String encoding = headers.getFirst(HttpHeaders.CONTENT_ENCODING);
+        if (encoding != null && !encoding.isEmpty() && !"identity".equalsIgnoreCase(encoding)) {
+            return "[skipped, contentEncoding=" + encoding + "]";
+        }
+        return "[skipped, attachment]";
+    }
+
+    private String resolveResponseBody(ServerHttpResponse response, byte[] bytes, String skipReason) {
+        if (skipReason != null) {
+            return skipReason;
+        }
+        return formatBody(bytes, resolveCharset(response.getHeaders().getContentType()));
     }
 
     /**
@@ -101,20 +232,20 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
         if (cached.isSkipped()) {
             return cached.getSkipReason();
         }
-        return formatBody(request, cached.getBytes());
+        return formatBody(cached.getBytes(), resolveCharset(request.getHeaders().getContentType()));
     }
 
     /**
-     * 将请求体转为单行文本，按需脱敏并截断。
+     * 将请求/响应体转为单行文本，按需脱敏并截断。
      *
-     * @param request 原请求（取 charset）
-     * @param bytes 请求体字节
+     * @param bytes 原始字节
+     * @param charset 字符集
      */
-    private String formatBody(ServerHttpRequest request, byte[] bytes) {
+    private String formatBody(byte[] bytes, Charset charset) {
         if (bytes == null || bytes.length == 0) {
             return "";
         }
-        String body = new String(bytes, resolveCharset(request));
+        String body = new String(bytes, charset);
         if (properties.isMaskSensitive()) {
             body = JSON_SECRET.matcher(body).replaceAll("$1" + MASK);
             body = FORM_SECRET.matcher(body).replaceAll("$1" + MASK);
@@ -127,8 +258,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
         return body;
     }
 
-    private Charset resolveCharset(ServerHttpRequest request) {
-        MediaType contentType = request.getHeaders().getContentType();
+    private Charset resolveCharset(MediaType contentType) {
         if (contentType != null && contentType.getCharset() != null) {
             return contentType.getCharset();
         }
@@ -159,29 +289,29 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
      *
      * @param params 查询参数
      */
-    private String formatParams(MultiValueMap<String, String> params) {
+    private Map<String, List<String>> formatParams(MultiValueMap<String, String> params) {
         if (params == null || params.isEmpty()) {
-            return "{}";
+            return Map.of();
         }
         Map<String, List<String>> result = new LinkedHashMap<>();
         params.forEach((name, values) -> result.put(name, maskValues(name, values)));
-        return result.toString();
+        return result;
     }
 
     /**
-     * 格式化请求头；Cookie 头改由 cookies 字段单独打印，避免重复。
+     * 格式化请求/响应头；Cookie / Set-Cookie 不重复打印明文。
      *
-     * @param headers 请求头
+     * @param headers HTTP 头
      */
-    private String formatHeaders(HttpHeaders headers) {
+    private Map<String, List<String>> formatHeaders(HttpHeaders headers) {
         Map<String, List<String>> result = new LinkedHashMap<>();
         headers.forEach((name, values) -> {
-            if (HttpHeaders.COOKIE.equalsIgnoreCase(name)) {
+            if (HttpHeaders.COOKIE.equalsIgnoreCase(name) || HttpHeaders.SET_COOKIE.equalsIgnoreCase(name)) {
                 return;
             }
             result.put(name, maskValues(name, values));
         });
-        return result.toString();
+        return result;
     }
 
     /**
@@ -189,9 +319,9 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
      *
      * @param cookies 请求 Cookie
      */
-    private String formatCookies(MultiValueMap<String, HttpCookie> cookies) {
+    private Map<String, List<String>> formatCookies(MultiValueMap<String, HttpCookie> cookies) {
         if (cookies == null || cookies.isEmpty()) {
-            return "{}";
+            return Map.of();
         }
         Map<String, List<String>> result = new LinkedHashMap<>();
         cookies.forEach((name, values) -> {
@@ -201,7 +331,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
             }
             result.put(name, cookieValues);
         });
-        return result.toString();
+        return result;
     }
 
     private String formatRemote(ServerHttpRequest request) {

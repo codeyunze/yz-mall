@@ -81,6 +81,9 @@ services:
       options:
         max-size: "30m"
         max-file: "3"
+    depends_on:
+      - elasticsearch
+      - kafka
     restart: unless-stopped
     networks:
       - mall
