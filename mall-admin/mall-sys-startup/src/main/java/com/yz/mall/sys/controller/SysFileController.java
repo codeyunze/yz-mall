@@ -2,6 +2,7 @@ package com.yz.mall.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
@@ -177,7 +178,7 @@ public class SysFileController extends ApiController {
     // @SaCheckPermission("api:system:file:list")
     @PostMapping("/page")
     public Result<ResultTable<SysFileVo>> page(@RequestBody @Valid PageFilter<SysFileQueryDto> filter) {
-        var page = service.page(filter);
+        Page<SysFileVo> page = service.page(filter);
         return success(page.getRecords(), page.getTotal());
     }
 

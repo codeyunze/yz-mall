@@ -32,14 +32,14 @@ Nacos 中该池必须配置 `autoCreate: false`，由代码 `@Bean` + `@DynamicT
 验证热更新：把 `corePoolSize` / `maximumPoolSize` 改大或改小，发布配置后调用：
 
 ```bash
-curl http://127.0.0.1:25002/sys/dtp/demo/info
+curl http://127.0.0.1:5002/sys/dtp/demo/info
 ```
 
 应看到参数已变化。可再压任务：
 
 ```bash
-curl -X POST "http://127.0.0.1:25002/sys/dtp/demo/submit?tasks=30&sleepMs=2000"
-curl http://127.0.0.1:25002/sys/dtp/demo/info
+curl -X POST "http://127.0.0.1:5002/sys/dtp/demo/submit?tasks=30&sleepMs=2000"
+curl http://127.0.0.1:5002/sys/dtp/demo/info
 ```
 
 ## 3. Prometheus
@@ -47,9 +47,9 @@ curl http://127.0.0.1:25002/sys/dtp/demo/info
 1. 配置文件：`docs/docker/prometheus/prometheus.yml`（已增加 `mall-sys` job）  
 2. 重启 Prometheus 容器使配置生效  
 3. 浏览器打开 `http://<prometheus主机>:9090/targets`，确认 `mall-sys` 为 UP  
-4. 指标页：`http://127.0.0.1:25002/actuator/prometheus`，搜索 `thread` / `dtp` 相关指标  
+4. 指标页：`http://127.0.0.1:5002/actuator/prometheus`，搜索 `thread` / `dtp` 相关指标  
 
-若 Prometheus 在 Docker、应用在宿主机，默认用 `host.docker.internal:25002`；不通时改为宿主机局域网 IP。
+若 Prometheus 在 Docker、应用在宿主机，默认用 `host.docker.internal:5002`；不通时改为宿主机局域网 IP。
 
 ## 4. Grafana
 

@@ -6,6 +6,19 @@ spring:
   application:
     name: mall-gateway
 
+# 网关：请求体缓存（供下游重复读）+ 访问日志
+yz:
+  gateway:
+    request-body-cache:
+      enabled: true
+      max-body-bytes: 1048576
+    access-log:
+      enabled: true
+      mask-sensitive: true
+      max-body-log-length: 8192
+      skip-paths:
+        - /actuator/**
+
 # MyBatis Mapper SQL 调试包（供 logback-spring.xml 读取；网关一般无本地 Mapper，可按需调整）
 logging:
   mapper-package: com.yz.mall.sys.mapper

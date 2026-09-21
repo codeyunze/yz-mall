@@ -77,6 +77,8 @@ public class SysFileServiceImpl implements SysFileService {
             criteria.setFileName(queryDto.getFileName());
             criteria.setFileStorageMode(queryDto.getFileStorageMode());
             criteria.setFileStorageStation(queryDto.getFileStorageStation());
+            criteria.setCreateTimeFrom(queryDto.getCreateTimeFrom());
+            criteria.setCreateTimeTo(queryDto.getCreateTimeTo());
         }
         PageResult<FileMetadata> page = query.page(criteria);
         List<SysFileVo> records = page.getRecords() == null ? Collections.emptyList()
