@@ -89,8 +89,7 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
-        <!-- ClickHouse JDBC 不在默认 classpath：SPI 会注册驱动，导致 dynamic-datasource 启动失败。
-             节点 3 启用轨迹时再引入；见 TwClickHouseConfig / README -->
+        <!-- ClickHouse：节点 3 使用 HTTP 客户端写读，不引入 clickhouse-jdbc，避免 SPI 干扰 MySQL -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

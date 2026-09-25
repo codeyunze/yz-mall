@@ -4,13 +4,16 @@ import cn.hutool.core.util.StrUtil;
 import com.yz.mall.base.exception.BusinessException;
 import com.yz.mall.tw.constant.TwTelemetryConstants;
 import com.yz.mall.tw.dto.TwGpsLatestBatchQueryDto;
+import com.yz.mall.tw.dto.TwGpsTrackQueryDto;
 import com.yz.mall.tw.entity.TwVehicle;
 import com.yz.mall.tw.service.TwGpsLatestService;
+import com.yz.mall.tw.service.TwGpsTrackService;
 import com.yz.mall.tw.service.TwTelemetryService;
 import com.yz.mall.tw.service.TwVehicleService;
 import com.yz.mall.tw.support.TwTelemetryAccessSupport;
 import com.yz.mall.tw.support.TwVehicleRealtimeSupport;
 import com.yz.mall.tw.vo.TwGpsLatestVo;
+import com.yz.mall.tw.vo.TwGpsTrackVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +24,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 遥测查询：access/check + Latest 读 + 在线标记
+ * 遥测查询：access/check + Latest / Track + 在线标记
  */
 @Service
 @RequiredArgsConstructor
 public class TwTelemetryServiceImpl implements TwTelemetryService {
 
     private final TwGpsLatestService gpsLatestService;
+    private final TwGpsTrackService gpsTrackService;
     private final TwVehicleService vehicleService;
     private final TwTelemetryAccessSupport accessSupport;
     private final TwVehicleRealtimeSupport realtimeSupport;
@@ -75,6 +79,11 @@ public class TwTelemetryServiceImpl implements TwTelemetryService {
         TwGpsLatestVo vo = gpsLatestService.getLatestByVin(normalized);
         fillOnline(vo, normalized);
         return vo;
+    }
+
+    @Override
+    public TwGpsTrackVo queryTrack(TwGpsTrackQueryDto dto) {
+        return gpsTrackService.queryTrack(dto);
     }
 
     private void fillOnline(TwGpsLatestVo vo, String vin) {

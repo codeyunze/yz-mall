@@ -32,4 +32,9 @@ public final class TwTelemetryConstants {
      * 权限：批量最新位置（运营/监控全量）
      */
     public static final String PERM_LATEST_BATCH = "api:tw:telemetry:latest:batch";
+
+    /**
+     * 权限：轨迹查询
+     */
+    public static final String PERM_TRACK = "api:tw:telemetry:track";
 }

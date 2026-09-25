@@ -3,9 +3,10 @@ package com.yz.mall.tw.service.impl;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yz.mall.json.JacksonUtil;
 import com.yz.mall.tw.constant.TwTelemetryConstants;
 import com.yz.mall.tw.dto.TwGpsLatestWriteDto;
 import com.yz.mall.tw.entity.TwGpsLatest;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 public class TwGpsLatestServiceImpl implements TwGpsLatestService {
 
     private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN);
+    private static final ObjectMapper OBJECT_MAPPER = JacksonUtil.getObjectMapper();
 
     private final TwGpsLatestMapper gpsLatestMapper;
     private final StringRedisTemplate stringRedisTemplate;
@@ -176,7 +178,11 @@ public class TwGpsLatestServiceImpl implements TwGpsLatestService {
         snap.put("reportTime", gpsTimeStr);
         snap.put("soc", vo.getSoc());
         snap.put("signalLevel", vo.getSignalLevel());
-        stringRedisTemplate.opsForValue().set(redisKey(vo.getVin()), JSONUtil.toJsonStr(snap), TwTelemetryConstants.REDIS_GPS_LATEST_TTL_DAYS, TimeUnit.DAYS);
+        try {
+            stringRedisTemplate.opsForValue().set(redisKey(vo.getVin()), OBJECT_MAPPER.writeValueAsString(snap), TwTelemetryConstants.REDIS_GPS_LATEST_TTL_DAYS, TimeUnit.DAYS);
+        } catch (Exception ex) {
+            log.warn("写入 Redis GPS 失败 vin={}: {}", vo.getVin(), ex.getMessage());
+        }
     }
 
     private TwGpsLatestVo parseRedis(String raw) {
@@ -184,49 +190,60 @@ public class TwGpsLatestServiceImpl implements TwGpsLatestService {
             return null;
         }
         try {
-            JSONObject json = JSONUtil.parseObj(raw);
+            JsonNode json = OBJECT_MAPPER.readTree(raw);
             TwGpsLatestVo vo = new TwGpsLatestVo();
-            vo.setVin(json.getStr("vin"));
-            if (json.get("vehicleId") != null) {
-                vo.setVehicleId(json.getLong("vehicleId"));
+            vo.setVin(textOrNull(json, "vin"));
+            if (json.hasNonNull("vehicleId")) {
+                vo.setVehicleId(json.get("vehicleId").asLong());
             }
-            if (json.get("lng") != null) {
-                vo.setLng(new BigDecimal(json.getStr("lng")));
-            }
-            if (json.get("lat") != null) {
-                vo.setLat(new BigDecimal(json.getStr("lat")));
-            }
-            if (json.get("altitude") != null) {
-                vo.setAltitude(new BigDecimal(json.getStr("altitude")));
-            }
-            if (json.get("speed") != null) {
-                vo.setSpeed(new BigDecimal(json.getStr("speed")));
-            }
-            if (json.get("heading") != null) {
-                vo.setHeading(new BigDecimal(json.getStr("heading")));
-            }
-            String gpsTime = json.getStr("gpsTime");
+            vo.setLng(toDecimal(json, "lng"));
+            vo.setLat(toDecimal(json, "lat"));
+            vo.setAltitude(toDecimal(json, "altitude"));
+            vo.setSpeed(toDecimal(json, "speed"));
+            vo.setHeading(toDecimal(json, "heading"));
+            String gpsTime = textOrNull(json, "gpsTime");
             if (StrUtil.isBlank(gpsTime)) {
-                gpsTime = json.getStr("reportTime");
+                gpsTime = textOrNull(json, "reportTime");
             }
             if (StrUtil.isNotBlank(gpsTime)) {
                 vo.setGpsTime(LocalDateTime.parse(gpsTime, DT_FMT));
             }
-            String receiveTime = json.getStr("receiveTime");
+            String receiveTime = textOrNull(json, "receiveTime");
             if (StrUtil.isNotBlank(receiveTime)) {
                 vo.setReceiveTime(LocalDateTime.parse(receiveTime, DT_FMT));
             }
-            if (json.get("soc") != null) {
-                vo.setSoc(new BigDecimal(json.getStr("soc")));
-            }
-            if (json.get("signalLevel") != null) {
-                vo.setSignalLevel(json.getInt("signalLevel"));
+            vo.setSoc(toDecimal(json, "soc"));
+            if (json.hasNonNull("signalLevel")) {
+                vo.setSignalLevel(json.get("signalLevel").asInt());
             }
             return vo;
         } catch (Exception ex) {
             log.warn("解析 Redis GPS 失败: {}", ex.getMessage());
             return null;
         }
+    }
+
+    private static String textOrNull(JsonNode json, String key) {
+        JsonNode node = json.get(key);
+        if (node == null || node.isNull()) {
+            return null;
+        }
+        return node.asText();
+    }
+
+    private static BigDecimal toDecimal(JsonNode json, String key) {
+        JsonNode node = json.get(key);
+        if (node == null || node.isNull()) {
+            return null;
+        }
+        if (node.isNumber()) {
+            return node.decimalValue();
+        }
+        String text = node.asText();
+        if (StrUtil.isBlank(text)) {
+            return null;
+        }
+        return new BigDecimal(text);
     }
 
     private TwGpsLatestVo toVo(TwGpsLatest entity) {

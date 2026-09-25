@@ -18,5 +18,13 @@ export BASE_URL=http://127.0.0.1:30001
 export TOKEN='Bearer xxx'
 export TW_TEST_VIN=TESTVIN001
 python tw_telemetry/test_latest_ok.py
-EXPECT_CODE=50000 python tw_telemetry/test_latest_ng_no_token.py
+python tw_telemetry/test_track_ok.py
+EXPECT_CODE=1 python tw_telemetry/test_track_ng_window.py
+```
+
+轨迹联调前请：`tw.telemetry.clickhouse.enabled=true`，并先：
+
+```http
+POST /tw/telemetry/dev/track/ingest
+POST /tw/telemetry/dev/track/flush
 ```

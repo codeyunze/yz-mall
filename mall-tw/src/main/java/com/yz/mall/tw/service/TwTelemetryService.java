@@ -1,12 +1,14 @@
 package com.yz.mall.tw.service;
 
 import com.yz.mall.tw.dto.TwGpsLatestBatchQueryDto;
+import com.yz.mall.tw.dto.TwGpsTrackQueryDto;
 import com.yz.mall.tw.vo.TwGpsLatestVo;
+import com.yz.mall.tw.vo.TwGpsTrackVo;
 
 import java.util.List;
 
 /**
- * 遥测查询门面：访问校验 + Latest 读
+ * 遥测查询门面：访问校验 + Latest / Track
  */
 public interface TwTelemetryService {
 
@@ -34,4 +36,12 @@ public interface TwTelemetryService {
      * @return 无数据返回 null
      */
     TwGpsLatestVo getLatestForExtend(String vin);
+
+    /**
+     * 轨迹查询（ClickHouse）；含 access/check scope=2、时间窗与抽稀。
+     *
+     * @param dto 查询条件
+     * @return 折线结果；无数据时 points 为空
+     */
+    TwGpsTrackVo queryTrack(TwGpsTrackQueryDto dto);
 }
