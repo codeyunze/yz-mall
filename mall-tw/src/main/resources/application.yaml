@@ -1,5 +1,5 @@
 server:
-  port: 25005
+  port: 5005
 
 spring:
   application:
@@ -11,6 +11,23 @@ logging:
 tw:
   vehicle:
     max-auth-users: 10
+  # 遥测与轨迹（节点 0 占位；CH/Kafka 默认关闭，保证无中间件也可启动）
+  telemetry:
+    kafka:
+      enabled: true
+      topic: tw-telemetry-raw
+      group-id: tw-telemetry-gps
+    clickhouse:
+      enabled: false
+      url: jdbc:clickhouse://${CLICKHOUSE_HOST:127.0.0.1}:${CLICKHOUSE_PORT:8123}/tw
+      username: ${CLICKHOUSE_USER:default}
+      password: ${CLICKHOUSE_PASSWORD:}
+    track:
+      max-query-hours: 24
+      default-max-points: 2000
+      absolute-max-points: 5000
+      batch-size: 1000
+      flush-interval-ms: 1000
 
 management:
   endpoints:

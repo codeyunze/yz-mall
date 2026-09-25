@@ -48,6 +48,7 @@
         <elastic-apm.version>1.52.0</elastic-apm.version>
         <prometheus.version>1.11.5</prometheus.version>
         <caffeine.version>3.1.8</caffeine.version>
+        <clickhouse-jdbc.version>0.6.5</clickhouse-jdbc.version>
         <!-- Spring Boot 3.x 使用带 -x 后缀的 Dynamic TP 版本，见官方 nacos-cloud 文档 -->
         <dynamictp.version>1.2.2-x</dynamictp.version>
     </properties>
@@ -263,6 +264,13 @@
                 <groupId>io.github.codeyunze</groupId>
                 <artifactId>qof-persistence-mysql</artifactId>
                 <version>${qof.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>${clickhouse-jdbc.version}</version>
+                <classifier>all</classifier>
             </dependency>
 
             <dependency>

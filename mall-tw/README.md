@@ -5,7 +5,7 @@ Titan Watch（车辆与终端）业务服务。由原 `mall-tw-vehicle`、`mall-
 | 项 | 说明 |
 |---|---|
 | 服务名 | `mall-tw`（`spring.application.name`） |
-| 本地端口 | `25005` |
+| 本地端口 | `5005`（以 `application.yaml` 为准；历史文档曾写 25005） |
 | 启动类 | `com.yz.mall.tw.TwApplication` |
 | 包根 | `com.yz.mall.tw` |
 
@@ -13,9 +13,20 @@ Titan Watch（车辆与终端）业务服务。由原 `mall-tw-vehicle`、`mall-
 
 - **车辆档案**：车辆主数据、车主绑定/过户、授权用户、车系/车型
 - **终端管理**：终端注册、启停、MQTT 凭证重置、终端与车辆绑定/解绑
+- **遥测与轨迹**（建设中，合入本服务）：最新位置 Redis+MySQL；轨迹 ClickHouse；Kafka 消费见设计文档 §12
 - **跨服务扩展接口**（`extend/tw/**`）：供其他服务查询鉴权信息、车辆访问权限等
 
-不包含：MQTT Broker 接入、轨迹入库、远程控车指令下发（由后续接入/遥测/指令域承担）。
+不包含：MQTT Broker 接入、Kafka 生产（access）、远程控车指令下发。
+
+## 遥测配置（节点 0）
+
+| 项 | 说明 |
+|---|---|
+| MySQL DDL | `src/main/resources/db/tw_gps_latest.sql`（需可写账号执行） |
+| ClickHouse DDL | `src/main/resources/db/clickhouse/tw_gps_track.sql`；Docker init：`docs/docker/clickhouse/init/` |
+| 开关 | `tw.telemetry.clickhouse.enabled` / `tw.telemetry.kafka.enabled`，**默认 false** |
+| ClickHouse JDBC | **默认不引入**（避免驱动 SPI 导致 MySQL 数据源启动失败）；节点 3 启用轨迹时再在 `mall-tw/pom.xml` 加上 `clickhouse-jdbc` |
+| 样例 | `docs/nacos/mall-tw-telemetry.yaml`、`docs/nacos/gateway-tw-telemetry-route.yaml` |
 
 ## 包结构（按层组织）
 
@@ -38,6 +49,8 @@ com.yz.mall.tw/
 | `/tw/vehicle/**` | 车辆档案 |
 | `/tw/series/**`、`/tw/model/**` | 车系 / 车型 |
 | `/tw/device/**` | 终端管理 |
+| `/tw/telemetry/**` | 最新位置 / 轨迹（建设中） |
+| `/extend/tw/**` | 车辆 / 终端 / 遥测扩展接口 |
 | `/extend/tw/vehicle/**` | 车辆扩展（如 by-vin、access/check） |
 | `/extend/tw/model/**` | 车型扩展 |
 | `/extend/tw/device/**` | 终端扩展（如 auth、by-vin、verify） |

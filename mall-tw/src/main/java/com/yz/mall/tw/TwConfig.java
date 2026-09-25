@@ -1,5 +1,6 @@
 package com.yz.mall.tw;
 
+import com.yz.mall.tw.config.TwTelemetryProperties;
 import com.yz.mall.tw.config.TwVehicleProperties;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -9,11 +10,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * mall-tw 统一配置：Mapper 扫描、车辆属性、终端密钥编码器。
+ * mall-tw 统一配置：Mapper 扫描、车辆/遥测属性、终端密钥编码器。
  */
 @Configuration
 @MapperScan("com.yz.mall.tw.mapper")
-@EnableConfigurationProperties(TwVehicleProperties.class)
+@EnableConfigurationProperties({TwVehicleProperties.class, TwTelemetryProperties.class})
 public class TwConfig {
 
     /**
