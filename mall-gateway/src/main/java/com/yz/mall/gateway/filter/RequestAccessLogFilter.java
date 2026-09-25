@@ -88,7 +88,8 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
         String requestBody = resolveBody(exchange, request);
         AtomicReference<byte[]> responseBodyBytes = new AtomicReference<>(new byte[0]);
         AtomicReference<String> responseSkipReason = new AtomicReference<>();
-        ServerWebExchange mutated = exchange.mutate().response(decorateResponse(exchange.getResponse(), responseBodyBytes, responseSkipReason)).build();
+        ServerHttpResponse decorated = new AccessLogResponseDecorator(exchange.getResponse(), this, responseBodyBytes, responseSkipReason, Math.max(properties.getMaxBodyLogLength(), 1));
+        ServerWebExchange mutated = exchange.mutate().response(decorated).build();
         return chain.filter(mutated).doFinally(signalType -> {
             long costMs = (System.nanoTime() - startNanos) / 1_000_000L;
             ServerHttpResponse response = mutated.getResponse();
@@ -152,33 +153,45 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
     }
 
     /**
-     * 包装响应：先 join 响应体再回写，保证日志能拿到完整 JSON；文件/压缩包仍跳过。
+     * 包装响应：先 join 再回写，避免匿名内部类热加载导致 NoSuchMethodError。
      */
-    private ServerHttpResponse decorateResponse(ServerHttpResponse response, AtomicReference<byte[]> captured, AtomicReference<String> skipReason) {
-        int limit = Math.max(properties.getMaxBodyLogLength(), 1);
-        return new ServerHttpResponseDecorator(response) {
-            @Override
-            public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-                if (!shouldCaptureResponse(getDelegate())) {
-                    skipReason.set(responseSkipReason(getDelegate()));
-                    return super.writeWith(body);
-                }
-                return DataBufferUtils.join(body)
-                        .defaultIfEmpty(bufferFactory().wrap(new byte[0]))
-                        .flatMap(joined -> {
-                            byte[] all = new byte[joined.readableByteCount()];
-                            joined.read(all);
-                            DataBufferUtils.release(joined);
-                            captured.set(all.length <= limit ? all : Arrays.copyOf(all, limit));
-                            return super.writeWith(Mono.just(bufferFactory().wrap(all)));
-                        });
-            }
+    private static final class AccessLogResponseDecorator extends ServerHttpResponseDecorator {
 
-            @Override
-            public Mono<Void> writeAndFlushWith(Publisher<? extends Publisher<? extends DataBuffer>> body) {
-                return writeWith(Flux.from(body).flatMapSequential(p -> p));
+        private final RequestAccessLogFilter owner;
+        private final AtomicReference<byte[]> captured;
+        private final AtomicReference<String> skipReason;
+        private final int limit;
+
+        private AccessLogResponseDecorator(ServerHttpResponse delegate, RequestAccessLogFilter owner,
+                AtomicReference<byte[]> captured, AtomicReference<String> skipReason, int limit) {
+            super(delegate);
+            this.owner = owner;
+            this.captured = captured;
+            this.skipReason = skipReason;
+            this.limit = limit;
+        }
+
+        @Override
+        public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
+            if (!owner.shouldCaptureResponse(getDelegate())) {
+                skipReason.set(owner.responseSkipReason(getDelegate()));
+                return super.writeWith(body);
             }
-        };
+            return DataBufferUtils.join(body)
+                    .defaultIfEmpty(bufferFactory().wrap(new byte[0]))
+                    .flatMap(joined -> {
+                        byte[] all = new byte[joined.readableByteCount()];
+                        joined.read(all);
+                        DataBufferUtils.release(joined);
+                        captured.set(all.length <= limit ? all : Arrays.copyOf(all, limit));
+                        return super.writeWith(Mono.just(bufferFactory().wrap(all)));
+                    });
+        }
+
+        @Override
+        public Mono<Void> writeAndFlushWith(Publisher<? extends Publisher<? extends DataBuffer>> body) {
+            return writeWith(Flux.from(body).flatMapSequential(p -> p));
+        }
     }
 
     private boolean shouldCaptureResponse(ServerHttpResponse response) {

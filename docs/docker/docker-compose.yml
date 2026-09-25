@@ -293,12 +293,39 @@ services:
     networks:
       - mall
 
+  # ClickHouse：Titan Watch 轨迹明细（HTTP 8123 / Native 9000）
+  # 演示镜像可用官方；生产可改为私有仓库同名 tag
+  clickhouse:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/clickhouse-server:26.4.5.143
+    container_name: 'dev-clickhouse'
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    environment:
+      CLICKHOUSE_DB: tw
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+      TZ: Asia/Shanghai
+    volumes:
+      - ./clickhouse/data:/var/lib/clickhouse
+      - ./clickhouse/logs:/var/log/clickhouse-server
+      - ./clickhouse/init:/docker-entrypoint-initdb.d:ro
+      - /etc/localtime:/etc/localtime:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    mem_limit: 1536m
+    restart: unless-stopped
+    networks:
+      - mall
+
   mongodb:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/mongo:8.3.11
     container_name: 'dev-mongodb-8.3.11'
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongouser
-      MONGO_INITDB_ROOT_PASSWORD: "0!xMPj2XL^0!xMPj2XL^"
+      MONGO_INITDB_ROOT_PASSWORD: "0!xMPj2XL^0!xM123"
       TZ: Asia/Shanghai
     ports:
       - '27017:27017'

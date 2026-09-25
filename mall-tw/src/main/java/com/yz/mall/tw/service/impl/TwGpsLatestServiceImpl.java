@@ -54,7 +54,7 @@ public class TwGpsLatestServiceImpl implements TwGpsLatestService {
             log.warn("GPS 写入丢弃：非法坐标 vin={} lng={} lat={}", dto.getVin(), dto.getLng(), dto.getLat());
             return null;
         }
-        String vin = dto.getVin().trim();
+        String vin = dto.getVin().trim().toUpperCase();
         LocalDateTime receiveTime = LocalDateTime.now();
         LocalDateTime gpsTime = dto.getGpsTime() != null ? dto.getGpsTime() : receiveTime;
 
@@ -90,16 +90,17 @@ public class TwGpsLatestServiceImpl implements TwGpsLatestService {
         if (StrUtil.isBlank(vin)) {
             return null;
         }
-        String key = redisKey(vin.trim());
+        String normalizedVin = vin.trim().toUpperCase();
+        String key = redisKey(normalizedVin);
         String raw = stringRedisTemplate.opsForValue().get(key);
         TwGpsLatestVo fromRedis = parseRedis(raw);
         if (fromRedis != null) {
             if (StrUtil.isBlank(fromRedis.getVin())) {
-                fromRedis.setVin(vin.trim());
+                fromRedis.setVin(normalizedVin);
             }
             return fromRedis;
         }
-        TwGpsLatest entity = gpsLatestMapper.selectOne(Wrappers.<TwGpsLatest>lambdaQuery().eq(TwGpsLatest::getVin, vin.trim()).last("LIMIT 1"));
+        TwGpsLatest entity = gpsLatestMapper.selectOne(Wrappers.<TwGpsLatest>lambdaQuery().eq(TwGpsLatest::getVin, normalizedVin).last("LIMIT 1"));
         if (entity == null) {
             return null;
         }
@@ -113,7 +114,7 @@ public class TwGpsLatestServiceImpl implements TwGpsLatestService {
         if (vins == null || vins.isEmpty()) {
             return Collections.emptyList();
         }
-        List<String> distinct = vins.stream().filter(StrUtil::isNotBlank).map(String::trim).distinct().collect(Collectors.toList());
+        List<String> distinct = vins.stream().filter(StrUtil::isNotBlank).map(v -> v.trim().toUpperCase()).distinct().collect(Collectors.toList());
         if (distinct.isEmpty()) {
             return Collections.emptyList();
         }

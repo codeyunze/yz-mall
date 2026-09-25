@@ -49,7 +49,8 @@ com.yz.mall.tw/
 | `/tw/vehicle/**` | 车辆档案 |
 | `/tw/series/**`、`/tw/model/**` | 车系 / 车型 |
 | `/tw/device/**` | 终端管理 |
-| `/tw/telemetry/**` | 最新位置 / 轨迹（建设中） |
+| `/tw/telemetry/**` | 最新位置（节点 2：`/latest`、`/latest/batch`）；轨迹待节点 3 |
+| `/tw/telemetry/dev/**` | 节点 1 临时灌数（ingest / latest） |
 | `/extend/tw/**` | 车辆 / 终端 / 遥测扩展接口 |
 | `/extend/tw/vehicle/**` | 车辆扩展（如 by-vin、access/check） |
 | `/extend/tw/model/**` | 车型扩展 |
