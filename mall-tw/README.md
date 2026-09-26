@@ -25,8 +25,9 @@ Titan Watch（车辆与终端）业务服务。由原 `mall-tw-vehicle`、`mall-
 | MySQL DDL | `src/main/resources/db/tw_gps_latest.sql`（需可写账号执行） |
 | ClickHouse DDL | `src/main/resources/db/clickhouse/tw_gps_track.sql`；Docker init：`docs/docker/clickhouse/init/` |
 | 开关 | `tw.telemetry.clickhouse.enabled` / `tw.telemetry.kafka.enabled`，**默认 false** |
-| ClickHouse 访问 | **HTTP 客户端**（非 JDBC），避免驱动 SPI 干扰 MySQL；`enabled=true` 时装配缓冲写与轨迹查询 |
-| 样例 | `docs/nacos/mall-tw-telemetry.yaml`、`docs/nacos/gateway-tw-telemetry-route.yaml` |
+| ClickHouse 访问 | **HTTP 客户端**（非 JDBC），避免驱动 SPI 干扰 MySQL |
+| Kafka | `spring-kafka`；仅 `kafka.enabled=true` 时 `@EnableKafka` + Listener；bootstrap：`KAFKA_BOOTSTRAP_SERVERS` |
+| 样例 | 网关路由见 `docs/nacos/gateway-tw-telemetry-route.yaml`（若有） |
 
 ## 包结构（按层组织）
 
@@ -50,7 +51,7 @@ com.yz.mall.tw/
 | `/tw/series/**`、`/tw/model/**` | 车系 / 车型 |
 | `/tw/device/**` | 终端管理 |
 | `/tw/telemetry/**` | 最新位置 / 轨迹：`/latest`、`/latest/batch`、`/track` |
-| `/tw/telemetry/dev/**` | 临时灌数：`ingest`、`track/ingest`、`track/flush` |
+| `/tw/telemetry/dev/**` | 临时：`ingest`、`raw/ingest`（模拟 Kafka 三写）、`track/ingest`、`track/flush` |
 | `/extend/tw/**` | 车辆 / 终端 / 遥测扩展接口 |
 | `/extend/tw/vehicle/**` | 车辆扩展（如 by-vin、access/check） |
 | `/extend/tw/model/**` | 车型扩展 |

@@ -4,6 +4,13 @@ server:
 spring:
   application:
     name: mall-tw
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:127.0.0.1:9092}
+    consumer:
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: true
 
 logging:
   mapper-package: com.yz.mall.tw
@@ -14,9 +21,11 @@ tw:
   # 遥测与轨迹（节点 0 占位；CH/Kafka 默认关闭，保证无中间件也可启动）
   telemetry:
     kafka:
-      enabled: false
+      enabled: true
       topic: tw-telemetry-raw
       group-id: tw-telemetry-gps
+      speed-jump-filter: true
+      max-speed-kmh: 250
     clickhouse:
       enabled: true
       url: jdbc:clickhouse://${CLICKHOUSE_HOST:127.0.0.1}:${CLICKHOUSE_PORT:8123}/tw

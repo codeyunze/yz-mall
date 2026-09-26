@@ -89,7 +89,11 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
-        <!-- ClickHouse：节点 3 使用 HTTP 客户端写读，不引入 clickhouse-jdbc，避免 SPI 干扰 MySQL -->
+        <!-- ClickHouse：HTTP 写读，不引入 clickhouse-jdbc -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

@@ -39,6 +39,14 @@ public class TwTelemetryProperties {
          * 消费组
          */
         private String groupId = "tw-telemetry-gps";
+        /**
+         * 是否启用速度跳变粗过滤
+         */
+        private boolean speedJumpFilter = true;
+        /**
+         * 速度跳变阈值（km/h），超过则丢弃该点
+         */
+        private double maxSpeedKmh = 250D;
     }
 
     @Data
