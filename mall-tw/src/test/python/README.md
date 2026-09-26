@@ -1,30 +1,23 @@
 # mall-tw 遥测 API 脚本
 
-环境变量：
+**硬性约定：每个 `test_*.py` 必须可独立运行**——禁止 `import` 同目录其它 `.py`（含 `_common`），禁止依赖额外配置文件；参数一律走环境变量。
+
+第三方依赖仅允许运行时已有的 `requests`（缺失时脚本打印安装提示并退出码 2）。
+
+## 环境变量
 
 | 变量 | 说明 |
 |------|------|
-| `BASE_URL` | 网关或 mall-tw 根地址，如 `http://127.0.0.1:30001` |
-| `TOKEN` | `Authorization` 完整值，如 `Bearer xxx`（运营账号需有位置/批量权限） |
-| `TW_TEST_VIN` | 正例用 VIN（建议先经 `/tw/telemetry/dev/ingest` 灌点） |
-| `EXPECT_CODE` | 反例期望业务码，默认见各脚本 |
+| `BASE_URL` | 网关或 mall-tw 根地址，如 `http://127.0.0.1:5005`（多数脚本必填） |
+| `TOKEN` | 可选，`Authorization` 完整值，如 `Bearer xxx` |
+| `TW_TEST_VIN` | 正例用 VIN |
+| `EXPECT_CODE` | 反例期望业务码 |
 
-单跑：
+## 单跑示例
 
-```bash
-cd yz-mall/mall-tw/src/test/python
-pip install -r requirements.txt
-export BASE_URL=http://127.0.0.1:30001
-export TOKEN='Bearer xxx'
-export TW_TEST_VIN=TESTVIN001
-python tw_telemetry/test_latest_ok.py
-python tw_telemetry/test_track_ok.py
-EXPECT_CODE=1 python tw_telemetry/test_track_ng_window.py
-```
-
-轨迹联调前请：`tw.telemetry.clickhouse.enabled=true`，并先：
-
-```http
-POST /tw/telemetry/dev/track/ingest
-POST /tw/telemetry/dev/track/flush
+```powershell
+$env:BASE_URL = "http://127.0.0.1:5005"
+$env:TOKEN = "Bearer xxx"
+$env:TW_TEST_VIN = "TESTVIN001"
+python yz-mall\mall-tw\src\test\python\tw_telemetry\test_raw_ingest_ok.py
 ```

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""API: POST /tw/telemetry/track — 反例(无Token) — 节点3"""
+"""API: POST /tw/telemetry/track — 反例(无Token) — 节点3
+
+环境变量：BASE_URL（必填）、EXPECT_CODE（默认 50000）
+依赖：仅标准库 + requests
+"""
 from __future__ import annotations
 
 import os
 import sys
-
-sys.path.insert(0, os.path.dirname(__file__))
-from _common import base_url, biz_code  # noqa: E402
 
 
 def main() -> int:
@@ -17,8 +18,13 @@ def main() -> int:
         print("FAIL: please pip install requests")
         return 2
 
+    base = os.environ.get("BASE_URL", "").rstrip("/")
+    if not base:
+        print("FAIL: BASE_URL is required")
+        return 2
     expect_code = int(os.environ.get("EXPECT_CODE", "50000"))
-    url = f"{base_url()}/tw/telemetry/track"
+
+    url = f"{base}/tw/telemetry/track"
     payload = {
         "vin": "TESTVIN001",
         "startTime": "2026-09-25 00:00:00",
@@ -29,7 +35,7 @@ def main() -> int:
         data = resp.json()
     except Exception:
         data = {}
-    code = biz_code(data)
+    code = data.get("code") if isinstance(data, dict) else None
     if code == expect_code:
         print(f"PASS ng: rejected bizCode={code} msg={data.get('msg')}")
         return 0

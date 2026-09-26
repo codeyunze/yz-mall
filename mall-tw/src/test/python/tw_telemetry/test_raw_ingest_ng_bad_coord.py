@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""API: GET /tw/telemetry/latest — 反例(缺 vin/vehicleId) — 节点2
+"""API: POST /tw/telemetry/dev/raw/ingest — 反例(非法坐标) — 节点4
 
 环境变量：BASE_URL（必填）、TOKEN（可选）、EXPECT_CODE（默认 1）
 依赖：仅标准库 + requests
@@ -26,8 +26,14 @@ def main() -> int:
     headers = {"Authorization": token} if token else {}
     expect_code = int(os.environ.get("EXPECT_CODE", "1"))
 
-    url = f"{base}/tw/telemetry/latest"
-    resp = requests.get(url, headers=headers, timeout=30)
+    url = f"{base}/tw/telemetry/dev/raw/ingest"
+    payload = {
+        "vin": "TESTVIN001",
+        "lng": 200,
+        "lat": 39.9,
+        "gpsTime": "2026-09-25 10:00:00",
+    }
+    resp = requests.post(url, json=payload, headers=headers, timeout=30)
     try:
         data = resp.json()
     except Exception:
