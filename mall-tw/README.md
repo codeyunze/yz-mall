@@ -51,7 +51,9 @@ com.yz.mall.tw/
 | `/tw/series/**`、`/tw/model/**` | 车系 / 车型 |
 | `/tw/device/**` | 终端管理 |
 | `/tw/telemetry/**` | 最新位置 / 轨迹：`/latest`、`/latest/batch`、`/track` |
-| `/tw/telemetry/dev/**` | 临时：`ingest`、`raw/ingest`（模拟 Kafka 三写）、`track/ingest`、`track/flush` |
+| `/tw/telemetry/dev/**` | 临时：`ingest`、`raw/ingest`、`track/ingest`、`track/flush` |
+| 权限码参考 | `src/main/resources/db/tw_telemetry_permissions.txt` |
+| 验收对照 | `.cursor/harness/runs/20260922-tw-telemetry/VERIFY_T1_T9.md` |
 | `/extend/tw/**` | 车辆 / 终端 / 遥测扩展接口 |
 | `/extend/tw/vehicle/**` | 车辆扩展（如 by-vin、access/check） |
 | `/extend/tw/model/**` | 车型扩展 |

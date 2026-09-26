@@ -1,0 +1,21 @@
+-- Titan Watch 遥测与轨迹：菜单建议 + API 权限码（按需在 mall-sys 录入；parent_id 按实际菜单树调整）
+-- 与 Controller 注释中的 @SaCheckPermission 对齐；数据范围另走 access/check scope=2
+
+-- ========== 菜单建议 ==========
+-- Titan Watch
+--   ├── 实时监控（最新位置 / 在线，地图点）  路由预留：/tw/monitor
+--   └── 轨迹查询（VIN + 时间范围 + 折线）    路由预留：/tw/track
+
+-- ========== API 权限码 ==========
+-- 最新位置（车主/授权需 scope 含位置位 2）
+-- api:tw:telemetry:latest
+
+-- 批量最新位置（运营/监控大屏；车主与授权用户不授予）
+-- api:tw:telemetry:latest:batch
+
+-- 轨迹查询（车主/授权需 scope 含位置位 2）
+-- api:tw:telemetry:track
+
+-- ========== 角色建议（录入时勾选） ==========
+-- SUPER_ADMIN / TW_OPERATOR / TW_MONITOR：latest + latest:batch + track
+-- TW_OWNER / TW_AUTH_USER：仅 latest + track（勿授 batch）
