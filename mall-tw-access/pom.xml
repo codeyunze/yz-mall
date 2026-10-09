@@ -85,10 +85,14 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
-        <!-- Elastic APM API（Agent 由启动参数 -javaagent 挂载） -->
+        <!-- SkyWalking：MQTT 手动 @Trace + 日志 TID（logback toolkit 经 mall-web 传递） -->
         <dependency>
-            <groupId>co.elastic.apm</groupId>
-            <artifactId>apm-agent-api</artifactId>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-trace</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-logback-1.x</artifactId>
         </dependency>
 
         <dependency>

@@ -102,10 +102,18 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-        <!-- Elastic APM API：回写 x-trace-id（Agent 由启动参数 -javaagent 挂载） -->
+        <!-- SkyWalking：WebFlux 追踪 + 日志 TID / OAP -->
         <dependency>
-            <groupId>co.elastic.apm</groupId>
-            <artifactId>apm-agent-api</artifactId>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-trace</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-logback-1.x</artifactId>
         </dependency>
     </dependencies>
 

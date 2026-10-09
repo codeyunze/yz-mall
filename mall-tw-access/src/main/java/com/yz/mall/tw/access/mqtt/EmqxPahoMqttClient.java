@@ -1,8 +1,5 @@
 package com.yz.mall.tw.access.mqtt;
 
-import co.elastic.apm.api.ElasticApm;
-import co.elastic.apm.api.Scope;
-import co.elastic.apm.api.Transaction;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.yz.mall.base.exception.BusinessException;
 import com.yz.mall.json.JacksonUtil;
@@ -12,6 +9,8 @@ import com.yz.mall.tw.access.service.TelemetryBridgeService;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.skywalking.apm.toolkit.trace.ActiveSpan;
+import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -133,8 +132,10 @@ public class EmqxPahoMqttClient implements ApplicationRunner {
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
-                    // 消费上行 GPS 消息
-                    onGpsMessage(topic, message);
+                    // 只处理 GPS 上行，避免非 GPS Topic 也建 Trace
+                    if (topic != null && topic.endsWith("/up/gps")) {
+                        onGpsMessage(topic, message);
+                    }
                 }
 
                 @Override
@@ -197,21 +198,15 @@ public class EmqxPahoMqttClient implements ApplicationRunner {
     /**
      * 上行 GPS 回调：解析 JSON 后桥接到 Kafka（与 HTTP {@code /emqx/bridge/gps} 共用逻辑）。
      * <p>
-     * Paho 回调线程无 HTTP 事务，需手动 {@link ElasticApm#startTransaction()}，日志 MDC 才有 {@code trace.id}。
+     * Paho 回调线程无 HTTP 入口，用 {@link Trace} 建本地 Span，日志经 TraceIdMDCPatternLogbackLayout 才有 {@code tid}。
      *
      * @param topic   实际 Topic，如 titan/{vin}/up/gps
      * @param message MQTT 报文
      */
+    @Trace(operationName = "MQTT up/gps")
     private void onGpsMessage(String topic, MqttMessage message) {
-        // 只处理 GPS 上行后缀，避免误收其它订阅
-        if (topic == null || !topic.endsWith("/up/gps")) {
-            return;
-        }
-        Transaction transaction = ElasticApm.startTransaction();
-        transaction.setName("MQTT up/gps");
-        transaction.setType("messaging");
-        transaction.setLabel("mqtt.topic", topic);
-        try (Scope scope = transaction.activate()) {
+        ActiveSpan.tag("mqtt.topic", topic);
+        try {
             String raw = new String(message.getPayload(), StandardCharsets.UTF_8);
             log.info("收到 EMQX 上行 GPS topic={} bytes={}", topic, message.getPayload() == null ? 0 : message.getPayload().length);
             EmqxGpsBridgeRequest req = new EmqxGpsBridgeRequest();
@@ -221,16 +216,10 @@ public class EmqxPahoMqttClient implements ApplicationRunner {
             boolean sent = telemetryBridgeService.bridgeGps(req);
             if (!sent) {
                 log.warn("上行 GPS 未投递 Kafka topic={}", topic);
-                transaction.setResult("skip");
-            } else {
-                transaction.setResult("success");
             }
         } catch (Exception ex) {
-            transaction.captureException(ex);
-            transaction.setResult("error");
+            ActiveSpan.error(ex);
             log.error("处理上行 GPS 失败 topic={}: {}", topic, ex.getMessage(), ex);
-        } finally {
-            transaction.end();
         }
     }
 

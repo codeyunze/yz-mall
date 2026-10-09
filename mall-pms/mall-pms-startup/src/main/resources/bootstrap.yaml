@@ -15,6 +15,7 @@ spring:
           - data-id: sa-token.yaml
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+        ip: 192.168.3.20
 
 
 # 执行器 address/port：未配置 port 时由 mall-job 按 server.port+100 计算

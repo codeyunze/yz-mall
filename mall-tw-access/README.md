@@ -77,6 +77,18 @@ java -jar mall-tw-access/target/mall-tw-access-*.jar
 
 本模块已放行 `/emqx/**`、`/actuator/**`。若 Nacos `sa-token.yaml` 另有全局拦截，请同样排除 `/emqx/**`。
 
+## SkyWalking
+
+启动挂载 SkyWalking Java Agent（与 tag `0.0.7` 一致），勿再使用 Elastic APM Agent：
+
+```text
+-javaagent:/path/to/skywalking-agent.jar
+-Dskywalking.agent.service_name=mall-tw-access
+-Dskywalking.collector.backend_service=<oap-host>:11800
+```
+
+日志 TID 字段为 `%X{tid}`（`TraceIdMDCPatternLogbackLayout`）。MQTT 上行由 `@Trace(operationName = "MQTT up/gps")` 建本地 Span。
+
 ## 网关样例
 
 见 `docs/nacos/gateway-tw-access-route.yaml`。

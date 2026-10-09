@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
+import org.apache.skywalking.apm.toolkit.webflux.WebFluxSkyWalkingOperators;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -90,10 +91,12 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
         AtomicReference<String> responseSkipReason = new AtomicReference<>();
         ServerHttpResponse decorated = new AccessLogResponseDecorator(exchange.getResponse(), this, responseBodyBytes, responseSkipReason, Math.max(properties.getMaxBodyLogLength(), 1));
         ServerWebExchange mutated = exchange.mutate().response(decorated).build();
-        return chain.filter(mutated).doFinally(signalType -> {
+        
+        return chain.filter(mutated).doFinally(signalType -> WebFluxSkyWalkingOperators.continueTracing(mutated, () -> {
             long costMs = (System.nanoTime() - startNanos) / 1_000_000L;
             ServerHttpResponse response = mutated.getResponse();
             HttpStatusCode status = response.getStatusCode();
+            
             String responseBody = resolveResponseBody(response, responseBodyBytes.get(), responseSkipReason.get());
             GatewayAccessLogMessage message = buildMessage(request, path, requestBody, response, responseBody, status, costMs);
             if (log.isInfoEnabled()) {
@@ -117,7 +120,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
             if (producer != null) {
                 producer.send(message);
             }
-        });
+        }));
     }
 
     @Override

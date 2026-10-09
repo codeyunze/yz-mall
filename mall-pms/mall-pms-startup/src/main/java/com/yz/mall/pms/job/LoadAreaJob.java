@@ -1,9 +1,8 @@
 package com.yz.mall.pms.job;
 
-import co.elastic.apm.api.ElasticApm;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.yz.mall.job.ElasticApmXxlJobSupport;
+import com.yz.mall.job.SkyWalkingXxlJobSupport;
 import com.yz.mall.json.JacksonUtil;
 import com.yz.mall.sys.service.ExtendSysAreaService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +28,8 @@ public class LoadAreaJob {
 
     @XxlJob(value = "loadAreaJobHandler", init = "init", destroy = "destroy")
     public void loadAreaJobHandler() throws Exception {
-        ElasticApmXxlJobSupport.run("loadAreaJobHandler", () -> {
-            String traceId = ElasticApm.currentTransaction().getTraceId();
-            log.info("loadAreaJobHandler 执行任务，traceId: {}", traceId);
+        SkyWalkingXxlJobSupport.run("loadAreaJobHandler", () -> {
+            log.info("loadAreaJobHandler 执行任务，traceId: {}", SkyWalkingXxlJobSupport.currentTraceId());
             String jobParam = XxlJobHelper.getJobParam();
             Map<String, String> params = JacksonUtil.getObjectMapper().readValue(jobParam, Map.class);
             extendSysAreaService.getById(params.get("area"));
