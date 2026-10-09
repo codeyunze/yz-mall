@@ -18,6 +18,7 @@
         <module>mall-pms</module>
         <module>mall-oms</module>
         <module>mall-tw</module>
+        <module>mall-tw-access</module>
     </modules>
 
     <properties>

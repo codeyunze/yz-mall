@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!-- 关闭 Status 控制台输出，避免 Logstash 启动首连超时刷 |-WARN；不影响业务日志与自动重连上报 -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+    <!--从 spring.application.name 读取服务名，日志目录与 Logstash 标签自动跟随，新模块只需配置服务名即可-->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="application"/>
+    <property name="LOG_HOME" value="./logs/${APP_NAME}/"/>
+
+    <!-- 控制台：trace.id 由 Elastic APM Agent log correlation 注入 MDC（默认开启） -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan([%X{trace.id}]) %logger{72} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="timeFileOutput" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/out.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{trace.id}] %logger{72} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+      Logstash → ES：日志能进 ES，但 APM 事务页要能点开「Logs」，文档还必须满足关联条件：
+      1) 顶层有 trace.id / transaction.id（Agent 写入 MDC，此处 include）
+      2) 顶层有 service.name，且与 -Delastic.apm.service_name 完全一致
+      3) Kibana APM/Observability 的日志索引配置要覆盖你 Logstash 写入的 index（默认常看 logs-*）
+      APM Server(8200) 只收 trace/metric；日志仍走本 appender，不会自动进 APM。
+    -->
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>192.168.3.237:4560</destination>
+        <!-- 启动期默认 5s 易超时，拉长首连等待 -->
+        <connectionTimeout>30000</connectionTimeout>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- service.name 优先取 Agent 启动参数，否则回退 spring.application.name -->
+            <customFields>{"platform":"mall","app_name":"${APP_NAME}","service.name":"${elastic.apm.service_name:-${APP_NAME}}"}</customFields>
+            <includeMdcKeyName>client_ip</includeMdcKeyName>
+            <includeMdcKeyName>trace.id</includeMdcKeyName>
+            <includeMdcKeyName>transaction.id</includeMdcKeyName>
+            <includeMdcKeyName>span.id</includeMdcKeyName>
+            <includeMdcKeyName>error.id</includeMdcKeyName>
+        </encoder>
+    </appender>
+
+    <springProperty scope="context" name="MAPPER_PACKAGE" source="logging.mapper-package" defaultValue="com.yz.mall"/>
+    <logger name="${MAPPER_PACKAGE}" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="timeFileOutput"/>
+        <appender-ref ref="logstash"/>
+    </root>
+</configuration>
