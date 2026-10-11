@@ -1,0 +1,57 @@
+server:
+  port: 5006
+
+spring:
+  application:
+    name: mall-tw-access
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:127.0.0.1:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+
+tw:
+  access:
+    topic-prefix: titan
+#    mall-tw:
+      # 空=走 Nacos lb://mall-tw；本地无注册中心时可设 http://127.0.0.1:5005
+#      url: ${MALL_TW_URL:}
+    auth:
+      # 本地无终端数据时先开 true；接上 mall-tw 设备表后改 false
+      dev-bypass: ${TW_ACCESS_DEV_BYPASS:true}
+      dev-default-vin: TESTVIN001
+    kafka:
+      enabled: true
+      telemetry-topic: tw-telemetry-raw
+    # Eclipse Paho：订阅 titan/+/up/gps + 下行 publish（需 enabled=true 且配好账号）
+    mqtt:
+      enabled: ${TW_ACCESS_MQTT_ENABLED:true}
+      broker: ${EMQX_MQTT_BROKER:ssl://q3aaa962.ala.cn-shenzhen.emqxsl.cn:8883}
+      client-id: ${EMQX_MQTT_CLIENT_ID:mall-tw-access}
+      username: ${EMQX_MQTT_USERNAME:}
+      password: ${EMQX_MQTT_PASSWORD:}
+      ca-cert-path: ${EMQX_MQTT_CA_CERT:classpath:emqxsl-ca.crt}
+      automatic-reconnect: true
+      clean-session: true
+      connection-timeout: 10
+      keep-alive-interval: 60
+      subscribe-gps: true
+      subscribe-qos: 1
+    online:
+      redis-prefix: "tw:online:"
+      online-value: "1"
+      ttl-seconds: 0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true

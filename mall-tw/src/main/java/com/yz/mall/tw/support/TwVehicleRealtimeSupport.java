@@ -1,8 +1,9 @@
 package com.yz.mall.tw.support;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yz.mall.json.JacksonUtil;
 import com.yz.mall.tw.constant.TwVehicleConstants;
 import com.yz.mall.tw.vo.TwVehicleLocationVo;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,6 +23,9 @@ import java.util.Map;
  */
 @Component
 public class TwVehicleRealtimeSupport {
+
+    private static final ObjectMapper OBJECT_MAPPER = JacksonUtil.getObjectMapper();
+    private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final StringRedisTemplate stringRedisTemplate;
 
@@ -65,20 +69,17 @@ public class TwVehicleRealtimeSupport {
             return null;
         }
         try {
-            JSONObject json = JSONUtil.parseObj(raw);
+            JsonNode json = OBJECT_MAPPER.readTree(raw);
             TwVehicleLocationVo vo = new TwVehicleLocationVo();
-            if (json.get("lng") != null) {
-                vo.setLng(new BigDecimal(json.getStr("lng")));
+            vo.setLng(toDecimal(json, "lng"));
+            vo.setLat(toDecimal(json, "lat"));
+            vo.setSpeed(toDecimal(json, "speed"));
+            String reportTime = textOrNull(json, "reportTime");
+            if (StrUtil.isBlank(reportTime)) {
+                reportTime = textOrNull(json, "gpsTime");
             }
-            if (json.get("lat") != null) {
-                vo.setLat(new BigDecimal(json.getStr("lat")));
-            }
-            if (json.get("speed") != null) {
-                vo.setSpeed(new BigDecimal(json.getStr("speed")));
-            }
-            String reportTime = json.getStr("reportTime");
             if (StrUtil.isNotBlank(reportTime)) {
-                vo.setReportTime(LocalDateTime.parse(reportTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                vo.setReportTime(LocalDateTime.parse(reportTime, DT_FMT));
             }
             return vo;
         } catch (Exception ex) {
@@ -98,6 +99,29 @@ public class TwVehicleRealtimeSupport {
         }
         String raw = stringRedisTemplate.opsForValue().get(TwVehicleConstants.REDIS_ONLINE_PREFIX + vin);
         return isOnlineValue(raw);
+    }
+
+    private static String textOrNull(JsonNode json, String key) {
+        JsonNode node = json.get(key);
+        if (node == null || node.isNull()) {
+            return null;
+        }
+        return node.asText();
+    }
+
+    private static BigDecimal toDecimal(JsonNode json, String key) {
+        JsonNode node = json.get(key);
+        if (node == null || node.isNull()) {
+            return null;
+        }
+        if (node.isNumber()) {
+            return node.decimalValue();
+        }
+        String text = node.asText();
+        if (StrUtil.isBlank(text)) {
+            return null;
+        }
+        return new BigDecimal(text);
     }
 
     private static boolean isOnlineValue(String raw) {

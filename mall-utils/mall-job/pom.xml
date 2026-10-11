@@ -32,10 +32,10 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- Elastic APM：XXL-JOB 线程无 HTTP 上下文，需手动 startTransaction -->
+        <!-- SkyWalking：@Trace 标注 XXL-JOB 入口 -->
         <dependency>
-            <groupId>co.elastic.apm</groupId>
-            <artifactId>apm-agent-api</artifactId>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-trace</artifactId>
         </dependency>
     </dependencies>
 

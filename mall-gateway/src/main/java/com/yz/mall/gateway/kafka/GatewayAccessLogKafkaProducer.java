@@ -1,11 +1,10 @@
 package com.yz.mall.gateway.kafka;
 
-import co.elastic.apm.api.ElasticApm;
 import com.yz.mall.gateway.config.GatewayAccessLogProperties;
 import com.yz.mall.json.JacksonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
+import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 import org.springframework.kafka.core.KafkaTemplate;
 
 /**
@@ -36,7 +35,7 @@ public class GatewayAccessLogKafkaProducer {
         String topic = properties.getKafka().getTopic();
         try {
             String payload = JacksonUtil.getObjectMapper().writeValueAsString(message);
-            kafkaTemplate.send(topic, ElasticApm.currentTransaction().getTraceId(), payload).whenComplete((result, ex) -> {
+            kafkaTemplate.send(topic, TraceContext.traceId(), payload).whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.warn("网关访问日志写入 Kafka 失败 topic={} path={}", topic, message.getPath(), ex);
                 }

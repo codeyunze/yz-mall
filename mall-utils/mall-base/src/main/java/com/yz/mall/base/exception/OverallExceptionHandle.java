@@ -43,6 +43,7 @@ public class OverallExceptionHandle {
      */
     @ExceptionHandler(BusinessException.class)
     Result<?> businessExceptionHandle(BusinessException e) {
+        log.error(e.getMessage(), e);
         return Result.error(e.getMessage());
     }
 
@@ -51,6 +52,7 @@ public class OverallExceptionHandle {
      */
     @ExceptionHandler(DataNotExistException.class)
     Result<?> dataNotExistExceptionHandle(DataNotExistException e) {
+        log.error(e.getMessage(), e);
         return Result.error(e.getMessage());
     }
 
@@ -60,6 +62,7 @@ public class OverallExceptionHandle {
      */
     @ExceptionHandler(DuplicateException.class)
     Result<?> duplicateExceptionHandle(DuplicateException e) {
+        log.error(e.getMessage(), e);
         return new Result<>(CodeEnum.ALREADY_EXISTS_ERROR.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.ALREADY_EXISTS_ERROR.getMsg());
     }
 
@@ -68,6 +71,7 @@ public class OverallExceptionHandle {
      */
     @ExceptionHandler(RepeatSubmitException.class)
     Result<?> businessExceptionHandle(RepeatSubmitException e) {
+        log.error(e.getMessage(), e);
         return new Result<>(CodeEnum.REPEAT_SUBMIT.get(), null, StringUtils.hasText(e.getMessage()) ? e.getMessage() : CodeEnum.REPEAT_SUBMIT.getMsg());
     }
 
@@ -94,6 +98,7 @@ public class OverallExceptionHandle {
      */
     @ExceptionHandler(AuthenticationException.class)
     Result<?> authenticationExceptionHandle(AuthenticationException e) {
+        log.error(e.getMessage(), e);
         return new Result<>(CodeEnum.AUTHENTICATION_ERROR.get(), null, e.getMessage());
     }
 
@@ -121,7 +126,7 @@ public class OverallExceptionHandle {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     Result<?> httpMessageNotReadableExceptionHandle(HttpMessageNotReadableException e) {
         String message = resolveHttpMessageNotReadableMessage(e);
-        log.warn("请求体解析失败: {}", e.getMessage());
+        log.error("请求体解析失败: {}", e.getMessage());
         return new Result<>(CodeEnum.PARAMS_ERROR.get(), null, message);
     }
 
