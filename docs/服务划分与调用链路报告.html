@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yz-mall 服务划分与调用链路报告</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --surface-2: #eef2f7;
+      --border: #d8e0ea;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #0369a1;
+      --accent-2: #0f766e;
+      --warn: #b45309;
+      --lib: #6d28d9;
+      --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "Cascadia Code", "Consolas", "SF Mono", monospace;
+      --n-client: #e0f2fe;
+      --n-edge: #dbeafe;
+      --n-biz: #d1fae5;
+      --n-infra: #fef3c7;
+      --n-line: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      background-image:
+        radial-gradient(ellipse 70% 40% at 0% 0%, rgba(3, 105, 161, 0.06), transparent),
+        radial-gradient(ellipse 50% 30% at 100% 0%, rgba(15, 118, 110, 0.05), transparent);
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+    header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; color: #0f172a; }
+    header .meta { color: var(--muted); font-size: 0.9rem; }
+    header .meta code { font-family: var(--mono); color: var(--accent); font-size: 0.85rem; background: #e0f2fe; padding: 0.1em 0.35em; border-radius: 4px; }
+    nav.toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0 0; }
+    nav.toc a {
+      color: var(--muted); text-decoration: none; font-size: 0.85rem;
+      padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 6px;
+      background: var(--surface); transition: color .15s, border-color .15s, box-shadow .15s;
+    }
+    nav.toc a:hover { color: var(--accent); border-color: var(--accent); box-shadow: 0 1px 3px rgba(3,105,161,.12); }
+    section { margin-bottom: 2.75rem; }
+    h2 {
+      font-size: 1.25rem; margin: 0 0 1rem; padding-left: 0.75rem;
+      border-left: 3px solid var(--accent); font-weight: 600; color: #0f172a;
+    }
+    h3 { font-size: 1.05rem; margin: 1.5rem 0 0.75rem; color: var(--accent-2); }
+    p, li { color: var(--text); }
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .note {
+      background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;
+      padding: 0.85rem 1rem; margin: 1rem 0; font-size: 0.9rem; color: #78716c;
+    }
+    .note strong { color: var(--warn); }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 0.9rem;
+      background: var(--surface); border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(15,23,42,.04);
+    }
+    th, td { padding: 0.7rem 0.9rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { background: var(--surface-2); color: var(--muted); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.04em; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+    code, .port {
+      font-family: var(--mono); font-size: 0.85em;
+      background: var(--surface-2); padding: 0.1em 0.4em; border-radius: 4px;
+    }
+    .port { color: var(--accent); white-space: nowrap; background: #e0f2fe; }
+    .badge {
+      display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.5rem;
+      border-radius: 4px; letter-spacing: 0.02em; vertical-align: middle;
+    }
+    .b-run { background: #d1fae5; color: #047857; }
+    .b-lib { background: #ede9fe; color: var(--lib); }
+    .b-ext { background: #ffedd5; color: #c2410c; }
+    .b-mw { background: #e0f2fe; color: var(--accent); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem;
+      box-shadow: 0 1px 2px rgba(15,23,42,.04);
+    }
+    .card h4 { margin: 0 0 0.5rem; font-size: 0.95rem; color: #0f172a; }
+    .card ul { margin: 0; padding-left: 1.2rem; font-size: 0.88rem; color: var(--muted); }
+    .card ul li { margin: 0.25rem 0; }
+    .diagram {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.25rem; margin: 1rem 0; overflow-x: auto;
+      box-shadow: 0 1px 2px rgba(15,23,42,.04);
+    }
+    .diagram-title {
+      font-size: 0.75rem; font-weight: 600; color: var(--muted); letter-spacing: 0.06em;
+      text-transform: uppercase; margin: 0 0 0.85rem;
+    }
+    .lane { margin-bottom: 1rem; }
+    .lane:last-child { margin-bottom: 0; }
+    .lane-label {
+      font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 0.45rem;
+    }
+    .nodes { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: stretch; }
+    .node {
+      min-width: 7.5rem; padding: 0.55rem 0.7rem; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 0.82rem; line-height: 1.35; text-align: center;
+    }
+    .node strong { display: block; font-size: 0.88rem; margin-bottom: 0.15rem; }
+    .node small { display: block; color: var(--muted); font-family: var(--mono); font-size: 0.75rem; }
+    .node.client { background: var(--n-client); border-color: #7dd3fc; }
+    .node.edge { background: var(--n-edge); border-color: #93c5fd; }
+    .node.biz { background: var(--n-biz); border-color: #6ee7b7; }
+    .node.infra { background: var(--n-infra); border-color: #fcd34d; }
+    .arrows {
+      display: flex; flex-wrap: wrap; gap: 0.4rem 0.85rem; margin-top: 1rem; padding-top: 0.9rem;
+      border-top: 1px dashed var(--border); font-size: 0.8rem; color: var(--muted);
+    }
+    .arrows span {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--surface-2); padding: 0.25rem 0.55rem; border-radius: 999px; border: 1px solid var(--border);
+    }
+    .arrows code { background: transparent; padding: 0; font-size: 0.78rem; color: var(--accent); }
+    .dep-flow {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem 0;
+      padding: 0.5rem 0;
+    }
+    .dep-col { display: flex; flex-direction: column; gap: 0.55rem; align-items: center; min-width: 7rem; }
+    .dep-arrow {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 0 0.65rem; color: var(--muted); font-size: 0.72rem; text-align: center; max-width: 7.5rem;
+    }
+    .dep-arrow .line { font-size: 1.1rem; color: var(--accent); line-height: 1; }
+    .layer-flow {
+      display: flex; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 0.35rem;
+    }
+    .layer-box {
+      flex: 1 1 9rem; max-width: 11rem; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 0.65rem; text-align: center; font-size: 0.8rem;
+    }
+    .layer-box strong { display: block; font-size: 0.85rem; color: #0f172a; margin-bottom: 0.35rem; font-family: var(--mono); }
+    .layer-box span { color: var(--muted); font-size: 0.75rem; }
+    .layer-chevron {
+      display: flex; align-items: center; color: var(--accent); font-size: 1.25rem; font-weight: 700; padding: 0 0.15rem;
+    }
+    .layer-links {
+      margin-top: 0.9rem; font-size: 0.82rem; color: var(--muted); text-align: center;
+    }
+    .layer-links code { color: var(--accent); }
+    .flow-list { list-style: none; padding: 0; margin: 0; }
+    .flow-list li {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.9rem 1rem; margin-bottom: 0.65rem; font-size: 0.9rem;
+      box-shadow: 0 1px 2px rgba(15,23,42,.03);
+    }
+    .flow-list .title { font-weight: 600; margin-bottom: 0.35rem; color: var(--accent); }
+    .flow-list .chain { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); word-break: break-all; }
+    footer {
+      margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 0.8rem;
+    }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>yz-mall 服务划分与调用链路报告</h1>
+      <p class="meta">
+        依据仓库源码与本地配置整理 · 端口以各服务 <code>application.yaml</code> 为准 ·
+        生成日期 2026-10-11 · 工程版本 <code>0.0.8-SNAPSHOT</code>
+      </p>
+      <nav class="toc">
+        <a href="#overview">概述</a>
+        <a href="#services">可运行服务</a>
+        <a href="#libs">库模块</a>
+        <a href="#gateway">网关路由</a>
+        <a href="#calls">调用链路</a>
+        <a href="#feign">Feign 清单</a>
+        <a href="#infra">中间件</a>
+        <a href="#layers">分层约定</a>
+      </nav>
+    </header>
+
+    <section id="overview">
+      <h2>1. 概述</h2>
+      <p>
+        yz-mall 是基于 <strong>Spring Boot 3.4.x + Spring Cloud 2024.x + Spring Cloud Alibaba</strong> 的微服务后端。
+        生产可运行进程包括：网关、系统管理（内嵌认证与流水号）、商品、订单、车辆终端、接入网关；
+        认证（mall-auth）与业务流水号（mall-serial）以<strong>库模块</strong>形式嵌入 <code>mall-sys</code>，不单独占端口。
+      </p>
+      <div class="note">
+        <strong>端口说明：</strong>下表「本地端口」取自各模块 <code>src/main/resources/application.yaml</code>。
+        k3s / Nginx 对外暴露端口可能不同（如网关 Service <code>25001</code>、Nginx 监听 <code>5000</code> 反代到网关 <code>5001</code>）。
+        精确路由 predicates 在 Nacos <code>gateway.yaml</code>，仓库无完整副本，下表 Path 按 Controller 前缀推断。
+      </div>
+    </section>
+
+    <section id="services">
+      <h2>2. 可运行服务（名称 / 端口 / 作用）</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>服务名</th>
+            <th>本地端口</th>
+            <th>模块路径</th>
+            <th>作用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>mall-gateway</code> <span class="badge b-run">进程</span></td>
+            <td><span class="port">5001</span></td>
+            <td><code>mall-gateway</code></td>
+            <td>统一入口：路由转发、Sa-Token 登录校验、Trace/IP、访问日志（可写 Kafka）、文件直链防护</td>
+          </tr>
+          <tr>
+            <td><code>mall-sys</code> <span class="badge b-run">进程</span></td>
+            <td><span class="port">5002</span><br /><span class="muted">XXL 执行器 <span class="port">15002</span></span></td>
+            <td><code>mall-admin/mall-sys-startup</code></td>
+            <td>系统管理：用户/角色/菜单/组织/字典/租户/文件/开放客户端；<strong>同进程</strong>承载 auth-core（登录鉴权）与 serial-core（流水号）</td>
+          </tr>
+          <tr>
+            <td><code>mall-oms</code> <span class="badge b-run">进程</span></td>
+            <td><span class="port">5003</span></td>
+            <td><code>mall-oms/mall-oms-startup</code></td>
+            <td>订单域：下单、我的订单、管理端发货/退款审核、支付入口；经 Feign 扣库存/查商品</td>
+          </tr>
+          <tr>
+            <td><code>mall-pms</code> <span class="badge b-run">进程</span></td>
+            <td><span class="port">5004</span><br /><span class="muted">XXL 执行器约 <span class="port">5104</span></span></td>
+            <td><code>mall-pms/mall-pms-startup</code></td>
+            <td>商品域：分类/属性/商品/SKU/库存/购物车；对外提供 <code>extend/pms/**</code> 供订单等调用</td>
+          </tr>
+          <tr>
+            <td><code>mall-tw</code> <span class="badge b-run">进程</span></td>
+            <td><span class="port">5005</span></td>
+            <td><code>mall-tw</code></td>
+            <td>Titan Watch：车辆档案、车系车型、终端管理、遥测最新位置/轨迹（Kafka 消费 + Redis/MySQL/ClickHouse）</td>
+          </tr>
+          <tr>
+            <td><code>mall-tw-access</code> <span class="badge b-run">进程</span></td>
+            <td><span class="port">5006</span></td>
+            <td><code>mall-tw-access</code></td>
+            <td>接入层：EMQX Auth/ACL/Webhook、MQTT GPS 桥接 Kafka、下行 publish；不持有车辆主数据</td>
+          </tr>
+          <tr>
+            <td>管理端前端 <span class="badge b-ext">外部</span></td>
+            <td><span class="port">8899</span></td>
+            <td><code>yz-mall-web-admin-pc</code>（独立仓库）</td>
+            <td>Vue3 管理后台；开发态代理 <code>/api</code> → 网关，不直连业务端口</td>
+          </tr>
+          <tr>
+            <td>xxl-job-admin <span class="badge b-mw">中间件</span></td>
+            <td><span class="port">30009</span></td>
+            <td>Docker / 独立部署</td>
+            <td>分布式任务调度中心；sys / pms 等注册执行器</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="libs">
+      <h2>3. 非独立部署模块</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>模块</th>
+            <th>类型</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>mall-auth</code></td>
+            <td><span class="badge b-lib">库</span></td>
+            <td>
+              <code>auth-core</code> 由 <code>mall-sys-startup</code> 引入，登录 API 跑在 <code>mall-sys:5002</code>；
+              其他服务用 <code>auth-interface</code> + <code>auth-feign</code> 做权限扩展远程调用
+            </td>
+          </tr>
+          <tr>
+            <td><code>mall-utils</code></td>
+            <td><span class="badge b-lib">库</span></td>
+            <td>
+              <code>mall-base</code> / <code>mall-web</code> / <code>mall-redis</code> / <code>mall-mybatis</code> /
+              <code>mall-rocketmq</code> / <code>mall-serial</code> / <code>mall-job</code> 等；禁止塞业务逻辑
+            </td>
+          </tr>
+          <tr>
+            <td><code>mall-demo</code></td>
+            <td><span class="badge b-ext">POC</span></td>
+            <td>同级目录演示工程（Seata/Kafka/Jaeger 等），<strong>禁止</strong>被生产模块依赖</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="gateway">
+      <h2>4. 网关路由（Path → 服务）</h2>
+      <p class="muted">入口：客户端 →（可选 Nginx :5000）→ mall-gateway :5001 → Nacos <code>lb://服务名</code></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Path 前缀</th>
+            <th>目标服务</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/authentication/**</code></td>
+            <td><code>mall-sys</code></td>
+            <td>登录 / 登出 / 验证码 / 刷新 Token（网关白名单放行登录相关）</td>
+          </tr>
+          <tr>
+            <td><code>/sys/**</code>、<code>/extend/sys/**</code>、<code>/extend/files</code>、<code>/extend/area</code>、<code>/extend/permission</code>、<code>/extend/serial/**</code></td>
+            <td><code>mall-sys</code></td>
+            <td>系统管理 + 内部扩展接口</td>
+          </tr>
+          <tr>
+            <td><code>/pms/**</code>、<code>/extend/pms/**</code></td>
+            <td><code>mall-pms</code></td>
+            <td>商品 / 库存 / 购物车</td>
+          </tr>
+          <tr>
+            <td><code>/oms/**</code></td>
+            <td><code>mall-oms</code></td>
+            <td>订单 / 支付相关</td>
+          </tr>
+          <tr>
+            <td><code>/tw/**</code>、<code>/extend/tw/**</code></td>
+            <td><code>mall-tw</code></td>
+            <td>车辆 / 终端 / 遥测管理端与扩展接口</td>
+          </tr>
+          <tr>
+            <td><code>/emqx/**</code>、<code>/tw/access/**</code></td>
+            <td><code>mall-tw-access</code></td>
+            <td>EMQX 回调与 MQTT 下行代理（通常不经管理端登录链路）</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="calls">
+      <h2>5. 调用链路</h2>
+
+      <h3>5.1 总体架构</h3>
+      <div class="diagram">
+        <p class="diagram-title">总体架构（分层节点 + 主链路）</p>
+        <div class="lane">
+          <div class="lane-label">客户端</div>
+          <div class="nodes">
+            <div class="node client"><strong>管理端 PC</strong><small>:8899</small></div>
+            <div class="node client"><strong>车机 / EMQX</strong><small>MQTT</small></div>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">边缘入口</div>
+          <div class="nodes">
+            <div class="node edge"><strong>Nginx</strong><small>:5000</small></div>
+            <div class="node edge"><strong>mall-gateway</strong><small>:5001</small></div>
+            <div class="node edge"><strong>mall-tw-access</strong><small>:5006</small></div>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">业务服务</div>
+          <div class="nodes">
+            <div class="node biz"><strong>mall-sys</strong><small>:5002 · +auth +serial</small></div>
+            <div class="node biz"><strong>mall-pms</strong><small>:5004</small></div>
+            <div class="node biz"><strong>mall-oms</strong><small>:5003</small></div>
+            <div class="node biz"><strong>mall-tw</strong><small>:5005</small></div>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">基础设施</div>
+          <div class="nodes">
+            <div class="node infra"><strong>Nacos</strong><small>:8848</small></div>
+            <div class="node infra"><strong>MySQL</strong><small>业务库</small></div>
+            <div class="node infra"><strong>Redis</strong><small>会话 / 缓存</small></div>
+            <div class="node infra"><strong>RocketMQ</strong><small>业务消息</small></div>
+            <div class="node infra"><strong>Kafka</strong><small>遥测 / 网关日志</small></div>
+            <div class="node infra"><strong>ClickHouse</strong><small>轨迹</small></div>
+            <div class="node infra"><strong>XXL-JOB</strong><small>:30009</small></div>
+          </div>
+        </div>
+        <div class="arrows">
+          <span><code>管理端</code> → Nginx → Gateway → sys / pms / oms / tw</span>
+          <span><code>车机</code> → access → Kafka → tw</span>
+          <span><code>Feign</code> oms→pms/sys · pms→sys · tw→sys · access→tw</span>
+          <span><code>注册配置</code> 各服务 ⇢ Nacos</span>
+        </div>
+      </div>
+
+      <h3>5.2 典型业务链路</h3>
+      <ul class="flow-list">
+        <li>
+          <div class="title">A. 管理端登录</div>
+          <div class="chain">Browser → Gateway → mall-sys(auth-core) → Redis(验证码/会话) + MySQL(用户角色) → 返回 Token</div>
+        </li>
+        <li>
+          <div class="title">B. 鉴权后业务请求</div>
+          <div class="chain">Browser + Token → Gateway(checkLogin) → 目标服务 → @SaCheckPermission → Redis 权限缓存 / 业务 DB</div>
+        </li>
+        <li>
+          <div class="title">C. 下单扣库存</div>
+          <div class="chain">Browser → Gateway → mall-oms → Feign ExtendPmsStock* → mall-pms(extend/pms/stock) → 库存落库；流水号 Feign → mall-sys(extend/serial)</div>
+        </li>
+        <li>
+          <div class="title">D. 车机遥测上报</div>
+          <div class="chain">车机 MQTT → EMQX → mall-tw-access(Paho/桥接) → Kafka(tw-telemetry-raw) → mall-tw 消费 → Redis/MySQL 最新点 + ClickHouse 轨迹</div>
+        </li>
+        <li>
+          <div class="title">E. EMQX 设备鉴权</div>
+          <div class="chain">EMQX HTTP Auth → mall-tw-access:/emqx/auth → Feign mall-tw:/extend/tw/device/verify（dev-bypass 时可跳过）</div>
+        </li>
+      </ul>
+
+      <h3>5.3 服务依赖（Feign / MQ）矩阵</h3>
+      <div class="diagram">
+        <p class="diagram-title">Feign 依赖方向（调用方 → 被调方）</p>
+        <div class="dep-flow">
+          <div class="dep-col">
+            <div class="node biz"><strong>mall-oms</strong></div>
+            <div class="node edge"><strong>mall-tw-access</strong></div>
+          </div>
+          <div class="dep-arrow">
+            <div class="line">→</div>
+            <div>stock / product / cart</div>
+            <div style="margin-top:1.4rem" class="line">→</div>
+            <div>device verify</div>
+          </div>
+          <div class="dep-col">
+            <div class="node biz"><strong>mall-pms</strong></div>
+            <div class="node biz"><strong>mall-tw</strong></div>
+          </div>
+          <div class="dep-arrow">
+            <div class="line">→</div>
+            <div>user / serial / permission</div>
+            <div style="margin-top:1.4rem" class="line">→</div>
+            <div>sys 扩展</div>
+          </div>
+          <div class="dep-col">
+            <div class="node biz"><strong>mall-sys</strong><small>+auth +serial</small></div>
+          </div>
+        </div>
+        <div class="arrows">
+          <span><code>oms</code> → pms、sys</span>
+          <span><code>pms</code> → sys</span>
+          <span><code>tw</code> → sys</span>
+          <span><code>tw-access</code> → tw</span>
+          <span><code>Kafka</code> access → tw（遥测）</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="feign">
+      <h2>6. 跨服务 Feign 清单（摘要）</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>调用方（依赖 feign 模块）</th>
+            <th>目标</th>
+            <th>主要 Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>mall-oms-startup</code><br /><span class="muted">pms-feign / sys-feign / auth-feign / serial-feign</span></td>
+            <td><code>mall-pms</code>、<code>mall-sys</code></td>
+            <td><code>extend/pms/stock|product|sku|cart</code>；<code>extend/sys/**</code>；<code>extend/permission</code>；<code>extend/serial/v3</code></td>
+          </tr>
+          <tr>
+            <td><code>mall-pms-startup</code><br /><span class="muted">sys-feign / auth-feign / serial-feign</span></td>
+            <td><code>mall-sys</code></td>
+            <td>用户 / 权限 / 流水号等扩展接口</td>
+          </tr>
+          <tr>
+            <td><code>mall-tw</code><br /><span class="muted">sys-feign</span></td>
+            <td><code>mall-sys</code></td>
+            <td>系统侧扩展能力（如用户/文件等按需）</td>
+          </tr>
+          <tr>
+            <td><code>mall-tw-access</code><br /><span class="muted">内置 ExtendTwDeviceFeign</span></td>
+            <td><code>mall-tw</code></td>
+            <td><code>extend/tw/device</code>（鉴权 verify、绑定 VIN 等）</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">
+        约定：跨服务只依赖对方 <code>*-interface</code>（编译）+ <code>*-feign</code>（远程实现），不直接依赖对方 dao/core。
+        同进程注入 <code>Extend*Service</code> 时走本地实现。
+      </div>
+    </section>
+
+    <section id="infra">
+      <h2>7. 中间件与基础设施</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h4>注册与配置</h4>
+          <ul>
+            <li>Nacos Discovery + Config（:8848）</li>
+            <li>Namespace：<code>ff6944dd-b11f-4403-8245-6c621b2f54c8</code></li>
+            <li>公共 data-id：<code>middleware.yaml</code>、<code>sa-token.yaml</code>；网关另拉 <code>gateway.yaml</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>数据与缓存</h4>
+          <ul>
+            <li>MySQL：sys / pms / oms / tw</li>
+            <li>Redis / Redisson：会话、权限、在线 VIN、防重、锁</li>
+            <li>ClickHouse：tw GPS 轨迹</li>
+            <li>对象存储（RustFS/Qof）：文件能力经 sys</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>消息</h4>
+          <ul>
+            <li>RocketMQ：sys / pms / oms / tw 业务异步</li>
+            <li>Kafka：网关访问日志；tw-access → tw 遥测原始 GPS</li>
+            <li>MQTT（EMQX）：车机上下行，由 access 接入</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>可观测与调度</h4>
+          <ul>
+            <li>Actuator + Prometheus metrics</li>
+            <li>XXL-JOB：sys / pms 执行器</li>
+            <li>SkyWalking / ELK：按环境启用</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="layers">
+      <h2>8. 业务域标准分层</h2>
+      <div class="diagram">
+        <p class="diagram-title">五层模块依赖（同域）</p>
+        <div class="layer-flow">
+          <div class="layer-box">
+            <strong>startup</strong>
+            <span>Controller / Application</span>
+          </div>
+          <div class="layer-chevron">→</div>
+          <div class="layer-box">
+            <strong>core</strong>
+            <span>Service / 本地 Extend 实现</span>
+          </div>
+          <div class="layer-chevron">→</div>
+          <div class="layer-box">
+            <strong>dao</strong>
+            <span>Entity / Mapper</span>
+          </div>
+        </div>
+        <div class="layer-flow" style="margin-top:0.75rem">
+          <div class="layer-box">
+            <strong>interface</strong>
+            <span>Extend* + DTO/VO</span>
+          </div>
+          <div class="layer-chevron">←</div>
+          <div class="layer-box">
+            <strong>core</strong>
+            <span>实现 interface</span>
+          </div>
+          <div class="layer-chevron">·</div>
+          <div class="layer-box">
+            <strong>feign</strong>
+            <span>@FeignClient 远程实现</span>
+          </div>
+          <div class="layer-chevron">→</div>
+          <div class="layer-box">
+            <strong>interface</strong>
+            <span>供调用方编译依赖</span>
+          </div>
+        </div>
+        <div class="layer-links">
+          跨服务：对方服务的 <code>startup</code> 依赖本域 <code>*-feign</code>（虚线依赖），不直连 dao/core。
+        </div>
+      </div>
+      <p class="muted">
+        包名 <code>com.yz.mall.{域}</code>；类前缀 <code>Sys</code> / <code>Pms</code> / <code>Oms</code> / <code>Auth</code> / <code>Tw</code>。
+        统一响应：<code>com.yz.mall.base.Result</code> / <code>ResultTable</code>。
+      </p>
+    </section>
+
+    <footer>
+      数据来源：<code>yz-mall/*/application.yaml</code>、<code>pom.xml</code> Feign 依赖、
+      <code>docs/设计文档/系统架构.md</code>、<code>mall-tw/README.md</code>、<code>mall-tw-access/README.md</code>、
+      <code>docs/docker/nginx/conf.d/mall-gateway.conf</code>。
+      若 Nacos 路由或端口被运维覆盖，以配置中心与实际部署为准。
+      图表为内联 HTML，本地直接打开即可显示，无需外网 CDN。
+    </footer>
+  </div>
+</body>
+</html>

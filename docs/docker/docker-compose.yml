@@ -334,3 +334,17 @@ services:
     restart: unless-stopped
     networks:
       - mall
+
+  # 对外入口：负载均衡到宿主机上的 mall-gateway（默认端口 25001）
+  nginx:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/nginx:1.30.4
+    container_name: 'dev-nginx-1.30.4'
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    networks:
+      - mall
