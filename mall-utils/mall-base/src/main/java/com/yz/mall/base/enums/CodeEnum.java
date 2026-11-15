@@ -12,9 +12,9 @@ package com.yz.mall.base.enums;
  */
 public enum CodeEnum {
     /**
-     * 成功
+     * 无错误。code 是错误码，0 表示成功。
      */
-    SUCCESS(200, "成功"),
+    SUCCESS(0, "成功"),
     /**
      * 业务异常
      */

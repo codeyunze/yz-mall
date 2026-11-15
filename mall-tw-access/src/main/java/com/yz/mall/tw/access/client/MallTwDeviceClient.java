@@ -1,6 +1,7 @@
 package com.yz.mall.tw.access.client;
 
 import com.yz.mall.base.Result;
+import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.tw.access.config.TwAccessProperties;
 import com.yz.mall.tw.access.feign.ExtendTwDeviceFeign;
 import com.yz.mall.tw.access.feign.TwDeviceVerifyRequest;
@@ -35,7 +36,7 @@ public class MallTwDeviceClient {
             req.setDeviceId(deviceId);
             req.setPassword(password);
             Result<Boolean> result = deviceFeign.verify(req);
-            if (result == null || result.getCode() != 200 || !Boolean.TRUE.equals(result.getData())) {
+            if (result == null || result.getCode() != CodeEnum.SUCCESS.get() || !Boolean.TRUE.equals(result.getData())) {
                 return null;
             }
             return getBoundVin(deviceId);
@@ -54,7 +55,7 @@ public class MallTwDeviceClient {
         }
         try {
             Result<String> result = deviceFeign.boundVin(deviceId);
-            if (result == null || result.getCode() != 200 || result.getData() == null || result.getData().isBlank()) {
+            if (result == null || result.getCode() != CodeEnum.SUCCESS.get() || result.getData() == null || result.getData().isBlank()) {
                 return null;
             }
             return result.getData().trim().toUpperCase();
