@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS sys_user (
                                         username    VARCHAR(10) NOT NULL,
                                         status      INT DEFAULT 1 NOT NULL,
                                         avatar      VARCHAR(100),
+                                        avatar_file_id BIGINT,
                                         sex         INT DEFAULT 0 NOT NULL
 );
 
@@ -29,6 +30,7 @@ COMMENT ON COLUMN sys_user.balance IS '账户余额';
 COMMENT ON COLUMN sys_user.username IS '昵称';
 COMMENT ON COLUMN sys_user.status IS '状态1-启用,0-停用';
 COMMENT ON COLUMN sys_user.avatar IS '头像';
+COMMENT ON COLUMN sys_user.avatar_file_id IS '头像文件id';
 COMMENT ON COLUMN sys_user.sex IS '状态1-女,0-男';
 
 -- 创建唯一约束（H2使用CREATE INDEX语法）

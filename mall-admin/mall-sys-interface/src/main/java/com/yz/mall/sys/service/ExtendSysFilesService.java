@@ -10,10 +10,11 @@ import java.util.List;
 public interface ExtendSysFilesService {
 
     /**
-     * 获取文件预览地址
+     * 按文件 ID 批量获取预签名预览地址。
+     * 返回列表与入参顺序、长度一致；文件不存在或签名失败时对应元素为 {@code null}。
      *
      * @param fileIds 文件 ID
-     * @return 文件预览地址
+     * @return 预签名预览地址
      */
     List<String> getFilePreviewByFileIds(List<Long> fileIds);
 }

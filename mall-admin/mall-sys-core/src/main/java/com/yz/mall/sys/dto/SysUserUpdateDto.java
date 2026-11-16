@@ -54,5 +54,10 @@ public class SysUserUpdateDto implements Serializable {
      * 性别 {@link com.yz.mall.base.enums.SexEnum}
      */
     private Integer sex;
+
+    /**
+     * 头像文件id。为空时不改已保存的头像。
+     */
+    private Long avatarFileId;
 }
 

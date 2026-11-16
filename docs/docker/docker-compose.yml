@@ -335,15 +335,19 @@ services:
     networks:
       - mall
 
-  # 对外入口：负载均衡到宿主机上的 mall-gateway（默认端口 25001）
+  # 对外入口：OpenResty 负载均衡到 mall-gateway，并上报 SkyWalking（OAP HTTP 12800）
   nginx:
-    image: registry.cn-guangzhou.aliyuncs.com/devyunze/nginx:1.30.4
-    container_name: 'dev-nginx-1.30.4'
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/openresty:1.31.1.1-alpine-fat
+    container_name: 'dev-openresty-1.31.1.1'
     ports:
       - '5000:5000'
+    environment:
+      # SkyWalking OAP HTTP 上报地址；OAP 不在本 compose 时改成宿主机可达地址
+      SW_OAP: http://skywalking-oap:12800
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/skywalking-nginx-lua/lib:/usr/local/skywalking-nginx-lua/lib:ro
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     networks:

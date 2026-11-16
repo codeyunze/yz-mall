@@ -99,8 +99,8 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
             
             String responseBody = resolveResponseBody(response, responseBodyBytes.get(), responseSkipReason.get());
             GatewayAccessLogMessage message = buildMessage(request, path, requestBody, response, responseBody, status, costMs);
-            if (log.isInfoEnabled()) {
-                log.info("网关请求 method={} uri={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} responseCode={} responseHeaders={} responseContentType={} responseBody={} cost={}ms",
+            if (log.isDebugEnabled()) {
+                log.debug("网关请求 method={} uri={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} responseCode={} responseHeaders={} responseContentType={} responseBody={} cost={}ms",
                         message.getMethod(),
                         message.getUri(),
                         message.getPath(),

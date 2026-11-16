@@ -57,9 +57,14 @@ public class SysUserVo extends Model<SysUserVo> {
     private Integer status;
 
     /**
-     * 头像
+     * 头像预览地址。存在头像文件 id 时，由文件预签名地址覆盖。
      */
     private String avatar;
+
+    /**
+     * 头像文件id
+     */
+    private Long avatarFileId;
 
     /**
      * 性别 {@link com.yz.mall.sys.enums.SexEnum}

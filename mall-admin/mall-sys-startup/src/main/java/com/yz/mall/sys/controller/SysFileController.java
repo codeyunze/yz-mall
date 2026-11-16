@@ -7,25 +7,23 @@ import com.yz.mall.base.ApiController;
 import com.yz.mall.base.PageFilter;
 import com.yz.mall.base.Result;
 import com.yz.mall.base.ResultTable;
+import com.yz.mall.base.enums.CodeEnum;
 import com.yz.mall.sys.dto.SysFileQueryDto;
 import com.yz.mall.sys.dto.SysFileUpdateDto;
 import com.yz.mall.sys.service.SysFileService;
 import com.yz.mall.sys.vo.SysFileVo;
-import io.github.codeyunze.bo.QofFileDownloadBo;
 import io.github.codeyunze.core.QofClient;
 import io.github.codeyunze.core.QofClientFactory;
 import io.github.codeyunze.dto.QofFileInfoDto;
 import io.github.codeyunze.dto.QofFileUploadDto;
 import io.github.codeyunze.exception.FileAccessDeniedException;
+import io.github.codeyunze.exception.TypeNotSupportedException;
 import io.github.codeyunze.metadata.FileMetadata;
 import io.github.codeyunze.metadata.FileMetadataRepository;
 import io.github.codeyunze.web.service.FileValidationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,14 +34,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.nio.charset.StandardCharsets;
+import java.net.URI;
 
 /**
  * 系统-文件管理。
  * <p>
- * 对接 QOF 17.3.2：上传/下载/预览/删除走 {@link QofClient}，鉴权与元数据走 {@link FileMetadataRepository}。
+ * 对接 QOF 17.3.3：上传/删除走 {@link QofClient}；下载与预览改为存储站预签名地址。鉴权与元数据走 {@link FileMetadataRepository}。
  * 物理删除由客户端生命周期删除元数据，此处不再二次删库。
  *
  * @author yunze
@@ -81,7 +78,7 @@ public class SysFileController extends ApiController {
         try {
             QofClient client = qofClientFactory.buildClient(fileUploadDto.getFileStorageMode());
             Long fileId = client.upload(file.getInputStream(), fileInfoDto);
-            return new Result<>(HttpStatus.OK.value(), fileId, "文件上传成功");
+            return new Result<>(CodeEnum.SUCCESS.get(), fileId, "文件上传成功");
         } catch (Exception e) {
             log.error("文件上传失败，文件名: {}", fileInfoDto.getFileName(), e);
             return new Result<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), null, "文件上传失败，请稍后重试");
@@ -89,51 +86,38 @@ public class SysFileController extends ApiController {
     }
 
     /**
-     * 文件下载。
+     * 获取带临时签名的下载地址。
      */
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<StreamingResponseBody> download(@PathVariable Long fileId) {
+    public Result<String> download(@PathVariable Long fileId) {
         try {
             FileMetadata metadata = requireAccessible(fileId);
-            QofFileDownloadBo fileDownloadBo = qofClientFactory.buildClient(metadata.getFileStorageMode()).download(fileId);
-            StreamingResponseBody streamingResponseBody = fileValidationService.createStreamingResponseBody(
-                    fileDownloadBo.getInputStream(), fileId, "下载");
-            String encodedFileName = fileValidationService.encodeFileName(fileDownloadBo.getFileName());
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + encodedFileName + "\";filename*=UTF-8''" + encodedFileName)
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .contentLength(fileDownloadBo.getFileSize())
-                    .body(streamingResponseBody);
+            String signedUrl = qofClientFactory.buildClient(metadata.getFileStorageMode()).download(fileId);
+            return new Result<>(CodeEnum.SUCCESS.get(), signedUrl, "获取下载地址成功");
         } catch (FileAccessDeniedException e) {
             log.warn("文件下载权限被拒绝，文件Id: {}, 原因: {}", fileId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return new Result<>(HttpStatus.FORBIDDEN.value(), null, e.getMessage());
         } catch (Exception e) {
             log.error("文件下载失败，文件Id: {}", fileId, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return new Result<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), null, "获取下载地址失败");
         }
     }
 
     /**
-     * 文件预览。
+     * 文件预览，302 到带临时签名的预览地址。
      */
     @GetMapping("/preview/{fileId}")
-    public ResponseEntity<StreamingResponseBody> preview(@PathVariable Long fileId) {
+    public ResponseEntity<Void> preview(@PathVariable Long fileId) {
         try {
             FileMetadata metadata = requireAccessible(fileId);
-            QofFileDownloadBo fileDownloadBo = qofClientFactory.buildClient(metadata.getFileStorageMode()).preview(fileId);
-            StreamingResponseBody streamingResponseBody = fileValidationService.createStreamingResponseBody(
-                    fileDownloadBo.getInputStream(), fileId, "预览");
-            String encodedFileName = fileValidationService.encodeFileName(fileDownloadBo.getFileName());
-            ContentDisposition contentDisposition = ContentDisposition.builder("inline")
-                    .filename(encodedFileName, StandardCharsets.UTF_8)
-                    .build();
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
-                    .contentType(MediaType.parseMediaType(fileDownloadBo.getFileType()))
-                    .body(streamingResponseBody);
+            String signedUrl = qofClientFactory.buildClient(metadata.getFileStorageMode()).preview(fileId);
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(signedUrl)).build();
         } catch (FileAccessDeniedException e) {
             log.warn("文件预览权限被拒绝，文件Id: {}, 原因: {}", fileId, e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (TypeNotSupportedException e) {
+            log.warn("文件预览类型不支持，文件Id: {}, 原因: {}", fileId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
         } catch (Exception e) {
             log.error("文件预览失败，文件Id: {}", fileId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -150,7 +134,7 @@ public class SysFileController extends ApiController {
             FileMetadata metadata = requireAccessible(fileId);
             boolean deleted = qofClientFactory.buildClient(metadata.getFileStorageMode()).delete(fileId);
             if (deleted) {
-                return new Result<>(HttpStatus.OK.value(), true, "文件删除成功!");
+                return new Result<>(CodeEnum.SUCCESS.get(), true, "文件删除成功!");
             }
             return new Result<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), false, "文件删除失败");
         } catch (FileAccessDeniedException e) {

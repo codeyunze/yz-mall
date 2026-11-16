@@ -1,11 +1,15 @@
 package com.yz.mall.gateway.kafka;
 
+import com.yz.mall.base.HeaderConstants;
 import com.yz.mall.gateway.config.GatewayAccessLogProperties;
 import com.yz.mall.json.JacksonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 import org.springframework.kafka.core.KafkaTemplate;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * 异步投递网关访问日志到 Kafka，失败只打 warn，不影响请求转发。
@@ -24,7 +28,7 @@ public class GatewayAccessLogKafkaProducer {
     private final GatewayAccessLogProperties properties;
 
     /**
-     * 按 path 分区异步发送；不阻塞 WebFlux 线程。
+     * 异步发送访问日志，不阻塞 WebFlux 线程；{@code traceId} 写入 Kafka header {@code x-trace-id}。
      *
      * @param message 已组装的访问日志
      */
@@ -35,7 +39,12 @@ public class GatewayAccessLogKafkaProducer {
         String topic = properties.getKafka().getTopic();
         try {
             String payload = JacksonUtil.getObjectMapper().writeValueAsString(message);
-            kafkaTemplate.send(topic, TraceContext.traceId(), payload).whenComplete((result, ex) -> {
+            ProducerRecord<String, String> record = new ProducerRecord<>(topic, TraceContext.traceId(), payload);
+            String traceId = message.getTraceId();
+            if (traceId != null && !traceId.isBlank()) {
+                record.headers().add(HeaderConstants.TRACE_ID_HEADER, traceId.getBytes(StandardCharsets.UTF_8));
+            }
+            kafkaTemplate.send(record).whenComplete((result, ex) -> {
                 if (ex != null) {
                     log.warn("网关访问日志写入 Kafka 失败 topic={} path={}", topic, message.getPath(), ex);
                 }

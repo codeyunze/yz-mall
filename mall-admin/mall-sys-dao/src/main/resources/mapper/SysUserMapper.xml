@@ -3,7 +3,7 @@
 <mapper namespace="com.yz.mall.sys.mapper.SysUserMapper">
 
     <select id="selectPage" resultType="com.yz.mall.sys.vo.SysUserVo">
-        select su.id, su.phone, su.avatar, su.email, su.create_time, su.sex
+        select su.id, su.phone, su.avatar, su.avatar_file_id, su.email, su.create_time, su.sex
              , su.username, su.status
         from sys_user su
         <if test="filter.roleId != null and filter.roleId != ''">
