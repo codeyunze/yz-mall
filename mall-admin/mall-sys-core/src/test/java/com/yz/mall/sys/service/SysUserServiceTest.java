@@ -3,6 +3,7 @@ package com.yz.mall.sys.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yz.mall.sys.dto.SysUserQueryDto;
 import com.yz.mall.sys.mapper.SysUserMapper;
+import com.yz.mall.sys.service.ExtendSysFilesService;
 import com.yz.mall.sys.service.impl.SysUserServiceImpl;
 import com.yz.mall.sys.vo.SysUserVo;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,9 @@ class SysUserServiceTest {
 
     @Mock
     private SysUserMapper userMapper; // 模拟依赖的 Mapper
+
+    @Mock
+    private ExtendSysFilesService extendSysFilesService;
 
     @InjectMocks
     private SysUserServiceImpl userService; // 注入被测试的 Service
@@ -80,5 +84,31 @@ class SysUserServiceTest {
         assertEquals(21, result.getTotal());
         assertEquals("test2@example.com", result.getRecords().get(2).getEmail());
         verify(userMapper, times(1)).selectPage(any(), eq(queryDto)); // 验证调用次数
+    }
+
+    @Test
+    @DisplayName("分页按头像文件id覆盖预览地址")
+    void pageReplacesAvatarWithPreviewUrl() {
+        SysUserVo withFile = new SysUserVo();
+        withFile.setId(1L);
+        withFile.setAvatar("old");
+        withFile.setAvatarFileId(99L);
+        SysUserVo withoutFile = new SysUserVo();
+        withoutFile.setId(2L);
+        withoutFile.setAvatar("keep");
+
+        Page<SysUserVo> voPage = new Page<>();
+        voPage.setTotal(2);
+        voPage.setRecords(new ArrayList<>(List.of(withFile, withoutFile)));
+
+        SysUserQueryDto queryDto = new SysUserQueryDto();
+        when(userMapper.selectPage(any(), eq(queryDto))).thenReturn(voPage);
+        when(extendSysFilesService.getFilePreviewByFileIds(List.of(99L))).thenReturn(List.of("https://cdn.example/a.png"));
+        ReflectionTestUtils.setField(userService, "extendSysFilesService", extendSysFilesService);
+
+        Page<SysUserVo> result = userService.page(1L, 10L, queryDto);
+
+        assertEquals("https://cdn.example/a.png", result.getRecords().get(0).getAvatar());
+        assertEquals("keep", result.getRecords().get(1).getAvatar());
     }
 }

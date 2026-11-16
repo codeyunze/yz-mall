@@ -83,6 +83,11 @@ public class SysUser extends Model<SysUser> {
     private String avatar;
 
     /**
+     * 头像文件id
+     */
+    private Long avatarFileId;
+
+    /**
      * 性别 {@link com.yz.mall.base.enums.SexEnum}
      */
     private Integer sex;

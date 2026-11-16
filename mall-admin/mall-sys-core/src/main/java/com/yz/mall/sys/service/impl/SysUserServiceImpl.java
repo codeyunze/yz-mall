@@ -12,6 +12,7 @@ import com.yz.mall.sys.dto.*;
 import com.yz.mall.sys.entity.SysMenu;
 import com.yz.mall.sys.entity.SysUser;
 import com.yz.mall.sys.mapper.SysUserMapper;
+import com.yz.mall.sys.service.ExtendSysFilesService;
 import com.yz.mall.sys.service.SysMenuService;
 import com.yz.mall.sys.service.SysRoleRelationMenuService;
 import com.yz.mall.sys.service.SysUserRelationRoleService;
@@ -26,7 +27,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -52,22 +55,58 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     private final RedisTemplate<String, Object> defaultRedisTemplate;
 
+    private final ExtendSysFilesService extendSysFilesService;
+
     public SysUserServiceImpl(SysProperties sysProperties
             , SysMenuService sysMenuService
             , SysUserRelationRoleService sysUserRelationRoleService
             , SysRoleRelationMenuService sysRoleRelationMenuService
-            , RedisTemplate<String, Object> defaultRedisTemplate) {
+            , RedisTemplate<String, Object> defaultRedisTemplate
+            , ExtendSysFilesService extendSysFilesService) {
         this.sysProperties = sysProperties;
         this.sysMenuService = sysMenuService;
         this.sysUserRelationRoleService = sysUserRelationRoleService;
         this.sysRoleRelationMenuService = sysRoleRelationMenuService;
         this.defaultRedisTemplate = defaultRedisTemplate;
+        this.extendSysFilesService = extendSysFilesService;
     }
 
     @Override
     public Page<SysUserVo> page(long current, long size, SysUserQueryDto filter) {
         log.info("用户信息实现类");
-        return baseMapper.selectPage(new Page<>(current, size), filter);
+        Page<SysUserVo> result = baseMapper.selectPage(new Page<>(current, size), filter);
+        fillAvatarPreview(result.getRecords());
+        return result;
+    }
+
+    /**
+     * 有头像文件 id 时，用预签名预览地址覆盖 {@code avatar}。
+     * 签名失败时保留库里原来的头像地址。
+     *
+     * @param records 分页用户
+     */
+    private void fillAvatarPreview(List<SysUserVo> records) {
+        if (CollectionUtils.isEmpty(records)) {
+            return;
+        }
+        List<SysUserVo> withFile = new ArrayList<>();
+        List<Long> fileIds = new ArrayList<>();
+        for (SysUserVo record : records) {
+            if (record.getAvatarFileId() != null) {
+                withFile.add(record);
+                fileIds.add(record.getAvatarFileId());
+            }
+        }
+        if (fileIds.isEmpty()) {
+            return;
+        }
+        List<String> urls = extendSysFilesService.getFilePreviewByFileIds(fileIds);
+        for (int i = 0; i < withFile.size(); i++) {
+            String url = urls != null && i < urls.size() ? urls.get(i) : null;
+            if (StringUtils.hasText(url)) {
+                withFile.get(i).setAvatar(url);
+            }
+        }
     }
 
     @Override
@@ -114,6 +153,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysUser user = baseMapper.selectById(userId);
         ExtendLoginInfoVo vo = new ExtendLoginInfoVo();
         BeanUtils.copyProperties(user, vo);
+        if (user.getAvatarFileId() != null) {
+            List<String> urls = extendSysFilesService.getFilePreviewByFileIds(Collections.singletonList(user.getAvatarFileId()));
+            if (!CollectionUtils.isEmpty(urls) && StringUtils.hasText(urls.get(0))) {
+                vo.setAvatar(urls.get(0));
+            }
+        }
         return vo;
     }
 
