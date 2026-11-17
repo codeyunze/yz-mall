@@ -23,3 +23,38 @@ spring:
       discovery:
         namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
         ip: 192.168.3.20
+    sentinel:
+      # 保持 false：网关类型由 Sentinel SCG 自动配置在心跳前写入。eager=true 时心跳会先发出，控制台会把应用当成普通应用
+#      eager: false
+      # 关闭 Servlet 过滤器，网关走 SentinelGatewayFilter
+      filter:
+        enabled: false
+      transport:
+        dashboard: ${SENTINEL_DASHBOARD:192.168.3.237:8858}
+        # Dashboard 向本机拉取/推送规则的端口，需对控制台所在机器可达
+        port: 8719
+        # 控制台回连网关的地址，须是 Dashboard 所在机器能访问的 IP
+        client-ip: ${SENTINEL_CLIENT_IP:192.168.3.20}
+      scg:
+        fallback:
+          mode: response
+          response-status: 429
+          content-type: application/json
+          response-body: '{"code":429,"msg":"请求过于频繁"}'
+
+# 网关接口限流。resource-mode=api 时按 paths 匹配；后续可再迁到 Nacos
+yz:
+  gateway:
+    sentinel:
+      enabled: true
+      rules:
+        - resource: /sys/dictionary/page
+          count: 5
+          interval-sec: 1
+          paths:
+            - /sys/dictionary/page
+        - resource: mall-sys
+          count: 10
+          interval-sec: 1
+          paths:
+            - /sys/**

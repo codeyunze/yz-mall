@@ -335,6 +335,25 @@ services:
     networks:
       - mall
 
+  # Sentinel 控制台（默认账号 sentinel / sentinel）
+  sentinel-dashboard:
+    image: registry.cn-guangzhou.aliyuncs.com/devyunze/sentinel-dashboard:1.8.10
+    container_name: 'dev-sentinel-dashboard-1.8.10'
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: >-
+        -Dserver.port=8858
+        -Dcsp.sentinel.dashboard.server=localhost:8858
+        -Dproject.name=sentinel-dashboard
+        -Duser.timezone=Asia/Shanghai
+    ports:
+      - '8858:8858'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    networks:
+      - mall
+
   # 对外入口：OpenResty 负载均衡到 mall-gateway，并上报 SkyWalking（OAP HTTP 12800）
   nginx:
     image: registry.cn-guangzhou.aliyuncs.com/devyunze/openresty:1.31.1.1-alpine-fat
