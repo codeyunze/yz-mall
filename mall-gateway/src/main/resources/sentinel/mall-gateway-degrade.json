@@ -1,0 +1,11 @@
+[
+  {
+    "resource": "mall-sys",
+    "grade": 0,
+    "count": 500,
+    "slowRatioThreshold": 0.5,
+    "minRequestAmount": 5,
+    "statIntervalMs": 1000,
+    "timeWindow": 10
+  }
+]

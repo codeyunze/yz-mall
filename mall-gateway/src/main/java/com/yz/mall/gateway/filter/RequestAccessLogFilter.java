@@ -100,9 +100,9 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
             String responseBody = resolveResponseBody(response, responseBodyBytes.get(), responseSkipReason.get());
             GatewayAccessLogMessage message = buildMessage(request, path, requestBody, response, responseBody, status, costMs);
             if (log.isDebugEnabled()) {
-                log.debug("网关请求 method={} uri={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} responseCode={} responseHeaders={} responseContentType={} responseBody={} cost={}ms",
+                log.debug("网关请求 method={} url={} path={} query={} headers={} cookies={} remote={} contentType={} body={} status={} responseCode={} responseHeaders={} responseContentType={} responseBody={} cost={}ms",
                         message.getMethod(),
-                        message.getUri(),
+                        message.getUrl(),
                         message.getPath(),
                         message.getQuery(),
                         message.getHeaders(),
@@ -138,7 +138,7 @@ public class RequestAccessLogFilter implements GlobalFilter, Ordered {
         message.setRequestTime(LocalDateTime.now());
         message.setTraceId(request.getHeaders().getFirst(TRACE_ID_HEADER));
         message.setMethod(request.getMethod() == null ? null : request.getMethod().name());
-        message.setUri(request.getURI().toString());
+        message.setUrl(request.getURI().toString());
         message.setPath(path);
         message.setQuery(formatParams(request.getQueryParams()));
         message.setHeaders(formatHeaders(request.getHeaders()));

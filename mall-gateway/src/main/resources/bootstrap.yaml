@@ -56,6 +56,16 @@ spring:
             data-id: mall-gateway-gw-flow.json
             data-type: json
             rule-type: gw-flow
+        degrade:
+          nacos:
+            server-addr: ${NACOS_HOST}:8848
+            username: nacos
+            password: ${NACOS_PASSWORD}
+            namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+            group-id: DEFAULT_GROUP
+            data-id: mall-gateway-degrade.json
+            data-type: json
+            rule-type: degrade
       scg:
         fallback:
           mode: response

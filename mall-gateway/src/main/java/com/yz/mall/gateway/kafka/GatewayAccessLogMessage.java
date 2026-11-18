@@ -1,5 +1,7 @@
 package com.yz.mall.gateway.kafka;
 
+import cn.hutool.core.date.DatePattern;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ public class GatewayAccessLogMessage {
     /**
      * 请求时间
      */
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime requestTime;
     /**
      * 链路追踪 ID
@@ -28,9 +31,9 @@ public class GatewayAccessLogMessage {
      */
     private String method;
     /**
-     * 完整 URI
+     * 完整 URL
      */
-    private String uri;
+    private String url;
     /**
      * 请求路径
      */
