@@ -1,0 +1,20 @@
+[
+  {
+    "apiName": "/sys/dictionary/page",
+    "predicateItems": [
+      {
+        "pattern": "/sys/dictionary/page",
+        "matchStrategy": 0
+      }
+    ]
+  },
+  {
+    "apiName": "mall-sys",
+    "predicateItems": [
+      {
+        "pattern": "/sys/",
+        "matchStrategy": 1
+      }
+    ]
+  }
+]

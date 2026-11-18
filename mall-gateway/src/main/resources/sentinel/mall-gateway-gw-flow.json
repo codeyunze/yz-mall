@@ -1,0 +1,20 @@
+[
+  {
+    "resource": "/sys/dictionary/page",
+    "resourceMode": 1,
+    "grade": 1,
+    "count": 5,
+    "intervalSec": 1,
+    "controlBehavior": 0,
+    "burst": 0
+  },
+  {
+    "resource": "mall-sys",
+    "resourceMode": 1,
+    "grade": 1,
+    "count": 10,
+    "intervalSec": 1,
+    "controlBehavior": 0,
+    "burst": 0
+  }
+]

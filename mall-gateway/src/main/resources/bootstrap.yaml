@@ -16,7 +16,7 @@ spring:
           enabled: false
         file-extension: yaml
         extension-configs:
-          - data-id: gateway.yaml
+          - data-id: mall-gateway.yaml
             refresh: true
           - data-id: middleware.yaml
           - data-id: sa-token.yaml
@@ -35,26 +35,30 @@ spring:
         port: 8719
         # 控制台回连网关的地址，须是 Dashboard 所在机器能访问的 IP
         client-ip: ${SENTINEL_CLIENT_IP:192.168.3.20}
+      datasource:
+        gw-api:
+          nacos:
+            server-addr: ${NACOS_HOST}:8848
+            username: nacos
+            password: ${NACOS_PASSWORD}
+            namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+            group-id: DEFAULT_GROUP
+            data-id: mall-gateway-gw-api.json
+            data-type: json
+            rule-type: gw-api-group
+        gw-flow:
+          nacos:
+            server-addr: ${NACOS_HOST}:8848
+            username: nacos
+            password: ${NACOS_PASSWORD}
+            namespace: ff6944dd-b11f-4403-8245-6c621b2f54c8
+            group-id: DEFAULT_GROUP
+            data-id: mall-gateway-gw-flow.json
+            data-type: json
+            rule-type: gw-flow
       scg:
         fallback:
           mode: response
           response-status: 429
           content-type: application/json
           response-body: '{"code":429,"msg":"请求过于频繁"}'
-
-# 网关接口限流。resource-mode=api 时按 paths 匹配；后续可再迁到 Nacos
-yz:
-  gateway:
-    sentinel:
-      enabled: true
-      rules:
-        - resource: /sys/dictionary/page
-          count: 5
-          interval-sec: 1
-          paths:
-            - /sys/dictionary/page
-        - resource: mall-sys
-          count: 10
-          interval-sec: 1
-          paths:
-            - /sys/**
